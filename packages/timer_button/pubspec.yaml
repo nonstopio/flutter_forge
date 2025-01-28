@@ -4,7 +4,7 @@ version: 2.2.0
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button
-issue_tracker: https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button/issues
+issue_tracker: https://github.com/nonstopio/flutter_forge/issues
 screenshots:
   - description: Demo Button
     path: screenshots/demo.png
