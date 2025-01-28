@@ -77,7 +77,7 @@ class TimerButton extends StatefulWidget {
     this.buttonType = ButtonType.elevatedButton,
     this.activeTextStyle,
     this.disabledTextStyle = const TextStyle(color: Colors.black45),
-  })  : builder = null;
+  }) : builder = null;
 
   /// Builder factory for creating a themed [TimerButton].
   ///

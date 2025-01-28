@@ -1,8 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
 linter:
   rules:
-    - directives_ordering
-
+    constant_identifier_names: false
+    directives_ordering: true

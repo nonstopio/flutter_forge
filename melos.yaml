@@ -10,3 +10,6 @@ packages:
 command:
   version:
     workspaceChangelog: false
+
+scripts:
+  lint: dart format . --set-exit-if-changed && flutter analyze --fatal-infos .
