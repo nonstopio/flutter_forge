@@ -1,3 +1,8 @@
+## 1.2.3
+
+ - **DOCS**(connectivity_wrapper): Update README image styling with responsive aspect ratio.
+ - **DOCS**(connectivity_wrapper): Enhance README with improved formatting and visual examples.
+
 ## 1.2.2
 
  - **DOCS**(connectivity_wrapper): Improve README markdown formatting and headers.
