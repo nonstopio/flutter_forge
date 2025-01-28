@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - **FIX**(connectivity_wrapper): Update screenshot description in pubspec.yaml.
+
 ## 1.2.0
 
  - **FIX**(connectivity_wrapper): Improve web connection check with additional connectivity types.
