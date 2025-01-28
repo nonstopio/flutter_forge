@@ -1,0 +1,12 @@
+name: flutter_forge_workspace
+description: A place where Flutter packages are crafted and built.
+
+packages:
+  - plugins/*
+  - plugins/*/*
+  - packages/*
+  - packages/*/*
+
+command:
+  version:
+    workspaceChangelog: false
