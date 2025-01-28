@@ -26,7 +26,7 @@ This plugin allows Flutter apps provide feedback on your app when it's not conne
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 ```
 
-##Check if device is connected to internet or not 
+## Check if device is connected to internet or not 
 
 ```dart
 ...
@@ -50,11 +50,11 @@ import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 ```
 
-##Create `Network` Aware Widgets
+## Create `Network` Aware Widgets
 
-#Type 1: A common widget for the entire app
+# Type 1: A common widget for the entire app
 
-##STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
+## STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -80,9 +80,9 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-#Type 2: Screen/widget specific widgets
+# Type 2: Screen/widget specific widgets
 
-##STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
+## STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
 ```
 
 
-##STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](example/lib/screens/menu_screen.dart) for In-build animation
+## STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](example/lib/screens/menu_screen.dart) for In-build animation
 
 ```dart
 
@@ -144,8 +144,7 @@ class MenuScreen extends StatelessWidget {
 ## Also, you can customize the offlineWidget . Let's see few examples.
 
 
-##Custom Decoration
-
+## Custom Decoration
 
 ```dart
 ....
@@ -187,7 +186,7 @@ body: ConnectivityWidgetWrapper(
 
 ![](https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png)
 
-##Custom Alignment and Disable User Interaction
+## Custom Alignment and Disable User Interaction
  
 
 ```dart
@@ -202,9 +201,7 @@ body: ConnectivityWidgetWrapper(
 ![](https://cdn-images-1.medium.com/max/600/1*wHJXb7XqHizgEvZ-RjhsDA.gif)
 
 
-
-##Provide your own Custom Offline Widget
- 
+## Provide your own Custom Offline Widget
 
 ```dart
 ...
@@ -217,9 +214,7 @@ body: ConnectivityWidgetWrapper(
 
 ![](https://cdn-images-1.medium.com/max/600/1*95pBwxafvlsDvcYIs9krJQ.gif)
 
-
-##Convert Any widget to network-aware widget
-
+## Convert Any widget to network-aware widget
 
 Wrap the widget `RaisedButton` which you want to be network-aware with `ConnectivityWidgetWrapper` and set `stacked: false`.
 Provide an `offlineWidget` to replace the current widget when the device is offline.
@@ -286,12 +281,9 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
 ![](https://cdn-images-1.medium.com/max/800/1*Biyy0EnWf8yVeA40iJcKGQ.gif)
 
 
-
-
 > Note that you should not be using the current network status for deciding
 whether you can reliably make a network connection. Always guard your app code
 against timeouts and errors that might come from the network layer.
-
 
 ## Contributing
 
