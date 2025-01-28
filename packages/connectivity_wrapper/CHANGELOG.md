@@ -1,3 +1,9 @@
+## 1.2.0
+
+ - **FIX**(connectivity_wrapper): Improve web connection check with additional connectivity types.
+ - **FEAT**(connectivity_wrapper): Moved `connectivity_wrapper` to mono repo.
+ - **DOCS**(connectivity_wrapper): Update README badge and formatting.
+
 ## [1.1.4] - Dependency Update
 
 - Updated connectivity_plus: `^5.0.1`
