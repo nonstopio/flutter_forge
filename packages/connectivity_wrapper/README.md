@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
 ```
 
 
-##STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](https://github.com/ProjectAj14/connectivity_wrapper/blob/master/example/lib/screens/menu_screen.dart) for In-build animation
+##STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](example/lib/screens/menu_screen.dart) for In-build animation
 
 ```dart
 
