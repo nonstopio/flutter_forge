@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **DOCS**(connectivity_wrapper): Improve README markdown formatting and headers.
+
 ## 1.2.1
 
  - **FIX**(connectivity_wrapper): Update screenshot description in pubspec.yaml.
