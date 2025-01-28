@@ -1,3 +1,7 @@
+## 1.2.4
+
+ - **DOCS**(connectivity_wrapper): Remove example images from README.
+
 ## 1.2.3
 
  - **DOCS**(connectivity_wrapper): Update README image styling with responsive aspect ratio.
