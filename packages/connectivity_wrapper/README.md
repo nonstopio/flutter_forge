@@ -9,17 +9,6 @@
 
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
 
-
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 600px;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*0ClOpA0bDy57h8ib9XiqQg.gif" alt="Image 1" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*qUAaseD03Jrk7I91LDv-sQ.png" alt="Image 2" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png" alt="Image 3" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*wHJXb7XqHizgEvZ-RjhsDA.gif" alt="Image 4" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*95pBwxafvlsDvcYIs9krJQ.gif" alt="Image 5" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-  <img src="https://cdn-images-1.medium.com/max/600/1*Biyy0EnWf8yVeA40iJcKGQ.gif" alt="Image 6" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
-</div>
-
-
 ## Requirements
 
 - Flutter >=3.19.0
