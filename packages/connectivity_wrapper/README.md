@@ -1,24 +1,15 @@
-[![](https://img.shields.io/badge/build-1.1.4-brightgreen)](https://github.com/ProjectAj14/connectivity_wrapper)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+    <img src="screenshots/icon.png" alt="Logo" height="128" />
+</p>
 
 # connectivity_wrapper
 
+[![](https://img.shields.io/badge/build-1.1.4-brightgreen)](https://github.com/ProjectAj14/connectivity_wrapper)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
 
-## Let's get started
-
-1. Go to `pubspec.yaml` 
-2. add a ns_utils and replace `[version]` with the latest version:  
-
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  connectivity_wrapper: ^[version]
-```
-3. click the packages get button or *flutter pub get*  
-
-## Import the package
+## Usage
 
 ```dart
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
@@ -201,7 +192,7 @@ body: ConnectivityWidgetWrapper(
 
 
 
-##Provide your own Custom Offline Widget
+##Provide your own Custom Offline Widget
  
 
 ```dart
@@ -289,27 +280,24 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
 > Note that you should not be using the current network status for deciding
 whether you can reliably make a network connection. Always guard your app code
 against timeouts and errors that might come from the network layer.
- 
- 
+
+
 
 ## Contributing
 
-There are couple of ways in which you can contribute.
-- Propose any feature, enhancement
-- Report a bug
-- Fix a bug
-- Participate in a discussion and help in decision making
-- Write and improve some **documentation**. Documentation is super critical and its importance
-  cannot be overstated!
-- Send in a Pull Request :-)
+We welcome contributions in various forms:
 
+- Proposing new features or enhancements.
+- Reporting and fixing bugs.
+- Engaging in discussions to help make decisions.
+- Improving documentation, as it is essential.
+- Sending Pull Requests is greatly appreciated!
 
+A big thank you to all our contributors! 🙌
 
-<br>
-<div align="center" >
-  <p>Thanks to all contributors of this package</p>
-  <a href="https://github.com/ProjectAJ14/connectivity_wrapper/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=ProjectAJ14/connectivity_wrapper" />
+<br></br>
+<div align="center">
+  <a href="https://github.com/nonstopio/flutter_forge/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=nonstopio/flutter_forge"  alt="contributors"/>
   </a>
 </div>
-<br>
