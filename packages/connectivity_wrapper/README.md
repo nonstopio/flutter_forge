@@ -9,6 +9,17 @@
 
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
 
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 600px;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*0ClOpA0bDy57h8ib9XiqQg.gif" alt="Image 1" style="width: 280px; height: 400px; object-fit: contain;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*qUAaseD03Jrk7I91LDv-sQ.png" alt="Image 2" style="width: 280px; height: 400px; object-fit: contain;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png" alt="Image 3" style="width: 280px; height: 400px; object-fit: contain;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*wHJXb7XqHizgEvZ-RjhsDA.gif" alt="Image 4" style="width: 280px; height: 400px; object-fit: contain;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*95pBwxafvlsDvcYIs9krJQ.gif" alt="Image 5" style="width: 280px; height: 400px; object-fit: contain;">
+  <img src="https://cdn-images-1.medium.com/max/600/1*Biyy0EnWf8yVeA40iJcKGQ.gif" alt="Image 6" style="width: 280px; height: 400px; object-fit: contain;">
+</div>
+
+
 ## Requirements
 
 - Flutter >=3.19.0
@@ -26,7 +37,7 @@ This plugin allows Flutter apps provide feedback on your app when it's not conne
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 ```
 
-## Check if device is connected to internet or not 
+Check if device is connected to internet or not 
 
 ```dart
 ...
@@ -50,11 +61,10 @@ import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 
 ```
 
-## Create `Network` Aware Widgets
+# Create `Network` Aware Widgets
 
-# Type 1: A common widget for the entire app
-
-## STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
+## Type 1: A common widget for the entire app
+STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -80,9 +90,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-# Type 2: Screen/widget specific widgets
-
-## STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
+## Type 2: Screen/widget specific widgets
+STEP 1: Wrap `MaterialApp/CupertinoApp` with `ConnectivityAppWrapper`
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -101,8 +110,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-
-## STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](example/lib/screens/menu_screen.dart) for In-build animation
+STEP 2: The last step, Wrap your body widget with `ConnectivityWidgetWrapper` or use [`ConnectivityScreenWrapper`](example/lib/screens/menu_screen.dart) for In-build animation
 
 ```dart
 
@@ -138,10 +146,10 @@ class MenuScreen extends StatelessWidget {
 }
 ```
 
-![](https://cdn-images-1.medium.com/max/800/1*0ClOpA0bDy57h8ib9XiqQg.gif)
+<img src="https://cdn-images-1.medium.com/max/600/1*0ClOpA0bDy57h8ib9XiqQg.gif" alt="Image 1" style="width: 280px; height: 400px; object-fit: contain;">
 
 
-## Also, you can customize the offlineWidget . Let's see few examples.
+Also, you can customize the offlineWidget . Let's see few examples.
 
 
 ## Custom Decoration
@@ -159,11 +167,10 @@ body: ConnectivityWidgetWrapper(
 ....
 ```
 
-![](https://cdn-images-1.medium.com/max/600/1*qUAaseD03Jrk7I91LDv-sQ.png)
+<img src="https://cdn-images-1.medium.com/max/600/1*qUAaseD03Jrk7I91LDv-sQ.png" alt="Image 2" style="width: 280px; height: 400px; object-fit: contain;">
 
 
-##Custom Height and Message
-
+## Custom Height and Message
 
 ```dart
 ...
@@ -184,7 +191,7 @@ body: ConnectivityWidgetWrapper(
 ...
 ```
 
-![](https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png)
+<img src="https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png" alt="Image 3" style="width: 280px; height: 400px; object-fit: contain;">
 
 ## Custom Alignment and Disable User Interaction
  
@@ -198,7 +205,7 @@ body: ConnectivityWidgetWrapper(
 ...
 ```
 
-![](https://cdn-images-1.medium.com/max/600/1*wHJXb7XqHizgEvZ-RjhsDA.gif)
+<img src="https://cdn-images-1.medium.com/max/600/1*wHJXb7XqHizgEvZ-RjhsDA.gif" alt="Image 4" style="width: 280px; height: 400px; object-fit: contain;">
 
 
 ## Provide your own Custom Offline Widget
@@ -212,7 +219,7 @@ body: ConnectivityWidgetWrapper(
 ....
 ```
 
-![](https://cdn-images-1.medium.com/max/600/1*95pBwxafvlsDvcYIs9krJQ.gif)
+<img src="https://cdn-images-1.medium.com/max/600/1*95pBwxafvlsDvcYIs9krJQ.gif" alt="Image 5" style="width: 280px; height: 400px; object-fit: contain;">
 
 ## Convert Any widget to network-aware widget
 
@@ -278,8 +285,9 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
 }
 ```
 
-![](https://cdn-images-1.medium.com/max/800/1*Biyy0EnWf8yVeA40iJcKGQ.gif)
+<img src="https://cdn-images-1.medium.com/max/600/1*Biyy0EnWf8yVeA40iJcKGQ.gif" alt="Image 6" style="width: 280px; height: 400px; object-fit: contain;">
 
+<br></br>
 
 > Note that you should not be using the current network status for deciding
 whether you can reliably make a network connection. Always guard your app code
