@@ -36,10 +36,10 @@ import 'package:timer_button/timer_button.dart';
 To use the Timer Button, follow these steps:
 
 1. Set the button type. There are six types to choose from:
-   - ElevatedButton (`buttonType: ButtonType.elevatedButton`) - default
-   - TextButton (`buttonType: ButtonType.textButton`)
-   - OutlineButton (`buttonType: ButtonType.outlineButton`)
-   - Custom (`buttonType: ButtonType.custom`)
+    - ElevatedButton (`buttonType: ButtonType.elevatedButton`) - default
+    - TextButton (`buttonType: ButtonType.textButton`)
+    - OutlineButton (`buttonType: ButtonType.outlineButton`)
+    - Custom (`buttonType: ButtonType.custom`)
 2. Specify the button label using `label: "Your Label"`.
 3. Set the timeout duration in seconds with `timeOutInSeconds: 20`.
 4. Customize the button's color using `color: Colors.deepPurple`.
@@ -48,6 +48,7 @@ To use the Timer Button, follow these steps:
 ## Example
 
 Default Timer Button:
+
 ```dart
                 TimerButton(
                   label: "Try Again",
@@ -60,6 +61,7 @@ Default Timer Button:
 
 With `TimerButton.builder`: You can customize the button's appearance by passing a `builder`
 function:
+
 ```dart
                 TimerButton.builder(
                   builder: (context, timeLeft) {
@@ -75,11 +77,6 @@ function:
                 ),
 ```
 
-## Issues and Source Code
-
-For reporting issues and accessing the source code, visit
-our [GitHub Repository](https://github.com/ProjectAJ14/timer_button).
-
 ## Contributing
 
 We welcome contributions in various forms:
@@ -94,7 +91,7 @@ A big thank you to all our contributors! 🙌
 
 <br></br>
 <div align="center">
-  <a href="https://github.com/ProjectAJ14/timer_button/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=ProjectAJ14/timer_button" />
+  <a href="https://github.com/nonstopio/flutter_forge/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=nonstopio/flutter_forge"  alt="contributors"/>
   </a>
 </div>
