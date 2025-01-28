@@ -1,3 +1,8 @@
+## 2.2.0
+
+ - **FEAT**: Setting up the mono repo for all the dart/flutter packages i.e flutter_forge.
+ - **DOCS**(timer_button): Update README with new badge and formatting improvements.
+
 ## [2.1.1]
 
 - Updated Documentation and Code Refactoring as per the dart analysis
