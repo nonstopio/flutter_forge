@@ -4,11 +4,10 @@
 
 # connectivity_wrapper
 
-[![](https://img.shields.io/badge/build-1.1.4-brightgreen)](https://github.com/ProjectAj14/connectivity_wrapper)
+[![Build Status](https://img.shields.io/pub/v/connectivity_wrapper.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/connectivity_wrapper)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
-
 
 ## Requirements
 
@@ -292,7 +291,6 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
 > Note that you should not be using the current network status for deciding
 whether you can reliably make a network connection. Always guard your app code
 against timeouts and errors that might come from the network layer.
-
 
 
 ## Contributing
