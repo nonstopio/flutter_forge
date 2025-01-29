@@ -2,7 +2,7 @@ import 'dart:io';
 
 import '../utils/constants.dart';
 
-/// Address Check Options
+/// [AddressCheckOptions] is used to configure the address check options.
 ///
 class AddressCheckOptions {
   /// [AddressCheckOptions] Constructor
@@ -17,11 +17,13 @@ class AddressCheckOptions {
           'Either address or hostname must be provided, but not both.',
         );
 
+  /// Address to check
   final InternetAddress? address;
 
+  /// Hostname to check
   final String? hostname;
 
-  /// Port
+  /// Port to check       
   final int port;
 
   /// Timeout Duration

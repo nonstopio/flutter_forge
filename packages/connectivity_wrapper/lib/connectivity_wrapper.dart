@@ -34,6 +34,9 @@ export 'src/models/address_check_result.dart';
 ///
 enum ConnectivityStatus { CONNECTED, DISCONNECTED }
 
+/// [ConnectivityWrapper] is a class that provides a way to check the
+/// connectivity status of the device.
+///
 class ConnectivityWrapper {
   static List<AddressCheckOptions> get _defaultAddresses => (kIsWeb)
       ? []
@@ -90,8 +93,17 @@ class ConnectivityWrapper {
     };
   }
 
+  /// [ConnectivityWrapper]'s singleton instance.
+  ///
   static final ConnectivityWrapper instance = ConnectivityWrapper._();
 
+  /// [isHostReachable] is a function that checks if a host is reachable.
+  ///
+  /// [options] is the options to use for the address check.
+  ///
+  /// Returns an [AddressCheckResult] indicating whether the address check was
+  /// successful.
+  ///
   Future<AddressCheckResult> isHostReachable(
     AddressCheckOptions options,
   ) async {
@@ -116,9 +128,15 @@ class ConnectivityWrapper {
     }
   }
 
+  /// [lastTryResults] is a list of [AddressCheckResult] objects that stores
+  /// the results of the last address check.
+  ///
   List<AddressCheckResult> get lastTryResults => _lastTryResults;
   List<AddressCheckResult> _lastTryResults = <AddressCheckResult>[];
 
+  /// [isConnected] is a boolean that indicates whether the device is connected
+  /// to the network.
+  ///
   Future<bool> get isConnected async {
     bool connected = await _checkWebConnection();
     if (kIsWeb) return connected;
@@ -134,12 +152,22 @@ class ConnectivityWrapper {
     return _lastTryResults.map((result) => result.isSuccess).contains(true);
   }
 
+  /// [connectionStatus] is a [Future] that returns a [ConnectivityStatus]
+  /// indicating whether the device is connected to the network.
+  ///
+  /// Returns a [ConnectivityStatus] indicating whether the device is connected
+  /// to the network.
+  ///
   Future<ConnectivityStatus> get connectionStatus async {
     return await isConnected
         ? ConnectivityStatus.CONNECTED
         : ConnectivityStatus.DISCONNECTED;
   }
 
+  /// [_checkWebConnection] is a function that checks if the device is connected
+  /// to the network.
+  ///
+  /// Returns a boolean indicating whether the device is connected to the network.
   ///
   Future<bool> _checkWebConnection() async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -151,6 +179,8 @@ class ConnectivityWrapper {
     return false;
   }
 
+  /// [checkInterval] is the interval at which the connectivity status is checked.
+  ///
   Duration checkInterval = DEFAULT_INTERVAL;
 
   ConnectivityStatus? _lastStatus;
@@ -160,10 +190,18 @@ class ConnectivityWrapper {
   final StreamController<ConnectivityStatus> _statusController =
       StreamController.broadcast();
 
+  /// [onStatusChange] is a [Stream] that emits [ConnectivityStatus] events.
+  ///
   Stream<ConnectivityStatus> get onStatusChange => _statusController.stream;
 
+  /// [hasListeners] is a boolean that indicates whether the [onStatusChange]
+  /// stream has listeners.
+  ///
   bool get hasListeners => _statusController.hasListener;
 
+  /// [isActivelyChecking] is a boolean that indicates whether the connectivity
+  /// status is being actively checked.
+  ///
   bool get isActivelyChecking => _statusController.hasListener;
 
   ConnectivityStatus? get lastStatus => _lastStatus;
