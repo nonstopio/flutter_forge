@@ -3,6 +3,7 @@ class Strings {
   static const String example2 = "Example 2 : Custom Offline Widget";
   static const String example3 = "Example 3 : Network-Aware widget";
   static const String example4 = "Example 4 : Check connection on  click";
+  static const String example5 = "Example 5 : Speed is";
 
   static const String userInteraction = "Disable User Interaction";
   static const String customDecoration = "Custom Decoration";

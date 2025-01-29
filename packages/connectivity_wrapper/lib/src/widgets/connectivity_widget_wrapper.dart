@@ -1,12 +1,10 @@
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
-import 'package:connectivity_wrapper/src/utils/constants.dart';
-import 'package:connectivity_wrapper/src/widgets/empty_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// [ConnectivityWidgetWrapper] is a StatelessWidget that wraps a widget and
 /// displays an offline widget if the connectivity status is not CONNECTED.
-/// 
+///
 class ConnectivityWidgetWrapper extends StatelessWidget {
   /// The [child] contained by the ConnectivityWidgetWrapper.
   final Widget child;
@@ -73,8 +71,9 @@ class ConnectivityWidgetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isOffline = Provider.of<ConnectivityStatus>(context) !=
-        ConnectivityStatus.CONNECTED;
+    final bool isOffline =
+        Provider.of<ConnectivityStatus>(context).isDisconnected;
+
     final finalOfflineWidget = Align(
       alignment: alignment ?? Alignment.bottomCenter,
       child: offlineWidget ??

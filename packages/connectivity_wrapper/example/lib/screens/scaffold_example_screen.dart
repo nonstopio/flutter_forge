@@ -2,6 +2,7 @@ import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/strings.dart';
+import '../utils/ui_helper.dart';
 
 class ScaffoldExampleScreen extends StatefulWidget {
   const ScaffoldExampleScreen({super.key});
@@ -68,7 +69,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             CheckboxListTile(
               title: const Text(Strings.customHeight),
               value: _customHeight,
@@ -87,7 +88,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             CheckboxListTile(
               title: const Text(Strings.customMessage),
               value: _customMessage,
@@ -106,11 +107,11 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             const ListTile(
               title: Text(Strings.customAlignment),
             ),
-            const Spacer(),
+            const SizeGap(),
             IconButton(
               icon: const Icon(Icons.arrow_upward),
               onPressed: () {
@@ -120,7 +121,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             IconButton(
               icon: const Icon(Icons.center_focus_strong),
               onPressed: () {
@@ -130,7 +131,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             IconButton(
               icon: const Icon(Icons.arrow_downward),
               onPressed: () {
@@ -140,7 +141,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizeGap(),
             CheckboxListTile(
               title: const Text(Strings.userInteraction),
               value: _disableInteraction,
@@ -153,7 +154,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
                 });
               },
             ),
-            const Spacer(),
+            const SizeGap(),
           ],
         ),
       ),

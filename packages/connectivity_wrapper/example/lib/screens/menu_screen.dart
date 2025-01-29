@@ -19,55 +19,66 @@ class MenuScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Connectivity Wrapper Example"),
       ),
-      body: ConnectivityScreenWrapper(
-        disableInteraction: false,
-        disableWidget: Container(
-          color: Colors.red.withAlpha((0.3 * 255).round()),
-        ),
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: const Text(Strings.example1),
-              onTap: () async {
-                AppRoutes.push(context, const ScaffoldExampleScreen());
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text(Strings.example2),
-              onTap: () {
-                AppRoutes.push(context, const CustomOfflineWidgetScreen());
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text(Strings.example3),
-              onTap: () {
-                AppRoutes.push(context, const NetworkAwareWidgetScreen());
-              },
-            ),
-            const Divider(),
-            ListTile(
-              title: const Text(Strings.example4),
-              onTap: () async {
-                if (await ConnectivityWrapper.instance.isConnected &&
-                    context.mounted) {
-                  showSnackBar(
-                    context,
-                    title: "You Are Connected",
-                    color: Colors.green,
-                  );
-                } else {
-                  showSnackBar(
-                    context,
-                    title: "You Are Not Connected",
-                  );
-                }
-              },
-            ),
-            const Divider(),
-          ],
-        ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            title: const Text(Strings.example1),
+            onTap: () async {
+              AppRoutes.push(context, const ScaffoldExampleScreen());
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text(Strings.example2),
+            onTap: () {
+              AppRoutes.push(context, const CustomOfflineWidgetScreen());
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text(Strings.example3),
+            onTap: () {
+              AppRoutes.push(context, const NetworkAwareWidgetScreen());
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: const Text(Strings.example4),
+            onTap: () async {
+              if (await ConnectivityWrapper.instance.isConnected &&
+                  context.mounted) {
+                showSnackBar(
+                  context,
+                  title: "You Are Connected",
+                  color: Colors.green,
+                );
+              } else {
+                showSnackBar(
+                  context,
+                  title: "You Are Not Connected",
+                );
+              }
+            },
+          ),
+          const Divider(),
+          ListTile(
+            title: InternetSpeedBuilder(builder: (context, speed) {
+              final text = "${Strings.example5} ${speed.value}";
+              return Text(text);
+            }),
+            onTap: () async {
+              final speed =
+                  await ConnectivityWrapper.instance.currentInternetSpeed;
+              if (!context.mounted) return;
+              showSnackBar(
+                context,
+                title: "Your Current Internet Speed is ${speed.value}",
+                color: speed.color,
+              );
+            },
+            trailing: const InternetSpeedIcon(),
+          ),
+        ],
       ),
     );
   }

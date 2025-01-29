@@ -1,24 +1,27 @@
-import 'address_check_options.dart';
+import 'internet_address_option.dart';
 
-/// [AddressCheckResult] is used to store the result of the address check.
+/// [InternetAddressOptionResult] is used to store the result of the address check.
 /// It contains the options used for the address check and a boolean indicating
 /// whether the address check was successful.
 ///
-class AddressCheckResult {
-  /// [AddressCheckResult] Constructor
+class InternetAddressOptionResult {
+  /// [InternetAddressOptionResult] Constructor
   ///
   /// [options] is the options used for the address check.
   /// [isSuccess] is a boolean indicating whether the address check was successful.
-  AddressCheckResult(
+  InternetAddressOptionResult(
     this.options, {
     required this.isSuccess,
+    required this.duration,
   });
 
   /// Options used for the address check.
-  final AddressCheckOptions options;
+  final InternetAddressOption options;
 
   /// Boolean indicating whether the address check was successful.
   final bool isSuccess;
+
+  final int duration;
 
   @override
   String toString() => 'AddressCheckResult($options, $isSuccess)';

@@ -1,5 +1,4 @@
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
-import 'package:connectivity_wrapper/src/providers/connectivity_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,13 +11,13 @@ class ConnectivityAppWrapper extends StatelessWidget {
   /// [ConnectivityAppWrapper] Constructor
   ///
   /// [app] will accept MaterialApp or CupertinoApp must be non-null
-  /// 
+  ///
   const ConnectivityAppWrapper({super.key, required this.app});
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<ConnectivityStatus>(
-      initialData: ConnectivityStatus.CONNECTED,
+      initialData: ConnectivityStatus.connected(),
       create: (context) => ConnectivityProvider().connectivityStream,
       child: app,
     );

@@ -11,22 +11,21 @@ class ConnectivityProvider extends ChangeNotifier {
       StreamController<ConnectivityStatus>();
 
   /// Stream of [ConnectivityStatus] events.
-  /// 
+  ///
   Stream<ConnectivityStatus> get connectivityStream =>
       connectivityController.stream;
 
   /// [ConnectivityProvider] Constructor
   ///
-  /// Initializes the connectivity status to CONNECTED and updates the 
+  /// Initializes the connectivity status to CONNECTED and updates the
   /// connectivity status.
   ConnectivityProvider() {
-    connectivityController.add(ConnectivityStatus.CONNECTED);
+    connectivityController.add(ConnectivityStatus.connected());
     _updateConnectivityStatus();
   }
 
-
   _updateConnectivityStatus() async {
-    ConnectivityWrapper.instance.onStatusChange
+    ConnectivityWrapper.instance.onChange
         .listen((ConnectivityStatus connectivityStatus) {
       connectivityController.add(connectivityStatus);
     });

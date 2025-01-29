@@ -3,6 +3,8 @@ import 'package:connectivity_wrapper_example/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/ui_helper.dart';
+
 class NetworkAwareWidgetScreen extends StatelessWidget {
   const NetworkAwareWidgetScreen({super.key});
 
@@ -18,11 +20,11 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
           const TextField(
             decoration: InputDecoration(labelText: 'Email'),
           ),
-          const Spacer(),
+          const SizeGap(),
           const TextField(
             decoration: InputDecoration(labelText: 'Password'),
           ),
-          const Spacer(),
+          const SizeGap(),
           ConnectivityWidgetWrapper(
             stacked: false,
             offlineWidget: ElevatedButton(
@@ -30,18 +32,18 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(Colors.grey),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "Connecting",
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    Spacer(),
+                    SizeGap(),
                     CupertinoActivityIndicator(radius: 8.0),
                   ],
                 ),

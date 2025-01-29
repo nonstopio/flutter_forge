@@ -1,11 +1,10 @@
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
-import 'package:connectivity_wrapper/src/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// [PositionOnScreen] is an enum that represents the position of the offline 
+/// [PositionOnScreen] is an enum that represents the position of the offline
 /// widget.
-/// 
+///
 enum PositionOnScreen {
   TOP,
   BOTTOM,
@@ -13,7 +12,7 @@ enum PositionOnScreen {
 
 /// [ConnectivityScreenWrapper] is a StatelessWidget that wraps a widget and
 /// displays an offline widget if the connectivity status is not CONNECTED.
-/// 
+///
 class ConnectivityScreenWrapper extends StatelessWidget {
   /// The [child] contained by the ConnectivityScreenWrapper.
   final Widget? child;
@@ -68,8 +67,8 @@ class ConnectivityScreenWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isOffline = Provider.of<ConnectivityStatus>(context) !=
-        ConnectivityStatus.CONNECTED;
+    final bool isOffline =
+        Provider.of<ConnectivityStatus>(context).isDisconnected;
 
     double height = this.height ?? defaultHeight;
 

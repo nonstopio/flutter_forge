@@ -17,11 +17,7 @@ class MyApp extends StatelessWidget {
         ),
         home: MenuScreen(),
         builder: (buildContext, widget) {
-          return ConnectivityWidgetWrapper(
-            disableInteraction: true,
-            height: 80,
-            child: widget!,
-          );
+          return ConnectivityWidgetWrapper(child: widget!);
         },
       ),
     );
