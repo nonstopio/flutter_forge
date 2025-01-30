@@ -1,0 +1,20 @@
+{
+  "name": "flutter_forge",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "keywords": [],
+  "author": {
+    "email": "ajay.kumar@nonstopio.com",
+    "name": "Ajay Kumar",
+    "url": "https://github.com/ProjectAJ14"
+  },
+  "devDependencies": {
+    "all-contributors-cli": "^6.26.1",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.12"
+  }
+}
