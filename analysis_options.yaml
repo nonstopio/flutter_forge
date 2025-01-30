@@ -1,5 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - lib/generated/**
+    - test/**
 linter:
   rules:
     constant_identifier_names: false
