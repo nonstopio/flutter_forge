@@ -45,10 +45,7 @@ class AppAnalytics implements FirebaseAnalytics {
     category ??= '';
 
     return logEvent(
-        name: eventName,
-        category: category,
-        parameters: parameters
-    );
+        name: eventName, category: category, parameters: parameters);
   }
 
   @override
@@ -80,9 +77,8 @@ class AppAnalytics implements FirebaseAnalytics {
     category = category?.replaceAll(RegExp(r' '), '_');
 
     // Combine name and category for full event name
-    final eventName = category == null || category.isEmpty
-        ? name!
-        : "${name}_$category";
+    final eventName =
+        category == null || category.isEmpty ? name! : "${name}_$category";
 
     // Initialize parameters if null
     parameters ??= <String, dynamic>{};
@@ -91,9 +87,7 @@ class AppAnalytics implements FirebaseAnalytics {
     final buildStr = NSFirebase.instance.buildNumber;
     final versionStr = NSFirebase.instance.version;
     parameters.putIfAbsent(
-        ConstKeys.version,
-            () => '$versionStr${ConstKeys.dash}$buildStr'
-    );
+        ConstKeys.version, () => '$versionStr${ConstKeys.dash}$buildStr');
 
     // Add user information if available
     if (_userInfo.isNotEmpty) {

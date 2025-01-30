@@ -37,7 +37,7 @@ const TextStyle defaultMessageStyle = TextStyle(
 
 /// [PositionOnScreenExtention] is an extension on [PositionOnScreen] to provide
 /// a way to get the top and bottom positions for the offline widget.
-/// 
+///
 extension PositionOnScreenExtention on PositionOnScreen {
   bool get isTOP => this == PositionOnScreen.TOP;
 

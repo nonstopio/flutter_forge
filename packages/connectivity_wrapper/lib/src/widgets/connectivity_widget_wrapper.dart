@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 /// [ConnectivityWidgetWrapper] is a StatelessWidget that wraps a widget and
 /// displays an offline widget if the connectivity status is not CONNECTED.
-/// 
+///
 class ConnectivityWidgetWrapper extends StatelessWidget {
   /// The [child] contained by the ConnectivityWidgetWrapper.
   final Widget child;

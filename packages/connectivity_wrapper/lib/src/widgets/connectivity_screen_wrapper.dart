@@ -3,9 +3,9 @@ import 'package:connectivity_wrapper/src/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// [PositionOnScreen] is an enum that represents the position of the offline 
+/// [PositionOnScreen] is an enum that represents the position of the offline
 /// widget.
-/// 
+///
 enum PositionOnScreen {
   TOP,
   BOTTOM,
@@ -13,7 +13,7 @@ enum PositionOnScreen {
 
 /// [ConnectivityScreenWrapper] is a StatelessWidget that wraps a widget and
 /// displays an offline widget if the connectivity status is not CONNECTED.
-/// 
+///
 class ConnectivityScreenWrapper extends StatelessWidget {
   /// The [child] contained by the ConnectivityScreenWrapper.
   final Widget? child;

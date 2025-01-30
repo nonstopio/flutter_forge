@@ -23,7 +23,7 @@ class AddressCheckOptions {
   /// Hostname to check
   final String? hostname;
 
-  /// Port to check       
+  /// Port to check
   final int port;
 
   /// Timeout Duration

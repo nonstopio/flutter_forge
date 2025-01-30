@@ -510,8 +510,7 @@ class FirestorePageView<Document> extends FirestoreQueryBuilder<Document> {
       BuildContext,
       QueryDocumentSnapshot<Document>,
       int index,
-    )
-        itemBuilder,
+    ) itemBuilder,
     int pageSize = 20,
     FirestoreLoadingBuilder? loadingBuilder,
     FirestoreErrorBuilder? errorBuilder,

@@ -12,7 +12,7 @@ class ConnectivityAppWrapper extends StatelessWidget {
   /// [ConnectivityAppWrapper] Constructor
   ///
   /// [app] will accept MaterialApp or CupertinoApp must be non-null
-  /// 
+  ///
   const ConnectivityAppWrapper({super.key, required this.app});
 
   @override
