@@ -2,34 +2,16 @@
 
 A place where Flutter packages are crafted and built.
 
-- [Packages](packages/README.md)
-- [Plugins](plugins/README.md)
+- All shared [packages](packages/README.md) are in the `/packages` directory
+- All [plugins](plugins/README.md) are in the `/plugins` directory
 
-## Technologies at play
+## Contributors
 
-- Dart
-- Flutter
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
-## Getting Started
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-- All shared packages are in the `/packages` directory
-- All plugins are in the `/plugins` directory
-
-## Contributing
-
-We welcome contributions in various forms:
-
-- Proposing new features or enhancements.
-- Reporting and fixing bugs.
-- Engaging in discussions to help make decisions.
-- Improving documentation, as it is essential.
-- Sending Pull Requests is greatly appreciated!
-
-A big thank you to all our contributors! 🙌
-
-<br></br>
-<div align="center">
-  <a href="https://github.com/nonstopio/flutter_forge/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=nonstopio/flutter_forge"  alt="contributors"/>
-  </a>
-</div>
+<!-- ALL-CONTRIBUTORS-LIST:END -->
