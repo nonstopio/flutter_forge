@@ -1,3 +1,8 @@
+## 1.2.0
+
+ - **FIX**: lint fixed.
+ - **FEAT**(ns_utils): Moved ns_utils to mono repo from https://github.com/ProjectAJ14/ns_utils.
+
 ## [1.1.2]
 - Add String extensions for `firstNChars`, `lastNChars`, `truncateMiddle`.
 - Add Map extensions for `getSDMap` which returns `Map<String, dynamic>`.

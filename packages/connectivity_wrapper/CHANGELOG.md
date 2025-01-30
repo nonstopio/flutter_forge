@@ -1,3 +1,8 @@
+## 1.2.5
+
+ - **FIX**(contact_permission): lint fixed.
+ - **DOCS**(connectivity_wrapper): Add comprehensive documentation and comments to improve code readability.
+
 ## 1.2.4
 
  - **DOCS**(connectivity_wrapper): Remove example images from README.

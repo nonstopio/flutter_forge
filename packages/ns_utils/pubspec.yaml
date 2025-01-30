@@ -1,6 +1,6 @@
 name: ns_utils
 description: ns_utils is a powerful Flutter utility library that simplifies and enhances your Flutter app development experience. It provides a collection of methods and extensions to streamline your code, making it more readable and efficient. Whether you need responsive design, date and time handling, map operations, string manipulation, or widget customization, ns_utils has got you covered.
-version: 1.1.2
+version: 1.2.0
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_utils
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_utils
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_utils

@@ -1,3 +1,9 @@
+## 1.2.0
+
+ - **FIX**: lint fixed.
+ - **FIX**(contact_permission): lint fixed.
+ - **FEAT**(ns_firebase_utils): Moved ns_firebase_utils to mono repo from https://github.com/ProjectAJ14/ns_firebase_utils.
+
 ## [1.1.4]  - Updated plugins
 
 ## [1.1.3]  - Updated plugins & README.md
