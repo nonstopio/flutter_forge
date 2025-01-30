@@ -9,12 +9,24 @@ A place where Flutter packages are crafted and built.
 - All [plugins](plugins/README.md) are in the `/plugins` directory
 
 
+
+| Packages                                                                                                                                                                                            |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![timer_button](https://img.shields.io/pub/v/timer_button.svg?label=timer_button&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/timer_button)                                 |
+| [![connectivity_wrapper](https://img.shields.io/pub/v/connectivity_wrapper.svg?label=connectivity_wrapper&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/connectivity_wrapper) |
+
+
+| Plugins                                                                                                                                                                                     |
+|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![contact_permission](https://img.shields.io/pub/v/contact_permission.svg?label=contact_permission&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/contact_permission) |
+
+
 ## Contact
 
 Follow us, stay up to date or reach out on:
 
 - [LinkedIn](https://www.linkedin.com/company/nonstop-io)
-- [X,com](https://x.com/NonStopio)
+- [X.com](https://x.com/NonStopio)
 - [Instagram](https://www.instagram.com/nonstopio_technologies/)
 - [YouTube](https://www.youtube.com/@NonStopioTechnology)
 - [Email](mailto:contact@nonstopio.com)
