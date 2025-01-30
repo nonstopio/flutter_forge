@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:ns_firebase_utils/analytics/analytics_service.dart';
 
 /// AppAnalytics service
-final AppAnalytics analytics = new AppAnalytics();
+final AppAnalytics analytics = AppAnalytics();
 
 typedef LogCallBack = void Function(
   Object object, [

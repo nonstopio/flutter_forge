@@ -63,13 +63,12 @@ typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// {@macro firebase_ui.firestore_query_builder}
   const FirestoreQueryBuilder({
-    Key? key,
+    super.key,
     required this.query,
     required this.builder,
     this.pageSize = 10,
     this.child,
-  })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
-        super(key: key);
+  }) : assert(pageSize > 1, 'Cannot have a pageSize lower than 1');
 
   /// The query that will be paginated.
   ///
@@ -416,11 +415,11 @@ typedef FirestoreErrorBuilder = Widget Function(
 class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
   /// {@macro flutterfire_ui.firestorelistview}
   FirestoreListView({
-    Key? key,
-    required Query<Document> query,
+    super.key,
+    required super.query,
+    super.pageSize = 10,
     required FirestoreItemBuilder<Document> itemBuilder,
     Widget? emptyBuilder,
-    int pageSize = 10,
     FirestoreLoadingBuilder? loadingBuilder,
     FirestoreErrorBuilder? errorBuilder,
     Axis scrollDirection = Axis.vertical,
@@ -443,9 +442,6 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
   }) : super(
-          key: key,
-          query: query,
-          pageSize: pageSize,
           builder: (context, snapshot, _) {
             if (snapshot.isFetching) {
               return loadingBuilder?.call(context) ??
@@ -504,14 +500,14 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
 
 class FirestorePageView<Document> extends FirestoreQueryBuilder<Document> {
   FirestorePageView({
-    Key? key,
-    required Query<Document> query,
+    super.key,
+    required super.query,
     required Widget Function(
       BuildContext,
       QueryDocumentSnapshot<Document>,
       int index,
     ) itemBuilder,
-    int pageSize = 20,
+    super.pageSize = 20,
     FirestoreLoadingBuilder? loadingBuilder,
     FirestoreErrorBuilder? errorBuilder,
     Widget? emptyBuilder,
@@ -524,9 +520,6 @@ class FirestorePageView<Document> extends FirestoreQueryBuilder<Document> {
     String? restorationId,
     Clip clipBehavior = Clip.hardEdge,
   }) : super(
-          key: key,
-          query: query,
-          pageSize: pageSize,
           builder: (context, snapshot, _) {
             if (snapshot.isFetching) {
               return loadingBuilder?.call(context) ??

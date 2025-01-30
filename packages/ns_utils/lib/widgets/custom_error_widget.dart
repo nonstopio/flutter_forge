@@ -23,12 +23,12 @@ class CustomErrorWidget extends StatelessWidget {
   final Function(BuildContext) onRestart;
 
   const CustomErrorWidget({
-    Key? key,
+    super.key,
     required this.errorDetails,
     required this.showErrorDetails,
     required this.logoAsset,
     required this.onRestart,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

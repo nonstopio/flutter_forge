@@ -18,7 +18,7 @@ const String defaultString = '';
 ///
 const Map defaultMap = {};
 
-/// Default value for Map<String, dynamic>
+/// Default value for [Map<String, dynamic>]
 ///
 const Map<String, dynamic> defaultSDMap = {};
 

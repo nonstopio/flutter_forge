@@ -173,14 +173,16 @@ class AppAnalytics implements FirebaseAnalytics {
   }
 
   @override
-  Future<void> setCurrentScreen({
-    required String? screenName,
-    String screenClassOverride = 'Flutter',
+  Future<void> logScreenView({
+    String? screenClass,
+    String? screenName,
+    Map<String, Object>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
-    return _firebaseAnalytics.setCurrentScreen(
+    return _firebaseAnalytics.logScreenView(
       screenName: screenName,
-      screenClassOverride: screenClassOverride,
+      screenClass: screenClass,
+      parameters: parameters,
       callOptions: callOptions,
     );
   }

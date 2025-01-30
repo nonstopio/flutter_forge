@@ -104,11 +104,7 @@ void main() {
         "greeting": "Hello, Richmond! You have 9 unread messages.",
         "favoriteFruit": "banana"
       };
-
-      print('Not Pretty\n');
-      print('$data');
-      print('\n\nPretty🌼');
-      print(data.toPretty());
+      expect(data.toPretty(), isA<String>());
     });
 
     test('nullProtected', () {

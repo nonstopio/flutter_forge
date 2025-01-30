@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-typedef Widget DataWidgetBuilder<T>(T data);
+typedef DataWidgetBuilder<T> = Widget Function(T data);
 
 class ReactiveRef<DataType> {
   final DocumentReference ref;
@@ -15,7 +15,8 @@ class ReactiveWidget<DataType> extends StatelessWidget {
   final DataType fallbackValue;
   final Widget? waitingWidget;
 
-  ReactiveWidget({
+  const ReactiveWidget({
+    super.key,
     required this.reactiveRef,
     required this.widgetBuilder,
     required this.fallbackValue,
@@ -24,7 +25,7 @@ class ReactiveWidget<DataType> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder<DataType?>(
+    return StreamBuilder<DataType?>(
       stream: reactiveRef.ref
           .snapshots()
           .map((DocumentSnapshot event) => event.data() as DataType?),
@@ -43,17 +44,19 @@ AsyncWidgetBuilder<T> getReactiveBuilder<T>({
   required Widget? onWaiting,
 }) {
   return (BuildContext context, AsyncSnapshot<T> snapshot) {
-    if (snapshot.hasData)
+    if (snapshot.hasData) {
       return onData(snapshot.data);
-    else
+    } else {
       switch (snapshot.connectionState) {
         case ConnectionState.active:
           return onFallback;
         default:
-          if (snapshot.hasError)
+          if (snapshot.hasError) {
             return onFallback;
-          else
+          } else {
             return onWaiting ?? onFallback;
+          }
       }
+    }
   };
 }

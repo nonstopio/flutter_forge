@@ -10,8 +10,8 @@ const int _transitionDuration = 700;
 class TransparentRoute<T> extends PageRoute<T> {
   TransparentRoute({
     required this.builder,
-    RouteSettings? settings,
-  }) : super(settings: settings, fullscreenDialog: true);
+    super.settings,
+  }) : super(fullscreenDialog: true);
 
   final WidgetBuilder builder;
 

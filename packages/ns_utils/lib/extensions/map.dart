@@ -147,6 +147,8 @@ dynamic toEncodable(object) {
       object is num ||
       object is Map ||
       object is List ||
-      object is bool) return object;
+      object is bool) {
+    return object;
+  }
   return '$object';
 }
