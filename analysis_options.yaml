@@ -4,6 +4,7 @@ analyzer:
   exclude:
     - lib/generated/**
     - test/**
+    - packages/nonstop_cli/bricks/**
 linter:
   rules:
     constant_identifier_names: false

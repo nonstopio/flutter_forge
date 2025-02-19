@@ -19,6 +19,7 @@ jobs:
           - ns_firebase_utils
           - ns_utils
           - timer_button
+          - nonstop_cli
         include:
           - package: connectivity_wrapper
             path: packages
@@ -33,6 +34,9 @@ jobs:
             path: packages
             test: false
           - package: timer_button
+            path: packages
+            test: false
+          - package: nonstop_cli
             path: packages
             test: false
     steps:
