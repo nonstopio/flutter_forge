@@ -7,13 +7,10 @@ repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/nonstop
 issue_tracker: https://github.com/nonstopio/flutter_forge/issues
 
 topics:
-  - cli
   - melos
   - codegen
   - template
-  - flutter
-  - dart
-  - nonstop
+  - cli
 
 screenshots:
   - description: The Nonstop CLI in action showing the creation of a new Flutter project.
