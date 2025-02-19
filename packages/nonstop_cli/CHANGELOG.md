@@ -1,3 +1,7 @@
+## 0.0.1+2
+
+ - **FIX**(command): update invocation format in command.dart and README.
+
 ## 0.0.1+1
 
  - **FIX**(pubspec): remove redundant topics from pubspec.yaml.
