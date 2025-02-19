@@ -10,7 +10,7 @@ packages:
 command:
   version:
     workspaceChangelog: false
-    fetchTags: false
+    fetchTags: true
     updateGitTagRefs: false
     includeCommitId: false
     linkToCommits: false
