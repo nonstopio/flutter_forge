@@ -66,7 +66,7 @@ Create a Flutter project in seconds based on the predefined template.
 
 
 ```sh
-nonstop nonstop create <project-name> [arguments]
+nonstop create <project-name> [arguments]
 ```
 
 
