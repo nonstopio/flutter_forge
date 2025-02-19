@@ -74,7 +74,7 @@ class CreateCommand extends Command<int> {
   String get projectDescription => argResults['description'] as String? ?? '';
 
   @override
-  String get invocation => 'nonstop $name [arguments]';
+  String get invocation => 'nonstop $name <project-name> [arguments]';
 
   @override
   ArgResults get argResults => argResultOverrides ?? super.argResults!;

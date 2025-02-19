@@ -58,32 +58,32 @@ nonstop doctor
 <img width="678" alt="nonstop doctor" src="_images/cli_doctor.png">
 
 
-Create a Flutter project in seconds based on the predefined template.
-
-<img width="851" alt="nonstop create super_app" src="_images/cli.png">
-
 ## Usage
 
 ### Create project `nonstop create`
 
-Creates a new Flutter project with melos.
+Create a Flutter project in seconds based on the predefined template.
+
 
 ```sh
-nonstop create <project-name>
-
+nonstop nonstop create <project-name> [arguments]
 ```
 
-```sh
-A Flutter project created by Nonstop CLI.
 
+<img width="851" alt="nonstop create super_app" src="_images/cli.png">
+
+
+```sh
 Usage: nonstop create <project-name> [arguments]
 -h, --help                Print this usage information.
+    --application-id      The bundle identifier on iOS or application id on Android. (defaults to <org-name>.<project-name>)
 -o, --output-directory    The desired output directory when creating a new project.
     --description         The description for this new project.
                           (defaults to "A Flutter project created by Nonstop CLI.")
     --org-name            The organization for this new project.
                           (defaults to "com.example")
-    --application-id      The bundle identifier on iOS or application id on Android. (defaults to <org-name>.<project-name>)
+
+Run "nonstop help" to see global options.
 ```
 
 ## Contact
