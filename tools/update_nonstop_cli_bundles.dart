@@ -26,13 +26,12 @@ class _GenBundlePath {
 
 void main() async {
   final logger = Logger();
-  final progress = logger.progress('Starting bundle update process');
   try {
-    progress.update('Activating mason_cli');
+    logger.info('Activating mason_cli');
     await Process.run('dart', ['pub', 'global', 'activate', 'mason_cli']);
     int updateCount = 0;
     for (final bundle in bundlePaths) {
-      progress.update('Bundling ${bundle.fileName}');
+      logger.info('Bundling ${bundle.fileName}');
 
       // Bundle the brick
       final bundleResult = await Process.run(
@@ -51,7 +50,7 @@ void main() async {
       final isModified =
           await Process.run('git', ['diff', '--quiet', fullPath]);
       if (isModified.exitCode == 1) {
-        progress.update('Committing changes to ${bundle.fileName}');
+        logger.info('Committing changes to ${bundle.fileName}');
         await Process.run('git', ['add', fullPath]);
         await Process.run(
           'git',
@@ -62,21 +61,21 @@ void main() async {
           ],
         );
         updateCount++;
-        progress.update('Successfully updated bundles for ${bundle.fileName}');
+        logger.info('Successfully updated bundles for ${bundle.fileName}');
       } else {
-        progress.update('No changes detected for ${bundle.fileName}');
+        logger.info('No changes detected for ${bundle.fileName}');
       }
     }
     if (updateCount > 0) {
-      progress.update(
+      logger.info(
         'Successfully updated $updateCount '
         'bundle${updateCount > 1 ? 's' : ''}',
       );
     } else {
-      progress.update('No changes detected');
+      logger.info('No changes detected');
     }
   } catch (e) {
-    progress.fail('An error occurred while updating the version $e');
+    logger.err('An error occurred while updating bundles $e');
     exit(1);
   }
 }
