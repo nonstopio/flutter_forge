@@ -16,8 +16,12 @@ final class FlutterCommand extends CliCommand {
     await _createProject(context, name, description, appName);
   }
 
-  _createProject(HookContext context, String name, String description,
-          String appName) =>
+  _createProject(
+    HookContext context,
+    String name,
+    String description,
+    String appName,
+  ) =>
       trackOperation(
         context,
         startMessage:

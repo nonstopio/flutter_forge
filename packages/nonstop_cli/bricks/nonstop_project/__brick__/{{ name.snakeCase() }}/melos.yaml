@@ -1,6 +1,4 @@
 name: {{ name.snakeCase() }}_workspace
-description: {{ description }}
-
 
 packages:
   - plugins/*
