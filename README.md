@@ -12,6 +12,7 @@ A place where Flutter packages are crafted and built.
 
 | Packages                                                                                                                                                                                            |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![nonstop_cli](https://img.shields.io/pub/v/nonstop_cli.svg?label=nonstop_cli&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/nonstop_cli)                                     |
 | [![timer_button](https://img.shields.io/pub/v/timer_button.svg?label=timer_button&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/timer_button)                                 |
 | [![connectivity_wrapper](https://img.shields.io/pub/v/connectivity_wrapper.svg?label=connectivity_wrapper&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/connectivity_wrapper) |
 | [![ns_firebase_utils](https://img.shields.io/pub/v/ns_firebase_utils.svg?label=ns_firebase_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_firebase_utils)             |
