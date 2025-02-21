@@ -14,6 +14,7 @@ final class FlutterCommand extends CliCommand {
     final appName = name.snakeCase;
 
     await _createProject(context, name, description, appName);
+    await _removeAppLevelAnalysisOptions(context, appName);
   }
 
   _createProject(
@@ -39,5 +40,15 @@ final class FlutterCommand extends CliCommand {
           workingDirectory: p.normalize('$appName/apps'),
           runInShell: true,
         ),
+      );
+
+  _removeAppLevelAnalysisOptions(HookContext context, String appName) =>
+      trackOperation(
+        context,
+        startMessage: p.normalize('Removing analysis_options.yaml'),
+        endMessage: p.normalize('analysis_options.yaml removed'),
+        operation: () =>
+            File(p.normalize('$appName/apps/$appName/analysis_options.yaml'))
+                .delete(),
       );
 }
