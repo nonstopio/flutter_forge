@@ -1,11 +1,11 @@
 name: {{ name.snakeCase() }}_workspace
 
 packages:
-  - plugins/*
+  - apps/*
   - features/*
   - features/*/*
   - packages/*
-  - apps/*
+  - plugins/*
 
 command:
   version:

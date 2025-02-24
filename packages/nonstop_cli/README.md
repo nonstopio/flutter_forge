@@ -5,7 +5,7 @@
   <h1 align="center">NonStop</h1>
   <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
   <p align="center">
-    <a href="https://github.com/nonstopio/flutter_forge">Docs</a> |
+    <a href="https://nonstopio.com/about">About</a> |
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
@@ -97,6 +97,8 @@ Follow us, stay up to date or reach out on:
 - [Email](mailto:contact@nonstopio.com)
 
 ---
+
+
 
 <p align="center">Made with ❤️ by <a href="https://github.com/ProjectAJ14">Ajay Kumar</a></p>
 
