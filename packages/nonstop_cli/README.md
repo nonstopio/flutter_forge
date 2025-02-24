@@ -55,7 +55,7 @@ their Flutter development environment.
 nonstop doctor
 ```
 
-<img width="678" alt="nonstop doctor" src="_images/cli_doctor.png">
+<img width="678" alt="nonstop doctor" src="https://github.com/user-attachments/assets/fab74b37-b5f7-4ad1-b0a3-d3d028fa949e">
 
 
 ## Usage
@@ -69,7 +69,7 @@ Create a Flutter project in seconds based on the predefined template.
 nonstop create <project-name> [arguments]
 ```
 
-<img width="851" alt="nonstop create super_app" src="_images/cli.png">
+<img width="851" alt="nonstop create super_app" src="https://github.com/user-attachments/assets/fecf6ee7-b3e4-4538-8e6b-09f0e6f92707">
 
 > The below structure will be created for mono repo setup.
 
