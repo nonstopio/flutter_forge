@@ -1,3 +1,10 @@
+## 0.0.2
+
+ - **FEAT**(nonstop_cli): improve CLI documentation and project creation options.
+ - **FEAT**(nonstop_cli): enhance Flutter package template for mono-repos.
+ - **FEAT**(nonstop_cli): add support for creating Flutter packages and projects in mono-repos.
+ - **DOCS**(nonstop_cli): update documentation links and image references.
+
 ## 0.0.1+3
 
  - **FIX**(readme): update command usage example in README.md.
