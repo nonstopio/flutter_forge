@@ -11,7 +11,8 @@ import 'package:nonstop_cli/utils/utils.dart';
 import 'package:path/path.dart' as path;
 
 const _defaultOrgName = 'com.example';
-const _defaultDescription = 'A Flutter project created by Nonstop CLI.';
+const _defaultDescription =
+    'A Flutter project within a Melos-managed mono-repo, created using NonStop CLI.';
 
 class CreateCommand extends Command<int> {
   CreateCommand({
@@ -53,7 +54,8 @@ class CreateCommand extends Command<int> {
   String get name => 'create';
 
   @override
-  String get description => 'Create a new Flutter project.';
+  String get description =>
+      'Create a new Flutter project within a Melos-managed mono-repo';
 
   Template get template => ProjectTemplate();
 

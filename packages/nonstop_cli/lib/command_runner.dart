@@ -8,7 +8,7 @@ import 'package:pub_updater/pub_updater.dart';
 
 const executableName = 'nonstop';
 const packageName = 'nonstop_cli';
-const description = 'Envision, Design, and Deploy Digital Products with CLI';
+const description = 'Envision, Start, and Deploy Digital Products with CLI';
 
 /// {@template nonstop_cli_command_runner}
 /// A [CommandRunner] for the CLI.
