@@ -42,8 +42,7 @@ final class FlutterCreateCommand extends CliCommand {
         ),
       );
 
-  _removeAnalysisOptions(HookContext context, String appName) =>
-      trackOperation(
+  _removeAnalysisOptions(HookContext context, String appName) => trackOperation(
         context,
         startMessage: p.normalize('Removing analysis_options.yaml'),
         endMessage: p.normalize('analysis_options.yaml removed'),
