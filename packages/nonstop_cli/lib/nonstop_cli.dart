@@ -1,4 +1,4 @@
-/// nonstop_cli, Envision, Design, and Deploy Digital Products with CLI
+/// nonstop_cli
 ///
 /// ```sh
 /// # activate nonstop_cli

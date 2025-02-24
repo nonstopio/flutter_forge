@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:mason/mason.dart';
 
-import 'commands/flutter_command.dart';
+import 'commands/flutter_create_command.dart';
 import 'commands/melos_command.dart';
 
 Future<void> run(HookContext context) async {
   final commands = [
-    FlutterCommand(),
+    FlutterCreateCommand(),
     MelosCommand(),
   ];
 

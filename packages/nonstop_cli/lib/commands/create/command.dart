@@ -5,13 +5,14 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
-import 'package:nonstop_cli/commands/create/template.dart';
+import 'package:nonstop_cli/commands/create/templates.dart';
 import 'package:nonstop_cli/template.dart';
 import 'package:nonstop_cli/utils/utils.dart';
 import 'package:path/path.dart' as path;
 
 const _defaultOrgName = 'com.example';
-const _defaultDescription = 'A Flutter project created by Nonstop CLI.';
+const _defaultDescription =
+    'A Melos-managed project for mono-repo, created using NonStop CLI.';
 
 class CreateCommand extends Command<int> {
   CreateCommand({
@@ -42,6 +43,19 @@ class CreateCommand extends Command<int> {
         help: 'The organization for this new project.',
         defaultsTo: _defaultOrgName,
         aliases: ['org'],
+      )
+      ..addOption(
+        'template',
+        abbr: 't',
+        help: 'Specify the type of project to create.',
+        allowed: ['mono', 'package'],
+        defaultsTo: 'mono',
+        allowedHelp: {
+          'mono':
+              '(default) Generate a Flutter application along with mono-repo.',
+          'package':
+              'Generate a shareable Flutter project containing modular Dart code.',
+        },
       );
   }
 
@@ -53,9 +67,20 @@ class CreateCommand extends Command<int> {
   String get name => 'create';
 
   @override
-  String get description => 'Create a new Flutter project.';
+  String get description =>
+      'Create a new Flutter project within a Melos-managed mono-repo';
 
-  Template get template => ProjectTemplate();
+  Template get template {
+    final templateType = argResults['template'] as String;
+    return templateType == 'package'
+        ? FlutterPackageForMonoRepoTemplate()
+        : FlutterProjectWithMonoRepoTemplate();
+  }
+
+  List<Template> templates = [
+    FlutterProjectWithMonoRepoTemplate(),
+    FlutterPackageForMonoRepoTemplate(),
+  ];
 
   @visibleForTesting
   ArgResults? argResultOverrides;

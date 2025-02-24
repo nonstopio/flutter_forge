@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - **DOCS**: add NonStop branding to README files across project.
+
 ## 1.2.0
 
  - **FIX**: lint fixed.

@@ -1,28 +1,28 @@
 name: flutter_forge_workspace
-description: A place where Flutter packages are crafted and built.
 
 packages:
   - plugins/*
   - plugins/*/*
   - packages/*
   - packages/*/*
+  - packages/nonstop_cli/bricks/flutter_package_for_mono_repo/hooks
+  - packages/nonstop_cli/bricks/flutter_project_with_mono_repo/hooks
 
 command:
   version:
     workspaceChangelog: false
     fetchTags: true
     updateGitTagRefs: false
-    includeCommitId: false
+    
     linkToCommits: false
     hooks:
       post: melos run update_nonstop_cli_version
+      pre: melos run update_nonstop_cli_bundles
 
 scripts:
   lint: dart format . --set-exit-if-changed && flutter analyze --fatal-infos .
   update_nonstop_cli_version:
     run: dart run tools/update_nonstop_cli_version.dart
-  bundle-project:
-    run: |
-      dart pub global activate mason_cli
-      mason bundle packages/nonstop_cli/bricks/nonstop_project -t dart -o packages/nonstop_cli/lib/commands/create
-      dart format packages/nonstop_cli/lib/commands/create/nonstop_project_bundle.dart
+  update_nonstop_cli_bundles:
+    run: dart run tools/update_nonstop_cli_bundles.dart
+

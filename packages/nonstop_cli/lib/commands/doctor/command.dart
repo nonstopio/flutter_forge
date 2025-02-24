@@ -10,9 +10,6 @@ final class DoctorCommand extends Command<int> {
   final Logger _logger;
 
   @override
-  String get summary => '$invocation\n$description';
-
-  @override
   final String description = 'Show information about the installed tooling.';
 
   @override

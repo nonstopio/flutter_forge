@@ -6,18 +6,23 @@ import 'package:path/path.dart' as p;
 
 import 'cli_command.dart';
 
-final class FlutterCommand extends CliCommand {
+final class FlutterCreateCommand extends CliCommand {
   @override
   Future<void> run(HookContext context) async {
     final String name = context.vars['name'];
     final String description = context.vars['description'];
     final appName = name.snakeCase;
 
-    await _createProject(context, name, description, appName);
+    await _create(context, name, description, appName);
+    await _removeAnalysisOptions(context, appName);
   }
 
-  _createProject(HookContext context, String name, String description,
-          String appName) =>
+  _create(
+    HookContext context,
+    String name,
+    String description,
+    String appName,
+  ) =>
       trackOperation(
         context,
         startMessage:
@@ -35,5 +40,14 @@ final class FlutterCommand extends CliCommand {
           workingDirectory: p.normalize('$appName/apps'),
           runInShell: true,
         ),
+      );
+
+  _removeAnalysisOptions(HookContext context, String appName) => trackOperation(
+        context,
+        startMessage: p.normalize('Removing analysis_options.yaml'),
+        endMessage: p.normalize('analysis_options.yaml removed'),
+        operation: () =>
+            File(p.normalize('$appName/apps/$appName/analysis_options.yaml'))
+                .delete(),
       );
 }

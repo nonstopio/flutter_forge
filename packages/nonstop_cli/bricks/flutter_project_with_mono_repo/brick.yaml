@@ -1,5 +1,5 @@
-name: nonstop_project
-description: A brick that sets up a new flutter project with melos.
+name: flutter_project_with_mono_repo
+description: A Flutter project within a Melos-managed mono-repo.
 
 repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/nonstop_cli
 

@@ -13,8 +13,10 @@ final RegExp orgNameRegExp = RegExp(r'^[a-zA-Z][\w-]*(\.[a-zA-Z][\w-]*)+$');
 const String infoText = '''
 
 +----------------------------------------------------+
-| Bespoke Engineering Studio                         |
+| NonStop IO                                         |
 |----------------------------------------------------|
+| A Bespoke Engineering Studio                       |
+|                                                    |
 | Digital Product Development Experts for            |
 | Startups & Enterprises                             |
 |                                                    |
@@ -38,7 +40,11 @@ void templateSummary({
   final projectPathLink =
       link(uri: Uri.parse(projectPath), message: projectPath);
 
+  final readmePath = path.join(relativePath, 'README.md');
+  final readmePathLink = link(uri: Uri.parse(readmePath), message: readmePath);
+
   final details = '''
+  • To get started refer to $readmePathLink
   • Your project code is in $projectPathLink
 ''';
 

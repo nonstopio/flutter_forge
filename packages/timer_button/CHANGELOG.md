@@ -1,3 +1,7 @@
+## 2.3.1
+
+ - **DOCS**: add NonStop branding to README files across project.
+
 ## 2.3.0
 
  - **FEAT**(connectivity_wrapper): Moved `connectivity_wrapper` to mono repo.

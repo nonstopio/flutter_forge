@@ -5,7 +5,7 @@
   <h1 align="center">NonStop</h1>
   <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
   <p align="center">
-    <a href="https://github.com/nonstopio/flutter_forge">Docs</a> |
+    <a href="https://nonstopio.com/about">About</a> |
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
@@ -55,7 +55,7 @@ their Flutter development environment.
 nonstop doctor
 ```
 
-<img width="678" alt="nonstop doctor" src="_images/cli_doctor.png">
+<img width="678" alt="nonstop doctor" src="https://github.com/user-attachments/assets/fab74b37-b5f7-4ad1-b0a3-d3d028fa949e">
 
 
 ## Usage
@@ -69,19 +69,40 @@ Create a Flutter project in seconds based on the predefined template.
 nonstop create <project-name> [arguments]
 ```
 
+<img width="851" alt="nonstop create super_app" src="https://github.com/user-attachments/assets/fecf6ee7-b3e4-4538-8e6b-09f0e6f92707">
 
-<img width="851" alt="nonstop create super_app" src="_images/cli.png">
+> The below structure will be created for mono repo setup.
+
+```
+super_app
+    ├── apps
+    │    └── super_app
+    ├── features
+    ├── packages
+    ├── plugins
+    ├── analysis_options.yaml
+    ├── README.md
+    ├── melos.yaml
+    └── pubspec.yaml
+```
+
 
 
 ```sh
+Create a new Flutter project within a Melos-managed mono-repo
+
 Usage: nonstop create <project-name> [arguments]
--h, --help                Print this usage information.
-    --application-id      The bundle identifier on iOS or application id on Android. (defaults to <org-name>.<project-name>)
--o, --output-directory    The desired output directory when creating a new project.
-    --description         The description for this new project.
-                          (defaults to "A Flutter project created by Nonstop CLI.")
-    --org-name            The organization for this new project.
-                          (defaults to "com.example")
+-h, --help                    Print this usage information.
+    --application-id          The bundle identifier on iOS or application id on Android. (defaults to <org-name>.<project-name>)
+-o, --output-directory        The desired output directory when creating a new project.
+    --description             The description for this new project.
+                              (defaults to "A Melos-managed project for mono-repo, created using NonStop CLI.")
+    --org-name                The organization for this new project.
+                              (defaults to "com.example")
+-t, --template                Specify the type of project to create.
+
+          [mono] (default)    (default) Generate a Flutter application along with mono-repo.
+          [package]           Generate a shareable Flutter project containing modular Dart code.
 
 Run "nonstop help" to see global options.
 ```
@@ -97,6 +118,8 @@ Follow us, stay up to date or reach out on:
 - [Email](mailto:contact@nonstopio.com)
 
 ---
+
+
 
 <p align="center">Made with ❤️ by <a href="https://github.com/ProjectAJ14">Ajay Kumar</a></p>
 

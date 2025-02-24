@@ -14,8 +14,7 @@
 
 ## Getting Started
 
-- All apps are in the `/apps` directory. This includes the Flutter App and the
-  Sanity Studio (if using the CMS)
+- All apps are in the `/apps` directory.
 - All plugins are in the `/plugins` directory
 - All features are in the `/features` directory
 - All shared packages are in the `/packages` directory

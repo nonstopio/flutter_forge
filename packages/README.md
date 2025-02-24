@@ -1,7 +1,20 @@
+<p align="center">
+  <a href="https://nonstopio.com">
+    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+  </a>
+  <h1 align="center">NonStop</h1>
+  <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
+  <p align="center">
+    <a href="https://nonstopio.com/about">About</a> |
+    <a href="https://nonstopio.com">Website</a>
+  </p>
+</p>
+
 # Packages
 
 | Name                 | pub.dev                                                                                                                                       | Source                                 |
 |----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| nonstop_cli          | [![timer_button pub.dev badge](https://img.shields.io/pub/v/nonstop_cli.svg)](https://pub.dev/packages/nonstop_cli)                           | [`🔗`](nonstop_cli/README.md)          |
 | timer_button         | [![timer_button pub.dev badge](https://img.shields.io/pub/v/timer_button.svg)](https://pub.dev/packages/timer_button)                         | [`🔗`](timer_button/README.md)         |
 | connectivity_wrapper | [![connectivity_wrapper pub.dev badge](https://img.shields.io/pub/v/connectivity_wrapper.svg)](https://pub.dev/packages/connectivity_wrapper) | [`🔗`](connectivity_wrapper/README.md) |
 | ns_firebase_utils    | [![ns_firebase_utils pub.dev badge](https://img.shields.io/pub/v/ns_firebase_utils.svg)](https://pub.dev/packages/ns_firebase_utils)          | [`🔗`](ns_firebase_utils/README.md)    |
