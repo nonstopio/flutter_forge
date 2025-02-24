@@ -6,12 +6,12 @@ import 'package:mason/mason.dart';
 final flutterPackageForMonoRepoBundle = MasonBundle.fromJson(<String, dynamic>{
   "files": [
     {
-      "path": "CHANGELOG.md",
+      "path": "{{ name/snakeCase() }}/CHANGELOG.md",
       "data": "IyMgMC4wLjEKCiogVE9ETzogRGVzY3JpYmUgaW5pdGlhbCByZWxlYXNlLgo=",
       "type": "text"
     },
     {
-      "path": "README.md",
+      "path": "{{ name/snakeCase() }}/README.md",
       "data":
           "IyB7eyBuYW1lLnRpdGxlQ2FzZSgpIH19Cgp7eyBkZXNjcmlwdGlvbiB9fQoKWyFbbm9uc3RvcF9jbGldKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2Uvc3RhcnRlZCUyMHdpdGgtbm9uc3RvcF9jbGktMTY2QzRFLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vcHViLmRldi9wYWNrYWdlcy9ub25zdG9wX2NsaSkKWyFbbWVsb3NdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvbWFpbnRhaW5lZCUyMHdpdGgtbWVsb3MtZjcwMGZmLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vZ2l0aHViLmNvbS9pbnZlcnRhc2UvbWVsb3MpCgojIyBJbnN0YWxsYXRpb24g8J+SuwoKKirinZcgSW4gb3JkZXIgdG8gc3RhcnQgdXNpbmcge3tuYW1lLnRpdGxlQ2FzZSgpfX0geW91IG11c3QgaGF2ZSB0aGUgW0ZsdXR0ZXIgU0RLXVtmbHV0dGVyX2luc3RhbGxfbGlua10gaW5zdGFsbGVkIG9uIHlvdXIgbWFjaGluZS4qKgoKSW5zdGFsbCB2aWEgYGZsdXR0ZXIgcHViIGFkZGA6CgpgYGBzaApkYXJ0IHB1YiBhZGQge3tuYW1lLnNuYWtlQ2FzZSgpfX0KYGBgCgpbZmx1dHRlcl9pbnN0YWxsX2xpbmtdOiBodHRwczovL2RvY3MuZmx1dHRlci5kZXYvZ2V0LXN0YXJ0ZWQvaW5zdGFsbA==",
       "type": "text"
