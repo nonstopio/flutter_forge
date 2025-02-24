@@ -12,7 +12,7 @@ import 'package:path/path.dart' as path;
 
 const _defaultOrgName = 'com.example';
 const _defaultDescription =
-    'A Flutter project within a Melos-managed mono-repo, created using NonStop CLI.';
+    'A Melos-managed project for mono-repo, created using NonStop CLI.';
 
 class CreateCommand extends Command<int> {
   CreateCommand({
@@ -43,6 +43,19 @@ class CreateCommand extends Command<int> {
         help: 'The organization for this new project.',
         defaultsTo: _defaultOrgName,
         aliases: ['org'],
+      )
+      ..addOption(
+        'template',
+        abbr: 't',
+        help: 'Specify the type of project to create.',
+        allowed: ['mono', 'package'],
+        defaultsTo: 'mono',
+        allowedHelp: {
+          'mono':
+              '(default) Generate a Flutter application along with mono-repo.',
+          'package':
+              'Generate a shareable Flutter project containing modular Dart code.',
+        },
       );
   }
 
@@ -57,7 +70,12 @@ class CreateCommand extends Command<int> {
   String get description =>
       'Create a new Flutter project within a Melos-managed mono-repo';
 
-  Template get template => FlutterProjectWithMonoRepoTemplate();
+  Template get template {
+    final templateType = argResults['template'] as String;
+    return templateType == 'package'
+        ? FlutterPackageForMonoRepoTemplate()
+        : FlutterProjectWithMonoRepoTemplate();
+  }
 
   List<Template> templates = [
     FlutterProjectWithMonoRepoTemplate(),

@@ -38,7 +38,7 @@ class FlutterPackageForMonoRepoTemplate extends Template {
     templateSummary(
       logger: logger,
       outputDir: outputDir,
-      message: 'Created a Flutter project within a Melos-managed mono-repo 🚀',
+      message: 'Created a Flutter package for a Melos-managed mono-repo 🚀',
     );
   }
 }

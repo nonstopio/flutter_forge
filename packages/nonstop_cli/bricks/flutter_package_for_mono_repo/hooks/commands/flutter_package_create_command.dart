@@ -25,8 +25,8 @@ final class FlutterPackageCreateCommand extends CliCommand {
   ) =>
       trackOperation(
         context,
-        startMessage: p.normalize('Setting up the Flutter package @ $appName'),
-        endMessage: p.normalize('Flutter package ready @ $appName'),
+        startMessage: p.normalize('Setting up the $appName package'),
+        endMessage: p.normalize('$appName package ready'),
         operation: (progress) => Process.run(
           'flutter',
           [
@@ -35,15 +35,14 @@ final class FlutterPackageCreateCommand extends CliCommand {
             '--template=package',
             '--description=$description',
           ],
-          workingDirectory: p.normalize('$appName'),
           runInShell: true,
         ),
       );
 
   _removeAnalysisOptions(HookContext context, String appName) => trackOperation(
         context,
-        startMessage: p.normalize('Removing analysis_options.yaml'),
-        endMessage: p.normalize('analysis_options.yaml removed'),
+        startMessage: p.normalize('Removing $appName/analysis_options.yaml'),
+        endMessage: p.normalize('$appName/analysis_options.yaml removed'),
         operation: (progress) =>
             File(p.normalize('$appName/analysis_options.yaml')).delete(),
       );
