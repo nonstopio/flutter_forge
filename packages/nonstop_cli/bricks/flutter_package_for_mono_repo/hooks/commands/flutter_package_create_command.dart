@@ -14,7 +14,10 @@ final class FlutterPackageCreateCommand extends CliCommand {
     final appName = name.snakeCase;
 
     await _create(context, name, description, appName);
-    await _removeAnalysisOptions(context, appName);
+    final isMonoRepo = context.vars['is_mono_repo'] ?? false;
+    if (isMonoRepo) {
+      await _removeAnalysisOptions(context, appName);
+    }
   }
 
   _create(
