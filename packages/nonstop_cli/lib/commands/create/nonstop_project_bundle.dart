@@ -29,7 +29,7 @@ final nonstopProjectBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "{{ name.snakeCase() }}/melos.yaml",
       "data":
-          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fV93b3Jrc3BhY2UKCnBhY2thZ2VzOgogIC0gcGx1Z2lucy8qCiAgLSBmZWF0dXJlcy8qCiAgLSBmZWF0dXJlcy8qLyoKICAtIHBhY2thZ2VzLyoKICAtIGFwcHMvKgoKY29tbWFuZDoKICB2ZXJzaW9uOgogICAgd29ya3NwYWNlQ2hhbmdlbG9nOiBmYWxzZQo=",
+          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fV93b3Jrc3BhY2UKCnBhY2thZ2VzOgogIC0gYXBwcy8qCiAgLSBmZWF0dXJlcy8qCiAgLSBmZWF0dXJlcy8qLyoKICAtIHBhY2thZ2VzLyoKICAtIHBsdWdpbnMvKgoKY29tbWFuZDoKICB2ZXJzaW9uOgogICAgd29ya3NwYWNlQ2hhbmdlbG9nOiBmYWxzZQo=",
       "type": "text"
     },
     {
@@ -46,13 +46,13 @@ final nonstopProjectBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "{{ name.snakeCase() }}/pubspec.yaml",
       "data":
-          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fQpkZXNjcmlwdGlvbjoge3sgZGVzY3JpcHRpb24gfX0KCmVudmlyb25tZW50OgogIHNkazogJz49My4yLjAgPDQuMC4wJwoKZGV2X2RlcGVuZGVuY2llczoKICBmbHV0dGVyX2xpbnRzOiBeNS4wLjAKICBtZWxvczogXjYuMi4wCg==",
+          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fQpkZXNjcmlwdGlvbjoge3sgZGVzY3JpcHRpb24gfX0KCmVudmlyb25tZW50OgogIHNkazogJz49My4wLjAgPDQuMC4wJwoKZGV2X2RlcGVuZGVuY2llczoKICBmbHV0dGVyX2xpbnRzOiBeNS4wLjAKICBtZWxvczogXjYuMi4wCg==",
       "type": "text"
     },
     {
       "path": "{{ name.snakeCase() }}/README.md",
       "data":
-          "IyB7eyBuYW1lLnRpdGxlQ2FzZSgpIH19Cgp7eyBkZXNjcmlwdGlvbiB9fQoKWyFbbm9uc3RvcF9jbGldKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2Uvc3RhcnRlZCUyMHdpdGgtbm9uc3RvcF9jbGktMTY2QzRFLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vcHViLmRldi9wYWNrYWdlcy9ub25zdG9wX2NsaSkKWyFbbWVsb3NdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvbWFpbnRhaW5lZCUyMHdpdGgtbWVsb3MtZjcwMGZmLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vZ2l0aHViLmNvbS9pbnZlcnRhc2UvbWVsb3MpCgoKIyMgVGVjaG5vbG9naWVzIGF0IHBsYXkKCi0gRGFydAotIEZsdXR0ZXIKLSBNZWxvcwoKIyMgR2V0dGluZyBTdGFydGVkCgotIEFsbCBhcHBzIGFyZSBpbiB0aGUgYC9hcHBzYCBkaXJlY3RvcnkuIFRoaXMgaW5jbHVkZXMgdGhlIEZsdXR0ZXIgQXBwIGFuZCB0aGUKICBTYW5pdHkgU3R1ZGlvIChpZiB1c2luZyB0aGUgQ01TKQotIEFsbCBwbHVnaW5zIGFyZSBpbiB0aGUgYC9wbHVnaW5zYCBkaXJlY3RvcnkKLSBBbGwgZmVhdHVyZXMgYXJlIGluIHRoZSBgL2ZlYXR1cmVzYCBkaXJlY3RvcnkKLSBBbGwgc2hhcmVkIHBhY2thZ2VzIGFyZSBpbiB0aGUgYC9wYWNrYWdlc2AgZGlyZWN0b3J5Cg==",
+          "IyB7eyBuYW1lLnRpdGxlQ2FzZSgpIH19Cgp7eyBkZXNjcmlwdGlvbiB9fQoKWyFbbm9uc3RvcF9jbGldKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2Uvc3RhcnRlZCUyMHdpdGgtbm9uc3RvcF9jbGktMTY2QzRFLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vcHViLmRldi9wYWNrYWdlcy9ub25zdG9wX2NsaSkKWyFbbWVsb3NdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvbWFpbnRhaW5lZCUyMHdpdGgtbWVsb3MtZjcwMGZmLnN2Zz9zdHlsZT1mbGF0LXNxdWFyZSldKGh0dHBzOi8vZ2l0aHViLmNvbS9pbnZlcnRhc2UvbWVsb3MpCgoKIyMgVGVjaG5vbG9naWVzIGF0IHBsYXkKCi0gRGFydAotIEZsdXR0ZXIKLSBNZWxvcwoKIyMgR2V0dGluZyBTdGFydGVkCgotIEFsbCBhcHBzIGFyZSBpbiB0aGUgYC9hcHBzYCBkaXJlY3RvcnkuCi0gQWxsIHBsdWdpbnMgYXJlIGluIHRoZSBgL3BsdWdpbnNgIGRpcmVjdG9yeQotIEFsbCBmZWF0dXJlcyBhcmUgaW4gdGhlIGAvZmVhdHVyZXNgIGRpcmVjdG9yeQotIEFsbCBzaGFyZWQgcGFja2FnZXMgYXJlIGluIHRoZSBgL3BhY2thZ2VzYCBkaXJlY3RvcnkK",
       "type": "text"
     }
   ],
