@@ -74,12 +74,14 @@ nonstop create <project-name> [arguments]
 
 
 ```sh
+Create a new Flutter project within a Melos-managed mono-repo
+
 Usage: nonstop create <project-name> [arguments]
 -h, --help                Print this usage information.
     --application-id      The bundle identifier on iOS or application id on Android. (defaults to <org-name>.<project-name>)
 -o, --output-directory    The desired output directory when creating a new project.
     --description         The description for this new project.
-                          (defaults to "A Flutter project created by Nonstop CLI.")
+                          (defaults to "A Flutter project within a Melos-managed mono-repo, created using NonStop CLI.")
     --org-name            The organization for this new project.
                           (defaults to "com.example")
 

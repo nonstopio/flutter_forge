@@ -1,4 +1,4 @@
-name: mason_hooks
+name: flutter_project_with_mono_repo_hooks
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

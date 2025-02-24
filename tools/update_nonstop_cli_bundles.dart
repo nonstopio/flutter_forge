@@ -6,9 +6,14 @@ const _cliDirectory = 'packages/nonstop_cli';
 
 final bundlePaths = [
   _GenBundlePath(
-    input: '$_cliDirectory/bricks/nonstop_project',
+    input: '$_cliDirectory/bricks/flutter_project_with_mono_repo',
     output: '$_cliDirectory/lib/commands/create',
-    fileName: 'nonstop_project_bundle.dart',
+    fileName: 'flutter_project_with_mono_repo_bundle.dart',
+  ),
+  _GenBundlePath(
+    input: '$_cliDirectory/bricks/flutter_package_for_mono_repo',
+    output: '$_cliDirectory/lib/commands/create',
+    fileName: 'flutter_package_for_mono_repo_bundle.dart',
   ),
 ];
 

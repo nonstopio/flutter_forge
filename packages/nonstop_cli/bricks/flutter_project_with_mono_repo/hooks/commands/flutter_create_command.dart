@@ -6,18 +6,18 @@ import 'package:path/path.dart' as p;
 
 import 'cli_command.dart';
 
-final class FlutterCommand extends CliCommand {
+final class FlutterCreateCommand extends CliCommand {
   @override
   Future<void> run(HookContext context) async {
     final String name = context.vars['name'];
     final String description = context.vars['description'];
     final appName = name.snakeCase;
 
-    await _createProject(context, name, description, appName);
-    await _removeAppLevelAnalysisOptions(context, appName);
+    await _create(context, name, description, appName);
+    await _removeAnalysisOptions(context, appName);
   }
 
-  _createProject(
+  _create(
     HookContext context,
     String name,
     String description,
@@ -42,7 +42,7 @@ final class FlutterCommand extends CliCommand {
         ),
       );
 
-  _removeAppLevelAnalysisOptions(HookContext context, String appName) =>
+  _removeAnalysisOptions(HookContext context, String appName) =>
       trackOperation(
         context,
         startMessage: p.normalize('Removing analysis_options.yaml'),

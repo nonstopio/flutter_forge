@@ -5,7 +5,7 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
-import 'package:nonstop_cli/commands/create/template.dart';
+import 'package:nonstop_cli/commands/create/templates.dart';
 import 'package:nonstop_cli/template.dart';
 import 'package:nonstop_cli/utils/utils.dart';
 import 'package:path/path.dart' as path;
@@ -57,7 +57,12 @@ class CreateCommand extends Command<int> {
   String get description =>
       'Create a new Flutter project within a Melos-managed mono-repo';
 
-  Template get template => ProjectTemplate();
+  Template get template => FlutterProjectWithMonoRepoTemplate();
+
+  List<Template> templates = [
+    FlutterProjectWithMonoRepoTemplate(),
+    FlutterPackageForMonoRepoTemplate(),
+  ];
 
   @visibleForTesting
   ArgResults? argResultOverrides;
