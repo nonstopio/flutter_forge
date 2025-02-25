@@ -151,6 +151,7 @@ class CreateCommand extends Command<int> {
 
   @override
   Future<int> run() async {
+    logger.logSignature();
     final template = this.template;
     final generator = await _getGeneratorForTemplate();
     final result = await runCreate(generator, template);

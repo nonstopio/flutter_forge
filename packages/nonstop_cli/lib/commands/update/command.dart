@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:nonstop_cli/command_runner.dart';
+import 'package:nonstop_cli/utils/utils.dart';
 import 'package:pub_updater/pub_updater.dart';
 
 class UpdateCommand extends Command<int> {
@@ -25,6 +26,7 @@ class UpdateCommand extends Command<int> {
 
   @override
   Future<int> run() async {
+    _logger.logSignature();
     final updateCheckProgress = _logger.progress('Checking for updates');
     late final String latestVersion;
     try {

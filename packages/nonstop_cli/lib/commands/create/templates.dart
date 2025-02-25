@@ -17,8 +17,7 @@ class FlutterProjectWithMonoRepoTemplate extends Template {
 
   @override
   Future<void> onGenerateComplete(Logger logger, Directory outputDir) async {
-    templateSummary(
-      logger: logger,
+    logger.logSummary(
       outputDir: outputDir,
       message: 'Created a Flutter project within a Melos-managed mono-repo 🚀',
     );
@@ -35,8 +34,7 @@ class FlutterPackageForMonoRepoTemplate extends Template {
 
   @override
   Future<void> onGenerateComplete(Logger logger, Directory outputDir) async {
-    templateSummary(
-      logger: logger,
+    logger.logSummary(
       outputDir: outputDir,
       message: 'Created a Flutter package for a Melos-managed mono-repo 🚀',
     );

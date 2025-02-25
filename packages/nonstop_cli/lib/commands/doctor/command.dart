@@ -1,6 +1,7 @@
 import 'package:args/command_runner.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:nonstop_cli/commands/doctor/src/doctor.dart';
+import 'package:nonstop_cli/utils/utils.dart';
 
 final class DoctorCommand extends Command<int> {
   DoctorCommand({
@@ -20,6 +21,7 @@ final class DoctorCommand extends Command<int> {
 
   @override
   Future<int> run() async {
+    _logger.logSignature();
     Doctor doctor = Doctor(logger: _logger);
     final bool success = await doctor.diagnose();
     return success ? ExitCode.success.code : ExitCode.tempFail.code;
