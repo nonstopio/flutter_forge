@@ -4,6 +4,7 @@ import 'package:mason/mason.dart';
 import 'package:nonstop_cli/template.dart';
 import 'package:nonstop_cli/utils/utils.dart';
 
+import 'flutter_app_for_mono_repo_bundle.dart';
 import 'flutter_package_for_mono_repo_bundle.dart';
 import 'flutter_project_with_mono_repo_bundle.dart';
 
@@ -37,6 +38,23 @@ class FlutterPackageForMonoRepoTemplate extends Template {
     logger.logSummary(
       outputDir: outputDir,
       message: 'Created a Flutter package for a Melos-managed mono-repo 🚀',
+    );
+  }
+}
+
+class FlutterAppForMonoRepoTemplate extends Template {
+  FlutterAppForMonoRepoTemplate()
+      : super(
+          name: 'flutterAppForMonoRepoBundle',
+          bundle: flutterAppForMonoRepoBundle,
+          help: 'A Flutter application for a Melos-managed mono-repo',
+        );
+
+  @override
+  Future<void> onGenerateComplete(Logger logger, Directory outputDir) async {
+    logger.logSummary(
+      outputDir: outputDir,
+      message: 'Created a Flutter application for a Melos-managed mono-repo 🚀',
     );
   }
 }
