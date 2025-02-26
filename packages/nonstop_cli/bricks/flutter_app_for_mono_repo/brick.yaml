@@ -1,0 +1,24 @@
+name: flutter_app_for_mono_repo
+description: A Flutter application for a Melos-managed mono-repo.
+
+repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/nonstop_cli
+
+version: 1.0.0
+
+environment:
+  mason: ">=0.0.0-dev.52 <0.1.0"
+
+vars:
+  name:
+    type: string
+    description: Name of the project
+    prompt: What is your project's name?
+  description:
+    type: string
+    description: Description of the project
+    prompt: What is your project's description?
+  org_name:
+    type: string
+    description: Organization name
+    prompt: What is your organization name?
+    default: com.example

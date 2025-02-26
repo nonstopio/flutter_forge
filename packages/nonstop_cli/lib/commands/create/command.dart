@@ -48,13 +48,15 @@ class CreateCommand extends Command<int> {
         'template',
         abbr: 't',
         help: 'Specify the type of project to create.',
-        allowed: ['mono', 'package'],
+        allowed: ['mono', 'package', 'app'],
         defaultsTo: 'mono',
         allowedHelp: {
           'mono':
               '(default) Generate a Flutter application along with mono-repo.',
           'package':
               'Generate a shareable Flutter project containing modular Dart code.',
+          'app':
+              'Generate a Flutter application for a Melos-managed mono-repo.',
         },
       );
   }
@@ -72,14 +74,21 @@ class CreateCommand extends Command<int> {
 
   Template get template {
     final templateType = argResults['template'] as String;
-    return templateType == 'package'
-        ? FlutterPackageForMonoRepoTemplate()
-        : FlutterProjectWithMonoRepoTemplate();
+    switch (templateType) {
+      case 'package':
+        return FlutterPackageForMonoRepoTemplate();
+      case 'app':
+        return FlutterAppForMonoRepoTemplate();
+      case 'mono':
+      default:
+        return FlutterProjectWithMonoRepoTemplate();
+    }
   }
 
   List<Template> templates = [
     FlutterProjectWithMonoRepoTemplate(),
     FlutterPackageForMonoRepoTemplate(),
+    FlutterAppForMonoRepoTemplate(),
   ];
 
   @visibleForTesting
@@ -151,6 +160,7 @@ class CreateCommand extends Command<int> {
 
   @override
   Future<int> run() async {
+    logger.logSignature();
     final template = this.template;
     final generator = await _getGeneratorForTemplate();
     final result = await runCreate(generator, template);
