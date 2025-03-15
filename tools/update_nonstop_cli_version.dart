@@ -35,26 +35,13 @@ const packageVersion = '$version';
         await Process.run('git', ['diff', '--quiet', versionFile.path]);
     if (isModified.exitCode == 1) {
       logger.info('version.dart has been modified');
-
-      // Check if the last commit is a release commit
-      final lastCommit = await Process.run('git', ['log', '-1', '--pretty=%B']);
-      final commitMessage = lastCommit.stdout.toString().trim();
-
-      if (commitMessage.startsWith('chore(release):')) {
-        logger.info('Amending last release commit');
-
-        // Stage and amend the commit
-        await Process.run('git', ['add', versionFile.path]);
-        await Process.run('git', ['commit', '--amend', '--no-edit']);
-
-        logger.success(
-          'Successfully updated version.dart with '
-          'version $version in $_cliDirectory',
-        );
-      } else {
-        logger.warn('version.dart has been modified but the '
-            'last commit is not a release commit');
-      }
+      await Process.run('git', ['add', versionFile.path]);
+      logger.info('${versionFile.path} has been staged');
+      logger.success(
+        'Successfully updated version.dart with '
+        'version $version in $_cliDirectory',
+      );
+      return;
     }
     logger.success('No changes detected');
   } catch (e) {

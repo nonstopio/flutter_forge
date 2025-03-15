@@ -52,9 +52,9 @@ class CreateCommand extends Command<int> {
         defaultsTo: 'mono',
         allowedHelp: {
           'mono':
-              '(default) Generate a Flutter application along with mono-repo.',
+              '(default) Generate a Flutter mono-repo structure for a Melos-managed project.',
           'package':
-              'Generate a shareable Flutter project containing modular Dart code.',
+              'Generate a shareable Flutter package for a Melos-managed mono-repo.',
           'app':
               'Generate a Flutter application for a Melos-managed mono-repo.',
         },
