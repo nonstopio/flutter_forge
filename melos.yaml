@@ -14,11 +14,9 @@ command:
     workspaceChangelog: false
     fetchTags: true
     updateGitTagRefs: false
-    
     linkToCommits: false
     hooks:
-      post: melos run update_nonstop_cli_version
-      pre: melos run update_nonstop_cli_bundles
+      preCommit: melos run update_nonstop_cli_version && melos run update_nonstop_cli_bundles
 
 scripts:
   lint: dart format . --set-exit-if-changed && flutter analyze --fatal-infos .
