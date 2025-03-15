@@ -1,6 +1,6 @@
 name: nonstop_cli
 description: A command-line interface for the Flutter Framework to generate Flutter projects, features and schemas.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/nonstopio/flutter_forge
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/nonstop_cli
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/nonstop_cli

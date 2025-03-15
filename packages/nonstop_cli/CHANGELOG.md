@@ -1,3 +1,11 @@
+## 0.0.3
+
+ - **FEAT**(flutter_project_with_mono_repo): added monorepo configuration.
+ - **FEAT**(nonstop_cli): add flutter_app_for_mono_repo template.
+ - **FEAT**(nonstop_cli): add custom logging and signature extensions.
+ - **DOCS**(command): update help text for mono-repo generation options.
+ - **DOCS**(nonstop_cli): enhance README with detailed CLI usage and examples; update .gitignore.
+
 ## 0.0.2
 
  - **FEAT**(nonstop_cli): improve CLI documentation and project creation options.
