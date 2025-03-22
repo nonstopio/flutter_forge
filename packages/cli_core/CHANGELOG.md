@@ -1,3 +1,8 @@
+## 0.0.2-dev.2
+
+ - **REFACTOR**(cli_core): rename cli_utils to cli_core.
+ - **DOCS**: update README and CHANGELOG for cli_core branding and features.
+
 # Changelog
 
 ## 0.0.2-dev.1
