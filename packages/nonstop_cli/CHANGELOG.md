@@ -1,3 +1,8 @@
+## 0.0.4
+
+ - **FEAT**(nonstop_cli): add Flutter plugin support for mono-repo with initial templates and hooks.
+ - **DOCS**(nonstop_cli): update README and add INSTALL.md for improved installation guidance.
+
 ## 0.0.3
 
  - **FEAT**(flutter_project_with_mono_repo): added monorepo configuration.
