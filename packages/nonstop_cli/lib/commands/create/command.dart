@@ -57,8 +57,7 @@ class CreateCommand extends Command<int> {
               'Generate a shareable Flutter package for a Melos-managed mono-repo.',
           'app':
               'Generate a Flutter application for a Melos-managed mono-repo.',
-          'plugin':
-              'Generate a Flutter plugin for a Melos-managed mono-repo.',
+          'plugin': 'Generate a Flutter plugin for a Melos-managed mono-repo.',
         },
       );
   }
