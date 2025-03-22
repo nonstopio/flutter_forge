@@ -1,6 +1,15 @@
 name: cli_utils
-description: Shared utilities for CLI operations in Flutter Forge packages.
-version: 0.0.2
+description: A shared utility package for CLI operations in Flutter Forge packages, providing utilities for CLI commands, Flutter project management, Melos workspace management, and file operations.
+version: 0.0.2-dev.1
+homepage: https://github.com/nonstopio/flutter_forge
+documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/cli_utils
+repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/cli_utils
+issue_tracker: https://github.com/nonstopio/flutter_forge/issues
+topics:
+  - cli
+  - utilities
+  - melos
+  - flutter
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -9,6 +18,11 @@ dependencies:
   mason: ^0.1.0-dev.59
   mason_logger: ^0.3.1
   path: ^1.8.0
+  meta: ^1.15.0
+  universal_io: ^2.2.2
 
 dev_dependencies:
   test: ^1.24.9
+  flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
+  build_runner: ^2.4.12

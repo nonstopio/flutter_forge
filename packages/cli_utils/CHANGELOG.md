@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.2-dev.1
+- First pre-release version
+- Added proper package metadata for pub.dev
+- Enhanced documentation and examples
+- Added LICENSE file
+- Removed string_utils module
+- Updated dependencies to latest versions
+
 ## 0.0.2
 
 - **BREAKING**: Renamed base command classes for better clarity
