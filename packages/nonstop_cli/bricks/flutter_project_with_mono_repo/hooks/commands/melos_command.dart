@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:mason/mason.dart';
+
 import 'package:cli_core/cli_core.dart' show BaseMelosCommand;
+import 'package:mason/mason.dart';
 
 final class MelosCommand extends BaseMelosCommand {
   @override
