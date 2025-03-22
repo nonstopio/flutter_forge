@@ -2,6 +2,7 @@
 
 ## 0.0.2-dev.1
 - First pre-release version
+- Package renamed to cli_core
 - Added proper package metadata for pub.dev
 - Enhanced documentation and examples
 - Added LICENSE file

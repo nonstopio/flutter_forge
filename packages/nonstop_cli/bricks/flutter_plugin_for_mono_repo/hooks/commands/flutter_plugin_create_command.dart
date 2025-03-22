@@ -1,5 +1,5 @@
 import 'package:mason/mason.dart';
-import 'package:cli_utils/cli_utils.dart' show BaseFlutterCommand;
+import 'package:cli_core/cli_core.dart' show BaseFlutterCommand;
 
 final class FlutterPluginCreateCommand extends BaseFlutterCommand {
   @override

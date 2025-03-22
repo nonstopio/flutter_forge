@@ -1,12 +1,6 @@
 # CLI Utils Examples
 
-This directory contains examples demonstrating how to use the various utilities provided by the `cli_utils` package.
-
-## Running the Examples
-
-```bash
-dart run cli_utils_example.dart
-```
+This directory contains examples demonstrating how to use the various utilities provided by the `cli_core` package.
 
 ## What's Demonstrated
 
@@ -20,11 +14,7 @@ dart run cli_utils_example.dart
    - Managing dependencies
    - Cleaning workspaces
 
-3. **String Case Conversions**
-   - Converting between snake_case, camelCase, PascalCase, and Title Case
-   - Handling various input formats
-
-4. **File Utilities**
+3. **File Utilities**
    - Directory creation and management
    - File operations (read, write, copy, delete)
    - YAML file handling

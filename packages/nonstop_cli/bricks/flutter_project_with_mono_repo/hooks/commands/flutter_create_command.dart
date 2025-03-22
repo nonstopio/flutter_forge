@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'package:mason/mason.dart';
+import 'package:cli_core/cli_core.dart' show BaseFlutterCommand;
 import 'package:path/path.dart' as p;
-import 'package:cli_utils/cli_utils.dart' show BaseFlutterCommand;
 
 final class FlutterCreateCommand extends BaseFlutterCommand {
   @override

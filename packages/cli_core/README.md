@@ -1,6 +1,6 @@
-# CLI Utils
+# CLI Core
 
-[![pub package](https://img.shields.io/pub/v/cli_utils.svg)](https://pub.dev/packages/cli_utils)
+[![pub package](https://img.shields.io/pub/v/cli_core.svg)](https://pub.dev/packages/cli_core)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A shared utility package for CLI operations in Flutter Forge packages.
@@ -11,7 +11,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  cli_utils: ^0.0.2-dev.1
+  cli_core: ^0.0.2-dev.1
 ```
 
 ## Features ✨
@@ -25,7 +25,7 @@ dependencies:
 
 ### Command Infrastructure
 ```dart
-import 'package:cli_utils/cli_utils.dart';
+import 'package:cli_core/cli_core.dart';
 
 // Using Flutter commands
 class MyFlutterCommand extends BaseFlutterCommand {

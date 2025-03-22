@@ -1,6 +1,7 @@
 import 'dart:async';
+
+import 'package:cli_core/cli_core.dart';
 import 'package:mason/mason.dart';
-import 'package:cli_utils/cli_utils.dart';
 
 Future<void> run(HookContext context) async {
   // Check if we're in a mono repo using the shared utility

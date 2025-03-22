@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cli_utils/cli_utils.dart';
+import 'package:cli_core/cli_core.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
