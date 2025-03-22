@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:mason/mason.dart';
 import 'package:path/path.dart' as p;
 
 /// Utility methods for common file system operations.
@@ -51,7 +50,7 @@ class FileUtils {
   static Future<void> copyFile(String source, String destination) async {
     final sourceFile = File(p.normalize(source));
     final destFile = File(p.normalize(destination));
-    
+
     if (!await sourceFile.exists()) {
       throw FileSystemException('Source file does not exist', source);
     }
@@ -90,7 +89,7 @@ class FileUtils {
   /// [path] - Optional path to check. Defaults to current directory.
   static Future<bool> isMonoRepo([String? path]) async {
     final workingDir = path ?? Directory.current.path;
-    
+
     // Try with melos command first
     try {
       final melosResult = await Process.run(
@@ -99,17 +98,18 @@ class FileUtils {
         workingDirectory: workingDir,
         runInShell: true,
       );
-      if (melosResult.exitCode == 0 && melosResult.stdout.toString().isNotEmpty) {
+      if (melosResult.exitCode == 0 &&
+          melosResult.stdout.toString().isNotEmpty) {
         return true;
       }
     } catch (_) {
       // Ignore melos command failures and fall back to file check
     }
-    
+
     // Check for melos.yaml in current and parent directories
     final currentMelosFile = File(p.join(workingDir, 'melos.yaml'));
     final parentMelosFile = File(p.join(p.dirname(workingDir), 'melos.yaml'));
-    
+
     return currentMelosFile.existsSync() || parentMelosFile.existsSync();
   }
 }

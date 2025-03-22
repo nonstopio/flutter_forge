@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:mason/mason.dart';
-import 'package:path/path.dart' as p;
 
 import '../src/cli_command.dart';
 
 /// A command class that provides common Melos CLI operations.
 ///
 /// This class extends [CliCommand] and provides methods for:
-/// - Initializing Melos workspaces
 /// - Managing workspace dependencies
 /// - Cleaning workspaces
 ///
@@ -25,26 +23,6 @@ import '../src/cli_command.dart';
 /// }
 /// ```
 base class BaseMelosCommand extends CliCommand {
-  /// Initialize a new Melos workspace
-  ///
-  /// [context] - The Mason hook context
-  /// [workspacePath] - Path to the workspace directory
-  Future<void> initialize({
-    required HookContext context,
-    required String workspacePath,
-  }) =>
-      trackOperation(
-        context,
-        startMessage: 'Initializing Melos workspace',
-        endMessage: 'Melos workspace initialized successfully',
-        operation: () => Process.run(
-          'melos',
-          ['bootstrap'],
-          workingDirectory: workspacePath,
-          runInShell: true,
-        ),
-      );
-
   /// Run Melos bootstrap to install dependencies
   ///
   /// [context] - The Mason hook context
