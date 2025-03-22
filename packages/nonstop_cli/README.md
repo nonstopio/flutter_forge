@@ -19,51 +19,18 @@ A command-line interface for Flutter that generates projects from predefined tem
 ## Table of Contents
 
 - [Overview](#overview)
-- [Installation](#installation)
-- [Global Options](#global-options)
 - [Commands](#commands)
   - [create](#create)
   - [doctor](#doctor)
   - [update](#update)
 - [Common Workflows](#common-workflows)
 - [Troubleshooting](#troubleshooting)
+- [Global Options](#global-options)
+- [Contact](#contact)
 
 ## Overview
 
 The NonStop CLI simplifies Flutter project setup and management, with a focus on mono-repository structures using Melos. It provides standardized templates, validation tools for your development environment, and ongoing updates for the best experience.
-
-## Installation
-
-Install the latest version:
-
-```sh
-dart pub global activate nonstop_cli
-```
-
-Install a specific version:
-
-```sh
-dart pub global activate nonstop_cli <version>
-```
-
-> If you haven't already, you might need to
-> [set up your path](https://dart.dev/tools/pub/cmd/pub-global#running-a-script-from-your-path).
-
-Alternative usage (e.g., in CI environments):
-
-```sh
-dart pub global run nonstop_cli:nonstop <command> <args>
-```
-
-## Global Options
-
-The following options can be used with any command:
-
-| Option      | Alias | Description                                         |
-|-------------|-------|-----------------------------------------------------|
-| `--version` | `-v`  | Print the current version of the CLI                |
-| `--verbose` |       | Enable verbose logging including all shell commands |
-| `--help`    | `-h`  | Display help information for commands               |
 
 ## Commands
 
@@ -92,6 +59,7 @@ nonstop create <project-name> [arguments]
 | `mono`    | Generate a Flutter application along with mono-repo (default) | Complete mono-repo structure with apps, features, packages, and plugins |
 | `package` | Generate a Flutter package for a Melos-managed mono-repo      | Flutter package compatible with mono-repo structure                     |
 | `app`     | Generate a Flutter application for a Melos-managed mono-repo  | Flutter application configured for mono-repo structure                  |
+| `plugin`  | Generate a Flutter plugin for a Melos-managed mono-repo       | Flutter plugin compatible with mono-repo structure                      |
 
 **Example: Create a mono-repo project**
 
@@ -157,7 +125,6 @@ For each tool, the doctor command indicates:
 - ✗ Missing: Tool is not installed or not found
 
 <img width="678" alt="nonstop doctor" src="https://github.com/user-attachments/assets/fab74b37-b5f7-4ad1-b0a3-d3d028fa949e">
-
 
 ### update
 
@@ -238,6 +205,16 @@ If template generation fails:
 1. Ensure you have proper permissions in the target directory
 2. Check if the project name is valid (should follow Dart package naming rules)
 3. Run with the `--verbose` flag to see detailed logs: `nonstop create my_project --verbose`
+
+## Global Options
+
+The following options can be used with any command:
+
+| Option      | Alias | Description                                         |
+|-------------|-------|-----------------------------------------------------|
+| `--version` | `-v`  | Print the current version of the CLI                |
+| `--verbose` |       | Enable verbose logging including all shell commands |
+| `--help`    | `-h`  | Display help information for commands               |
 
 ## Contact
 
