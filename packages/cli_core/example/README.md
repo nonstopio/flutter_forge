@@ -1,4 +1,4 @@
-# CLI Utils Examples
+# CLI Core Examples
 
 This directory contains examples demonstrating how to use the various utilities provided by the `cli_core` package.
 
@@ -10,9 +10,9 @@ This directory contains examples demonstrating how to use the various utilities 
    - Running Flutter commands
 
 2. **Melos Commands**
-   - Initializing workspaces
-   - Managing dependencies
+   - Managing dependencies with bootstrap
    - Cleaning workspaces
+   - Mono-repo operations
 
 3. **File Utilities**
    - Directory creation and management
@@ -23,16 +23,19 @@ This directory contains examples demonstrating how to use the various utilities 
 ## Example Output
 
 ```
-// String Case Examples
-my_awesome_project
-myAwesomeProject
-MyAwesomeProject
-My Awesome Project
-
 // File Utility Examples
 Directory created: output/logs
 Config content: name: example
 version: 1.0.0
 description: An example configuration
 Is mono-repo? true
+
+// Flutter Command Examples
+Creating Flutter project: my_app
+Flutter project created successfully
+Analysis options removed
+
+// Melos Command Examples
+Running melos bootstrap
+Dependencies installed successfully
 ```

@@ -228,5 +228,5 @@ Follow us, stay up to date or reach out on:
 
 ---
 
-<p align="center">Made with ❤️ by <a href="https://github.com/ProjectAJ14">Ajay Kumar</a></p>
+<p align="center">🚀 Founded by <a href="https://github.com/ProjectAJ14">Ajay Kumar</a> 🎉</p>
 

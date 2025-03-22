@@ -21,21 +21,18 @@ A place where Flutter packages are crafted and built.
 - All shared [packages](packages/README.md) are in the `/packages` directory
 - All [plugins](plugins/README.md) are in the `/plugins` directory
 
-
-
 | Packages                                                                                                                                                                                            |
 |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [![nonstop_cli](https://img.shields.io/pub/v/nonstop_cli.svg?label=nonstop_cli&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/nonstop_cli)                                     |
+| [![cli_core](https://img.shields.io/pub/v/cli_core.svg?label=cli_core&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/cli_core)                                                 |
 | [![timer_button](https://img.shields.io/pub/v/timer_button.svg?label=timer_button&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/timer_button)                                 |
 | [![connectivity_wrapper](https://img.shields.io/pub/v/connectivity_wrapper.svg?label=connectivity_wrapper&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/connectivity_wrapper) |
 | [![ns_firebase_utils](https://img.shields.io/pub/v/ns_firebase_utils.svg?label=ns_firebase_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_firebase_utils)             |
 | [![ns_utils](https://img.shields.io/pub/v/ns_utils.svg?label=ns_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_utils)                                                 |
 
-
 | Plugins                                                                                                                                                                                     |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [![contact_permission](https://img.shields.io/pub/v/contact_permission.svg?label=contact_permission&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/contact_permission) |
-
 
 ## Contact
 

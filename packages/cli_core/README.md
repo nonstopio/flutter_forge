@@ -1,33 +1,71 @@
-# CLI Core
+<p align="center">
+  <a href="https://nonstopio.com">
+    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+  </a>
+  <h1 align="center">NonStop</h1>
+  <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
+  <p align="center">
+    <a href="https://nonstopio.com/about">About</a> |
+    <a href="https://nonstopio.com">Website</a>
+  </p>
+</p>
 
-[![pub package](https://img.shields.io/pub/v/cli_core.svg)](https://pub.dev/packages/cli_core)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+# cli_core
 
-A shared utility package for CLI operations in Flutter Forge packages.
+[![cli_core](https://img.shields.io/pub/v/cli_core.svg?label=cli_core&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/cli_core)
 
-## Installation 💻
+A shared utility package for CLI operations in Flutter Forge packages, providing core functionality for CLI commands, Flutter project management, and Melos workspace operations.
 
-Add this to your package's `pubspec.yaml` file:
+## Table of Contents
 
-```yaml
-dependencies:
-  cli_core: ^0.0.2-dev.1
-```
+- [Overview](#overview)
+- [Features](#features)
+- [Usage](#usage)
+  - [Command Infrastructure](#command-infrastructure)
+  - [Flutter Commands](#flutter-commands)
+  - [Melos Commands](#melos-commands)
+  - [File Operations](#file-operations)
+- [Contributing](#contributing)
+- [Contact](#contact)
 
-## Features ✨
+## Overview
+
+CLI Core provides the foundational building blocks for creating CLI tools in the Flutter Forge ecosystem. It abstracts common CLI operations, provides progress tracking, and includes utilities for Flutter project management and Melos workspace operations.
+
+## Features
 
 - 🚀 Base CLI command infrastructure with progress tracking
 - 📱 Flutter project creation and management utilities
 - 📦 Melos workspace management utilities
 - 🔧 File system utilities for common operations
 
-## Usage 📖
+## Usage
 
 ### Command Infrastructure
+
+Create custom CLI commands by extending the base command classes:
+
 ```dart
 import 'package:cli_core/cli_core.dart';
 
-// Using Flutter commands
+class MyCommand extends CliCommand {
+  @override
+  Future<void> run(HookContext context) async {
+    await trackOperation(
+      context,
+      startMessage: 'Starting operation',
+      endMessage: 'Operation completed',
+      operation: () => yourOperation(),
+    );
+  }
+}
+```
+
+### Flutter Commands
+
+Manage Flutter projects with built-in utilities:
+
+```dart
 class MyFlutterCommand extends BaseFlutterCommand {
   Future<void> execute(HookContext context) async {
     await createFlutterProject(
@@ -41,8 +79,10 @@ class MyFlutterCommand extends BaseFlutterCommand {
 ```
 
 ### Melos Commands
+
+Handle Melos workspace operations:
+
 ```dart
-// Using Melos commands
 class MyMelosCommand extends BaseMelosCommand {
   Future<void> execute(HookContext context) async {
     await bootstrap(
@@ -54,6 +94,9 @@ class MyMelosCommand extends BaseMelosCommand {
 ```
 
 ### File Operations
+
+Perform common file system operations:
+
 ```dart
 // Using file utilities
 Future<void> fileOperations() async {
@@ -74,7 +117,7 @@ Future<void> fileOperations() async {
 }
 ```
 
-## Contributing 🤝
+## Contributing
 
 We welcome contributions! Here's how you can help:
 
@@ -84,11 +127,15 @@ We welcome contributions! Here's how you can help:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License ⚖️
+## Contact
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Follow us, stay up to date or reach out on:
 
-## Related Packages 📦
+- [LinkedIn](https://www.linkedin.com/company/nonstop-io)
+- [X.com](https://x.com/NonStopio)
+- [Instagram](https://www.instagram.com/nonstopio_technologies/)
+- [YouTube](https://www.youtube.com/@NonStopioTechnology)
+- [Email](mailto:contact@nonstopio.com)
 
-- [nonstop_cli](https://pub.dev/packages/nonstop_cli) - CLI tool for Flutter project generation and management
-- [connectivity_wrapper](https://pub.dev/packages/connectivity_wrapper) - A Flutter package for handling connectivity states
+---
+<p align="center">🚀 Founded by <a href="https://github.com/ProjectAJ14">Ajay Kumar</a> 🎉</p>
