@@ -1,3 +1,9 @@
+## 0.0.5
+
+ - **REFACTOR**(cli_core): rename cli_utils to cli_core.
+ - **FEAT**(cli_utils): introduce cli_utils package with shared utilities for CLI operations.
+ - **DOCS**: update README and CHANGELOG for cli_core branding and features.
+
 ## 0.0.4
 
  - **FEAT**(nonstop_cli): add Flutter plugin support for mono-repo with initial templates and hooks.
