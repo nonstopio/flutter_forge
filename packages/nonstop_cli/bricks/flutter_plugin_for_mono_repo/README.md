@@ -1,0 +1,1 @@
+# flutter_plugin_for_mono_repo

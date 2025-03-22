@@ -48,7 +48,7 @@ class CreateCommand extends Command<int> {
         'template',
         abbr: 't',
         help: 'Specify the type of project to create.',
-        allowed: ['mono', 'package', 'app'],
+        allowed: ['mono', 'package', 'app', 'plugin'],
         defaultsTo: 'mono',
         allowedHelp: {
           'mono':
@@ -57,6 +57,7 @@ class CreateCommand extends Command<int> {
               'Generate a shareable Flutter package for a Melos-managed mono-repo.',
           'app':
               'Generate a Flutter application for a Melos-managed mono-repo.',
+          'plugin': 'Generate a Flutter plugin for a Melos-managed mono-repo.',
         },
       );
   }
@@ -79,6 +80,8 @@ class CreateCommand extends Command<int> {
         return FlutterPackageForMonoRepoTemplate();
       case 'app':
         return FlutterAppForMonoRepoTemplate();
+      case 'plugin':
+        return FlutterPluginForMonoRepoTemplate();
       case 'mono':
       default:
         return FlutterProjectWithMonoRepoTemplate();
@@ -89,6 +92,7 @@ class CreateCommand extends Command<int> {
     FlutterProjectWithMonoRepoTemplate(),
     FlutterPackageForMonoRepoTemplate(),
     FlutterAppForMonoRepoTemplate(),
+    FlutterPluginForMonoRepoTemplate(),
   ];
 
   @visibleForTesting

@@ -20,6 +20,11 @@ final bundlePaths = [
     output: '$_cliDirectory/lib/commands/create',
     fileName: 'flutter_app_for_mono_repo_bundle.dart',
   ),
+  _GenBundlePath(
+    input: '$_cliDirectory/bricks/flutter_plugin_for_mono_repo',
+    output: '$_cliDirectory/lib/commands/create',
+    fileName: 'flutter_plugin_for_mono_repo_bundle.dart',
+  ),
 ];
 
 class _GenBundlePath {
