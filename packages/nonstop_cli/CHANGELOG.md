@@ -1,3 +1,7 @@
+## 0.0.5+2
+
+ - Update a dependency to the latest release.
+
 ## 0.0.5+1
 
  - **FIX**: remove the cli_core path and use the version instead.

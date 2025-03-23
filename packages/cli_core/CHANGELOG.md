@@ -1,3 +1,7 @@
+## 0.0.2-dev.4
+
+ - **FIX**(flutter_command): conditionally include platforms argument for non-package templates.
+
 ## 0.0.2-dev.3
 
  - **FIX**: remove the cli_core path and use the version instead.
