@@ -6,5 +6,4 @@ environment:
 dependencies:
   mason: ^0.1.0-dev.59
   mason_logger: ^0.3.1
-  cli_core:
-    path: ../../../../../packages/cli_core
+  cli_core: ^0.0.2-dev.2
