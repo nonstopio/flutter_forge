@@ -25,6 +25,7 @@ A shared utility package for CLI operations in Flutter Forge packages, providing
   - [Flutter Commands](#flutter-commands)
   - [Melos Commands](#melos-commands)
   - [File Operations](#file-operations)
+  - [Logger Extension](#logger-extension)
 - [Contributing](#contributing)
 - [Contact](#contact)
 
@@ -114,6 +115,28 @@ Future<void> fileOperations() async {
   
   // Check for mono-repo
   final isMonoRepo = await FileUtils.isMonoRepo();
+}
+```
+
+### Logger Extension
+
+The `LoggerX` extension on the `Logger` class provides additional utility methods for logging in CLI applications.
+
+#### Methods
+
+- `void created(String message)`: Logs a message with a specific style indicating creation.
+- `void wrap(String? text, {required void Function(String?) print, int? length})`: Wraps the provided text to fit within the terminal width, taking into account ANSI escape sequences for styling.
+
+#### Example
+
+```dart
+import 'package:cli_core/cli_core.dart';
+import 'package:mason_logger/mason_logger.dart';
+
+void main() {
+  final logger = Logger();
+  logger.created('Project created successfully');
+  logger.wrap('This is a long message that should be wrapped to fit within the terminal width.', print: print);
 }
 ```
 
