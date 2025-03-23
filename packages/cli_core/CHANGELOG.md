@@ -1,3 +1,7 @@
+## 0.0.2-dev.3
+
+ - **FIX**: remove the cli_core path and use the version instead.
+
 ## 0.0.2-dev.2
 
  - **REFACTOR**(cli_core): rename cli_utils to cli_core.
