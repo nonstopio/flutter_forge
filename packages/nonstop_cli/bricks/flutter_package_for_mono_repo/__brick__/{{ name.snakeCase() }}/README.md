@@ -9,7 +9,7 @@
 
 **❗ In order to start using {{name.titleCase()}} you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
 
-Install via `flutter pub add`:
+Install via `dart pub add`:
 
 ```sh
 dart pub add {{name.snakeCase()}}
