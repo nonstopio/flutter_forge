@@ -27,6 +27,7 @@ A command-line interface for Flutter that generates projects from predefined tem
 - [Troubleshooting](#troubleshooting)
 - [Global Options](#global-options)
 - [Contact](#contact)
+- [Aliases](#aliases)
 
 ## Overview
 
@@ -225,6 +226,16 @@ Follow us, stay up to date or reach out on:
 - [Instagram](https://www.instagram.com/nonstopio_technologies/)
 - [YouTube](https://www.youtube.com/@NonStopioTechnology)
 - [Email](mailto:contact@nonstopio.com)
+
+## Aliases
+
+The NonStop CLI can be invoked using any of the following aliases:
+
+- `nonstop`
+- `ns`
+- `nsio`
+
+These aliases provide flexibility in how you choose to run the CLI commands.
 
 ---
 
