@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:mason_logger/mason_logger.dart';
 import 'package:meta/meta.dart';
 import 'package:universal_io/io.dart';
@@ -33,7 +31,7 @@ extension LoggerX on Logger {
       for (final word in words) {
         // Replace all ANSI sequences so we can get the true character length.
         final charLength = word
-            .replaceAll(RegExp('\x1B(?:[@-Z\\-_]|[[0-?]*[ -/]*[@-~])'), '')
+            .replaceAll(RegExp(r'\x1B(?:[@-Z\\-_]|[[0-?]*[ -/]*[@-~])'), '')
             .length;
 
         if (currentLine.length + charLength > maxLength) {

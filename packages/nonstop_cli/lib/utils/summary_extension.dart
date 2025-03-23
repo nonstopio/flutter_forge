@@ -1,5 +1,5 @@
+import 'package:cli_core/cli_core.dart';
 import 'package:mason/mason.dart';
-import 'package:nonstop_cli/utils/logger_extension.dart';
 import 'package:path/path.dart' as path;
 import 'package:universal_io/io.dart';
 
