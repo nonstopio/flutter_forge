@@ -17,8 +17,8 @@ environment:
 dependencies:
   mason: ^0.1.0-dev.59
   mason_logger: ^0.3.1
-  path: ^1.8.0
   meta: ^1.15.0
+  path: ^1.8.0
   universal_io: ^2.2.2
 
 dev_dependencies:
