@@ -42,3 +42,6 @@ dev_dependencies:
 
 executables:
   nonstop:
+  ns:
+  nsio:
+
