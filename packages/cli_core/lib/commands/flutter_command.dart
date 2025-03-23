@@ -54,7 +54,7 @@ base class BaseFlutterCommand extends CliCommand {
             'create',
             name,
             '--template=$template',
-            '--platforms=${platforms.join(",")}',
+            if (template != 'package') '--platforms=${platforms.join(",")}',
             '--description=$description',
           ];
 
