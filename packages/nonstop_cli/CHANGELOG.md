@@ -1,3 +1,8 @@
+## 0.0.6
+
+ - **FEAT**(nonstop_cli): Add executables ‘ns’ and ‘nsio’ as aliases for nonstop.
+ - **DOCS**: add section for CLI aliases in README.
+
 ## 0.0.5+2
 
  - Update a dependency to the latest release.
