@@ -35,10 +35,6 @@ scripts:
     packageFilters:
       flutter: true
 
-  clean:git:
-    description: "Deep clean the project (git clean)"
-    run: git clean -x -d -f -q
-
   lint:
     description: "Run all linting and static analysis checks"
     run: melos run analyze && melos run format
