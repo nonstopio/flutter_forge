@@ -11,18 +11,6 @@ packages:
   - packages/*
   - plugins/*
 
-# Optional: Define package categories for better organization
-# Useful for targeting specific groups of packages
-categories:
-  apps:
-    - apps/*
-  features:
-    - packages/*
-  packages:
-    - packages/*
-  plugins:
-    - plugins/**
-
 ###############################################################################
 # SCRIPTS
 ###############################################################################
@@ -37,20 +25,9 @@ scripts:
 
   lint:
     description: "Run all linting and static analysis checks"
-    run: melos run analyze && melos run format
-
-  analyze:
-    description: "Run Flutter analyzer in all packages"
-    run: flutter analyze . --fatal-infos
-    exec:
-      concurrency: 1
-      failFast: true
-
-  format:
-    description: "Format code with dart format"
-    run: dart format --set-exit-if-changed .
-    exec:
-      concurrency: 5
+    steps:
+      - format --output none --set-exit-if-changed -c 5
+      - analyze --fatal-infos
 
   fix:
     description: "Apply Dart automated fixes to all packages"
