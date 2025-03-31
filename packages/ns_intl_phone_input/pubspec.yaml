@@ -1,0 +1,28 @@
+name: ns_intl_phone_input
+description: Package for international phone number input with country code
+version: 0.0.3
+homepage: https://github.com/Rajan-Metaliya/ns_intl_phone_input/
+repository: https://github.com/Rajan-Metaliya/ns_intl_phone_input/
+issue_tracker: https://github.com/Rajan-Metaliya/ns_intl_phone_input/issues
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  mask_text_input_formatter: ^2.9.0
+  equatable: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+# The following section is specific to Flutter packages.
+flutter:
+  fonts:
+    - family: "AppleColorEmoji"
+      fonts:
+        - asset: assets/fonts/apple_color_emoji.ttf
