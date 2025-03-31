@@ -113,7 +113,7 @@ class _SampleScreenState extends State<SampleScreen> {
           child: NsIntlPhoneInput(
             textEditingController: _phoneNumberController,
             onPhoneChange: (countrySelection) {
-              print(countrySelection);
+              debugPrint(countrySelection);
             },
           ),
         ));

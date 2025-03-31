@@ -34,7 +34,7 @@ class _SampleScreenState extends State<SampleScreen> {
             textEditingController: _phoneNumberController,
             enableValidation: false,
             onPhoneChange: (countrySelection) {
-              print(countrySelection);
+              debugPrint(countrySelection.toString());
             },
           ),
         ));
