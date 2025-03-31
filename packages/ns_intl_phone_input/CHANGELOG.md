@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Update dependency
+
 ## 0.0.3
 
 * Update test cases
