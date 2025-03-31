@@ -1,0 +1,4 @@
+enum CountrySelectionTypeEnum {
+  dialog,
+  screen,
+}
