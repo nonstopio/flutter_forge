@@ -7,7 +7,7 @@ typedef BuildCountry = CountrySelection? Function();
 
 class NsIntlPhoneInput extends StatefulWidget {
   const NsIntlPhoneInput({
-    Key? key,
+    super.key,
     required this.onPhoneChange,
     required this.textEditingController,
     this.focusNode,
@@ -18,7 +18,7 @@ class NsIntlPhoneInput extends StatefulWidget {
     this.countrySelectOption = const CountrySelectOption(),
     this.countrySelectionType = CountrySelectionTypeEnum.dialog,
     this.enableValidation = true,
-  }) : super(key: key);
+  });
 
   final FocusNode? focusNode;
 
