@@ -4,7 +4,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../ns_intl_phone_input.dart';
 
 class IntlTextEditingController extends TextEditingController {
-  IntlTextEditingController({String? text}) : super(text: text);
+  IntlTextEditingController({super.text});
 
   CountryModel? selectedCountry;
 
