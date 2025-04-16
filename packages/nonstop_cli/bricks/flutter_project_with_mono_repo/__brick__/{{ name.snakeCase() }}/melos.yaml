@@ -26,7 +26,7 @@ scripts:
   lint:
     description: "Run all linting and static analysis checks"
     steps:
-      - format --output none --set-exit-if-changed -c 5
+      - format --set-exit-if-changed -c 5
       - analyze --fatal-infos
 
   fix:
@@ -65,10 +65,6 @@ scripts:
       failFast: true
     packageFilters:
       dirExists: test
-
-  coverage:
-    description: "Generate combined coverage report"
-    run: dart run scripts/combine_coverage.dart
 
 ###############################################################################
 # IDE CONFIGURATION
