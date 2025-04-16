@@ -24,10 +24,13 @@ scripts:
       flutter: true
 
   lint:
-    description: "Run all linting and static analysis checks"
-    steps:
-      - format --set-exit-if-changed -c 5
-      - analyze --fatal-infos
+    description: "Run format and analyze all packages"
+    run: |
+      dart format --set-exit-if-changed . &&
+      dart analyze --fatal-infos .
+    exec:
+      concurrency: 5
+      failFast: true
 
   fix:
     description: "Apply Dart automated fixes to all packages"

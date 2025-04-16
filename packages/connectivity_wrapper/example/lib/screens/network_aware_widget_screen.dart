@@ -30,11 +30,11 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all<Color>(Colors.grey),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "Connecting",
                       style: TextStyle(
