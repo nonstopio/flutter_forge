@@ -20,7 +20,14 @@ command:
       preCommit: melos run update_nonstop_cli_version && melos run update_nonstop_cli_bundles
 
 scripts:
-  lint: dart format . --set-exit-if-changed && flutter analyze --fatal-infos .
+  lint:
+    description: "Run format and analyze all packages"
+    run: |
+      dart format --set-exit-if-changed . &&
+      dart analyze --fatal-infos .
+    exec:
+      concurrency: 5
+      failFast: true
   update_nonstop_cli_version:
     run: dart run tools/update_nonstop_cli_version.dart
   update_nonstop_cli_bundles:
