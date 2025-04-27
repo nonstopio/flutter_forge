@@ -1,3 +1,10 @@
+## 0.0.7
+
+ - **FEAT**(nonstop_cli): add executables ‘ns’ and ‘nsio’ as aliases for nonstop.
+ - **FEAT**(nonstop_cli): Add executables ‘ns’ and ‘nsio’ as aliases for nonstop.
+ - **DOCS**: add section for CLI aliases in README.
+ - **DOCS**: add section for CLI aliases in README.
+
 ## 0.0.6
 
  - **FEAT**(nonstop_cli): Add executables ‘ns’ and ‘nsio’ as aliases for nonstop.
