@@ -2,9 +2,9 @@ name: Dart
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -39,6 +39,9 @@ jobs:
           - package: nonstop_cli
             path: packages
             test: false
+          - package: ns_intl_phone_input
+            path: packages
+            test: true
     steps:
       - uses: actions/checkout@v3
 
@@ -73,4 +76,3 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.package }}
           files: ${{ matrix.path }}/${{ matrix.package }}/coverage/lcov.info
-
