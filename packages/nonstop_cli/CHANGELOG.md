@@ -1,3 +1,8 @@
+## 0.0.7+1
+
+ - **DOCS**: update README to include flutter_plugin_for_mono_repo.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+
 ## 0.0.7
 
  - **FEAT**(nonstop_cli): add executables ‘ns’ and ‘nsio’ as aliases for nonstop.

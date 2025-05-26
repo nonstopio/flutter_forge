@@ -1,6 +1,6 @@
 name: contact_permission
 description: A plugin for Flutter that requests and verifies contact permissions.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/plugins/contact_permission
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/plugins/contact_permission
 repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/contact_permission

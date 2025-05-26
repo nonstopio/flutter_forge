@@ -1,6 +1,6 @@
 name: ns_firebase_utils
 description: This package provides a comprehensive set of methods and extensions for Firebase, simplifying its integration into your Flutter projects while also adding valuable functionality.
-version: 1.2.1
+version: 1.2.2
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_firebase_utils
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_firebase_utils
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_firebase_utils

@@ -1,3 +1,7 @@
+## 1.2.7
+
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+
 ## 1.2.6
 
  - **DOCS**: add NonStop branding to README files across project.
