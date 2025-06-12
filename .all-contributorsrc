@@ -22,6 +22,15 @@
         "example",
         "maintenance"
       ]
+    },
+    {
+      "login": "rajan-nonstopio",
+      "name": "rajan-nonstopio",
+      "avatar_url": "https://avatars.githubusercontent.com/u/86942642?v=4",
+      "profile": "https://github.com/rajan-nonstopio",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
