@@ -47,7 +47,7 @@ final flutterProjectWithMonoRepoBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "{{ name.snakeCase() }}/pubspec.yaml",
       "data":
-          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fQpkZXNjcmlwdGlvbjoge3sgZGVzY3JpcHRpb24gfX0KCmVudmlyb25tZW50OgogIHNkazogJz49My4wLjAgPDQuMC4wJwoKZGV2X2RlcGVuZGVuY2llczoKICBmbHV0dGVyX2xpbnRzOiBeNS4wLjAKICBtZWxvczogXjYuMi4wCg==",
+          "bmFtZToge3sgbmFtZS5zbmFrZUNhc2UoKSB9fV93b3Jrc3BhY2UKZGVzY3JpcHRpb246IHt7IGRlc2NyaXB0aW9uIH19CgplbnZpcm9ubWVudDoKICBzZGs6ICc+PTMuMC4wIDw0LjAuMCcKCmRldl9kZXBlbmRlbmNpZXM6CiAgZmx1dHRlcl9saW50czogXjUuMC4wCiAgbWVsb3M6IF42LjIuMAo=",
       "type": "text"
     },
     {
