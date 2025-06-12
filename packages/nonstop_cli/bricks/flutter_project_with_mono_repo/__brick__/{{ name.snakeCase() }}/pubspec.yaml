@@ -1,4 +1,4 @@
-name: {{ name.snakeCase() }}
+name: {{ name.snakeCase() }}_workspace
 description: {{ description }}
 
 environment:
