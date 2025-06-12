@@ -4,7 +4,6 @@ extension WidgetsExtension on Widget {
   Widget withTooltip(
     String message, {
     required Decoration decoration,
-    required double height,
     required bool preferBelow,
     required EdgeInsetsGeometry padding,
     required TextStyle textStyle,
@@ -14,7 +13,6 @@ extension WidgetsExtension on Widget {
       Tooltip(
         message: message,
         decoration: decoration,
-        height: height,
         padding: padding,
         preferBelow: preferBelow,
         textStyle: textStyle,
