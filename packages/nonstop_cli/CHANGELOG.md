@@ -1,3 +1,7 @@
+## 0.0.7+2
+
+ - **DOCS**: fix broken link in README.
+
 ## 0.0.7+1
 
  - **DOCS**: update README to include flutter_plugin_for_mono_repo.
