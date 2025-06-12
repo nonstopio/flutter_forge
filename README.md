@@ -13,7 +13,7 @@
 # Flutter Forge
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A place where Flutter packages are crafted and built.
@@ -58,6 +58,7 @@ Follow us, stay up to date or reach out on:
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ProjectAJ14"><img src="https://avatars.githubusercontent.com/u/35396392?v=4?s=100" width="100px;" alt="Ajay Kumar"/><br /><sub><b>Ajay Kumar</b></sub></a><br /><a href="https://github.com/nonstopio/flutter_forge/commits?author=ProjectAJ14" title="Code">💻</a> <a href="#content-ProjectAJ14" title="Content">🖋</a> <a href="https://github.com/nonstopio/flutter_forge/commits?author=ProjectAJ14" title="Documentation">📖</a> <a href="#example-ProjectAJ14" title="Examples">💡</a> <a href="#maintenance-ProjectAJ14" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rajan-nonstopio"><img src="https://avatars.githubusercontent.com/u/86942642?v=4?s=100" width="100px;" alt="rajan-nonstopio"/><br /><sub><b>rajan-nonstopio</b></sub></a><br /><a href="https://github.com/nonstopio/flutter_forge/commits?author=rajan-nonstopio" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
