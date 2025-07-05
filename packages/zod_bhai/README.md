@@ -1,27 +1,36 @@
-# zod-bhai
+<p align="center">
+  <a href="https://nonstopio.com">
+    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+  </a>
+  <h1 align="center">NonStop</h1>
+  <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
+  <p align="center">
+    <a href="https://nonstopio.com/about-us">About</a> |
+    <a href="https://nonstopio.com">Website</a>
+  </p>
 
-A powerful Dart schema validation library inspired by Zod, providing type-safe validation, parsing, and inference with excellent developer experience.
+<h1>🔐 Zod Bhai</h1>
 
-## Features
+**⚡ Powerful Dart schema validation library inspired by Zod with type-safe validation and excellent developer experience**
 
-- 🚀 **Type-safe validation** with strong type inference
-- 📝 **Schema-based validation** with detailed error reporting
-- 🔗 **Schema composition** and reuse
-- ⚡ **High performance** with lazy validation
-- 🎯 **Zod-like API** for familiar developer experience
-- 🔧 **Extensible** with custom validation functions
-- 📱 **Flutter ready** with no external dependencies
+[![pub package](https://img.shields.io/pub/v/zod_bhai.svg?label=zod_bhai&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/zod_bhai)
+[![License](https://img.shields.io/badge/license-MIT-purple.svg?style=for-the-badge)](LICENSE)
+[![Flutter](https://img.shields.io/badge/Flutter-Ready-02569B.svg?style=for-the-badge&logo=flutter)](https://flutter.dev)
 
-## Installation
+---
 
-Add `zod_bhai` to your `pubspec.yaml`:
+## 🎯 What is Zod Bhai?
 
-```yaml
-dependencies:
-  zod_bhai: ^0.1.0
+Zod Bhai is a powerful Dart schema validation library inspired by Zod, providing type-safe validation, parsing, and inference with excellent developer experience. It offers a familiar API for developers coming from TypeScript/JavaScript while being fully optimized for Dart and Flutter applications.
+
+> 🎨 **Perfect for teams** who want robust data validation with type safety and detailed error reporting
+
+## 🚀 Quick Start
+
+```bash
+# Add to your pubspec.yaml
+dart pub add zod_bhai
 ```
-
-## Quick Start
 
 ```dart
 import 'package:zod_bhai/zod_bhai.dart';
@@ -51,9 +60,27 @@ if (result.isSuccess) {
 }
 ```
 
-## Basic Schemas
+## 📖 Features
 
-### String Schema
+<div align="center">
+
+| Feature                | 🎯 Description                                                    |
+|------------------------|-------------------------------------------------------------------|
+| 🚀 **Type-safe validation** | Strong type inference with compile-time safety                   |
+| 📝 **Schema-based validation** | Detailed error reporting with path information                  |
+| 🔗 **Schema composition** | Reusable schemas with composition and inheritance                |
+| ⚡ **High performance** | Lazy validation with efficient error handling                    |
+| 🎯 **Zod-like API** | Familiar developer experience for TypeScript developers          |
+| 🔧 **Extensible** | Custom validation functions and transformations                  |
+| 📱 **Flutter ready** | No external dependencies, optimized for Flutter                  |
+
+</div>
+
+---
+
+## 🔧 Basic Schemas
+
+### 📝 String Schema
 
 ```dart
 final schema = z.string()
@@ -70,7 +97,7 @@ final uuidSchema = z.uuid();
 final nonEmptySchema = z.nonEmptyString();
 ```
 
-### Number Schema
+### 🔢 Number Schema
 
 ```dart
 final schema = z.number()
@@ -87,7 +114,7 @@ final portSchema = z.port();
 final yearSchema = z.year();
 ```
 
-### Boolean Schema
+### ✅ Boolean Schema
 
 ```dart
 final schema = z.boolean()
@@ -98,16 +125,18 @@ final trueSchema = z.trueValue;
 final falseSchema = z.falseValue;
 ```
 
-### Null Schema
+### 🚫 Null Schema
 
 ```dart
 final schema = z.null_();
 final nullValueSchema = z.nullValue;
 ```
 
-## Complex Schemas
+---
 
-### Object Schema
+## 🏗️ Complex Schemas
+
+### 📦 Object Schema
 
 ```dart
 final userSchema = z.object({
@@ -125,7 +154,7 @@ final userSchema = z.object({
 final result = userSchema.validate(userData);
 ```
 
-### Array Schema
+### 📋 Array Schema
 
 ```dart
 final schema = z.array(z.string())
@@ -137,7 +166,7 @@ final schema = z.array(z.string())
 final result = schema.validate(['item1', 'item2']);
 ```
 
-### Union Schema
+### 🔀 Union Schema
 
 ```dart
 final schema = z.union([
@@ -150,7 +179,7 @@ final result1 = schema.validate('hello');
 final result2 = schema.validate(42);
 ```
 
-### Tuple Schema
+### 📐 Tuple Schema
 
 ```dart
 final schema = z.tuple([
@@ -163,9 +192,11 @@ final schema = z.tuple([
 final result = schema.validate(['hello', 42, true]);
 ```
 
-## Schema Composition
+---
 
-### Chaining Methods
+## 🔗 Schema Composition
+
+### ⛓️ Chaining Methods
 
 ```dart
 final schema = z.string()
@@ -176,7 +207,7 @@ final schema = z.string()
   .toLowerCase();
 ```
 
-### Refinement
+### 🔍 Refinement
 
 ```dart
 final schema = z.string().refine(
@@ -185,7 +216,7 @@ final schema = z.string().refine(
 );
 ```
 
-### Transformation
+### 🔄 Transformation
 
 ```dart
 final schema = z.string()
@@ -193,7 +224,7 @@ final schema = z.string()
   .transform((value) => value.toUpperCase());
 ```
 
-### Default Values
+### 📝 Default Values
 
 ```dart
 final schema = z.string()
@@ -204,7 +235,7 @@ final schema = z.string()
   .defaultToComputed(() => DateTime.now().toString());
 ```
 
-### Optional Fields
+### ❓ Optional Fields
 
 ```dart
 final schema = z.object({
@@ -213,9 +244,11 @@ final schema = z.object({
 });
 ```
 
-## Error Handling
+---
 
-### Detailed Error Information
+## 🚨 Error Handling
+
+### 📊 Detailed Error Information
 
 ```dart
 final result = schema.validate(invalidData);
@@ -233,7 +266,7 @@ if (result.isFailure) {
 }
 ```
 
-### Error Filtering
+### 🔍 Error Filtering
 
 ```dart
 final errors = result.errors!;
@@ -245,7 +278,7 @@ final fieldErrors = errors.filterByPath(['user', 'email']);
 final typeErrors = errors.filterByCode('type_mismatch');
 ```
 
-### Safe Parsing
+### 🛡️ Safe Parsing
 
 ```dart
 // Throws exception on validation failure
@@ -258,9 +291,11 @@ final data = schema.safeParse(input);
 final result = schema.validate(input);
 ```
 
-## Advanced Features
+---
 
-### Custom Validation
+## 🚀 Advanced Features
+
+### 🔧 Custom Validation
 
 ```dart
 final schema = z.custom<String>((input, path) {
@@ -279,7 +314,7 @@ final schema = z.custom<String>((input, path) {
 });
 ```
 
-### Lazy Schemas
+### 🔄 Lazy Schemas
 
 ```dart
 final recursiveSchema = z.lazy(() => z.object({
@@ -288,7 +323,7 @@ final recursiveSchema = z.lazy(() => z.object({
 }));
 ```
 
-### Async Validation
+### ⚡ Async Validation
 
 ```dart
 final schema = z.string().refineAsync(
@@ -303,9 +338,11 @@ final schema = z.string().refineAsync(
 final result = await schema.validateAsync('test@example.com');
 ```
 
-## Flutter Integration
+---
 
-### Form Validation
+## 📱 Flutter Integration
+
+### 📋 Form Validation
 
 ```dart
 class UserForm extends StatefulWidget {
@@ -367,7 +404,7 @@ class _UserFormState extends State<UserForm> {
 }
 ```
 
-### State Management Integration
+### 🎛️ State Management Integration
 
 ```dart
 // With Riverpod
@@ -392,16 +429,26 @@ class UserNotifier extends StateNotifier<AsyncValue<User>> {
 }
 ```
 
-## Performance Considerations
+---
 
-- **Lazy Validation**: Schemas are only validated when `.validate()` is called
-- **Error Caching**: Validation errors are cached for repeated failures
-- **Schema Reuse**: Schema instances can be reused across multiple validations
-- **Memory Management**: Efficient error object creation and management
+## ⚡ Performance Considerations
 
-## Migration from Other Libraries
+<div align="center">
 
-### From json_annotation
+| Feature                | 🚀 Benefit                                                    |
+|------------------------|---------------------------------------------------------------|
+| **Lazy Validation**    | Schemas are only validated when `.validate()` is called      |
+| **Error Caching**      | Validation errors are cached for repeated failures           |
+| **Schema Reuse**       | Schema instances can be reused across multiple validations   |
+| **Memory Management**  | Efficient error object creation and management               |
+
+</div>
+
+---
+
+## 🔄 Migration from Other Libraries
+
+### 📦 From json_annotation
 
 ```dart
 // Before (json_annotation)
@@ -427,7 +474,7 @@ if (result.isSuccess) {
 }
 ```
 
-### From validators
+### ✅ From validators
 
 ```dart
 // Before (validators)
@@ -445,13 +492,39 @@ final schema = z.object({
 final result = schema.validate(data);
 ```
 
-## Contributing
+---
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 🌟 Connect with NonStop
 
-## License
+<div align="center">
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**Stay connected and get the latest updates!**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
+[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
+
+</div>
+
+---
+
+<div align="center">
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║  🚀 Built with ❤️ by Ajay Kumar                              ║
+║                                                              ║
+║  ⭐ Star us on GitHub if this helped you!                    ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+
+</div> 
 
 ## Acknowledgments
 
