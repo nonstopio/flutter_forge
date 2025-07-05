@@ -9,6 +9,7 @@ packages:
   - packages/nonstop_cli/bricks/flutter_package_for_mono_repo/hooks
   - packages/nonstop_cli/bricks/flutter_project_with_mono_repo/hooks
   - packages/nonstop_cli/bricks/flutter_plugin_for_mono_repo/hooks
+  - packages/zod_bhai/example
 
 command:
   version:
