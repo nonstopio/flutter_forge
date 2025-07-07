@@ -3,14 +3,14 @@ import '../../core/schema.dart';
 import '../../core/validation_result.dart';
 
 /// Schema for validating null values
-class NullSchema extends Schema<Null> {
+class NullSchema extends Schema<void> {
   const NullSchema({
     super.description,
     super.metadata,
   });
 
   @override
-  ValidationResult<Null> validate(dynamic input,
+  ValidationResult<void> validate(dynamic input,
       [List<String> path = const []]) {
     // Type check
     if (input != null) {
@@ -25,7 +25,7 @@ class NullSchema extends Schema<Null> {
       );
     }
 
-    return ValidationResult.success(null);
+    return const ValidationResult.success(null);
   }
 
   @override

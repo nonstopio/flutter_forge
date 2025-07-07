@@ -1,10 +1,19 @@
 import 'core/error.dart';
 import 'core/schema.dart';
 import 'core/validation_result.dart';
+import 'schemas/advanced/coercion_schema.dart';
+import 'schemas/advanced/discriminated_union_schema.dart';
+import 'schemas/advanced/pipeline_schema.dart';
+import 'schemas/advanced/recursive_schema.dart';
+import 'schemas/collections/array_schema.dart';
+import 'schemas/collections/record_schema.dart';
+import 'schemas/collections/tuple_schema.dart';
+import 'schemas/object/object_schema.dart';
 import 'schemas/primitive/boolean_schema.dart';
 import 'schemas/primitive/null_schema.dart';
 import 'schemas/primitive/number_schema.dart';
 import 'schemas/primitive/string_schema.dart';
+import 'schemas/specialized/enum_schema.dart';
 
 /// Convenience class that provides factory methods for creating schemas
 ///
@@ -35,6 +44,18 @@ class Z {
   /// Creates a null schema (alias for null_)
   static NullSchema get nullValue => const NullSchema();
 
+  /// Creates an array schema with element validation
+  static ArraySchema<T> array<T>(Schema<T> elementSchema) =>
+      ArraySchema<T>(elementSchema);
+
+  /// Creates a tuple schema with fixed-length typed elements
+  static TupleSchema<List<dynamic>> tuple(
+          List<Schema<dynamic>> elementSchemas) =>
+      TupleSchema<List<dynamic>>(elementSchemas);
+
+  /// Creates an enum schema from a list of values
+  static EnumSchema<T> enum_<T>(List<T> values) => EnumSchema<T>(values);
+
   /// Creates a true boolean schema
   static BooleanSchema get trueValue =>
       const BooleanSchema(expectedValue: true);
@@ -53,6 +74,56 @@ class Z {
     return Schema.union(schemas);
   }
 
+  /// Creates a discriminated union schema for efficient union parsing
+  static DiscriminatedUnionSchema<T> discriminatedUnion<T>(
+    String discriminator,
+    List<Schema<T>> schemas, {
+    String? description,
+    Map<String, dynamic>? metadata,
+  }) {
+    return DiscriminatedUnionSchema<T>(
+      discriminator,
+      schemas,
+      description: description,
+      metadata: metadata,
+    );
+  }
+
+  /// Creates a pipeline schema for multi-stage validation
+  static PipelineSchema<TInput, TOutput> pipeline<TInput, TOutput>(
+    List<Schema<dynamic>> stages, {
+    String? description,
+    Map<String, dynamic>? metadata,
+  }) {
+    return PipelineSchema<TInput, TOutput>(
+      stages,
+      description: description,
+      metadata: metadata,
+    );
+  }
+
+  /// Creates a recursive schema with enhanced circular reference handling
+  static RecursiveSchema<T> recursive<T>(
+    Schema<T> Function() schemaFactory, {
+    int maxDepth = 1000,
+    bool enableCircularDetection = true,
+    bool enableMemoization = true,
+    String? description,
+    Map<String, dynamic>? metadata,
+  }) {
+    return RecursiveSchema<T>(
+      schemaFactory,
+      maxDepth: maxDepth,
+      enableCircularDetection: enableCircularDetection,
+      enableMemoization: enableMemoization,
+      description: description,
+      metadata: metadata,
+    );
+  }
+
+  /// Access to coercion schemas
+  static const Coerce coerce = Coerce();
+
   /// Creates an intersection schema from multiple schemas
   static Schema<T> intersection<T>(List<Schema<T>> schemas) {
     return Schema.intersection(schemas);
@@ -70,10 +141,12 @@ class Z {
     return _CustomSchema<T>(validator);
   }
 
-  /// Creates an object schema
-  static Schema<Map<String, dynamic>> object(
-      Map<String, Schema<dynamic>> shape) {
-    return _ObjectSchema(shape);
+  /// Creates an object schema with comprehensive manipulation methods
+  static ObjectSchema object(
+    Map<String, Schema<dynamic>> shape, {
+    Set<String>? optionalKeys,
+  }) {
+    return ObjectSchema(shape, optionalKeys: optionalKeys);
   }
 
   /// Creates an any schema that accepts any value
@@ -113,7 +186,8 @@ class Z {
   static Schema<Set<dynamic>> set() => const _SetSchema();
 
   /// Creates a record schema for key-value pairs
-  static Schema<Map<String, dynamic>> record() => const _RecordSchema();
+  static RecordSchema<String, dynamic> record([Schema<dynamic>? valueSchema]) =>
+      RecordSchema<String, dynamic>(valueSchema: valueSchema);
 
   /// Creates a promise schema (for async values)
   static Schema<Future<dynamic>> promise() => const _PromiseSchema();
@@ -158,7 +232,7 @@ class Z {
   static StringSchema uuid() => const StringSchema(isUuid: true);
 
   /// Creates an integer schema
-  static NumberSchema int() => const NumberSchema(isInt: true);
+  static NumberSchema integer() => const NumberSchema(isInt: true);
 
   /// Creates a positive number schema
   static NumberSchema positive() => const NumberSchema(isPositive: true);
@@ -198,9 +272,138 @@ class Z {
 
   /// Creates a second schema
   static NumberSchema second() => const NumberSchema().second();
+
+  /// Creates a transform schema that can be used in pipelines
+  static TransformStage<T, R> transform<T, R>(R Function(T) transformer) =>
+      TransformStage<T, R>(transformer);
+
+  /// Creates a refine schema that can be used in pipelines
+  static RefineStage<T> refine<T>(bool Function(T) validator,
+          {String? message, String? code}) =>
+      RefineStage<T>(validator, message: message, code: code);
+
+  /// Creates an async refine schema that can be used in pipelines
+  /// TODO: Implement proper async validation support
+  static AsyncRefineStage<T> refineAsync<T>(Future<bool> Function(T) validator,
+          {String? message, String? code}) =>
+      AsyncRefineStage<T>();
 }
 
 // Implementation classes for convenience schemas
+
+/// A transform stage for use in pipelines
+class TransformStage<T, R> extends Schema<R> {
+  final R Function(T) _transformer;
+
+  const TransformStage(this._transformer);
+
+  @override
+  ValidationResult<R> validate(dynamic input, [List<String> path = const []]) {
+    if (input is T) {
+      try {
+        final result = _transformer(input);
+        return ValidationResult.success(result);
+      } catch (e) {
+        return ValidationResult.failure(
+          ValidationErrorCollection.single(
+            ValidationError.constraintViolation(
+              path: path,
+              received: input,
+              constraint: 'Transform failed: $e',
+              code: 'transform_failed',
+            ),
+          ),
+        );
+      }
+    }
+    return ValidationResult.failure(
+      ValidationErrorCollection.single(
+        ValidationError.typeMismatch(
+          expected: '$T',
+          received: input,
+          path: path,
+        ),
+      ),
+    );
+  }
+}
+
+/// A refine stage for use in pipelines
+class RefineStage<T> extends Schema<T> {
+  final bool Function(T) _validator;
+  final String? _message;
+  final String? _code;
+
+  const RefineStage(this._validator, {String? message, String? code})
+      : _message = message,
+        _code = code;
+
+  @override
+  ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
+    if (input is T) {
+      try {
+        if (_validator(input)) {
+          return ValidationResult.success(input);
+        } else {
+          return ValidationResult.failure(
+            ValidationErrorCollection.single(
+              ValidationError.constraintViolation(
+                path: path,
+                received: input,
+                constraint: _message ?? 'Validation failed',
+                code: _code ?? 'validation_failed',
+              ),
+            ),
+          );
+        }
+      } catch (e) {
+        return ValidationResult.failure(
+          ValidationErrorCollection.single(
+            ValidationError.constraintViolation(
+              path: path,
+              received: input,
+              constraint: 'Validation error: $e',
+              code: 'validation_error',
+            ),
+          ),
+        );
+      }
+    }
+    return ValidationResult.failure(
+      ValidationErrorCollection.single(
+        ValidationError.typeMismatch(
+          expected: '$T',
+          received: input,
+          path: path,
+        ),
+      ),
+    );
+  }
+}
+
+/// An async refine stage for use in pipelines
+/// TODO: Implement proper async validation support
+class AsyncRefineStage<T> extends Schema<T> {
+  const AsyncRefineStage();
+
+  @override
+  ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
+    if (input is T) {
+      // For now, async validation in pipeline context would need special handling
+      // This is a simplified implementation
+      return ValidationResult.success(input);
+    }
+    return ValidationResult.failure(
+      ValidationErrorCollection.single(
+        ValidationError.typeMismatch(
+          expected: '$T',
+          received: input,
+          path: path,
+        ),
+      ),
+    );
+  }
+}
 
 /// Schema for literal values
 class _LiteralSchema<T> extends Schema<T> {
@@ -276,7 +479,7 @@ class _VoidSchema extends Schema<void> {
   ValidationResult<void> validate(dynamic input,
       [List<String> path = const []]) {
     if (input == null) {
-      return ValidationResult.success(null);
+      return const ValidationResult.success(null);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -458,28 +661,6 @@ class _SetSchema extends Schema<Set<dynamic>> {
   }
 }
 
-/// Schema for record values
-class _RecordSchema extends Schema<Map<String, dynamic>> {
-  const _RecordSchema();
-
-  @override
-  ValidationResult<Map<String, dynamic>> validate(dynamic input,
-      [List<String> path = const []]) {
-    if (input is Map<String, dynamic>) {
-      return ValidationResult.success(input);
-    }
-    return ValidationResult.failure(
-      ValidationErrorCollection.single(
-        ValidationError.typeMismatch(
-          path: path,
-          received: input,
-          expected: 'record',
-        ),
-      ),
-    );
-  }
-}
-
 /// Schema for promise values
 class _PromiseSchema extends Schema<Future<dynamic>> {
   const _PromiseSchema();
@@ -510,7 +691,7 @@ class _UndefinedSchema extends Schema<void> {
   ValidationResult<void> validate(dynamic input,
       [List<String> path = const []]) {
     if (input == null) {
-      return ValidationResult.success(null);
+      return const ValidationResult.success(null);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -532,7 +713,7 @@ class _NanSchema extends Schema<double> {
   ValidationResult<double> validate(dynamic input,
       [List<String> path = const []]) {
     if (input is num && input.isNaN) {
-      return ValidationResult.success(double.nan);
+      return const ValidationResult.success(double.nan);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -555,7 +736,7 @@ class _InfinitySchema extends Schema<double> {
   ValidationResult<double> validate(dynamic input,
       [List<String> path = const []]) {
     if (input is num && input.isInfinite) {
-      return ValidationResult.success(double.infinity);
+      return const ValidationResult.success(double.infinity);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -578,7 +759,7 @@ class _NegativeInfinitySchema extends Schema<double> {
   ValidationResult<double> validate(dynamic input,
       [List<String> path = const []]) {
     if (input is num && input.isInfinite && input.isNegative) {
-      return ValidationResult.success(double.negativeInfinity);
+      return const ValidationResult.success(double.negativeInfinity);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -601,7 +782,7 @@ class _PositiveInfinitySchema extends Schema<double> {
   ValidationResult<double> validate(dynamic input,
       [List<String> path = const []]) {
     if (input is num && input.isInfinite && !input.isNegative) {
-      return ValidationResult.success(double.infinity);
+      return const ValidationResult.success(double.infinity);
     }
     return ValidationResult.failure(
       ValidationErrorCollection.single(
@@ -695,51 +876,5 @@ class _CustomSchema<T> extends Schema<T> {
   @override
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     return _validator(input, path);
-  }
-}
-
-/// Schema for object validation
-class _ObjectSchema extends Schema<Map<String, dynamic>> {
-  final Map<String, Schema<dynamic>> _shape;
-
-  const _ObjectSchema(this._shape);
-
-  @override
-  ValidationResult<Map<String, dynamic>> validate(dynamic input,
-      [List<String> path = const []]) {
-    if (input is! Map<String, dynamic>) {
-      return ValidationResult.failure(
-        ValidationErrorCollection.single(
-          ValidationError.typeMismatch(
-            path: path,
-            received: input,
-            expected: 'object',
-          ),
-        ),
-      );
-    }
-
-    final result = <String, dynamic>{};
-    final errors = <ValidationError>[];
-
-    for (final entry in _shape.entries) {
-      final fieldName = entry.key;
-      final fieldSchema = entry.value;
-      final fieldValue = input[fieldName];
-
-      final fieldResult =
-          fieldSchema.validate(fieldValue, [...path, fieldName]);
-      if (fieldResult.isSuccess) {
-        result[fieldName] = fieldResult.data;
-      } else {
-        errors.addAll(fieldResult.errors!.errors);
-      }
-    }
-
-    if (errors.isNotEmpty) {
-      return ValidationResult.failure(ValidationErrorCollection(errors));
-    }
-
-    return ValidationResult.success(result);
   }
 }
