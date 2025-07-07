@@ -54,11 +54,49 @@ abstract class Schema<T> {
     return validate(input, path).isSuccess;
   }
 
+  /// Asynchronously validates the input and returns a ValidationResult
+  ///
+  /// This is the async version of validate() that supports async refinements
+  /// and async transformations. Override this in schemas that need async validation.
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    return validate(input, path);
+  }
+
+  /// Asynchronously parses the input, throwing an exception if validation fails
+  ///
+  /// This is the async version of parse() that supports async refinements.
+  /// Use this when you want exceptions for validation failures in async contexts.
+  Future<T> parseAsync(dynamic input, [List<String> path = const []]) async {
+    final result = await validateAsync(input, path);
+    if (result.isSuccess) {
+      return result.data!;
+    }
+    throw ValidationException(result.errors!.formattedErrors);
+  }
+
+  /// Asynchronously and safely parses the input, returning null if validation fails
+  ///
+  /// This is the async version of safeParse() for cases where you want to handle
+  /// validation failures gracefully in async contexts.
+  Future<T?> safeParseAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await validateAsync(input, path);
+    return result.data;
+  }
+
   /// Creates a new schema that applies a transformation after validation
   ///
   /// The transformation function is only called if validation succeeds.
   Schema<R> transform<R>(R Function(T value) transformer) {
     return TransformSchema<T, R>(this, transformer);
+  }
+
+  /// Creates a new schema that applies an async transformation after validation
+  ///
+  /// The async transformation function is only called if validation succeeds.
+  Schema<R> transformAsync<R>(Future<R> Function(T value) transformer) {
+    return AsyncTransformSchema<T, R>(this, transformer);
   }
 
   /// Creates a new schema that applies additional validation
@@ -210,6 +248,74 @@ class TransformSchema<T, R> extends Schema<R> {
     }
     return ValidationResult.failure(result.errors!);
   }
+
+  @override
+  Future<ValidationResult<R>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await _schema.validateAsync(input, path);
+    if (result.isSuccess) {
+      try {
+        final transformed = _transformer(result.data as T);
+        return ValidationResult.success(transformed);
+      } catch (e) {
+        return ValidationResult.failure(
+          ValidationErrorCollection.single(
+            ValidationError.simple(
+              message: 'Transformation failed: $e',
+              path: path,
+              received: result.data,
+            ),
+          ),
+        );
+      }
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+}
+
+/// Schema that applies an async transformation after validation
+class AsyncTransformSchema<T, R> extends Schema<R> {
+  final Schema<T> _schema;
+  final Future<R> Function(T value) _transformer;
+
+  const AsyncTransformSchema(this._schema, this._transformer);
+
+  @override
+  ValidationResult<R> validate(dynamic input, [List<String> path = const []]) {
+    return ValidationResult.failure(
+      ValidationErrorCollection.single(
+        ValidationError.simple(
+          message: 'Async transformation not supported in sync context',
+          path: path,
+          received: input,
+          code: 'async_transformation_in_sync_context',
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<ValidationResult<R>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await _schema.validateAsync(input, path);
+    if (result.isSuccess) {
+      try {
+        final transformed = await _transformer(result.data as T);
+        return ValidationResult.success(transformed);
+      } catch (e) {
+        return ValidationResult.failure(
+          ValidationErrorCollection.single(
+            ValidationError.simple(
+              message: 'Async transformation failed: $e',
+              path: path,
+              received: result.data,
+            ),
+          ),
+        );
+      }
+    }
+    return ValidationResult.failure(result.errors!);
+  }
 }
 
 /// Schema that applies additional validation
@@ -230,6 +336,30 @@ class RefineSchema<T> extends Schema<T> {
   @override
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     final result = _schema.validate(input, path);
+    if (result.isSuccess) {
+      final value = result.data as T;
+      if (_validator(value)) {
+        return result;
+      } else {
+        return ValidationResult.failure(
+          ValidationErrorCollection.single(
+            ValidationError.constraintViolation(
+              path: path,
+              received: value,
+              constraint: _message ?? 'Custom validation failed',
+              code: _code ?? 'refinement_failed',
+            ),
+          ),
+        );
+      }
+    }
+    return result;
+  }
+
+  @override
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await _schema.validateAsync(input, path);
     if (result.isSuccess) {
       final value = result.data as T;
       if (_validator(value)) {
@@ -286,6 +416,7 @@ class AsyncRefineSchema<T> extends Schema<T> {
   }
 
   /// Async validation method
+  @override
   Future<ValidationResult<T>> validateAsync(dynamic input,
       [List<String> path = const []]) async {
     final result = _schema.validate(input, path);
@@ -363,6 +494,19 @@ class OptionalSchema<T> extends Schema<T?> {
       return ValidationResult.success(null);
     }
     final result = _schema.validate(input, path);
+    if (result.isSuccess) {
+      return ValidationResult.success(result.data);
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+
+  @override
+  Future<ValidationResult<T?>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    if (input == null) {
+      return ValidationResult.success(null);
+    }
+    final result = await _schema.validateAsync(input, path);
     if (result.isSuccess) {
       return ValidationResult.success(result.data);
     }
@@ -476,6 +620,12 @@ class LazySchema<T> extends Schema<T> {
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     return _schema.validate(input, path);
   }
+
+  @override
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    return await _schema.validateAsync(input, path);
+  }
 }
 
 /// Schema that validates against multiple schemas (union)
@@ -498,6 +648,22 @@ class UnionSchema<T> extends Schema<T> {
 
     return ValidationResult.failure(allErrors);
   }
+
+  @override
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    ValidationErrorCollection allErrors = ValidationErrorCollection.empty();
+
+    for (final schema in _schemas) {
+      final result = await schema.validateAsync(input, path);
+      if (result.isSuccess) {
+        return result;
+      }
+      allErrors = allErrors.merge(result.errors!);
+    }
+
+    return ValidationResult.failure(allErrors);
+  }
 }
 
 /// Schema that validates against multiple schemas (intersection)
@@ -512,6 +678,22 @@ class IntersectionSchema<T> extends Schema<T> {
 
     for (final schema in _schemas) {
       final result = schema.validate(input, path);
+      if (result.isFailure) {
+        return result;
+      }
+      lastValidValue = result.data;
+    }
+
+    return ValidationResult.success(lastValidValue as T);
+  }
+
+  @override
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    T? lastValidValue;
+
+    for (final schema in _schemas) {
+      final result = await schema.validateAsync(input, path);
       if (result.isFailure) {
         return result;
       }

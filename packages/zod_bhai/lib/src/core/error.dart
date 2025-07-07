@@ -77,6 +77,23 @@ class ValidationError {
     );
   }
 
+  /// Creates a validation error for missing property
+  factory ValidationError.missingProperty({
+    required String property,
+    required List<String> path,
+    String? code,
+    Map<String, dynamic>? context,
+  }) {
+    return ValidationError(
+      message: 'Missing required property: $property',
+      path: path,
+      received: null,
+      expected: property,
+      code: code ?? 'missing_property',
+      context: context,
+    );
+  }
+
   /// Gets the full path as a string (e.g., "user.address.street")
   String get fullPath => path.join('.');
 

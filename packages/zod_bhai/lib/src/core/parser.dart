@@ -205,7 +205,7 @@ class Parser {
   static ParserFunction<T?> optional<T>(Schema<T> schema) {
     return (dynamic input, [List<String> path = const []]) {
       if (input == null) {
-        return ValidationResult.success(null);
+        return const ValidationResult.success(null);
       }
       final result = schema.validate(input, path);
       if (result.isSuccess) {
