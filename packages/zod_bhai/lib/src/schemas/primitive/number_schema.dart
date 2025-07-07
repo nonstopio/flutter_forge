@@ -1,36 +1,36 @@
+import '../../core/error.dart';
 import '../../core/schema.dart';
 import '../../core/validation_result.dart';
-import '../../core/error.dart';
 
 /// Schema for validating number values
 class NumberSchema extends Schema<num> {
   /// Minimum value constraint
   final num? _min;
-  
+
   /// Maximum value constraint
   final num? _max;
-  
+
   /// Exact value constraint
   final num? _exact;
-  
+
   /// Integer validation flag
   final bool _isInt;
-  
+
   /// Positive validation flag
   final bool _isPositive;
-  
+
   /// Negative validation flag
   final bool _isNegative;
-  
+
   /// Non-negative validation flag
   final bool _isNonNegative;
-  
+
   /// Non-positive validation flag
   final bool _isNonPositive;
-  
+
   /// Finite validation flag
   final bool _isFinite;
-  
+
   /// Safe integer validation flag
   final bool _isSafeInt;
 
@@ -59,7 +59,8 @@ class NumberSchema extends Schema<num> {
         _isSafeInt = isSafeInt;
 
   @override
-  ValidationResult<num> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<num> validate(dynamic input,
+      [List<String> path = const []]) {
     // Type check
     if (input is! num) {
       return ValidationResult.failure(
@@ -209,7 +210,10 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'safe integer value',
             code: 'not_safe_integer',
-            context: {'min_safe': -9007199254740991, 'max_safe': 9007199254740991},
+            context: {
+              'min_safe': -9007199254740991,
+              'max_safe': 9007199254740991
+            },
           ),
         ),
       );
@@ -437,7 +441,7 @@ class NumberSchema extends Schema<num> {
   /// Checks if number is a multiple of the given value
   NumberSchema multipleOf(num value) {
     return refine(
-      (num) => num % value == 0,
+      (num n) => n % value == 0,
       message: 'must be a multiple of $value',
       code: 'not_multiple_of',
     ) as NumberSchema;
@@ -455,7 +459,7 @@ class NumberSchema extends Schema<num> {
   /// Checks if number is greater than the given value
   NumberSchema gt(num value) {
     return refine(
-      (num) => num > value,
+      (n) => n > value,
       message: 'must be greater than $value',
       code: 'not_greater_than',
     ) as NumberSchema;
@@ -464,7 +468,7 @@ class NumberSchema extends Schema<num> {
   /// Checks if number is greater than or equal to the given value
   NumberSchema gte(num value) {
     return refine(
-      (num) => num >= value,
+      (n) => n >= value,
       message: 'must be greater than or equal to $value',
       code: 'not_greater_than_or_equal',
     ) as NumberSchema;
@@ -473,7 +477,7 @@ class NumberSchema extends Schema<num> {
   /// Checks if number is less than the given value
   NumberSchema lt(num value) {
     return refine(
-      (num) => num < value,
+      (n) => n < value,
       message: 'must be less than $value',
       code: 'not_less_than',
     ) as NumberSchema;
@@ -482,7 +486,7 @@ class NumberSchema extends Schema<num> {
   /// Checks if number is less than or equal to the given value
   NumberSchema lte(num value) {
     return refine(
-      (num) => num <= value,
+      (n) => n <= value,
       message: 'must be less than or equal to $value',
       code: 'not_less_than_or_equal',
     ) as NumberSchema;
@@ -572,13 +576,15 @@ class NumberSchema extends Schema<num> {
   // Helper methods
 
   bool _isSafeInteger(num value) {
-    return value >= -9007199254740991 && value <= 9007199254740991 && value == value.toInt();
+    return value >= -9007199254740991 &&
+        value <= 9007199254740991 &&
+        value == value.toInt();
   }
 
   @override
   String toString() {
     final constraints = <String>[];
-    
+
     if (_min != null) constraints.add('min: $_min');
     if (_max != null) constraints.add('max: $_max');
     if (_exact != null) constraints.add('exact: $_exact');
@@ -589,8 +595,9 @@ class NumberSchema extends Schema<num> {
     if (_isNonPositive) constraints.add('nonPositive');
     if (_isFinite) constraints.add('finite');
     if (_isSafeInt) constraints.add('safeInt');
-    
-    final constraintStr = constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
+
+    final constraintStr =
+        constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
     return 'NumberSchema$constraintStr';
   }
-} 
+}

@@ -1,8 +1,8 @@
-import 'validation_result.dart';
 import 'error.dart';
+import 'validation_result.dart';
 
 /// Base class for all schemas in zod-bhai
-/// 
+///
 /// This abstract class provides the foundation for type-safe schema validation,
 /// parsing, and transformation. All schema types extend this class.
 abstract class Schema<T> {
@@ -21,13 +21,13 @@ abstract class Schema<T> {
   Type get type => T;
 
   /// Validates the input and returns a ValidationResult
-  /// 
+  ///
   /// This is the core validation method that all schemas must implement.
   /// It should perform type checking and any additional validation logic.
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]);
 
   /// Parses the input, throwing an exception if validation fails
-  /// 
+  ///
   /// This is a convenience method that unwraps the validation result.
   /// Use this when you want exceptions for validation failures.
   T parse(dynamic input, [List<String> path = const []]) {
@@ -39,7 +39,7 @@ abstract class Schema<T> {
   }
 
   /// Safely parses the input, returning null if validation fails
-  /// 
+  ///
   /// This is a convenience method for cases where you want to handle
   /// validation failures gracefully.
   T? safeParse(dynamic input, [List<String> path = const []]) {
@@ -48,21 +48,21 @@ abstract class Schema<T> {
   }
 
   /// Validates the input and returns true if valid, false otherwise
-  /// 
+  ///
   /// This is a convenience method for boolean validation checks.
   bool isValid(dynamic input, [List<String> path = const []]) {
     return validate(input, path).isSuccess;
   }
 
   /// Creates a new schema that applies a transformation after validation
-  /// 
+  ///
   /// The transformation function is only called if validation succeeds.
   Schema<R> transform<R>(R Function(T value) transformer) {
     return TransformSchema<T, R>(this, transformer);
   }
 
   /// Creates a new schema that applies additional validation
-  /// 
+  ///
   /// The refinement function should return true if the value is valid,
   /// false otherwise. You can provide a custom error message.
   Schema<T> refine(
@@ -74,7 +74,7 @@ abstract class Schema<T> {
   }
 
   /// Creates a new schema that applies async validation
-  /// 
+  ///
   /// The async refinement function should return true if the value is valid,
   /// false otherwise.
   Schema<T> refineAsync(
@@ -86,75 +86,76 @@ abstract class Schema<T> {
   }
 
   /// Creates a new schema that provides a default value
-  /// 
+  ///
   /// If validation fails, the default value will be used instead.
   Schema<T> defaultTo(T defaultValue) {
     return DefaultSchema<T>(this, defaultValue);
   }
 
   /// Creates a new schema that provides a computed default value
-  /// 
+  ///
   /// If validation fails, the default function will be called to compute a value.
   Schema<T> defaultToComputed(T Function() defaultValue) {
     return ComputedDefaultSchema<T>(this, defaultValue);
   }
 
   /// Creates a new schema that is optional (nullable)
-  /// 
+  ///
   /// This allows the schema to accept null values.
   Schema<T?> optional() {
     return OptionalSchema<T>(this);
   }
 
   /// Creates a new schema that is nullable
-  /// 
+  ///
   /// This allows the schema to accept null values (alias for optional).
   Schema<T?> nullable() => optional();
 
   /// Creates a new schema that provides a fallback value
-  /// 
+  ///
   /// If validation fails, the fallback value will be used.
   Schema<T> fallback(T fallbackValue) {
     return FallbackSchema<T>(this, fallbackValue);
   }
 
   /// Creates a new schema that provides a computed fallback value
-  /// 
+  ///
   /// If validation fails, the fallback function will be called.
-  Schema<T> fallbackComputed(T Function(ValidationErrorCollection errors) fallback) {
+  Schema<T> fallbackComputed(
+      T Function(ValidationErrorCollection errors) fallback) {
     return ComputedFallbackSchema<T>(this, fallback);
   }
 
   /// Creates a new schema that preprocesses the input
-  /// 
+  ///
   /// The preprocessor function is called before validation.
   Schema<T> preprocess<R>(R Function(dynamic input) preprocessor) {
     return PreprocessSchema<T, R>(this, preprocessor);
   }
 
   /// Creates a new schema that postprocesses the output
-  /// 
+  ///
   /// The postprocessor function is called after successful validation.
   Schema<T> postprocess(T Function(T value) postprocessor) {
     return PostprocessSchema<T>(this, postprocessor);
   }
 
   /// Creates a new schema that is lazy (evaluated only when needed)
-  /// 
+  ///
   /// This is useful for recursive schemas or schemas that depend on runtime values.
   static Schema<T> lazy<T>(Schema<T> Function() schemaFactory) {
     return LazySchema<T>(schemaFactory);
   }
 
   /// Creates a union schema from multiple schemas
-  /// 
+  ///
   /// The input will be validated against each schema in order.
   static Schema<T> union<T>(List<Schema<T>> schemas) {
     return UnionSchema<T>(schemas);
   }
 
   /// Creates an intersection schema from multiple schemas
-  /// 
+  ///
   /// The input must pass validation for all schemas.
   static Schema<T> intersection<T>(List<Schema<T>> schemas) {
     return IntersectionSchema<T>(schemas);
@@ -193,7 +194,7 @@ class TransformSchema<T, R> extends Schema<R> {
     final result = _schema.validate(input, path);
     if (result.isSuccess) {
       try {
-        final transformed = _transformer(result.data!);
+        final transformed = _transformer(result.data as T);
         return ValidationResult.success(transformed);
       } catch (e) {
         return ValidationResult.failure(
@@ -230,7 +231,7 @@ class RefineSchema<T> extends Schema<T> {
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     final result = _schema.validate(input, path);
     if (result.isSuccess) {
-      final value = result.data!;
+      final value = result.data as T;
       if (_validator(value)) {
         return result;
       } else {
@@ -269,7 +270,7 @@ class AsyncRefineSchema<T> extends Schema<T> {
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     final result = _schema.validate(input, path);
     if (result.isSuccess) {
-      final value = result.data!;
+      final value = result.data as T;
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.simple(
@@ -285,10 +286,11 @@ class AsyncRefineSchema<T> extends Schema<T> {
   }
 
   /// Async validation method
-  Future<ValidationResult<T>> validateAsync(dynamic input, [List<String> path = const []]) async {
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
     final result = _schema.validate(input, path);
     if (result.isSuccess) {
-      final value = result.data!;
+      final value = result.data as T;
       final isValid = await _validator(value);
       if (isValid) {
         return result;
@@ -440,7 +442,7 @@ class PostprocessSchema<T> extends Schema<T> {
     final result = _schema.validate(input, path);
     if (result.isSuccess) {
       try {
-        final postprocessed = _postprocessor(result.data!);
+        final postprocessed = _postprocessor(result.data as T);
         return ValidationResult.success(postprocessed);
       } catch (e) {
         return ValidationResult.failure(
@@ -516,6 +518,6 @@ class IntersectionSchema<T> extends Schema<T> {
       lastValidValue = result.data;
     }
 
-    return ValidationResult.success(lastValidValue!);
+    return ValidationResult.success(lastValidValue as T);
   }
-} 
+}

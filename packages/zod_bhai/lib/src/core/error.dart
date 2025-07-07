@@ -2,19 +2,19 @@
 class ValidationError {
   /// The error message
   final String message;
-  
+
   /// The path to the field that caused the error
   final List<String> path;
-  
+
   /// The actual value that failed validation
   final dynamic received;
-  
+
   /// The expected type or constraint
   final String expected;
-  
+
   /// Additional error code for programmatic handling
   final String? code;
-  
+
   /// Additional context information
   final Map<String, dynamic>? context;
 
@@ -68,7 +68,7 @@ class ValidationError {
     Map<String, dynamic>? context,
   }) {
     return ValidationError(
-      message: 'Failed to satisfy constraint: $constraint',
+      message: constraint,
       path: path,
       received: received,
       expected: constraint,
@@ -144,7 +144,8 @@ class ValidationErrorCollection {
   const ValidationErrorCollection(this._errors);
 
   /// Creates an empty error collection
-  factory ValidationErrorCollection.empty() => const ValidationErrorCollection([]);
+  factory ValidationErrorCollection.empty() =>
+      const ValidationErrorCollection([]);
 
   /// Creates an error collection with a single error
   factory ValidationErrorCollection.single(ValidationError error) =>
@@ -206,24 +207,26 @@ class ValidationErrorCollection {
   /// Gets a formatted string representation of all errors
   String get formattedErrors {
     if (_errors.isEmpty) return 'No validation errors';
-    
+
     return _errors.map((error) => error.toString()).join('\n');
   }
 
   /// Converts errors to a JSON-serializable format
   List<Map<String, dynamic>> toJson() {
-    return _errors.map((error) => {
-      'message': error.message,
-      'path': error.path,
-      'received': error.received,
-      'expected': error.expected,
-      'code': error.code,
-      'context': error.context,
-    }).toList();
+    return _errors
+        .map((error) => {
+              'message': error.message,
+              'path': error.path,
+              'received': error.received,
+              'expected': error.expected,
+              'code': error.code,
+              'context': error.context,
+            })
+        .toList();
   }
 
   @override
   String toString() {
     return 'ValidationErrorCollection(${_errors.length} errors)';
   }
-} 
+}

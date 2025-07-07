@@ -1,6 +1,6 @@
+import '../../core/error.dart';
 import '../../core/schema.dart';
 import '../../core/validation_result.dart';
-import '../../core/error.dart';
 
 /// Schema for validating boolean values
 class BooleanSchema extends Schema<bool> {
@@ -14,7 +14,8 @@ class BooleanSchema extends Schema<bool> {
   }) : _expectedValue = expectedValue;
 
   @override
-  ValidationResult<bool> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<bool> validate(dynamic input,
+      [List<String> path = const []]) {
     // Type check
     if (input is! bool) {
       return ValidationResult.failure(
@@ -48,17 +49,17 @@ class BooleanSchema extends Schema<bool> {
 
   /// Creates a schema that only accepts true
   BooleanSchema get trueValue => BooleanSchema(
-    description: description,
-    metadata: metadata,
-    expectedValue: true,
-  );
+        description: description,
+        metadata: metadata,
+        expectedValue: true,
+      );
 
   /// Creates a schema that only accepts false
   BooleanSchema get falseValue => BooleanSchema(
-    description: description,
-    metadata: metadata,
-    expectedValue: false,
-  );
+        description: description,
+        metadata: metadata,
+        expectedValue: false,
+      );
 
   /// Checks if boolean is true
   Schema<bool> isTrue() {
@@ -99,10 +100,11 @@ class BooleanSchema extends Schema<bool> {
   @override
   String toString() {
     final constraints = <String>[];
-    
+
     if (_expectedValue != null) constraints.add('expected: $_expectedValue');
-    
-    final constraintStr = constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
+
+    final constraintStr =
+        constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
     return 'BooleanSchema$constraintStr';
   }
-} 
+}

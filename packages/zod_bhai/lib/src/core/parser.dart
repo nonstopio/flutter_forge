@@ -1,40 +1,45 @@
+import 'error.dart';
 import 'schema.dart';
 import 'validation_result.dart';
-import 'error.dart';
 
 /// Utility class for parsing and validation operations
 class Parser {
   const Parser._();
 
   /// Parses a value using a schema, throwing an exception if validation fails
-  static T parse<T>(Schema<T> schema, dynamic input, [List<String> path = const []]) {
+  static T parse<T>(Schema<T> schema, dynamic input,
+      [List<String> path = const []]) {
     return schema.parse(input, path);
   }
 
   /// Safely parses a value using a schema, returning null if validation fails
-  static T? safeParse<T>(Schema<T> schema, dynamic input, [List<String> path = const []]) {
+  static T? safeParse<T>(Schema<T> schema, dynamic input,
+      [List<String> path = const []]) {
     return schema.safeParse(input, path);
   }
 
   /// Validates a value using a schema, returning a ValidationResult
-  static ValidationResult<T> validate<T>(Schema<T> schema, dynamic input, [List<String> path = const []]) {
+  static ValidationResult<T> validate<T>(Schema<T> schema, dynamic input,
+      [List<String> path = const []]) {
     return schema.validate(input, path);
   }
 
   /// Checks if a value is valid according to a schema
-  static bool isValid<T>(Schema<T> schema, dynamic input, [List<String> path = const []]) {
+  static bool isValid<T>(Schema<T> schema, dynamic input,
+      [List<String> path = const []]) {
     return schema.isValid(input, path);
   }
 
   /// Parses multiple values using a schema
-  static List<T> parseMany<T>(Schema<T> schema, List<dynamic> inputs, [List<String> path = const []]) {
+  static List<T> parseMany<T>(Schema<T> schema, List<dynamic> inputs,
+      [List<String> path = const []]) {
     final results = <T>[];
     final errors = <ValidationError>[];
 
     for (int i = 0; i < inputs.length; i++) {
       final result = schema.validate(inputs[i], [...path, i.toString()]);
       if (result.isSuccess) {
-        results.add(result.data!);
+        results.add(result.data as T);
       } else {
         errors.addAll(result.errors!.errors);
       }
@@ -50,7 +55,8 @@ class Parser {
   }
 
   /// Safely parses multiple values using a schema
-  static List<T> safeParseMany<T>(Schema<T> schema, List<dynamic> inputs, [List<String> path = const []]) {
+  static List<T> safeParseMany<T>(Schema<T> schema, List<dynamic> inputs,
+      [List<String> path = const []]) {
     final results = <T>[];
 
     for (int i = 0; i < inputs.length; i++) {
@@ -64,14 +70,16 @@ class Parser {
   }
 
   /// Validates multiple values using a schema
-  static ValidationResult<List<T>> validateMany<T>(Schema<T> schema, List<dynamic> inputs, [List<String> path = const []]) {
+  static ValidationResult<List<T>> validateMany<T>(
+      Schema<T> schema, List<dynamic> inputs,
+      [List<String> path = const []]) {
     final results = <T>[];
     final errors = <ValidationError>[];
 
     for (int i = 0; i < inputs.length; i++) {
       final result = schema.validate(inputs[i], [...path, i.toString()]);
       if (result.isSuccess) {
-        results.add(result.data!);
+        results.add(result.data as T);
       } else {
         errors.addAll(result.errors!.errors);
       }
@@ -85,32 +93,40 @@ class Parser {
   }
 
   /// Parses a JSON object using a schema
-  static T parseJson<T>(Schema<T> schema, Map<String, dynamic> json, [List<String> path = const []]) {
+  static T parseJson<T>(Schema<T> schema, Map<String, dynamic> json,
+      [List<String> path = const []]) {
     return schema.parse(json, path);
   }
 
   /// Safely parses a JSON object using a schema
-  static T? safeParseJson<T>(Schema<T> schema, Map<String, dynamic> json, [List<String> path = const []]) {
+  static T? safeParseJson<T>(Schema<T> schema, Map<String, dynamic> json,
+      [List<String> path = const []]) {
     return schema.safeParse(json, path);
   }
 
   /// Validates a JSON object using a schema
-  static ValidationResult<T> validateJson<T>(Schema<T> schema, Map<String, dynamic> json, [List<String> path = const []]) {
+  static ValidationResult<T> validateJson<T>(
+      Schema<T> schema, Map<String, dynamic> json,
+      [List<String> path = const []]) {
     return schema.validate(json, path);
   }
 
   /// Parses a JSON array using a schema
-  static List<T> parseJsonArray<T>(Schema<T> schema, List<dynamic> json, [List<String> path = const []]) {
+  static List<T> parseJsonArray<T>(Schema<T> schema, List<dynamic> json,
+      [List<String> path = const []]) {
     return parseMany(schema, json, path);
   }
 
   /// Safely parses a JSON array using a schema
-  static List<T> safeParseJsonArray<T>(Schema<T> schema, List<dynamic> json, [List<String> path = const []]) {
+  static List<T> safeParseJsonArray<T>(Schema<T> schema, List<dynamic> json,
+      [List<String> path = const []]) {
     return safeParseMany(schema, json, path);
   }
 
   /// Validates a JSON array using a schema
-  static ValidationResult<List<T>> validateJsonArray<T>(Schema<T> schema, List<dynamic> json, [List<String> path = const []]) {
+  static ValidationResult<List<T>> validateJsonArray<T>(
+      Schema<T> schema, List<dynamic> json,
+      [List<String> path = const []]) {
     return validateMany(schema, json, path);
   }
 
@@ -123,7 +139,7 @@ class Parser {
       final result = schema.validate(input, path);
       if (result.isSuccess) {
         try {
-          final transformed = transformer(result.data!);
+          final transformed = transformer(result.data as T);
           return ValidationResult.success(transformed);
         } catch (e) {
           return ValidationResult.failure(
@@ -151,7 +167,7 @@ class Parser {
     return (dynamic input, [List<String> path = const []]) {
       final result = schema.validate(input, path);
       if (result.isSuccess) {
-        final value = result.data!;
+        final value = result.data as T;
         if (validator(value)) {
           return result;
         } else {
@@ -242,7 +258,7 @@ class Parser {
       final result = schema.validate(input, path);
       if (result.isSuccess) {
         try {
-          final postprocessed = postprocessor(result.data!);
+          final postprocessed = postprocessor(result.data as T);
           return ValidationResult.success(postprocessed);
         } catch (e) {
           return ValidationResult.failure(
@@ -262,7 +278,8 @@ class Parser {
 }
 
 /// Function type for custom parsers
-typedef ParserFunction<T> = ValidationResult<T> Function(dynamic input, [List<String> path]);
+typedef ParserFunction<T> = ValidationResult<T> Function(dynamic input,
+    [List<String> path]);
 
 /// Extension methods for easier parsing
 extension ParserExtensions<T> on Schema<T> {
@@ -277,7 +294,8 @@ extension ParserExtensions<T> on Schema<T> {
   }
 
   /// Validates the input, returning a ValidationResult
-  ValidationResult<T> validateInput(dynamic input, [List<String> path = const []]) {
+  ValidationResult<T> validateInput(dynamic input,
+      [List<String> path = const []]) {
     return Parser.validate(this, input, path);
   }
 
@@ -297,7 +315,8 @@ extension ParserExtensions<T> on Schema<T> {
   }
 
   /// Validates a JSON object
-  ValidationResult<T> validateJson(Map<String, dynamic> json, [List<String> path = const []]) {
+  ValidationResult<T> validateJson(Map<String, dynamic> json,
+      [List<String> path = const []]) {
     return Parser.validateJson(this, json, path);
   }
-} 
+}

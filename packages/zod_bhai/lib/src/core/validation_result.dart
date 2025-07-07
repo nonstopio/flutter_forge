@@ -1,7 +1,7 @@
 import 'error.dart';
 
 /// Represents the result of a validation operation
-/// 
+///
 /// This class provides a type-safe way to handle validation results,
 /// similar to Rust's Result type or functional programming patterns.
 sealed class ValidationResult<T> {
@@ -11,7 +11,8 @@ sealed class ValidationResult<T> {
   const factory ValidationResult.success(T data) = ValidationSuccess<T>;
 
   /// Creates a failed validation result
-  const factory ValidationResult.failure(ValidationErrorCollection errors) = ValidationFailure<T>;
+  const factory ValidationResult.failure(ValidationErrorCollection errors) =
+      ValidationFailure<T>;
 
   /// Checks if the validation was successful
   bool get isSuccess;
@@ -41,7 +42,8 @@ sealed class ValidationResult<T> {
   ValidationResult<T> onSuccess(void Function(T data) callback);
 
   /// Executes a function on failure
-  ValidationResult<T> onFailure(void Function(ValidationErrorCollection errors) callback);
+  ValidationResult<T> onFailure(
+      void Function(ValidationErrorCollection errors) callback);
 
   /// Unwraps the value, throwing an exception if validation failed
   T unwrap();
@@ -102,7 +104,8 @@ class ValidationSuccess<T> extends ValidationResult<T> {
   }
 
   @override
-  ValidationResult<T> onFailure(void Function(ValidationErrorCollection errors) callback) {
+  ValidationResult<T> onFailure(
+      void Function(ValidationErrorCollection errors) callback) {
     return this;
   }
 
@@ -113,7 +116,8 @@ class ValidationSuccess<T> extends ValidationResult<T> {
   T unwrapOr(T defaultValue) => _data;
 
   @override
-  T unwrapOrElse(T Function(ValidationErrorCollection errors) defaultValue) => _data;
+  T unwrapOrElse(T Function(ValidationErrorCollection errors) defaultValue) =>
+      _data;
 
   @override
   T? toNullable() => _data;
@@ -176,7 +180,8 @@ class ValidationFailure<T> extends ValidationResult<T> {
   }
 
   @override
-  ValidationResult<T> onFailure(void Function(ValidationErrorCollection errors) callback) {
+  ValidationResult<T> onFailure(
+      void Function(ValidationErrorCollection errors) callback) {
     callback(_errors);
     return this;
   }
@@ -190,7 +195,8 @@ class ValidationFailure<T> extends ValidationResult<T> {
   T unwrapOr(T defaultValue) => defaultValue;
 
   @override
-  T unwrapOrElse(T Function(ValidationErrorCollection errors) defaultValue) => defaultValue(_errors);
+  T unwrapOrElse(T Function(ValidationErrorCollection errors) defaultValue) =>
+      defaultValue(_errors);
 
   @override
   T? toNullable() => null;
@@ -227,8 +233,12 @@ class Either<L, R> {
   final R? _right;
   final bool _isLeft;
 
-  const Either._left(this._left) : _right = null, _isLeft = true;
-  const Either._right(this._right) : _left = null, _isLeft = false;
+  const Either._left(this._left)
+      : _right = null,
+        _isLeft = true;
+  const Either._right(this._right)
+      : _left = null,
+        _isLeft = false;
 
   /// Creates an Either with a left value
   factory Either.left(L value) => Either._left(value);
@@ -257,25 +267,25 @@ class Either<L, R> {
   /// Maps the left value
   Either<L2, R> mapLeft<L2>(L2 Function(L value) mapper) {
     if (_isLeft) {
-      return Either.left(mapper(_left!));
+      return Either.left(mapper(_left as L));
     }
-    return Either.right(_right!);
+    return Either.right(_right as R);
   }
 
   /// Maps the right value
   Either<L, R2> mapRight<R2>(R2 Function(R value) mapper) {
     if (_isLeft) {
-      return Either.left(_left!);
+      return Either.left(_left as L);
     }
-    return Either.right(mapper(_right!));
+    return Either.right(mapper(_right as R));
   }
 
   /// Folds both values into a single result
   T fold<T>(T Function(L left) leftMapper, T Function(R right) rightMapper) {
     if (_isLeft) {
-      return leftMapper(_left!);
+      return leftMapper(_left as L);
     }
-    return rightMapper(_right!);
+    return rightMapper(_right as R);
   }
 
   @override
@@ -291,5 +301,6 @@ class Either<L, R> {
   int get hashCode => Object.hash(_isLeft, _left, _right);
 
   @override
-  String toString() => _isLeft ? 'Either.left($_left)' : 'Either.right($_right)';
-} 
+  String toString() =>
+      _isLeft ? 'Either.left($_left)' : 'Either.right($_right)';
+}

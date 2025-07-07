@@ -1,6 +1,6 @@
+import '../../core/error.dart';
 import '../../core/schema.dart';
 import '../../core/validation_result.dart';
-import '../../core/error.dart';
 
 /// Schema for validating null values
 class NullSchema extends Schema<Null> {
@@ -10,7 +10,8 @@ class NullSchema extends Schema<Null> {
   });
 
   @override
-  ValidationResult<Null> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Null> validate(dynamic input,
+      [List<String> path = const []]) {
     // Type check
     if (input != null) {
       return ValidationResult.failure(
@@ -29,4 +30,4 @@ class NullSchema extends Schema<Null> {
 
   @override
   String toString() => 'NullSchema';
-} 
+}

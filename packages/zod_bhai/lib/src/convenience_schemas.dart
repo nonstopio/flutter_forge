@@ -1,24 +1,24 @@
-import 'schemas/primitive/string_schema.dart';
-import 'schemas/primitive/number_schema.dart';
-import 'schemas/primitive/boolean_schema.dart';
-import 'schemas/primitive/null_schema.dart';
+import 'core/error.dart';
 import 'core/schema.dart';
 import 'core/validation_result.dart';
-import 'core/error.dart';
+import 'schemas/primitive/boolean_schema.dart';
+import 'schemas/primitive/null_schema.dart';
+import 'schemas/primitive/number_schema.dart';
+import 'schemas/primitive/string_schema.dart';
 
 /// Convenience class that provides factory methods for creating schemas
-/// 
+///
 /// This class provides a Zod-like API for creating schemas:
 /// ```dart
-/// final userSchema = z.object({
-///   'name': z.string().min(2).max(50),
-///   'email': z.string().email(),
-///   'age': z.number().min(18).max(120),
-///   'isActive': z.boolean(),
+/// final userSchema = Z.object({
+///   'name': Z.string().min(2).max(50),
+///   'email': Z.string().email(),
+///   'age': Z.number().min(18).max(120),
+///   'isActive': Z.boolean(),
 /// });
 /// ```
-class z {
-  const z._();
+class Z {
+  const Z._();
 
   /// Creates a string schema
   static StringSchema string() => const StringSchema();
@@ -36,10 +36,12 @@ class z {
   static NullSchema get nullValue => const NullSchema();
 
   /// Creates a true boolean schema
-  static BooleanSchema get trueValue => const BooleanSchema(expectedValue: true);
+  static BooleanSchema get trueValue =>
+      const BooleanSchema(expectedValue: true);
 
   /// Creates a false boolean schema
-  static BooleanSchema get falseValue => const BooleanSchema(expectedValue: false);
+  static BooleanSchema get falseValue =>
+      const BooleanSchema(expectedValue: false);
 
   /// Creates a literal schema for any value
   static Schema<T> literal<T>(T value) {
@@ -62,12 +64,15 @@ class z {
   }
 
   /// Creates a custom schema with a validation function
-  static Schema<T> custom<T>(ValidationResult<T> Function(dynamic input, List<String> path) validator) {
+  static Schema<T> custom<T>(
+      ValidationResult<T> Function(dynamic input, List<String> path)
+          validator) {
     return _CustomSchema<T>(validator);
   }
 
   /// Creates an object schema
-  static Schema<Map<String, dynamic>> object(Map<String, Schema<dynamic>> shape) {
+  static Schema<Map<String, dynamic>> object(
+      Map<String, Schema<dynamic>> shape) {
     return _ObjectSchema(shape);
   }
 
@@ -226,7 +231,8 @@ class _AnySchema extends Schema<dynamic> {
   const _AnySchema();
 
   @override
-  ValidationResult<dynamic> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<dynamic> validate(dynamic input,
+      [List<String> path = const []]) {
     return ValidationResult.success(input);
   }
 }
@@ -236,7 +242,8 @@ class _UnknownSchema extends Schema<dynamic> {
   const _UnknownSchema();
 
   @override
-  ValidationResult<dynamic> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<dynamic> validate(dynamic input,
+      [List<String> path = const []]) {
     return ValidationResult.success(input);
   }
 }
@@ -246,7 +253,8 @@ class _NeverSchema extends Schema<Never> {
   const _NeverSchema();
 
   @override
-  ValidationResult<Never> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Never> validate(dynamic input,
+      [List<String> path = const []]) {
     return ValidationResult.failure(
       ValidationErrorCollection.single(
         ValidationError.constraintViolation(
@@ -265,7 +273,8 @@ class _VoidSchema extends Schema<void> {
   const _VoidSchema();
 
   @override
-  ValidationResult<void> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<void> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input == null) {
       return ValidationResult.success(null);
     }
@@ -286,7 +295,8 @@ class _DateSchema extends Schema<DateTime> {
   const _DateSchema();
 
   @override
-  ValidationResult<DateTime> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<DateTime> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is DateTime) {
       return ValidationResult.success(input);
     }
@@ -313,7 +323,8 @@ class _BigIntSchema extends Schema<BigInt> {
   const _BigIntSchema();
 
   @override
-  ValidationResult<BigInt> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<BigInt> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is BigInt) {
       return ValidationResult.success(input);
     }
@@ -342,7 +353,8 @@ class _SymbolSchema extends Schema<Symbol> {
   const _SymbolSchema();
 
   @override
-  ValidationResult<Symbol> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Symbol> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Symbol) {
       return ValidationResult.success(input);
     }
@@ -363,7 +375,8 @@ class _FunctionSchema extends Schema<Function> {
   const _FunctionSchema();
 
   @override
-  ValidationResult<Function> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Function> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Function) {
       return ValidationResult.success(input);
     }
@@ -384,7 +397,8 @@ class _RegexSchema extends Schema<RegExp> {
   const _RegexSchema();
 
   @override
-  ValidationResult<RegExp> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<RegExp> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is RegExp) {
       return ValidationResult.success(input);
     }
@@ -405,7 +419,8 @@ class _MapSchema extends Schema<Map<String, dynamic>> {
   const _MapSchema();
 
   @override
-  ValidationResult<Map<String, dynamic>> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Map<String, dynamic>> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Map<String, dynamic>) {
       return ValidationResult.success(input);
     }
@@ -426,7 +441,8 @@ class _SetSchema extends Schema<Set<dynamic>> {
   const _SetSchema();
 
   @override
-  ValidationResult<Set<dynamic>> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Set<dynamic>> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Set<dynamic>) {
       return ValidationResult.success(input);
     }
@@ -447,7 +463,8 @@ class _RecordSchema extends Schema<Map<String, dynamic>> {
   const _RecordSchema();
 
   @override
-  ValidationResult<Map<String, dynamic>> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Map<String, dynamic>> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Map<String, dynamic>) {
       return ValidationResult.success(input);
     }
@@ -468,7 +485,8 @@ class _PromiseSchema extends Schema<Future<dynamic>> {
   const _PromiseSchema();
 
   @override
-  ValidationResult<Future<dynamic>> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Future<dynamic>> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is Future<dynamic>) {
       return ValidationResult.success(input);
     }
@@ -489,7 +507,8 @@ class _UndefinedSchema extends Schema<void> {
   const _UndefinedSchema();
 
   @override
-  ValidationResult<void> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<void> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input == null) {
       return ValidationResult.success(null);
     }
@@ -510,7 +529,8 @@ class _NanSchema extends Schema<double> {
   const _NanSchema();
 
   @override
-  ValidationResult<double> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<double> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input.isNaN) {
       return ValidationResult.success(double.nan);
     }
@@ -532,7 +552,8 @@ class _InfinitySchema extends Schema<double> {
   const _InfinitySchema();
 
   @override
-  ValidationResult<double> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<double> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input.isInfinite) {
       return ValidationResult.success(double.infinity);
     }
@@ -554,7 +575,8 @@ class _NegativeInfinitySchema extends Schema<double> {
   const _NegativeInfinitySchema();
 
   @override
-  ValidationResult<double> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<double> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input.isInfinite && input.isNegative) {
       return ValidationResult.success(double.negativeInfinity);
     }
@@ -576,7 +598,8 @@ class _PositiveInfinitySchema extends Schema<double> {
   const _PositiveInfinitySchema();
 
   @override
-  ValidationResult<double> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<double> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input.isInfinite && !input.isNegative) {
       return ValidationResult.success(double.infinity);
     }
@@ -598,7 +621,8 @@ class _ZeroSchema extends Schema<num> {
   const _ZeroSchema();
 
   @override
-  ValidationResult<num> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<num> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input == 0) {
       return ValidationResult.success(input);
     }
@@ -620,7 +644,8 @@ class _OneSchema extends Schema<num> {
   const _OneSchema();
 
   @override
-  ValidationResult<num> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<num> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input == 1) {
       return ValidationResult.success(input);
     }
@@ -642,7 +667,8 @@ class _NegativeOneSchema extends Schema<num> {
   const _NegativeOneSchema();
 
   @override
-  ValidationResult<num> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<num> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is num && input == -1) {
       return ValidationResult.success(input);
     }
@@ -661,7 +687,8 @@ class _NegativeOneSchema extends Schema<num> {
 
 /// Schema for custom validation
 class _CustomSchema<T> extends Schema<T> {
-  final ValidationResult<T> Function(dynamic input, List<String> path) _validator;
+  final ValidationResult<T> Function(dynamic input, List<String> path)
+      _validator;
 
   const _CustomSchema(this._validator);
 
@@ -678,7 +705,8 @@ class _ObjectSchema extends Schema<Map<String, dynamic>> {
   const _ObjectSchema(this._shape);
 
   @override
-  ValidationResult<Map<String, dynamic>> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<Map<String, dynamic>> validate(dynamic input,
+      [List<String> path = const []]) {
     if (input is! Map<String, dynamic>) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
@@ -699,7 +727,8 @@ class _ObjectSchema extends Schema<Map<String, dynamic>> {
       final fieldSchema = entry.value;
       final fieldValue = input[fieldName];
 
-      final fieldResult = fieldSchema.validate(fieldValue, [...path, fieldName]);
+      final fieldResult =
+          fieldSchema.validate(fieldValue, [...path, fieldName]);
       if (fieldResult.isSuccess) {
         result[fieldName] = fieldResult.data;
       } else {
@@ -713,4 +742,4 @@ class _ObjectSchema extends Schema<Map<String, dynamic>> {
 
     return ValidationResult.success(result);
   }
-} 
+}

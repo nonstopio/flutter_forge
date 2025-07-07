@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zod_bhai/zod_bhai.dart';
+
+import 'examples/string_validation_example.dart';
 
 void main() {
   runApp(const ZodBhaiExampleApp());
@@ -11,214 +12,119 @@ class ZodBhaiExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Zod-Bhai Example',
+      title: 'Zod-Bhai Validation Showcase',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.light,
+        ),
       ),
-      home: const ValidationExamplePage(),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+      ),
+      home: const ValidationShowcasePage(),
     );
   }
 }
 
-class ValidationExamplePage extends StatefulWidget {
-  const ValidationExamplePage({super.key});
+class ValidationShowcasePage extends StatefulWidget {
+  const ValidationShowcasePage({super.key});
 
   @override
-  State<ValidationExamplePage> createState() => _ValidationExamplePageState();
+  State<ValidationShowcasePage> createState() => _ValidationShowcasePageState();
 }
 
-class _ValidationExamplePageState extends State<ValidationExamplePage> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _ageController = TextEditingController();
-  
-  String? _validationResult;
-  bool _isValid = false;
-
-  // Define the user schema
-  final _userSchema = z.object({
-    'name': z.string().min(2).max(50),
-    'email': z.string().email(),
-    'age': z.number().min(18).max(120).int(),
-  });
-
-  void _validateForm() {
-    final data = {
-      'name': _nameController.text,
-      'email': _emailController.text,
-      'age': int.tryParse(_ageController.text) ?? 0,
-    };
-
-    final result = _userSchema.validate(data);
-    
-    setState(() {
-      if (result.isSuccess) {
-        _validationResult = '✅ Validation successful!\nData: ${result.data}';
-        _isValid = true;
-      } else {
-        _validationResult = '❌ Validation failed:\n${result.errors?.formattedErrors ?? 'Unknown error'}';
-        _isValid = false;
-      }
-    });
-  }
-
-  void _clearForm() {
-    _nameController.clear();
-    _emailController.clear();
-    _ageController.clear();
-    setState(() {
-      _validationResult = null;
-      _isValid = false;
-    });
-  }
-
+class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Zod-Bhai Example'),
+        title: const Text('Zod-Bhai Validation Showcase'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        elevation: 0,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'User Validation Example',
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Interactive Validation Examples',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 20),
-              
-              // Name field
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Name',
-                  hintText: 'Enter your name (2-50 characters)',
-                  border: OutlineInputBorder(),
-                ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Explore zod_bhai validation features through interactive examples',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(height: 16),
-              
-              // Email field
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email address',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              
-              // Age field
-              TextFormField(
-                controller: _ageController,
-                decoration: const InputDecoration(
-                  labelText: 'Age',
-                  hintText: 'Enter your age (18-120)',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 24),
-              
-              // Validation buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _validateForm,
-                      child: const Text('Validate'),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: _clearForm,
-                      child: const Text('Clear'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              
-              // Validation result
-              if (_validationResult != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: _isValid ? Colors.green.shade50 : Colors.red.shade50,
-                    border: Border.all(
-                      color: _isValid ? Colors.green : Colors.red,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _validationResult!,
-                    style: TextStyle(
-                      color: _isValid ? Colors.green.shade800 : Colors.red.shade800,
-                      fontFamily: 'monospace',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-              ],
-              
-              // Schema information
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Schema Definition:',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(4),
+            ),
+            const SizedBox(height: 24),
+            const StringValidationExample(),
+            const SizedBox(height: 24),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.construction,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        child: const Text(
-                          '''final userSchema = z.object({
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
-  'age': z.number().min(18).max(120).int(),
-});''',
-                          style: TextStyle(
-                            fontFamily: 'monospace',
-                            fontSize: 12,
+                        const SizedBox(width: 8),
+                        Text(
+                          'Coming Soon',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'More validation examples will be added here:',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        'Number Validation',
+                        'Boolean Validation',
+                        'Object Validation',
+                        'Array Validation',
+                        'Custom Validation',
+                        'Complex Schemas',
+                      ].map((text) => Chip(
+                        label: Text(text),
+                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                        ),
+                      )).toList(),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _ageController.dispose();
-    super.dispose();
-  }
-} 
+ 

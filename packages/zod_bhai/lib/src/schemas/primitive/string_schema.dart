@@ -1,36 +1,36 @@
+import '../../core/error.dart';
 import '../../core/schema.dart';
 import '../../core/validation_result.dart';
-import '../../core/error.dart';
 
 /// Schema for validating string values
 class StringSchema extends Schema<String> {
   /// Minimum length constraint
   final int? _minLength;
-  
+
   /// Maximum length constraint
   final int? _maxLength;
-  
+
   /// Exact length constraint
   final int? _exactLength;
-  
+
   /// Regular expression pattern
   final RegExp? _pattern;
-  
+
   /// Email validation flag
   final bool _isEmail;
-  
+
   /// URL validation flag
   final bool _isUrl;
-  
+
   /// UUID validation flag
   final bool _isUuid;
-  
+
   /// Trim whitespace flag
   final bool _trim;
-  
+
   /// Convert to lowercase flag
   final bool _toLowerCase;
-  
+
   /// Convert to uppercase flag
   final bool _toUpperCase;
 
@@ -59,7 +59,8 @@ class StringSchema extends Schema<String> {
         _toUpperCase = toUpperCase;
 
   @override
-  ValidationResult<String> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<String> validate(dynamic input,
+      [List<String> path = const []]) {
     // Type check
     if (input is! String) {
       return ValidationResult.failure(
@@ -483,7 +484,7 @@ class StringSchema extends Schema<String> {
   bool _isValidIpv4(String ip) {
     final parts = ip.split('.');
     if (parts.length != 4) return false;
-    
+
     for (final part in parts) {
       final num = int.tryParse(part);
       if (num == null || num < 0 || num > 255) return false;
@@ -495,7 +496,7 @@ class StringSchema extends Schema<String> {
     // Simplified IPv6 validation
     final parts = ip.split(':');
     if (parts.length < 3 || parts.length > 8) return false;
-    
+
     for (final part in parts) {
       if (part.isEmpty) continue;
       final num = int.tryParse(part, radix: 16);
@@ -507,7 +508,7 @@ class StringSchema extends Schema<String> {
   @override
   String toString() {
     final constraints = <String>[];
-    
+
     if (_minLength != null) constraints.add('min: $_minLength');
     if (_maxLength != null) constraints.add('max: $_maxLength');
     if (_exactLength != null) constraints.add('length: $_exactLength');
@@ -518,8 +519,9 @@ class StringSchema extends Schema<String> {
     if (_trim) constraints.add('trim');
     if (_toLowerCase) constraints.add('toLowerCase');
     if (_toUpperCase) constraints.add('toUpperCase');
-    
-    final constraintStr = constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
+
+    final constraintStr =
+        constraints.isNotEmpty ? ' (${constraints.join(', ')})' : '';
     return 'StringSchema$constraintStr';
   }
-} 
+}
