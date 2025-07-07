@@ -16,3 +16,4 @@ mason-lock.json
 .mason
 package-lock.json
 devtools_options.yaml
+.claude/sessions

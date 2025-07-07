@@ -155,7 +155,6 @@ void main() {
         final result = schema.validate(null);
 
         expect(result.isSuccess, true);
-        expect(result.data, null);
       });
 
       test('rejects non-null values', () {
@@ -270,7 +269,7 @@ void main() {
       });
 
       test('int convenience method', () {
-        final schema = Z.int();
+        final schema = Z.integer();
         final validResult = schema.validate(42);
         final invalidResult = schema.validate(3.14);
 

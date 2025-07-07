@@ -5,12 +5,12 @@ export 'form_validation_extensions.dart';
 
 class ClipboardHelper {
   static Future<void> copyToClipboard(
-    BuildContext context, 
+    BuildContext context,
     String text, {
     String? successMessage,
   }) async {
     await Clipboard.setData(ClipboardData(text: text));
-    
+
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

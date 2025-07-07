@@ -56,16 +56,16 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
             Text(
               'Interactive Validation Examples',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               'Explore zod_bhai validation features through interactive examples',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
             const SizedBox(height: 24),
             const StringValidationExample(),
@@ -85,10 +85,13 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                         const SizedBox(width: 8),
                         Text(
                           'Coming Soon',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ],
                     ),
@@ -108,13 +111,19 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                         'Array Validation',
                         'Custom Validation',
                         'Complex Schemas',
-                      ].map((text) => Chip(
-                        label: Text(text),
-                        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                        labelStyle: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
-                        ),
-                      )).toList(),
+                      ]
+                          .map((text) => Chip(
+                                label: Text(text),
+                                backgroundColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer,
+                                labelStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
+                                ),
+                              ))
+                          .toList(),
                     ),
                   ],
                 ),
@@ -126,5 +135,3 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
     );
   }
 }
-
- 

@@ -16,7 +16,7 @@ class SchemaDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
@@ -45,9 +45,9 @@ class SchemaDisplay extends StatelessWidget {
                       child: Text(
                         title,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
-                        ),
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurface,
+                            ),
                       ),
                     ),
                     IconButton(
@@ -70,8 +70,8 @@ class SchemaDisplay extends StatelessWidget {
                   Text(
                     description!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                          color: colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ],
@@ -90,10 +90,10 @@ class SchemaDisplay extends StatelessWidget {
             child: SelectableText(
               code,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontFamily: 'monospace',
-                color: colorScheme.onSurface,
-                height: 1.4,
-              ),
+                    fontFamily: 'monospace',
+                    color: colorScheme.onSurface,
+                    height: 1.4,
+                  ),
             ),
           ),
         ],
@@ -103,7 +103,7 @@ class SchemaDisplay extends StatelessWidget {
 
   void _copyToClipboard(BuildContext context) {
     Clipboard.setData(ClipboardData(text: code));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Row(
