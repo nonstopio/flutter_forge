@@ -562,6 +562,44 @@ void main() {
         expect(button.onPressed, isNotNull);
         expect(find.text('Negative'), findsOneWidget);
       });
+
+      testWidgets('should never display negative countdown values',
+          (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: TimerButton(
+                label: 'Test',
+                onPressed: () {},
+                timeOutInSeconds: 2,
+              ),
+            ),
+          ),
+        );
+
+        // Initial state should show 2s
+        expect(find.text('Test |  2s'), findsOneWidget);
+        expect(find.textContaining('-'), findsNothing);
+
+        // After 1 second, should show 1s
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.text('Test |  1s'), findsOneWidget);
+        expect(find.textContaining('-'), findsNothing);
+
+        // After 2 seconds total, should show 0s and then just label
+        await tester.pump(const Duration(seconds: 1));
+        await tester.pumpAndSettle();
+
+        // Should show just the label, no countdown
+        expect(find.text('Test'), findsOneWidget);
+        expect(find.textContaining('0s'), findsNothing);
+        expect(find.textContaining('-'), findsNothing);
+
+        // Wait a bit more to ensure no negative values appear
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(find.text('Test'), findsOneWidget);
+        expect(find.textContaining('-'), findsNothing);
+      });
     });
   });
 
