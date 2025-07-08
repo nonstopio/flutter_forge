@@ -315,7 +315,8 @@ extension ValidationResultExtensions<T> on ValidationResult<T> {
     if (isSuccess) {
       return '✅ Validation successful';
     } else {
-      final errorMessages = errors!.errors.map((e) => '• ${e.message}').join('\n');
+      final errorMessages =
+          errors!.errors.map((e) => '• ${e.message}').join('\n');
       return '❌ Validation failed:\n$errorMessages';
     }
   }
@@ -335,7 +336,7 @@ extension ValidationErrorCollectionExtensions on ValidationErrorCollection {
     buffer.writeln('Input type: ${value.runtimeType}');
     buffer.writeln();
     buffer.writeln('Errors:');
-    
+
     for (final error in errors) {
       final pathStr = error.path.isEmpty ? 'root' : error.fullPath;
       buffer.writeln('• At $pathStr: ${error.message}');
@@ -346,7 +347,7 @@ extension ValidationErrorCollectionExtensions on ValidationErrorCollection {
         buffer.writeln('  Received: ${error.received}');
       }
     }
-    
+
     return buffer.toString().trim();
   }
 }

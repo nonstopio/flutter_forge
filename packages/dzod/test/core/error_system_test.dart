@@ -508,7 +508,10 @@ void main() {
 
     test('should filter by depth', () {
       final filtered = ErrorUtils.filterByDepth(testErrors, 2);
-      expect(filtered, hasLength(2)); // ['user', 'name'] and ['user', 'age']
+      expect(
+          filtered,
+          hasLength(
+              3)); // ['user', 'name'], ['user', 'age'], and ['admin', 'role']
     });
 
     test('should filter by category', () {
@@ -536,7 +539,7 @@ void main() {
     test('should group by depth', () {
       final grouped = ErrorUtils.groupByDepth(testErrors);
       expect(grouped[0], hasLength(1)); // root path
-      expect(grouped[2], hasLength(2)); // user.name, user.age
+      expect(grouped[2], hasLength(3)); // user.name, user.age, admin.role
       expect(grouped[3], hasLength(1)); // user.profile.avatar
     });
 

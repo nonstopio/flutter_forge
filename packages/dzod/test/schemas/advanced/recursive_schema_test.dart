@@ -670,7 +670,7 @@ void main() {
 
         // Create a chain of 50 nodes (well within limit)
         Map<String, dynamic> buildChain(int depth) {
-          if (depth <= 0) {
+          if (depth <= 1) {
             return {'value': depth};
           }
           return {

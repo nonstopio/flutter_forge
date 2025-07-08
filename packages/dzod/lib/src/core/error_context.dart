@@ -181,8 +181,7 @@ class ErrorContext {
 
   /// Gets the path segments as a breadcrumb trail
   List<String> get breadcrumbs {
-    if (parent == null) return path;
-    return [...parent!.breadcrumbs, ...path];
+    return path;
   }
 
   /// Gets all ancestors in the context hierarchy
