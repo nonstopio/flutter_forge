@@ -1,20 +1,4 @@
-import 'core/error.dart';
-import 'core/schema.dart';
-import 'core/validation_result.dart';
-import 'flutter/widget_schemas.dart';
-import 'schemas/advanced/coercion_schema.dart';
-import 'schemas/advanced/discriminated_union_schema.dart';
-import 'schemas/advanced/pipeline_schema.dart';
-import 'schemas/advanced/recursive_schema.dart';
-import 'schemas/collections/array_schema.dart';
-import 'schemas/collections/record_schema.dart';
-import 'schemas/collections/tuple_schema.dart';
-import 'schemas/object/object_schema.dart';
-import 'schemas/primitive/boolean_schema.dart';
-import 'schemas/primitive/null_schema.dart';
-import 'schemas/primitive/number_schema.dart';
-import 'schemas/primitive/string_schema.dart';
-import 'schemas/specialized/enum_schema.dart';
+import 'package:dzod/dzod.dart';
 
 /// Convenience class that provides factory methods for creating schemas
 ///
@@ -289,17 +273,16 @@ class Z {
           {String? message, String? code}) =>
       AsyncRefineStage<T>();
 
-  // Flutter-specific schemas
-  /// Create a Color schema
+  /// Create a Color schema for Flutter Color validation
   static ColorSchema color() => ColorSchema();
 
-  /// Create an EdgeInsets schema
+  /// Create an EdgeInsets schema for Flutter EdgeInsets validation
   static EdgeInsetsSchema edgeInsets() => EdgeInsetsSchema();
 
-  /// Create a Duration schema
+  /// Create a Duration schema for Dart/Flutter Duration validation
   static DurationSchema duration() => DurationSchema();
 
-  /// Create a Size schema
+  /// Create a Size schema for Flutter Size validation
   static SizeSchema size() => SizeSchema();
 }
 
