@@ -68,7 +68,7 @@ class ResultDisplay extends StatelessWidget {
               ),
             ),
             child: SelectableText(
-              result.toHumanReadable(value),
+              result.toHumanReadable(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontFamily: 'monospace',
                     color:

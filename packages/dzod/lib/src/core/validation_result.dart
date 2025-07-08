@@ -304,3 +304,49 @@ class Either<L, R> {
   String toString() =>
       _isLeft ? 'Either.left($_left)' : 'Either.right($_right)';
 }
+
+/// Extension on ValidationResult to provide human-readable output
+extension ValidationResultExtensions<T> on ValidationResult<T> {
+  /// Generates a clean, human-readable validation result message
+  ///
+  /// For successful validation, shows a simple success indicator.
+  /// For failed validation, shows formatted error messages without the input value.
+  String toHumanReadable() {
+    if (isSuccess) {
+      return '✅ Validation successful';
+    } else {
+      final errorMessages = errors!.errors.map((e) => '• ${e.message}').join('\n');
+      return '❌ Validation failed:\n$errorMessages';
+    }
+  }
+}
+
+/// Extension on ValidationErrorCollection to provide detailed error information
+extension ValidationErrorCollectionExtensions on ValidationErrorCollection {
+  /// Provides detailed error information including the input value
+  ///
+  /// Shows comprehensive information including:
+  /// - Input value and its type
+  /// - Formatted list of all errors with paths
+  /// - Human-readable error summaries
+  String details(dynamic value) {
+    final buffer = StringBuffer();
+    buffer.writeln('❌ Validation failed for input: "$value"');
+    buffer.writeln('Input type: ${value.runtimeType}');
+    buffer.writeln();
+    buffer.writeln('Errors:');
+    
+    for (final error in errors) {
+      final pathStr = error.path.isEmpty ? 'root' : error.fullPath;
+      buffer.writeln('• At $pathStr: ${error.message}');
+      if (error.expected != 'valid value') {
+        buffer.writeln('  Expected: ${error.expected}');
+      }
+      if (error.received != value) {
+        buffer.writeln('  Received: ${error.received}');
+      }
+    }
+    
+    return buffer.toString().trim();
+  }
+}
