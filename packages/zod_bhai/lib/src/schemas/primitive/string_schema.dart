@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../core/error.dart';
 import '../../core/schema.dart';
 import '../../core/validation_result.dart';
@@ -451,6 +453,98 @@ class StringSchema extends Schema<String> {
     ) as StringSchema;
   }
 
+  /// Checks if string is a valid CUID (Collision-resistant Unique Identifier)
+  Schema<String> cuid() {
+    return refine(
+      (value) => _isValidCuid(value),
+      message: 'must be a valid CUID',
+      code: 'invalid_cuid',
+    );
+  }
+
+  /// Checks if string is a valid CUID2 (CUID version 2)
+  Schema<String> cuid2() {
+    return refine(
+      (value) => _isValidCuid2(value),
+      message: 'must be a valid CUID2',
+      code: 'invalid_cuid2',
+    );
+  }
+
+  /// Checks if string is a valid ULID (Universally Unique Lexicographically Sortable Identifier)
+  Schema<String> ulid() {
+    return refine(
+      (value) => _isValidUlid(value),
+      message: 'must be a valid ULID',
+      code: 'invalid_ulid',
+    );
+  }
+
+  /// Checks if string is a valid Base64 encoded string
+  Schema<String> base64() {
+    return refine(
+      (value) => _isValidBase64(value),
+      message: 'must be a valid Base64 encoded string',
+      code: 'invalid_base64',
+    );
+  }
+
+  /// Checks if string contains only emoji characters
+  Schema<String> emoji() {
+    return refine(
+      (value) => _isValidEmoji(value),
+      message: 'must contain only emoji characters',
+      code: 'invalid_emoji',
+    );
+  }
+
+  /// Checks if string is a valid NanoID (URL-safe unique string identifier)
+  Schema<String> nanoid({int? length}) {
+    return refine(
+      (value) => _isValidNanoid(value, length),
+      message: length != null
+          ? 'must be a valid NanoID with length $length'
+          : 'must be a valid NanoID',
+      code: 'invalid_nanoid',
+    );
+  }
+
+  /// Checks if string is a valid JWT (JSON Web Token)
+  Schema<String> jwt() {
+    return refine(
+      (value) => _isValidJwt(value),
+      message: 'must be a valid JWT',
+      code: 'invalid_jwt',
+    );
+  }
+
+  /// Checks if string is a valid hexadecimal string
+  Schema<String> hex() {
+    return refine(
+      (value) => _isValidHex(value),
+      message: 'must be a valid hexadecimal string',
+      code: 'invalid_hex',
+    );
+  }
+
+  /// Checks if string is a valid color hex code
+  Schema<String> hexColor() {
+    return refine(
+      (value) => _isValidHexColor(value),
+      message: 'must be a valid hex color code',
+      code: 'invalid_hex_color',
+    );
+  }
+
+  /// Checks if string is a valid JSON string
+  Schema<String> json() {
+    return refine(
+      (value) => _isValidJson(value),
+      message: 'must be a valid JSON string',
+      code: 'invalid_json',
+    );
+  }
+
   // Helper methods for validation
 
   bool _isValidEmail(String email) {
@@ -503,6 +597,173 @@ class StringSchema extends Schema<String> {
       if (num == null || num < 0 || num > 65535) return false;
     }
     return true;
+  }
+
+  bool _isValidCuid(String cuid) {
+    // CUID format: c[timestamp][counter][fingerprint][random]
+    // Length: 25 characters, starts with 'c'
+    if (cuid.length != 25 || !cuid.startsWith('c')) return false;
+
+    final cuidRegex = RegExp(r'^c[0-9a-z]{24}$');
+    return cuidRegex.hasMatch(cuid);
+  }
+
+  bool _isValidCuid2(String cuid2) {
+    // CUID2 format: [length][timestamp][counter][fingerprint][random]
+    // Length: variable (21-50 characters), starts with a letter
+    if (cuid2.length < 21 || cuid2.length > 50) return false;
+
+    final cuid2Regex = RegExp(r'^[a-z][0-9a-z]*$');
+    return cuid2Regex.hasMatch(cuid2);
+  }
+
+  bool _isValidUlid(String ulid) {
+    // ULID format: 26 characters, Crockford's Base32 encoding
+    if (ulid.length != 26) return false;
+
+    // Crockford's Base32 alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+    final ulidRegex = RegExp(r'^[0-9A-HJKMNP-TV-Z]{26}$');
+    return ulidRegex.hasMatch(ulid.toUpperCase());
+  }
+
+  bool _isValidBase64(String base64) {
+    if (base64.isEmpty) return false;
+
+    // Remove padding and check length
+    final withoutPadding = base64.replaceAll('=', '');
+    if (withoutPadding.length % 4 == 1) return false;
+
+    final base64Regex = RegExp(r'^[A-Za-z0-9+/]*={0,2}$');
+    return base64Regex.hasMatch(base64);
+  }
+
+  bool _isValidEmoji(String text) {
+    if (text.isEmpty) return false;
+
+    // Unicode emoji ranges (simplified)
+    final emojiRegex = RegExp(
+      r'[\u{1F600}-\u{1F64F}]|' // Emoticons
+      r'[\u{1F300}-\u{1F5FF}]|' // Misc Symbols and Pictographs
+      r'[\u{1F680}-\u{1F6FF}]|' // Transport and Map
+      r'[\u{1F1E0}-\u{1F1FF}]|' // Flags (iOS)
+      r'[\u{2600}-\u{26FF}]|' // Misc symbols
+      r'[\u{2700}-\u{27BF}]|' // Dingbats
+      r'[\u{FE00}-\u{FE0F}]|' // Variation Selectors
+      r'[\u{1F900}-\u{1F9FF}]|' // Supplemental Symbols and Pictographs
+      r'[\u{1F018}-\u{1F270}]|' // Various other emoji
+      r'[\u{238C}]|' // Pushpin
+      r'[\u{2194}-\u{2199}]|' // Arrows
+      r'[\u{21A9}-\u{21AA}]|' // Curved arrows
+      r'[\u{231A}]|' // Watch
+      r'[\u{231B}]|' // Hourglass
+      r'[\u{23E9}-\u{23EC}]|' // Play/Pause buttons
+      r'[\u{23F0}]|' // Alarm clock
+      r'[\u{23F3}]|' // Hourglass with flowing sand
+      r'[\u{25FD}-\u{25FE}]|' // Small squares
+      r'[\u{2614}-\u{2615}]|' // Umbrella and Hot beverage
+      r'[\u{2648}-\u{2653}]|' // Zodiac
+      r'[\u{267F}]|' // Wheelchair
+      r'[\u{2693}]|' // Anchor
+      r'[\u{26A1}]|' // High voltage
+      r'[\u{26AA}-\u{26AB}]|' // Circles
+      r'[\u{26BD}-\u{26BE}]|' // Sports
+      r'[\u{26C4}-\u{26C5}]|' // Weather
+      r'[\u{26CE}]|' // Ophiuchus
+      r'[\u{26D4}]|' // No entry
+      r'[\u{26EA}]|' // Church
+      r'[\u{26F2}-\u{26F3}]|' // Fountain
+      r'[\u{26F5}]|' // Sailboat
+      r'[\u{26FA}]|' // Tent
+      r'[\u{26FD}]|' // Fuel pump
+      r'[\u{2705}]|' // Check mark
+      r'[\u{270A}-\u{270B}]|' // Hands
+      r'[\u{2728}]|' // Sparkles
+      r'[\u{274C}]|' // Cross mark
+      r'[\u{274E}]|' // Cross mark
+      r'[\u{2753}-\u{2755}]|' // Question marks
+      r'[\u{2757}]|' // Exclamation mark
+      r'[\u{2795}-\u{2797}]|' // Plus/minus
+      r'[\u{27B0}]|' // Curly loop
+      r'[\u{27BF}]|' // Double curly loop
+      r'[\u{2B1B}-\u{2B1C}]|' // Squares
+      r'[\u{2B50}]|' // Star
+      r'[\u{2B55}]', // Circle
+      unicode: true,
+    );
+
+    // Check if entire string consists of emoji and whitespace
+    final textWithoutEmoji = text.replaceAll(emojiRegex, '').trim();
+    return textWithoutEmoji.isEmpty;
+  }
+
+  bool _isValidNanoid(String nanoid, int? expectedLength) {
+    if (nanoid.isEmpty) return false;
+
+    // NanoID uses URL-safe alphabet: A-Za-z0-9_-
+    final nanoidRegex = RegExp(r'^[A-Za-z0-9_-]+$');
+    if (!nanoidRegex.hasMatch(nanoid)) return false;
+
+    // Check length if specified
+    if (expectedLength != null && nanoid.length != expectedLength) {
+      return false;
+    }
+
+    // Default NanoID length is 21
+    return expectedLength == null ? nanoid.length == 21 : true;
+  }
+
+  bool _isValidJwt(String jwt) {
+    // JWT format: header.payload.signature
+    final parts = jwt.split('.');
+    if (parts.length != 3) return false;
+
+    // Each part should be base64url encoded
+    for (final part in parts) {
+      if (part.isEmpty) return false;
+      // Base64url uses A-Za-z0-9_- instead of A-Za-z0-9+/
+      final base64UrlRegex = RegExp(r'^[A-Za-z0-9_-]+$');
+      if (!base64UrlRegex.hasMatch(part)) return false;
+    }
+
+    return true;
+  }
+
+  bool _isValidHex(String hex) {
+    if (hex.isEmpty) return false;
+
+    // Remove optional 0x prefix
+    final cleanHex =
+        hex.toLowerCase().startsWith('0x') ? hex.substring(2) : hex;
+
+    final hexRegex = RegExp(r'^[0-9a-fA-F]+$');
+    return hexRegex.hasMatch(cleanHex);
+  }
+
+  bool _isValidHexColor(String hexColor) {
+    if (hexColor.isEmpty) return false;
+
+    // Remove optional # prefix
+    final cleanColor =
+        hexColor.startsWith('#') ? hexColor.substring(1) : hexColor;
+
+    // Valid hex color lengths: 3, 4, 6, 8 (RGB, ARGB, RRGGBB, AARRGGBB)
+    if (![3, 4, 6, 8].contains(cleanColor.length)) return false;
+
+    final hexRegex = RegExp(r'^[0-9a-fA-F]+$');
+    return hexRegex.hasMatch(cleanColor);
+  }
+
+  bool _isValidJson(String json) {
+    if (json.isEmpty) return false;
+
+    try {
+      // Try to parse as JSON
+      final decoded = jsonDecode(json);
+      // Ensure it's a valid JSON object or array
+      return decoded is Map || decoded is List;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override

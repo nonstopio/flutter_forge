@@ -253,25 +253,25 @@ class Z {
   static NumberSchema safeInt() => const NumberSchema(isSafeInt: true);
 
   /// Creates a port number schema
-  static NumberSchema port() => const NumberSchema().port();
+  static Schema<num> port() => const NumberSchema().port();
 
   /// Creates a year schema
-  static NumberSchema year() => const NumberSchema().year();
+  static Schema<num> year() => const NumberSchema().year();
 
   /// Creates a month schema
-  static NumberSchema month() => const NumberSchema().month();
+  static Schema<num> month() => const NumberSchema().month();
 
   /// Creates a day schema
-  static NumberSchema day() => const NumberSchema().day();
+  static Schema<num> day() => const NumberSchema().day();
 
   /// Creates an hour schema
-  static NumberSchema hour() => const NumberSchema().hour();
+  static Schema<num> hour() => const NumberSchema().hour();
 
   /// Creates a minute schema
-  static NumberSchema minute() => const NumberSchema().minute();
+  static Schema<num> minute() => const NumberSchema().minute();
 
   /// Creates a second schema
-  static NumberSchema second() => const NumberSchema().second();
+  static Schema<num> second() => const NumberSchema().second();
 
   /// Creates a transform schema that can be used in pipelines
   static TransformStage<T, R> transform<T, R>(R Function(T) transformer) =>
