@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../core/error.dart';
 import '../../core/error_codes.dart';
 import '../../core/schema.dart';
@@ -227,74 +229,266 @@ class CoercionSchema<T> extends Schema<T> {
 class CoercionUtils {
   const CoercionUtils._();
 
-  /// Coerces input to string
-  static String coerceToString(dynamic input) {
+  /// Coerces input to string with advanced parsing options
+  static String coerceToString(
+    dynamic input, {
+    bool preserveWhitespace = false,
+    bool trimWhitespace = false,
+    String? joinSeparator,
+    bool formatNumbers = false,
+    int? numberPrecision,
+    bool prettifyJson = false,
+  }) {
     if (input == null) return '';
-    if (input is String) return input;
+    if (input is String) {
+      String result = input;
+      if (trimWhitespace) result = result.trim();
+      if (!preserveWhitespace) result = result.replaceAll(RegExp(r'\s+'), ' ');
+      return result;
+    }
     if (input is bool) return input ? 'true' : 'false';
-    if (input is num) return input.toString();
-    if (input is List) return input.join(',');
-    if (input is Map) return input.toString();
+    if (input is num) {
+      if (formatNumbers && numberPrecision != null) {
+        return input.toStringAsFixed(numberPrecision);
+      }
+      return input.toString();
+    }
+    if (input is List) {
+      final separator = joinSeparator ?? ',';
+      return input
+          .map((e) => coerceToString(
+                e,
+                preserveWhitespace: preserveWhitespace,
+                trimWhitespace: trimWhitespace,
+                joinSeparator: joinSeparator,
+                formatNumbers: formatNumbers,
+                numberPrecision: numberPrecision,
+                prettifyJson: prettifyJson,
+              ))
+          .join(separator);
+    }
+    if (input is Map) {
+      if (prettifyJson) {
+        try {
+          const encoder = JsonEncoder.withIndent('  ');
+          return encoder.convert(input);
+        } catch (e) {
+          return input.toString();
+        }
+      }
+      return input.toString();
+    }
     return input.toString();
   }
 
-  /// Coerces input to number
-  static num coerceToNumber(dynamic input) {
-    if (input is num) return input;
+  /// Advanced string coercion with fallback strategies
+  static String coerceToStringAdvanced(
+    dynamic input, {
+    List<String Function(dynamic)> fallbackStrategies = const [],
+    bool strict = false,
+  }) {
+    try {
+      return coerceToString(input);
+    } catch (e) {
+      if (strict) rethrow;
+
+      // Try fallback strategies
+      for (final strategy in fallbackStrategies) {
+        try {
+          return strategy(input);
+        } catch (_) {
+          continue;
+        }
+      }
+
+      // Ultimate fallback
+      return input.toString();
+    }
+  }
+
+  /// Coerces input to number with advanced parsing and validation
+  static num coerceToNumber(
+    dynamic input, {
+    int? precision,
+    num? step,
+    bool allowInfinity = false,
+    bool allowNaN = false,
+    num? min,
+    num? max,
+    bool strict = false,
+  }) {
+    if (input is num) {
+      num value = input;
+
+      // Handle special values
+      if (!allowInfinity && value.isInfinite) {
+        throw const FormatException('Infinity not allowed');
+      }
+      if (!allowNaN && value.isNaN) {
+        throw const FormatException('NaN not allowed');
+      }
+
+      // Apply precision
+      if (precision != null && value is double) {
+        value = double.parse(value.toStringAsFixed(precision));
+      }
+
+      // Apply step validation
+      if (step != null && step > 0) {
+        final remainder = value % step;
+        if (remainder != 0) {
+          if (strict) {
+            throw FormatException('Value $value does not match step $step');
+          }
+          // Round to nearest step
+          value = (value / step).round() * step;
+        }
+      }
+
+      // Apply range validation
+      if (min != null && value < min) {
+        if (strict) {
+          throw FormatException('Value $value is below minimum $min');
+        }
+        value = min;
+      }
+      if (max != null && value > max) {
+        if (strict) {
+          throw FormatException('Value $value is above maximum $max');
+        }
+        value = max;
+      }
+
+      return value;
+    }
+
     if (input is bool) return input ? 1 : 0;
     if (input is String) {
       final trimmed = input.trim();
       if (trimmed.isEmpty) return 0;
 
+      // Handle special string values
+      if (trimmed.toLowerCase() == 'infinity' || trimmed == '∞') {
+        if (allowInfinity) return double.infinity;
+        throw const FormatException('Infinity not allowed');
+      }
+      if (trimmed.toLowerCase() == '-infinity' || trimmed == '-∞') {
+        if (allowInfinity) return double.negativeInfinity;
+        throw const FormatException('Negative infinity not allowed');
+      }
+      if (trimmed.toLowerCase() == 'nan') {
+        if (allowNaN) return double.nan;
+        throw const FormatException('NaN not allowed');
+      }
+
       // Try integer first
       final intValue = int.tryParse(trimmed);
-      if (intValue != null) return intValue;
+      if (intValue != null) {
+        return coerceToNumber(
+          intValue,
+          precision: precision,
+          step: step,
+          allowInfinity: allowInfinity,
+          allowNaN: allowNaN,
+          min: min,
+          max: max,
+          strict: strict,
+        );
+      }
 
       // Try double
       final doubleValue = double.tryParse(trimmed);
-      if (doubleValue != null) return doubleValue;
+      if (doubleValue != null) {
+        return coerceToNumber(
+          doubleValue,
+          precision: precision,
+          step: step,
+          allowInfinity: allowInfinity,
+          allowNaN: allowNaN,
+          min: min,
+          max: max,
+          strict: strict,
+        );
+      }
 
       throw FormatException('Cannot coerce "$input" to number');
     }
     throw FormatException('Cannot coerce ${input.runtimeType} to number');
   }
 
-  /// Coerces input to integer
-  static int coerceToInt(dynamic input) {
-    if (input is int) return input;
-    if (input is double) return input.round();
-    if (input is bool) return input ? 1 : 0;
-    if (input is String) {
-      final trimmed = input.trim();
-      if (trimmed.isEmpty) return 0;
+  /// Advanced number coercion with fallback strategies
+  static num coerceToNumberAdvanced(
+    dynamic input, {
+    List<num Function(dynamic)> fallbackStrategies = const [],
+    bool strict = false,
+  }) {
+    try {
+      return coerceToNumber(input);
+    } catch (e) {
+      if (strict) rethrow;
 
-      final intValue = int.tryParse(trimmed);
-      if (intValue != null) return intValue;
+      // Try fallback strategies
+      for (final strategy in fallbackStrategies) {
+        try {
+          return strategy(input);
+        } catch (_) {
+          continue;
+        }
+      }
 
-      // Try parsing as double and converting
-      final doubleValue = double.tryParse(trimmed);
-      if (doubleValue != null) return doubleValue.round();
-
-      throw FormatException('Cannot coerce "$input" to integer');
+      // Ultimate fallback
+      return 0;
     }
-    throw FormatException('Cannot coerce ${input.runtimeType} to integer');
   }
 
-  /// Coerces input to double
-  static double coerceToDouble(dynamic input) {
-    if (input is double) return input;
-    if (input is int) return input.toDouble();
-    if (input is bool) return input ? 1.0 : 0.0;
-    if (input is String) {
-      final trimmed = input.trim();
-      if (trimmed.isEmpty) return 0.0;
+  /// Coerces input to integer with advanced options
+  static int coerceToInt(
+    dynamic input, {
+    int? step,
+    int? min,
+    int? max,
+    bool strict = false,
+  }) {
+    final numValue = coerceToNumber(
+      input,
+      step: step?.toDouble(),
+      min: min?.toDouble(),
+      max: max?.toDouble(),
+      strict: strict,
+    );
 
-      final doubleValue = double.tryParse(trimmed);
-      if (doubleValue != null) return doubleValue;
+    if (numValue is int) return numValue;
+    if (numValue is double) return numValue.round();
 
-      throw FormatException('Cannot coerce "$input" to double');
-    }
-    throw FormatException('Cannot coerce ${input.runtimeType} to double');
+    throw FormatException('Cannot convert $numValue to integer');
+  }
+
+  /// Coerces input to double with advanced precision and validation
+  static double coerceToDouble(
+    dynamic input, {
+    int? precision,
+    double? step,
+    double? min,
+    double? max,
+    bool allowInfinity = false,
+    bool allowNaN = false,
+    bool strict = false,
+  }) {
+    final numValue = coerceToNumber(
+      input,
+      precision: precision,
+      step: step,
+      min: min,
+      max: max,
+      allowInfinity: allowInfinity,
+      allowNaN: allowNaN,
+      strict: strict,
+    );
+
+    if (numValue is double) return numValue;
+    if (numValue is int) return numValue.toDouble();
+
+    throw FormatException('Cannot convert $numValue to double');
   }
 
   /// Coerces input to boolean
@@ -406,66 +600,181 @@ class CoercionUtils {
     }
     throw FormatException('Cannot coerce ${input.runtimeType} to BigInt');
   }
+
+  /// Automatic type conversion with intelligent fallback strategies
+  static T coerceToType<T>(
+    dynamic input, {
+    required T Function(dynamic) primaryCoercer,
+    List<T Function(dynamic)> fallbackStrategies = const [],
+    T? defaultValue,
+    bool strict = false,
+  }) {
+    try {
+      return primaryCoercer(input);
+    } catch (e) {
+      if (strict) rethrow;
+
+      // Try fallback strategies
+      for (final strategy in fallbackStrategies) {
+        try {
+          return strategy(input);
+        } catch (_) {
+          continue;
+        }
+      }
+
+      // Use default value if provided
+      if (defaultValue != null) {
+        return defaultValue;
+      }
+
+      // Re-throw original error if no fallback worked
+      rethrow;
+    }
+  }
+
+  /// Smart type detection and conversion
+  static T smartCoerce<T>(dynamic input, Type targetType) {
+    switch (targetType) {
+      case String:
+        return coerceToString(input) as T;
+      case int:
+        return coerceToInt(input) as T;
+      case double:
+        return coerceToDouble(input) as T;
+      case num:
+        return coerceToNumber(input) as T;
+      case bool:
+        return coerceToBoolean(input) as T;
+      case DateTime:
+        return coerceToDateTime(input) as T;
+      case BigInt:
+        return coerceToBigInt(input) as T;
+      case List:
+        return coerceToList(input) as T;
+      case Set:
+        return coerceToSet(input) as T;
+      case Map:
+        return coerceToMap(input) as T;
+      default:
+        throw FormatException('Cannot coerce to type $targetType');
+    }
+  }
 }
 
 /// Coercion factory methods
 class Coerce {
   const Coerce();
 
-  /// Creates a string coercion schema
+  /// Creates a string coercion schema with advanced parsing options
   CoercionSchema<String> string({
     bool strict = false,
+    bool preserveWhitespace = false,
+    bool trimWhitespace = false,
+    String? joinSeparator,
+    bool formatNumbers = false,
+    int? numberPrecision,
+    bool prettifyJson = false,
+    List<String Function(dynamic)> fallbackStrategies = const [],
     String? description,
     Map<String, dynamic>? metadata,
   }) {
     return CoercionSchema<String>(
       const StringSchema(),
-      CoercionUtils.coerceToString,
+      (input) => CoercionUtils.coerceToString(
+        input,
+        preserveWhitespace: preserveWhitespace,
+        trimWhitespace: trimWhitespace,
+        joinSeparator: joinSeparator,
+        formatNumbers: formatNumbers,
+        numberPrecision: numberPrecision,
+        prettifyJson: prettifyJson,
+      ),
       strict: strict,
       description: description,
       metadata: metadata,
     );
   }
 
-  /// Creates a number coercion schema
+  /// Creates a number coercion schema with advanced parsing and validation
   CoercionSchema<num> number({
     bool strict = false,
+    int? precision,
+    num? step,
+    bool allowInfinity = false,
+    bool allowNaN = false,
+    num? min,
+    num? max,
+    List<num Function(dynamic)> fallbackStrategies = const [],
     String? description,
     Map<String, dynamic>? metadata,
   }) {
     return CoercionSchema<num>(
       const NumberSchema(),
-      CoercionUtils.coerceToNumber,
+      (input) => CoercionUtils.coerceToNumber(
+        input,
+        precision: precision,
+        step: step,
+        allowInfinity: allowInfinity,
+        allowNaN: allowNaN,
+        min: min,
+        max: max,
+        strict: strict,
+      ),
       strict: strict,
       description: description,
       metadata: metadata,
     );
   }
 
-  /// Creates an integer coercion schema
+  /// Creates an integer coercion schema with advanced validation
   CoercionSchema<int> integer({
     bool strict = false,
+    int? step,
+    int? min,
+    int? max,
     String? description,
     Map<String, dynamic>? metadata,
   }) {
     return CoercionSchema<int>(
       const NumberSchema().transform((n) => n.round()),
-      CoercionUtils.coerceToInt,
+      (input) => CoercionUtils.coerceToInt(
+        input,
+        step: step,
+        min: min,
+        max: max,
+        strict: strict,
+      ),
       strict: strict,
       description: description,
       metadata: metadata,
     );
   }
 
-  /// Creates a double coercion schema
+  /// Creates a double coercion schema with precision and validation
   CoercionSchema<double> decimal({
     bool strict = false,
+    int? precision,
+    double? step,
+    double? min,
+    double? max,
+    bool allowInfinity = false,
+    bool allowNaN = false,
     String? description,
     Map<String, dynamic>? metadata,
   }) {
     return CoercionSchema<double>(
       const NumberSchema().transform((n) => n.toDouble()),
-      CoercionUtils.coerceToDouble,
+      (input) => CoercionUtils.coerceToDouble(
+        input,
+        precision: precision,
+        step: step,
+        min: min,
+        max: max,
+        allowInfinity: allowInfinity,
+        allowNaN: allowNaN,
+        strict: strict,
+      ),
       strict: strict,
       description: description,
       metadata: metadata,
@@ -560,5 +869,57 @@ class Coerce {
       description: description,
       metadata: metadata,
     );
+  }
+
+  /// Creates a smart coercion schema that automatically detects target type
+  CoercionSchema<T> smart<T>(
+    Type targetType, {
+    bool strict = false,
+    List<T Function(dynamic)> fallbackStrategies = const [],
+    T? defaultValue,
+    String? description,
+    Map<String, dynamic>? metadata,
+  }) {
+    return CoercionSchema<T>(
+      _createTargetSchema<T>(targetType),
+      (input) => CoercionUtils.coerceToType<T>(
+        input,
+        primaryCoercer: (inp) => CoercionUtils.smartCoerce<T>(inp, targetType),
+        fallbackStrategies: fallbackStrategies,
+        defaultValue: defaultValue,
+        strict: strict,
+      ),
+      strict: strict,
+      description: description,
+      metadata: metadata,
+    );
+  }
+
+  /// Creates a target schema for the given type
+  Schema<T> _createTargetSchema<T>(Type targetType) {
+    switch (targetType) {
+      case String:
+        return const StringSchema() as Schema<T>;
+      case int:
+        return const NumberSchema().transform((n) => n.round()) as Schema<T>;
+      case double:
+        return const NumberSchema().transform((n) => n.toDouble()) as Schema<T>;
+      case num:
+        return const NumberSchema() as Schema<T>;
+      case bool:
+        return const BooleanSchema() as Schema<T>;
+      case DateTime:
+        return const _DateTimeSchema() as Schema<T>;
+      case BigInt:
+        return const _BigIntSchema() as Schema<T>;
+      case List:
+        return const _ListSchema() as Schema<T>;
+      case Set:
+        return const _SetSchema() as Schema<T>;
+      case Map:
+        return const _MapSchema() as Schema<T>;
+      default:
+        throw ArgumentError('Unsupported target type: $targetType');
+    }
   }
 }
