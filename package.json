@@ -2,6 +2,7 @@
   "name": "flutter_forge",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "private": true,
   "keywords": [],
   "author": {
