@@ -195,12 +195,12 @@ void main() {
 
         // After 1 second total - wait long enough for timer to complete
         await tester.pump(const Duration(seconds: 1));
-        await tester.pump(const Duration(
-            milliseconds: 100)); // Additional time for state update
+        await tester.pumpAndSettle();
 
         // Check if button is enabled
         button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
+        expect(find.text('Start'), findsOneWidget);
       });
 
       testWidgets('should handle timeUpFlag initial state', (tester) async {
@@ -242,7 +242,7 @@ void main() {
 
         // Wait for timer to complete
         await tester.pump(const Duration(seconds: 2));
-        await tester.pump(); // Additional pump for state update
+        await tester.pumpAndSettle();
 
         // Press button
         await tester.tap(find.byType(ElevatedButton));
@@ -270,7 +270,7 @@ void main() {
 
         // Wait for timer to complete
         await tester.pump(const Duration(seconds: 2));
-        await tester.pump(); // Additional pump for state update
+        await tester.pumpAndSettle();
 
         // Press button
         await tester.tap(find.byType(ElevatedButton));
@@ -367,6 +367,7 @@ void main() {
 
         // Wait 1 second and check update
         await tester.pump(const Duration(seconds: 1));
+        await tester.pump();
         expect(receivedSeconds, 2);
         expect(find.text('Builder: 2'), findsOneWidget);
       });
@@ -504,7 +505,7 @@ void main() {
 
         // Wait for timer to complete
         await tester.pump(const Duration(seconds: 1));
-        await tester.pump(const Duration(milliseconds: 100));
+        await tester.pumpAndSettle();
 
         // Press button multiple times
         await tester.tap(find.byType(ElevatedButton));
@@ -553,8 +554,7 @@ void main() {
 
         // Wait for timer to complete and go negative
         await tester.pump(const Duration(seconds: 1));
-        await tester.pump(const Duration(
-            seconds: 1)); // This should trigger the negative check
+        await tester.pumpAndSettle();
 
         // Button should be enabled now
         final button =
