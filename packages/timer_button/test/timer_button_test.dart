@@ -377,7 +377,7 @@ void main() {
           MaterialApp(
             home: Scaffold(
               body: TimerButton.builder(
-                builder: (context, seconds) => Container(
+                builder: (context, seconds) => SizedBox(
                   width: 100,
                   height: 50,
                   child: Text('Tap: $seconds'),
