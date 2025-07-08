@@ -84,11 +84,11 @@ class DiscriminatedUnionSchema<T> extends Schema<T> {
   dynamic _findLiteralValueByTesting(Schema discriminatorSchema) {
     // For boolean schemas, test both true and false
     if (discriminatorSchema is BooleanSchema) {
-      if (discriminatorSchema.validate(true).isSuccess && 
+      if (discriminatorSchema.validate(true).isSuccess &&
           !discriminatorSchema.validate(false).isSuccess) {
         return true;
-      } else if (discriminatorSchema.validate(false).isSuccess && 
-                 !discriminatorSchema.validate(true).isSuccess) {
+      } else if (discriminatorSchema.validate(false).isSuccess &&
+          !discriminatorSchema.validate(true).isSuccess) {
         return false;
       }
     }
@@ -117,7 +117,7 @@ class DiscriminatedUnionSchema<T> extends Schema<T> {
         // Test a few other values to make sure they fail
         bool isExclusive = true;
         for (final otherCandidate in candidates) {
-          if (otherCandidate != candidate && 
+          if (otherCandidate != candidate &&
               otherCandidate.runtimeType == candidate.runtimeType) {
             if (discriminatorSchema.validate(otherCandidate).isSuccess) {
               isExclusive = false;

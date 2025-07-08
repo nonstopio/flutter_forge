@@ -138,13 +138,13 @@ class Z {
         autoOptionalKeys.add(entry.key);
       }
     }
-    
+
     // Combine explicit and auto-detected optional keys
     final combinedOptionalKeys = <String>{
       ...autoOptionalKeys,
       if (optionalKeys != null) ...optionalKeys,
     };
-    
+
     return ObjectSchema(shape, optionalKeys: combinedOptionalKeys);
   }
 
@@ -409,7 +409,7 @@ class _LiteralSchema<T> extends Schema<T> {
   final T _value;
 
   const _LiteralSchema(this._value);
-  
+
   /// Gets the literal value this schema validates against
   T get value => _value;
 
