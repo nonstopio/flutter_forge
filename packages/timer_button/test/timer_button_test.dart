@@ -5,7 +5,8 @@ import 'package:timer_button/timer_button.dart';
 void main() {
   group('TimerButton', () {
     group('Constructor Tests', () {
-      testWidgets('should create TimerButton with required parameters', (tester) async {
+      testWidgets('should create TimerButton with required parameters',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -23,7 +24,8 @@ void main() {
         expect(find.text('Start |  5s'), findsOneWidget);
       });
 
-      testWidgets('should create TimerButton with custom parameters', (tester) async {
+      testWidgets('should create TimerButton with custom parameters',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -49,7 +51,8 @@ void main() {
         expect(find.text('Custom |  3 sec'), findsOneWidget);
       });
 
-      testWidgets('should create TimerButton.builder with custom builder', (tester) async {
+      testWidgets('should create TimerButton.builder with custom builder',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -111,7 +114,8 @@ void main() {
         expect(find.byType(OutlinedButton), findsNothing);
       });
 
-      testWidgets('should render OutlinedButton when specified', (tester) async {
+      testWidgets('should render OutlinedButton when specified',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -150,7 +154,8 @@ void main() {
     });
 
     group('Timer Functionality Tests', () {
-      testWidgets('should start with disabled button and countdown text', (tester) async {
+      testWidgets('should start with disabled button and countdown text',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -163,12 +168,14 @@ void main() {
           ),
         );
 
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNull);
         expect(find.text('Start |  3s'), findsOneWidget);
       });
 
-      testWidgets('should countdown and enable button when timer completes', (tester) async {
+      testWidgets('should countdown and enable button when timer completes',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -188,8 +195,9 @@ void main() {
 
         // After 1 second total - wait long enough for timer to complete
         await tester.pump(const Duration(seconds: 1));
-        await tester.pump(const Duration(milliseconds: 100)); // Additional time for state update
-        
+        await tester.pump(const Duration(
+            milliseconds: 100)); // Additional time for state update
+
         // Check if button is enabled
         button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
@@ -210,11 +218,14 @@ void main() {
         );
 
         expect(find.text('Ready'), findsOneWidget);
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
       });
 
-      testWidgets('should reset timer when button pressed with resetTimerOnPressed true', (tester) async {
+      testWidgets(
+          'should reset timer when button pressed with resetTimerOnPressed true',
+          (tester) async {
         bool pressed = false;
         await tester.pumpWidget(
           MaterialApp(
@@ -232,7 +243,7 @@ void main() {
         // Wait for timer to complete
         await tester.pump(const Duration(seconds: 2));
         await tester.pump(); // Additional pump for state update
-        
+
         // Press button
         await tester.tap(find.byType(ElevatedButton));
         await tester.pump();
@@ -241,7 +252,8 @@ void main() {
         expect(find.text('Reset |  2s'), findsOneWidget);
       });
 
-      testWidgets('should not reset timer when resetTimerOnPressed is false', (tester) async {
+      testWidgets('should not reset timer when resetTimerOnPressed is false',
+          (tester) async {
         bool pressed = false;
         await tester.pumpWidget(
           MaterialApp(
@@ -287,7 +299,8 @@ void main() {
         expect(find.text('Custom |  1 seconds'), findsOneWidget);
       });
 
-      testWidgets('should apply disabled text style when timer active', (tester) async {
+      testWidgets('should apply disabled text style when timer active',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -295,7 +308,8 @@ void main() {
                 label: 'Styled',
                 onPressed: () {},
                 timeOutInSeconds: 1,
-                disabledTextStyle: const TextStyle(color: Colors.red, fontSize: 20),
+                disabledTextStyle:
+                    const TextStyle(color: Colors.red, fontSize: 20),
               ),
             ),
           ),
@@ -306,7 +320,8 @@ void main() {
         expect(text.style?.fontSize, 20);
       });
 
-      testWidgets('should apply active text style when timer complete', (tester) async {
+      testWidgets('should apply active text style when timer complete',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -314,7 +329,8 @@ void main() {
                 label: 'Active',
                 onPressed: () {},
                 timeOutInSeconds: 1,
-                activeTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
+                activeTextStyle:
+                    const TextStyle(color: Colors.green, fontSize: 18),
                 timeUpFlag: true,
               ),
             ),
@@ -328,7 +344,8 @@ void main() {
     });
 
     group('Custom Builder Tests', () {
-      testWidgets('should call builder with correct parameters', (tester) async {
+      testWidgets('should call builder with correct parameters',
+          (tester) async {
         int receivedSeconds = -1;
         await tester.pumpWidget(
           MaterialApp(
@@ -377,7 +394,8 @@ void main() {
         expect(tapped, isTrue);
       });
 
-      testWidgets('should not respond to gestures when timer active in builder', (tester) async {
+      testWidgets('should not respond to gestures when timer active in builder',
+          (tester) async {
         bool tapped = false;
         await tester.pumpWidget(
           MaterialApp(
@@ -411,10 +429,11 @@ void main() {
         );
 
         expect(find.text('Zero |  0s'), findsOneWidget);
-        
+
         // Should enable immediately
         await tester.pump();
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
       });
 
@@ -434,15 +453,17 @@ void main() {
 
         // Let timer start
         await tester.pump(const Duration(milliseconds: 100));
-        
+
         // Remove widget before timer completes
-        await tester.pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
-        
+        await tester
+            .pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
+
         // Should not throw error when widget is disposed
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('should handle widget disposal when timeUpFlag is true', (tester) async {
+      testWidgets('should handle widget disposal when timeUpFlag is true',
+          (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -455,15 +476,17 @@ void main() {
             ),
           ),
         );
-        
-        // Remove widget immediately 
-        await tester.pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
-        
+
+        // Remove widget immediately
+        await tester
+            .pumpWidget(const MaterialApp(home: Scaffold(body: SizedBox())));
+
         // Should not throw error when widget is disposed with timeUpFlag true
         expect(tester.takeException(), isNull);
       });
 
-      testWidgets('should handle multiple button presses correctly', (tester) async {
+      testWidgets('should handle multiple button presses correctly',
+          (tester) async {
         int pressCount = 0;
         await tester.pumpWidget(
           MaterialApp(
@@ -472,7 +495,8 @@ void main() {
                 label: 'Multi',
                 onPressed: () => pressCount++,
                 timeOutInSeconds: 1,
-                resetTimerOnPressed: false, // Don't reset timer for simpler test
+                resetTimerOnPressed:
+                    false, // Don't reset timer for simpler test
               ),
             ),
           ),
@@ -481,7 +505,7 @@ void main() {
         // Wait for timer to complete
         await tester.pump(const Duration(seconds: 1));
         await tester.pump(const Duration(milliseconds: 100));
-        
+
         // Press button multiple times
         await tester.tap(find.byType(ElevatedButton));
         await tester.pump();
@@ -501,7 +525,8 @@ void main() {
                 label: 'Default',
                 onPressed: () {},
                 timeOutInSeconds: 1,
-                buttonType: ButtonType.custom, // This should trigger default case since builder is null
+                buttonType: ButtonType
+                    .custom, // This should trigger default case since builder is null
               ),
             ),
           ),
@@ -528,10 +553,12 @@ void main() {
 
         // Wait for timer to complete and go negative
         await tester.pump(const Duration(seconds: 1));
-        await tester.pump(const Duration(seconds: 1)); // This should trigger the negative check
+        await tester.pump(const Duration(
+            seconds: 1)); // This should trigger the negative check
 
         // Button should be enabled now
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
         expect(button.onPressed, isNotNull);
         expect(find.text('Negative'), findsOneWidget);
       });
@@ -558,7 +585,8 @@ void main() {
       expect(find.text('Ready'), findsOneWidget);
     });
 
-    testWidgets('should display label with timer when timer is active', (tester) async {
+    testWidgets('should display label with timer when timer is active',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -577,7 +605,8 @@ void main() {
       expect(find.text('Wait |  3s'), findsOneWidget);
     });
 
-    testWidgets('should apply active text style for outlined button', (tester) async {
+    testWidgets('should apply active text style for outlined button',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -597,7 +626,8 @@ void main() {
       expect(text.style?.color, Colors.red);
     });
 
-    testWidgets('should apply custom active text style when provided', (tester) async {
+    testWidgets('should apply custom active text style when provided',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -619,7 +649,8 @@ void main() {
       expect(text.style?.fontSize, 24);
     });
 
-    testWidgets('should apply disabled text style when timer is active', (tester) async {
+    testWidgets('should apply disabled text style when timer is active',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
