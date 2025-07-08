@@ -4,6 +4,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+/// A mixin that provides safe state updates for StatefulWidget classes.
+mixin SafeStateMixin<T extends StatefulWidget> on State<T> {
+  /// Safely updates the state by calling setState only if the widget is mounted.
+  void safeSetState([VoidCallback? fn]) {
+    if (mounted) {
+      setState(fn ?? () {});
+    }
+  }
+}
+
 /// Type definition for TimerButton builder.
 ///
 typedef TimerButtonBuilder = Widget Function(BuildContext context, int seconds);
@@ -100,10 +110,10 @@ class TimerButton extends StatefulWidget {
   State<TimerButton> createState() => _TimerButtonState();
 }
 
-class _TimerButtonState extends State<TimerButton> {
+class _TimerButtonState extends State<TimerButton> with SafeStateMixin {
   bool _timeUpFlag = false;
   int _timeCounter = 0;
-  late Timer _timer;
+  Timer? _timer;
 
   String get _timerText => '$_timeCounter${widget.secPostFix}';
 
@@ -113,20 +123,19 @@ class _TimerButtonState extends State<TimerButton> {
     _timeCounter = widget.timeOutInSeconds;
     _timeUpFlag = widget.timeUpFlag;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTime();
+      if (_timeCounter <= 0) {
+        _timeUpFlag = true;
+        safeSetState();
+      } else {
+        _updateTime();
+      }
     });
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     super.dispose();
-  }
-
-  void _updateState() {
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   void _updateTime() {
@@ -136,22 +145,23 @@ class _TimerButtonState extends State<TimerButton> {
     _timer = Timer(const Duration(seconds: aSec), () async {
       if (!mounted) return;
       _timeCounter--;
-      _updateState();
-      if (_timeCounter >= 0) {
-        _updateTime();
-      } else {
+      if (_timeCounter <= 0) {
         _timeUpFlag = true;
+      }
+      safeSetState();
+      if (_timeCounter > 0) {
+        _updateTime();
       }
     });
   }
 
   void _onPressed() {
-    _timeUpFlag = false;
-    _timeCounter = widget.timeOutInSeconds;
-    _updateState();
     widget.onPressed();
     // reset the timer when the button is pressed
     if (widget.resetTimerOnPressed) {
+      _timeUpFlag = false;
+      _timeCounter = widget.timeOutInSeconds;
+      safeSetState();
       _updateTime();
     }
   }

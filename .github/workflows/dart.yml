@@ -38,7 +38,7 @@ jobs:
             test: false
           - package: timer_button
             path: packages
-            test: false
+            test: true
           - package: nonstop_cli
             path: packages
             test: false
