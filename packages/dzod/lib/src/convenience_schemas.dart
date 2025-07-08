@@ -272,18 +272,6 @@ class Z {
   static AsyncRefineStage<T> refineAsync<T>(Future<bool> Function(T) validator,
           {String? message, String? code}) =>
       AsyncRefineStage<T>();
-
-  /// Create a Color schema for Flutter Color validation
-  static ColorSchema color() => ColorSchema();
-
-  /// Create an EdgeInsets schema for Flutter EdgeInsets validation
-  static EdgeInsetsSchema edgeInsets() => EdgeInsetsSchema();
-
-  /// Create a Duration schema for Dart/Flutter Duration validation
-  static DurationSchema duration() => DurationSchema();
-
-  /// Create a Size schema for Flutter Size validation
-  static SizeSchema size() => SizeSchema();
 }
 
 // Implementation classes for convenience schemas

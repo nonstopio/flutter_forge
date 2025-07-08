@@ -1,5 +1,4 @@
 import 'package:dzod/dzod.dart';
-import 'package:dzod_example/utils/form_validation_extensions.dart';
 import 'package:flutter/material.dart';
 
 class ResultDisplay extends StatelessWidget {
@@ -69,7 +68,7 @@ class ResultDisplay extends StatelessWidget {
               ),
             ),
             child: SelectableText(
-              result.toDisplayMessage(value),
+              result.toHumanReadable(value),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontFamily: 'monospace',
                     color:
