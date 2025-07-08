@@ -29,7 +29,7 @@ This is a Flutter/Dart monorepo managed by Melos with the following structure:
 
 ### Key Packages
 - **nonstop_cli**: CLI tool with Mason bricks for project generation
-- **zod_bhai**: Schema validation library (similar to Zod for TypeScript)
+- **dzod**: Schema validation library (similar to Zod for TypeScript)
 - **cli_core**: Core utilities for CLI commands
 - **ns_utils**: Common utilities and extensions
 - **connectivity_wrapper**: Network connectivity widgets
@@ -53,8 +53,8 @@ This is a Flutter/Dart monorepo managed by Melos with the following structure:
 - Most packages follow the pattern: `lib/src/` for implementation, `lib/package_name.dart` for exports
 - Examples are provided in `example/` directories for demonstration
 
-### Schema Validation (zod_bhai)
-- Located in `packages/zod_bhai/`
+### Schema Validation (dzod)
+- Located in `packages/dzod/`
 - Provides type-safe validation similar to Zod
 - Core classes: `Schema<T>`, `ValidationResult<T>`, `ValidationException`
 - Implementation in `lib/src/core/` with specific schema types in `lib/src/schemas/`

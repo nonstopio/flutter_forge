@@ -9,7 +9,7 @@ packages:
   - packages/nonstop_cli/bricks/flutter_package_for_mono_repo/hooks
   - packages/nonstop_cli/bricks/flutter_project_with_mono_repo/hooks
   - packages/nonstop_cli/bricks/flutter_plugin_for_mono_repo/hooks
-  - packages/zod_bhai/example
+  - packages/dzod/example
 
 command:
   version:
@@ -29,8 +29,14 @@ scripts:
     exec:
       concurrency: 5
       failFast: true
+  fix:
+    description: "Apply Dart automated fixes to all packages"
+    run: dart fix --apply
+    exec:
+      concurrency: 5
+    packageFilters:
+      dirExists: lib
   update_nonstop_cli_version:
     run: dart run tools/update_nonstop_cli_version.dart
   update_nonstop_cli_bundles:
     run: dart run tools/update_nonstop_cli_bundles.dart
-
