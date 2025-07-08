@@ -178,6 +178,33 @@ abstract class Schema<T> {
     return PostprocessSchema<T>(this, postprocessor);
   }
 
+  /// Creates a new schema with a description and optional metadata
+  ///
+  /// This is useful for documenting schemas and adding contextual information.
+  /// The description can be used in error messages and documentation generation.
+  Schema<T> describe(
+    String description, {
+    Map<String, dynamic>? metadata,
+  }) {
+    return DescribeSchema<T>(this, description, metadata);
+  }
+
+  /// Creates a branded schema for nominal typing
+  ///
+  /// Branded types prevent mixing values of the same base type but different brands.
+  /// For example, a UserId and ProductId can both be strings but should not be interchangeable.
+  BrandedSchema<T, B> brand<B>() {
+    return BrandedSchema<T, B>(this);
+  }
+
+  /// Creates a readonly version of this schema
+  ///
+  /// This returns a schema that wraps the result in a readonly container,
+  /// preventing modification after validation.
+  ReadonlySchema<T> readonly() {
+    return ReadonlySchema<T>(this);
+  }
+
   /// Creates a new schema that is lazy (evaluated only when needed)
   ///
   /// This is useful for recursive schemas or schemas that depend on runtime values.
@@ -488,6 +515,9 @@ class OptionalSchema<T> extends Schema<T?> {
 
   const OptionalSchema(this._schema);
 
+  /// Get the underlying schema
+  Schema<T> get innerSchema => _schema;
+
   @override
   ValidationResult<T?> validate(dynamic input, [List<String> path = const []]) {
     if (input == null) {
@@ -702,4 +732,140 @@ class IntersectionSchema<T> extends Schema<T> {
 
     return ValidationResult.success(lastValidValue as T);
   }
+}
+
+/// Schema that adds description and metadata
+class DescribeSchema<T> extends Schema<T> {
+  final Schema<T> _schema;
+
+  DescribeSchema(
+      this._schema, String description, Map<String, dynamic>? metadata)
+      : super(
+          description: description,
+          metadata: metadata,
+        );
+
+  /// Get the underlying schema
+  Schema<T> get innerSchema => _schema;
+
+  @override
+  ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
+    return _schema.validate(input, path);
+  }
+
+  @override
+  Future<ValidationResult<T>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    return await _schema.validateAsync(input, path);
+  }
+
+  @override
+  String toString() {
+    return 'DescribeSchema($description)';
+  }
+}
+
+/// Branded type wrapper for nominal typing
+class Branded<T, B> {
+  final T value;
+  const Branded(this.value);
+
+  @override
+  String toString() => 'Branded<$T, $B>($value)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Branded<T, B> && other.value == value;
+  }
+
+  @override
+  int get hashCode => Object.hash(T, B, value);
+}
+
+/// Schema that creates branded types for nominal typing
+class BrandedSchema<T, B> extends Schema<Branded<T, B>> {
+  final Schema<T> _schema;
+
+  const BrandedSchema(this._schema);
+
+  /// Get the underlying schema
+  Schema<T> get innerSchema => _schema;
+
+  @override
+  ValidationResult<Branded<T, B>> validate(dynamic input,
+      [List<String> path = const []]) {
+    final result = _schema.validate(input, path);
+    if (result.isSuccess) {
+      return ValidationResult.success(Branded<T, B>(result.data as T));
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+
+  @override
+  Future<ValidationResult<Branded<T, B>>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await _schema.validateAsync(input, path);
+    if (result.isSuccess) {
+      return ValidationResult.success(Branded<T, B>(result.data as T));
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+
+  @override
+  String toString() => 'BrandedSchema<$T, $B>';
+}
+
+/// Readonly wrapper that prevents modification
+class Readonly<T> {
+  final T _value;
+  const Readonly(this._value);
+
+  /// Gets the readonly value
+  T get value => _value;
+
+  @override
+  String toString() => 'Readonly<$T>($_value)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Readonly<T> && other._value == _value;
+  }
+
+  @override
+  int get hashCode => Object.hash(T, _value);
+}
+
+/// Schema that creates readonly values
+class ReadonlySchema<T> extends Schema<Readonly<T>> {
+  final Schema<T> _schema;
+
+  const ReadonlySchema(this._schema);
+
+  /// Get the underlying schema
+  Schema<T> get innerSchema => _schema;
+
+  @override
+  ValidationResult<Readonly<T>> validate(dynamic input,
+      [List<String> path = const []]) {
+    final result = _schema.validate(input, path);
+    if (result.isSuccess) {
+      return ValidationResult.success(Readonly<T>(result.data as T));
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+
+  @override
+  Future<ValidationResult<Readonly<T>>> validateAsync(dynamic input,
+      [List<String> path = const []]) async {
+    final result = await _schema.validateAsync(input, path);
+    if (result.isSuccess) {
+      return ValidationResult.success(Readonly<T>(result.data as T));
+    }
+    return ValidationResult.failure(result.errors!);
+  }
+
+  @override
+  String toString() => 'ReadonlySchema<$T>';
 }

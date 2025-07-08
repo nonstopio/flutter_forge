@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/schema.dart';
 import '../core/validation_result.dart';
 
@@ -324,7 +325,7 @@ class ZodFormHelper {
   }
 }
 
-/// Extension for GlobalKey<FormState> to add Zod validation
+/// Extension for GlobalKey(FormState) to add Zod validation
 extension ZodFormStateExtension on GlobalKey<FormState> {
   /// Validates the form using Zod schemas
   ///

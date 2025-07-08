@@ -2,7 +2,7 @@
 ///
 /// This file provides comprehensive Flutter integration for Dzod schemas,
 /// including form validation, widgets, state management, and more.
-library flutter_extensions;
+library;
 
 // Export all Flutter extensions
 export 'form_integration.dart';

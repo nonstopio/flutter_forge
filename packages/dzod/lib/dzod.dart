@@ -9,8 +9,10 @@ export 'src/core/error_codes.dart';
 export 'src/core/error_context.dart';
 export 'src/core/error_formatter.dart';
 export 'src/core/error_utils.dart';
+export 'src/core/json_schema.dart';
 export 'src/core/parser.dart';
 export 'src/core/schema.dart';
+export 'src/core/schema_composition.dart';
 export 'src/core/validation_result.dart';
 
 // Flutter extensions

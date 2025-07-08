@@ -9,16 +9,16 @@ class ColorSchema extends Schema<Color> {
   ColorSchema();
 
   @override
-  ValidationResult<Color> validate(dynamic value,
+  ValidationResult<Color> validate(dynamic input,
       [List<String> path = const []]) {
-    if (value is Color) {
-      return ValidationResult.success(value);
+    if (input is Color) {
+      return ValidationResult.success(input);
     }
 
-    if (value is String) {
+    if (input is String) {
       try {
         // Try to parse hex color
-        final hexColor = _parseHexColor(value);
+        final hexColor = _parseHexColor(input);
         if (hexColor != null) {
           return ValidationResult.success(hexColor);
         }
@@ -28,7 +28,7 @@ class ColorSchema extends Schema<Color> {
 
       try {
         // Try to parse named color
-        final namedColor = _parseNamedColor(value);
+        final namedColor = _parseNamedColor(input);
         if (namedColor != null) {
           return ValidationResult.success(namedColor);
         }
@@ -37,15 +37,15 @@ class ColorSchema extends Schema<Color> {
       }
     }
 
-    if (value is int) {
+    if (input is int) {
       try {
-        return ValidationResult.success(Color(value));
+        return ValidationResult.success(Color(input));
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid color value: $value',
+            message: 'Invalid color value: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'Color',
           ),
         ]));
@@ -54,9 +54,9 @@ class ColorSchema extends Schema<Color> {
 
     return ValidationResult.failure(ValidationErrorCollection([
       ValidationError(
-        message: 'Expected Color, String, or int, got ${value.runtimeType}',
+        message: 'Expected Color, String, or int, got ${input.runtimeType}',
         path: path,
-        received: value,
+        received: input,
         expected: 'Color',
       ),
     ]));
@@ -229,26 +229,26 @@ class EdgeInsetsSchema extends Schema<EdgeInsets> {
   EdgeInsetsSchema();
 
   @override
-  ValidationResult<EdgeInsets> validate(dynamic value,
+  ValidationResult<EdgeInsets> validate(dynamic input,
       [List<String> path = const []]) {
-    if (value is EdgeInsets) {
-      return ValidationResult.success(value);
+    if (input is EdgeInsets) {
+      return ValidationResult.success(input);
     }
 
-    if (value is double) {
-      return ValidationResult.success(EdgeInsets.all(value));
+    if (input is double) {
+      return ValidationResult.success(EdgeInsets.all(input));
     }
 
-    if (value is int) {
-      return ValidationResult.success(EdgeInsets.all(value.toDouble()));
+    if (input is int) {
+      return ValidationResult.success(EdgeInsets.all(input.toDouble()));
     }
 
-    if (value is Map<String, dynamic>) {
+    if (input is Map<String, dynamic>) {
       try {
-        final left = (value['left'] as num?)?.toDouble() ?? 0.0;
-        final top = (value['top'] as num?)?.toDouble() ?? 0.0;
-        final right = (value['right'] as num?)?.toDouble() ?? 0.0;
-        final bottom = (value['bottom'] as num?)?.toDouble() ?? 0.0;
+        final left = (input['left'] as num?)?.toDouble() ?? 0.0;
+        final top = (input['top'] as num?)?.toDouble() ?? 0.0;
+        final right = (input['right'] as num?)?.toDouble() ?? 0.0;
+        final bottom = (input['bottom'] as num?)?.toDouble() ?? 0.0;
 
         return ValidationResult.success(
           EdgeInsets.fromLTRB(left, top, right, bottom),
@@ -256,31 +256,31 @@ class EdgeInsetsSchema extends Schema<EdgeInsets> {
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid EdgeInsets map: $value',
+            message: 'Invalid EdgeInsets map: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'EdgeInsets',
           ),
         ]));
       }
     }
 
-    if (value is List<dynamic>) {
+    if (input is List<dynamic>) {
       try {
-        if (value.length == 1) {
-          final all = (value[0] as num).toDouble();
+        if (input.length == 1) {
+          final all = (input[0] as num).toDouble();
           return ValidationResult.success(EdgeInsets.all(all));
-        } else if (value.length == 2) {
-          final horizontal = (value[0] as num).toDouble();
-          final vertical = (value[1] as num).toDouble();
+        } else if (input.length == 2) {
+          final horizontal = (input[0] as num).toDouble();
+          final vertical = (input[1] as num).toDouble();
           return ValidationResult.success(
             EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
           );
-        } else if (value.length == 4) {
-          final left = (value[0] as num).toDouble();
-          final top = (value[1] as num).toDouble();
-          final right = (value[2] as num).toDouble();
-          final bottom = (value[3] as num).toDouble();
+        } else if (input.length == 4) {
+          final left = (input[0] as num).toDouble();
+          final top = (input[1] as num).toDouble();
+          final right = (input[2] as num).toDouble();
+          final bottom = (input[3] as num).toDouble();
           return ValidationResult.success(
             EdgeInsets.fromLTRB(left, top, right, bottom),
           );
@@ -288,9 +288,9 @@ class EdgeInsetsSchema extends Schema<EdgeInsets> {
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid EdgeInsets list: $value',
+            message: 'Invalid EdgeInsets list: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'EdgeInsets',
           ),
         ]));
@@ -300,9 +300,9 @@ class EdgeInsetsSchema extends Schema<EdgeInsets> {
     return ValidationResult.failure(ValidationErrorCollection([
       ValidationError(
         message:
-            'Expected EdgeInsets, double, int, Map, or List, got ${value.runtimeType}',
+            'Expected EdgeInsets, double, int, Map, or List, got ${input.runtimeType}',
         path: path,
-        received: value,
+        received: input,
         expected: 'EdgeInsets',
       ),
     ]));
@@ -503,24 +503,24 @@ class DurationSchema extends Schema<Duration> {
   DurationSchema();
 
   @override
-  ValidationResult<Duration> validate(dynamic value,
+  ValidationResult<Duration> validate(dynamic input,
       [List<String> path = const []]) {
-    if (value is Duration) {
-      return ValidationResult.success(value);
+    if (input is Duration) {
+      return ValidationResult.success(input);
     }
 
-    if (value is int) {
-      return ValidationResult.success(Duration(milliseconds: value));
+    if (input is int) {
+      return ValidationResult.success(Duration(milliseconds: input));
     }
 
-    if (value is double) {
-      return ValidationResult.success(Duration(milliseconds: value.round()));
+    if (input is double) {
+      return ValidationResult.success(Duration(milliseconds: input.round()));
     }
 
-    if (value is String) {
+    if (input is String) {
       try {
         // Try to parse ISO 8601 duration
-        final duration = _parseIsoDuration(value);
+        final duration = _parseIsoDuration(input);
         if (duration != null) {
           return ValidationResult.success(duration);
         }
@@ -529,14 +529,14 @@ class DurationSchema extends Schema<Duration> {
       }
     }
 
-    if (value is Map<String, dynamic>) {
+    if (input is Map<String, dynamic>) {
       try {
-        final days = (value['days'] as int?) ?? 0;
-        final hours = (value['hours'] as int?) ?? 0;
-        final minutes = (value['minutes'] as int?) ?? 0;
-        final seconds = (value['seconds'] as int?) ?? 0;
-        final milliseconds = (value['milliseconds'] as int?) ?? 0;
-        final microseconds = (value['microseconds'] as int?) ?? 0;
+        final days = (input['days'] as int?) ?? 0;
+        final hours = (input['hours'] as int?) ?? 0;
+        final minutes = (input['minutes'] as int?) ?? 0;
+        final seconds = (input['seconds'] as int?) ?? 0;
+        final milliseconds = (input['milliseconds'] as int?) ?? 0;
+        final microseconds = (input['microseconds'] as int?) ?? 0;
 
         return ValidationResult.success(Duration(
           days: days,
@@ -549,9 +549,9 @@ class DurationSchema extends Schema<Duration> {
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid Duration map: $value',
+            message: 'Invalid Duration map: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'Duration',
           ),
         ]));
@@ -561,9 +561,9 @@ class DurationSchema extends Schema<Duration> {
     return ValidationResult.failure(ValidationErrorCollection([
       ValidationError(
         message:
-            'Expected Duration, int, double, String, or Map, got ${value.runtimeType}',
+            'Expected Duration, int, double, String, or Map, got ${input.runtimeType}',
         path: path,
-        received: value,
+        received: input,
         expected: 'Duration',
       ),
     ]));
@@ -776,48 +776,48 @@ class SizeSchema extends Schema<Size> {
   SizeSchema();
 
   @override
-  ValidationResult<Size> validate(dynamic value,
+  ValidationResult<Size> validate(dynamic input,
       [List<String> path = const []]) {
-    if (value is Size) {
-      return ValidationResult.success(value);
+    if (input is Size) {
+      return ValidationResult.success(input);
     }
 
-    if (value is double) {
-      return ValidationResult.success(Size.square(value));
+    if (input is double) {
+      return ValidationResult.success(Size.square(input));
     }
 
-    if (value is int) {
-      return ValidationResult.success(Size.square(value.toDouble()));
+    if (input is int) {
+      return ValidationResult.success(Size.square(input.toDouble()));
     }
 
-    if (value is List<dynamic> && value.length == 2) {
+    if (input is List<dynamic> && input.length == 2) {
       try {
-        final width = (value[0] as num).toDouble();
-        final height = (value[1] as num).toDouble();
+        final width = (input[0] as num).toDouble();
+        final height = (input[1] as num).toDouble();
         return ValidationResult.success(Size(width, height));
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid Size list: $value',
+            message: 'Invalid Size list: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'Size',
           ),
         ]));
       }
     }
 
-    if (value is Map<String, dynamic>) {
+    if (input is Map<String, dynamic>) {
       try {
-        final width = (value['width'] as num).toDouble();
-        final height = (value['height'] as num).toDouble();
+        final width = (input['width'] as num).toDouble();
+        final height = (input['height'] as num).toDouble();
         return ValidationResult.success(Size(width, height));
       } catch (e) {
         return ValidationResult.failure(ValidationErrorCollection([
           ValidationError(
-            message: 'Invalid Size map: $value',
+            message: 'Invalid Size map: $input',
             path: path,
-            received: value,
+            received: input,
             expected: 'Size',
           ),
         ]));
@@ -827,9 +827,9 @@ class SizeSchema extends Schema<Size> {
     return ValidationResult.failure(ValidationErrorCollection([
       ValidationError(
         message:
-            'Expected Size, double, int, List, or Map, got ${value.runtimeType}',
+            'Expected Size, double, int, List, or Map, got ${input.runtimeType}',
         path: path,
-        received: value,
+        received: input,
         expected: 'Size',
       ),
     ]));

@@ -43,7 +43,7 @@ class ZodTextFormField extends StatefulWidget {
   final bool useAsyncValidation;
 
   const ZodTextFormField({
-    Key? key,
+    super.key,
     required this.schema,
     this.controller,
     this.labelText,
@@ -75,7 +75,7 @@ class ZodTextFormField extends StatefulWidget {
     this.showErrorImmediately = false,
     this.customErrorMessage,
     this.useAsyncValidation = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ZodTextFormField> createState() => _ZodTextFormFieldState();
@@ -309,7 +309,7 @@ class ZodErrorDisplay extends StatelessWidget {
   final Widget Function(ValidationError error)? errorBuilder;
 
   const ZodErrorDisplay({
-    Key? key,
+    super.key,
     required this.result,
     this.errorStyle,
     this.errorColor,
@@ -319,7 +319,7 @@ class ZodErrorDisplay extends StatelessWidget {
     this.showMultipleErrors = true,
     this.customPrefix,
     this.errorBuilder,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -386,13 +386,13 @@ class ZodValidationFeedback extends StatefulWidget {
   final bool useAsyncValidation;
 
   const ZodValidationFeedback({
-    Key? key,
+    super.key,
     required this.schema,
     required this.value,
     required this.builder,
     this.debounceTime = const Duration(milliseconds: 300),
     this.useAsyncValidation = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ZodValidationFeedback> createState() => _ZodValidationFeedbackState();
@@ -503,7 +503,7 @@ class ZodFormField<T> extends StatefulWidget {
   final Duration debounceTime;
 
   const ZodFormField({
-    Key? key,
+    super.key,
     required this.schema,
     this.initialValue,
     required this.builder,
@@ -513,7 +513,7 @@ class ZodFormField<T> extends StatefulWidget {
     this.customErrorMessage,
     this.useAsyncValidation = false,
     this.debounceTime = const Duration(milliseconds: 300),
-  }) : super(key: key);
+  });
 
   @override
   State<ZodFormField<T>> createState() => _ZodFormFieldState<T>();
@@ -653,7 +653,7 @@ class ZodValidationStatus extends StatelessWidget {
   final String? invalidMessage;
 
   const ZodValidationStatus({
-    Key? key,
+    super.key,
     required this.result,
     this.showWhenValid = true,
     this.showWhenInvalid = true,
@@ -665,7 +665,7 @@ class ZodValidationStatus extends StatelessWidget {
     this.invalidColor,
     this.validMessage,
     this.invalidMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
