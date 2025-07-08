@@ -636,25 +636,25 @@ class CoercionUtils {
   /// Smart type detection and conversion
   static T smartCoerce<T>(dynamic input, Type targetType) {
     switch (targetType) {
-      case String:
+      case const (String):
         return coerceToString(input) as T;
-      case int:
+      case const (int):
         return coerceToInt(input) as T;
-      case double:
+      case const (double):
         return coerceToDouble(input) as T;
-      case num:
+      case const (num):
         return coerceToNumber(input) as T;
-      case bool:
+      case const (bool):
         return coerceToBoolean(input) as T;
-      case DateTime:
+      case const (DateTime):
         return coerceToDateTime(input) as T;
-      case BigInt:
+      case const (BigInt):
         return coerceToBigInt(input) as T;
-      case List:
+      case const (List):
         return coerceToList(input) as T;
-      case Set:
+      case const (Set):
         return coerceToSet(input) as T;
-      case Map:
+      case const (Map):
         return coerceToMap(input) as T;
       default:
         throw FormatException('Cannot coerce to type $targetType');
@@ -898,25 +898,25 @@ class Coerce {
   /// Creates a target schema for the given type
   Schema<T> _createTargetSchema<T>(Type targetType) {
     switch (targetType) {
-      case String:
+      case const (String):
         return const StringSchema() as Schema<T>;
-      case int:
+      case const (int):
         return const NumberSchema().transform((n) => n.round()) as Schema<T>;
-      case double:
+      case const (double):
         return const NumberSchema().transform((n) => n.toDouble()) as Schema<T>;
-      case num:
+      case const (num):
         return const NumberSchema() as Schema<T>;
-      case bool:
+      case const (bool):
         return const BooleanSchema() as Schema<T>;
-      case DateTime:
+      case const (DateTime):
         return const _DateTimeSchema() as Schema<T>;
-      case BigInt:
+      case const (BigInt):
         return const _BigIntSchema() as Schema<T>;
-      case List:
+      case const (List):
         return const _ListSchema() as Schema<T>;
-      case Set:
+      case const (Set):
         return const _SetSchema() as Schema<T>;
-      case Map:
+      case const (Map):
         return const _MapSchema() as Schema<T>;
       default:
         throw ArgumentError('Unsupported target type: $targetType');
