@@ -147,6 +147,7 @@ class _TimerButtonState extends State<TimerButton> with SafeStateMixin {
       _timeCounter--;
       if (_timeCounter <= 0) {
         _timeUpFlag = true;
+        _timeCounter = 0; // Ensure counter doesn't go negative
       }
       safeSetState();
       if (_timeCounter > 0) {
