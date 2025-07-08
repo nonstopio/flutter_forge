@@ -131,7 +131,21 @@ class Z {
     Map<String, Schema<dynamic>> shape, {
     Set<String>? optionalKeys,
   }) {
-    return ObjectSchema(shape, optionalKeys: optionalKeys);
+    // Auto-detect optional keys from OptionalSchema instances
+    final autoOptionalKeys = <String>{};
+    for (final entry in shape.entries) {
+      if (entry.value is OptionalSchema) {
+        autoOptionalKeys.add(entry.key);
+      }
+    }
+    
+    // Combine explicit and auto-detected optional keys
+    final combinedOptionalKeys = <String>{
+      ...autoOptionalKeys,
+      if (optionalKeys != null) ...optionalKeys,
+    };
+    
+    return ObjectSchema(shape, optionalKeys: combinedOptionalKeys);
   }
 
   /// Creates an any schema that accepts any value
@@ -395,6 +409,9 @@ class _LiteralSchema<T> extends Schema<T> {
   final T _value;
 
   const _LiteralSchema(this._value);
+  
+  /// Gets the literal value this schema validates against
+  T get value => _value;
 
   @override
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {

@@ -64,7 +64,29 @@ class RecursiveSchema<T> extends Schema<T> {
 
   @override
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
-    return _validateWithContext(input, path, ValidationContext());
+    // Check if this is the root of the validation tree
+    final isRoot = _globalContext == null;
+
+    try {
+      final context = _getOrCreateValidationContext();
+      return _validateWithContext(input, path, context);
+    } finally {
+      // Clear global context only if this was the root validator
+      if (isRoot) {
+        _clearGlobalContext();
+      }
+    }
+  }
+
+  static ValidationContext? _globalContext;
+
+  ValidationContext _getOrCreateValidationContext() {
+    // Use global context for the validation tree
+    return _globalContext ??= ValidationContext();
+  }
+
+  static void _clearGlobalContext() {
+    _globalContext = null;
   }
 
   @override
@@ -75,6 +97,9 @@ class RecursiveSchema<T> extends Schema<T> {
 
   ValidationResult<T> _validateWithContext(
       dynamic input, List<String> path, ValidationContext context) {
+    // Update context stats
+    context.totalValidations++;
+
     // Check depth limit
     if (context.depth >= _maxDepth) {
       return ValidationResult.failure(
@@ -89,42 +114,71 @@ class RecursiveSchema<T> extends Schema<T> {
       );
     }
 
-    // Check for circular references
+    // Check for circular references before processing
+    String? objectId;
     if (_enableCircularDetection) {
-      final objectId = _getObjectId(input);
-      if (objectId != null && context.visitedObjects.contains(objectId)) {
-        return ValidationResult.failure(
-          ValidationErrorCollection.single(
-            ValidationError.constraintViolation(
-              constraint: 'Circular reference detected',
-              received: input,
-              path: path,
-              code: ValidationErrorCode.schemaCircular.code,
-            ),
-          ),
-        );
-      }
-
+      objectId = _getObjectId(input);
       if (objectId != null) {
+        if (context.visitedObjects.contains(objectId)) {
+          context.circularReferencesDetected++;
+          return ValidationResult.failure(
+            ValidationErrorCollection.single(
+              ValidationError.constraintViolation(
+                constraint: 'Circular reference detected',
+                received: input,
+                path: path,
+                code: ValidationErrorCode.schemaCircular.code,
+              ),
+            ),
+          );
+        }
+        // Add to visited set before processing
         context.visitedObjects.add(objectId);
       }
     }
 
-    // Increase depth and validate
-    final newContext = context.incrementDepth();
-    final result = _schema.validate(input, path);
+    // Increment depth and update max depth reached
+    context.depth++;
+    if (context.depth > context.maxDepthReached) {
+      context.maxDepthReached = context.depth;
+    }
 
-    // If the schema is also a RecursiveSchema, pass the context
-    if (_schema is RecursiveSchema<T>) {
-      final recursiveSchema = _schema as RecursiveSchema<T>;
-      return recursiveSchema._validateWithContext(input, path, newContext);
+    ValidationResult<T> result;
+
+    try {
+      // If the schema is also a RecursiveSchema, pass the context
+      if (_schema is RecursiveSchema<T>) {
+        final recursiveSchema = _schema as RecursiveSchema<T>;
+        result = recursiveSchema._validateWithContext(input, path, context);
+      } else {
+        // For non-recursive schemas, we need to handle nested RecursiveSchema instances
+        result = _validateNestedWithContext(input, path, context);
+      }
+    } finally {
+      // Always decrement depth and clean up
+      context.depth--;
+
+      // Remove from visited set when done processing this object
+      if (_enableCircularDetection && objectId != null) {
+        context.visitedObjects.remove(objectId);
+      }
     }
 
     return result;
   }
 
+  /// Helper method to handle nested validation with context propagation
+  ValidationResult<T> _validateNestedWithContext(
+      dynamic input, List<String> path, ValidationContext context) {
+    // For now, just use regular validation - the context will be passed through RecursiveSchema instances
+    return _schema.validate(input, path);
+  }
+
   Future<ValidationResult<T>> _validateAsyncWithContext(
       dynamic input, List<String> path, ValidationContext context) async {
+    // Update context stats
+    context.totalValidations++;
+
     // Check depth limit
     if (context.depth >= _maxDepth) {
       return ValidationResult.failure(
@@ -143,6 +197,7 @@ class RecursiveSchema<T> extends Schema<T> {
     if (_enableCircularDetection) {
       final objectId = _getObjectId(input);
       if (objectId != null && context.visitedObjects.contains(objectId)) {
+        context.circularReferencesDetected++;
         return ValidationResult.failure(
           ValidationErrorCollection.single(
             ValidationError.constraintViolation(
@@ -160,16 +215,26 @@ class RecursiveSchema<T> extends Schema<T> {
       }
     }
 
-    // Increase depth and validate
-    final newContext = context.incrementDepth();
-    final result = await _schema.validateAsync(input, path);
+    // Increment depth and update max depth reached
+    context.depth++;
+    if (context.depth > context.maxDepthReached) {
+      context.maxDepthReached = context.depth;
+    }
+
+    ValidationResult<T> result;
 
     // If the schema is also a RecursiveSchema, pass the context
     if (_schema is RecursiveSchema<T>) {
       final recursiveSchema = _schema as RecursiveSchema<T>;
-      return await recursiveSchema._validateAsyncWithContext(
-          input, path, newContext);
+      result =
+          await recursiveSchema._validateAsyncWithContext(input, path, context);
+    } else {
+      // For non-recursive schemas, use regular validation
+      result = await _schema.validateAsync(input, path);
     }
+
+    // Decrement depth when returning
+    context.depth--;
 
     return result;
   }
@@ -177,9 +242,12 @@ class RecursiveSchema<T> extends Schema<T> {
   String? _getObjectId(dynamic input) {
     if (input == null) return null;
 
-    // For objects and arrays, use identity hash
-    if (input is Map || input is List) {
-      return input.hashCode.toString();
+    // For objects and arrays, use identity hash combined with type and length
+    if (input is Map) {
+      return 'Map_${identityHashCode(input)}_${input.length}';
+    }
+    if (input is List) {
+      return 'List_${identityHashCode(input)}_${input.length}';
     }
 
     return null;
@@ -332,13 +400,13 @@ class ValidationContext {
   int totalValidations = 0;
 
   ValidationContext incrementDepth() {
+    // Create new context but share the same state
     final newContext = ValidationContext();
     newContext.visitedObjects.addAll(visitedObjects);
     newContext.depth = depth + 1;
-    newContext.maxDepthReached =
-        newContext.depth > maxDepthReached ? newContext.depth : maxDepthReached;
+    newContext.maxDepthReached = maxDepthReached;
     newContext.circularReferencesDetected = circularReferencesDetected;
-    newContext.totalValidations = totalValidations + 1;
+    newContext.totalValidations = totalValidations;
     return newContext;
   }
 }
