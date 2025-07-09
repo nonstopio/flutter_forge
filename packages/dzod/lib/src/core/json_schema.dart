@@ -161,6 +161,11 @@ class JsonSchemaGenerator {
         result['title'] = schema.description;
         result['description'] = schema.description;
       }
+      if (context.config.includeMetadata && schema.metadata != null) {
+        for (final entry in schema.metadata!.entries) {
+          result['${context.config.metadataPrefix}${entry.key}'] = entry.value;
+        }
+      }
       return result;
     }
 

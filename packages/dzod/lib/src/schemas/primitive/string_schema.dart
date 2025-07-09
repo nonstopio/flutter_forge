@@ -622,33 +622,50 @@ class StringSchema extends Schema<String> {
     if (ulid.length != 26) return false;
 
     // Crockford's Base32 alphabet: 0123456789ABCDEFGHJKMNPQRSTVWXYZ
+    // Excludes I, L, O, U to avoid confusion with 1, 1, 0, V
     final ulidRegex = RegExp(r'^[0-9A-HJKMNP-TV-Z]{26}$');
-    return ulidRegex.hasMatch(ulid.toUpperCase());
+    return ulidRegex.hasMatch(ulid);
   }
 
   bool _isValidBase64(String base64) {
     if (base64.isEmpty) return false;
 
-    // Remove padding and check length
-    final withoutPadding = base64.replaceAll('=', '');
-    if (withoutPadding.length % 4 == 1) return false;
-
+    // Base64 must be properly padded
     final base64Regex = RegExp(r'^[A-Za-z0-9+/]*={0,2}$');
-    return base64Regex.hasMatch(base64);
+    if (!base64Regex.hasMatch(base64)) return false;
+
+    // Check for proper padding
+    final withoutPadding = base64.replaceAll('=', '');
+    final remainder = withoutPadding.length % 4;
+
+    // If remainder is 1, it's invalid
+    if (remainder == 1) return false;
+
+    // Check if padding matches expected amount
+    if (remainder == 2 && !base64.endsWith('==')) return false;
+    if (remainder == 3 && !base64.endsWith('=')) return false;
+    if (remainder == 0 && base64.contains('=')) return false;
+
+    return true;
   }
 
   bool _isValidEmoji(String text) {
     if (text.isEmpty) return false;
 
-    // Unicode emoji ranges (simplified)
+    // More comprehensive emoji regex including:
+    // - Basic emoji ranges
+    // - Skin tone modifiers
+    // - Zero-width joiner sequences (ZWJ)
+    // - Regional indicator symbols (flags)
+    // - Variation selectors
     final emojiRegex = RegExp(
+      r'('
       r'[\u{1F600}-\u{1F64F}]|' // Emoticons
       r'[\u{1F300}-\u{1F5FF}]|' // Misc Symbols and Pictographs
       r'[\u{1F680}-\u{1F6FF}]|' // Transport and Map
       r'[\u{1F1E0}-\u{1F1FF}]|' // Flags (iOS)
       r'[\u{2600}-\u{26FF}]|' // Misc symbols
       r'[\u{2700}-\u{27BF}]|' // Dingbats
-      r'[\u{FE00}-\u{FE0F}]|' // Variation Selectors
       r'[\u{1F900}-\u{1F9FF}]|' // Supplemental Symbols and Pictographs
       r'[\u{1F018}-\u{1F270}]|' // Various other emoji
       r'[\u{238C}]|' // Pushpin
@@ -687,13 +704,48 @@ class StringSchema extends Schema<String> {
       r'[\u{27BF}]|' // Double curly loop
       r'[\u{2B1B}-\u{2B1C}]|' // Squares
       r'[\u{2B50}]|' // Star
-      r'[\u{2B55}]', // Circle
+      r'[\u{2B55}]|' // Circle
+      r'[\u{1FA70}-\u{1FAFF}]|' // Symbols and Pictographs Extended-A
+      r'[\u{1F000}-\u{1F02F}]|' // Mahjong tiles
+      r'[\u{1F0A0}-\u{1F0FF}]|' // Playing cards
+      r'[\u{1F100}-\u{1F1FF}]' // Enclosed characters
+      r')'
+      r'(?:[\u{1F3FB}-\u{1F3FF}])?' // Optional skin tone modifier
+      r'(?:\u{200D}' // Zero-width joiner
+      r'(?:'
+      r'[\u{1F600}-\u{1F64F}]|'
+      r'[\u{1F300}-\u{1F5FF}]|'
+      r'[\u{1F680}-\u{1F6FF}]|'
+      r'[\u{1F1E0}-\u{1F1FF}]|'
+      r'[\u{2600}-\u{26FF}]|'
+      r'[\u{2700}-\u{27BF}]|'
+      r'[\u{1F900}-\u{1F9FF}]|'
+      r'[\u{2640}\u{FE0F}]|' // Female sign
+      r'[\u{2642}\u{FE0F}]|' // Male sign
+      r'[\u{2695}\u{FE0F}]|' // Medical symbol
+      r'[\u{1F308}]|' // Rainbow
+      r'[\u{1F3F3}]' // White flag
+      r')'
+      r'(?:[\u{1F3FB}-\u{1F3FF}])?' // Optional skin tone modifier
+      r')*' // Can have multiple ZWJ sequences
+      r'|'
+      r'[\u{1F3F3}]\u{FE0F}?\u{200D}[\u{1F308}]|' // Rainbow flag
+      r'[\u{1F3F4}]\u{200D}[\u{2620}\u{FE0F}]|' // Pirate flag
+      r'(?:[\u{1F1E6}-\u{1F1FF}]){2}|' // Country flags
+      r'[\u{FE00}-\u{FE0F}]|' // Variation selectors
+      r'[\u{E0020}-\u{E007F}]', // Tag characters
       unicode: true,
     );
 
-    // Check if entire string consists of only emoji characters
-    final textWithoutEmoji = text.replaceAll(emojiRegex, '');
-    return textWithoutEmoji.isEmpty;
+    // Remove all valid emoji sequences
+    var remaining = text;
+    remaining = remaining.replaceAll(emojiRegex, '');
+
+    // Also remove any remaining variation selectors and ZWJ that might be orphaned
+    remaining = remaining.replaceAll(
+        RegExp(r'[\u{FE00}-\u{FE0F}\u{200D}]', unicode: true), '');
+
+    return remaining.isEmpty;
   }
 
   bool _isValidNanoid(String nanoid, int? expectedLength) {
