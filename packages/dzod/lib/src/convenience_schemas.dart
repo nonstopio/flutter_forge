@@ -282,12 +282,14 @@ class Z {
   /// Creates a refine schema that can be used in pipelines
   static RefineSchema<T> refine<T>(bool Function(T) validator,
           {String? message, String? code}) =>
-      RefineSchema<T>(_TypedSchema<T>(), validator, message: message, code: code);
+      RefineSchema<T>(_TypedSchema<T>(), validator,
+          message: message, code: code);
 
   /// Creates an async refine schema that can be used in pipelines
   static AsyncRefineSchema<T> refineAsync<T>(Future<bool> Function(T) validator,
           {String? message, String? code}) =>
-      AsyncRefineSchema<T>(_TypedSchema<T>(), validator, message: message, code: code);
+      AsyncRefineSchema<T>(_TypedSchema<T>(), validator,
+          message: message, code: code);
 }
 
 // Implementation classes for convenience schemas

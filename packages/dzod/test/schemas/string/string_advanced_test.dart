@@ -89,7 +89,7 @@ void main() {
         final validUlids = [
           '01ARZ3NDEKTSV4RRFFQ69G5FAV', // Example ULID
           '01BX5ZZKBKACTAV9WEVGEMMVRZ', // Another example
-          '01C3H2Z3B4EFGH5JKLMNPQRSTW', // Valid format
+          '01C3H2Z3B4EFGH5JKMNPQRSTWY', // Valid Crockford's Base32 format (removed I and L)
           '7ZZZZZZZZZZZZZZZZZZZZZZZZZ', // All Z's (valid)
           '01234567890ABCDEFGHJKMNPQR', // Valid Crockford's Base32
         ];
