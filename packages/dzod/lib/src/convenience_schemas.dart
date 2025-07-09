@@ -80,6 +80,9 @@ class Z {
     String? description,
     Map<String, dynamic>? metadata,
   }) {
+    if (stages.isEmpty) {
+      throw ArgumentError('Pipeline must have at least one stage');
+    }
     return PipelineSchema<TInput, TOutput>(
       stages,
       description: description,
@@ -273,123 +276,29 @@ class Z {
   static Schema<num> second() => const NumberSchema().second();
 
   /// Creates a transform schema that can be used in pipelines
-  static TransformStage<T, R> transform<T, R>(R Function(T) transformer) =>
-      TransformStage<T, R>(transformer);
+  static TransformSchema<T, R> transform<T, R>(R Function(T) transformer) =>
+      TransformSchema<T, R>(_TypedSchema<T>(), transformer);
 
   /// Creates a refine schema that can be used in pipelines
-  static RefineStage<T> refine<T>(bool Function(T) validator,
+  static RefineSchema<T> refine<T>(bool Function(T) validator,
           {String? message, String? code}) =>
-      RefineStage<T>(validator, message: message, code: code);
+      RefineSchema<T>(_TypedSchema<T>(), validator, message: message, code: code);
 
   /// Creates an async refine schema that can be used in pipelines
-  /// TODO: Implement proper async validation support
-  static AsyncRefineStage<T> refineAsync<T>(Future<bool> Function(T) validator,
+  static AsyncRefineSchema<T> refineAsync<T>(Future<bool> Function(T) validator,
           {String? message, String? code}) =>
-      AsyncRefineStage<T>();
+      AsyncRefineSchema<T>(_TypedSchema<T>(), validator, message: message, code: code);
 }
 
 // Implementation classes for convenience schemas
 
-/// A transform stage for use in pipelines
-class TransformStage<T, R> extends Schema<R> {
-  final R Function(T) _transformer;
-
-  const TransformStage(this._transformer);
-
-  @override
-  ValidationResult<R> validate(dynamic input, [List<String> path = const []]) {
-    if (input is T) {
-      try {
-        final result = _transformer(input);
-        return ValidationResult.success(result);
-      } catch (e) {
-        return ValidationResult.failure(
-          ValidationErrorCollection.single(
-            ValidationError.constraintViolation(
-              path: path,
-              received: input,
-              constraint: 'Transform failed: $e',
-              code: 'transform_failed',
-            ),
-          ),
-        );
-      }
-    }
-    return ValidationResult.failure(
-      ValidationErrorCollection.single(
-        ValidationError.typeMismatch(
-          expected: '$T',
-          received: input,
-          path: path,
-        ),
-      ),
-    );
-  }
-}
-
-/// A refine stage for use in pipelines
-class RefineStage<T> extends Schema<T> {
-  final bool Function(T) _validator;
-  final String? _message;
-  final String? _code;
-
-  const RefineStage(this._validator, {String? message, String? code})
-      : _message = message,
-        _code = code;
+/// A typed schema that accepts any value of type T
+class _TypedSchema<T> extends Schema<T> {
+  const _TypedSchema();
 
   @override
   ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
     if (input is T) {
-      try {
-        if (_validator(input)) {
-          return ValidationResult.success(input);
-        } else {
-          return ValidationResult.failure(
-            ValidationErrorCollection.single(
-              ValidationError.constraintViolation(
-                path: path,
-                received: input,
-                constraint: _message ?? 'Validation failed',
-                code: _code ?? 'validation_failed',
-              ),
-            ),
-          );
-        }
-      } catch (e) {
-        return ValidationResult.failure(
-          ValidationErrorCollection.single(
-            ValidationError.constraintViolation(
-              path: path,
-              received: input,
-              constraint: 'Validation error: $e',
-              code: 'validation_error',
-            ),
-          ),
-        );
-      }
-    }
-    return ValidationResult.failure(
-      ValidationErrorCollection.single(
-        ValidationError.typeMismatch(
-          expected: '$T',
-          received: input,
-          path: path,
-        ),
-      ),
-    );
-  }
-}
-
-/// An async refine stage for use in pipelines
-/// TODO: Implement proper async validation support
-class AsyncRefineStage<T> extends Schema<T> {
-  const AsyncRefineStage();
-
-  @override
-  ValidationResult<T> validate(dynamic input, [List<String> path = const []]) {
-    if (input is T) {
-      // For now, async validation in pipeline context would need special handling
-      // This is a simplified implementation
       return ValidationResult.success(input);
     }
     return ValidationResult.failure(

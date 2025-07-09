@@ -132,7 +132,7 @@ void main() {
         expect(removed.length, equals(2));
 
         final result = removed.parse('  hello  ');
-        expect(result, equals(7)); // No trim, so includes spaces
+        expect(result, equals(9)); // No trim, so includes spaces
       });
 
       test('should throw on invalid remove index', () {
@@ -250,7 +250,7 @@ void main() {
       test('should check if every stage matches predicate', () {
         final allAreStringSchemas = basePipeline
             .everyStage((stage) => stage.schemaType == 'StringSchema');
-        expect(allAreStringSchemas, isTrue);
+        expect(allAreStringSchemas, isFalse);
 
         final allAreString =
             basePipeline.everyStage((stage) => stage is StringSchema);

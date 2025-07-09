@@ -691,8 +691,8 @@ class StringSchema extends Schema<String> {
       unicode: true,
     );
 
-    // Check if entire string consists of emoji and whitespace
-    final textWithoutEmoji = text.replaceAll(emojiRegex, '').trim();
+    // Check if entire string consists of only emoji characters
+    final textWithoutEmoji = text.replaceAll(emojiRegex, '');
     return textWithoutEmoji.isEmpty;
   }
 

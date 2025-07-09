@@ -349,7 +349,7 @@ void main() {
           '#f00', // Short form
           'f00', // Short form without #
           '#ff0000ff', // With alpha
-          '#rgba', // Short form with alpha
+          '#abcd', // Short form with alpha - valid hex characters
         ];
 
         for (final color in validColors) {
