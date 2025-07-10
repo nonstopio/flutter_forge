@@ -543,20 +543,26 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
 ```dart
 // Flutter widget-specific schemas
 final colorSchema = Z.color()
-  .hex()                        // Hex color validation
-  .alpha(0.5, 1.0)             // Alpha range
-  .namedColor('blue');         // Named color validation
+  .alpha(255)                   // Specific alpha value (0-255)
+  .opaque();                    // Must be opaque (alpha = 255)
+
+final alphaRangeSchema = Z.color()
+  .minAlpha(128)                // Minimum alpha value
+  .maxAlpha(255);               // Maximum alpha value
 
 final edgeInsetsSchema = Z.edgeInsets()
-  .uniform(8.0, 16.0)          // Uniform padding range
-  .symmetric(horizontal: 16.0) // Symmetric constraints
-  .only(left: 8.0, right: 8.0); // Specific edge constraints
+  .uniform()                    // Must be uniform padding
+  .minAll(8.0)                  // Minimum padding on all sides
+  .maxAll(16.0);                // Maximum padding on all sides
+
+final paddingConstraintsSchema = Z.edgeInsets()
+  .horizontalRange(8.0, 24.0)   // Horizontal padding range
+  .verticalRange(4.0, 12.0);    // Vertical padding range
 
 final durationSchema = Z.duration()
   .min(Duration(seconds: 1))    // Minimum duration
   .max(Duration(minutes: 5))    // Maximum duration
-  .iso8601()                    // ISO 8601 parsing
-  .range(Duration(seconds: 30), Duration(minutes: 2));
+  .positive();                  // Must be positive duration
 ```
 
 ### Example 19: State Management with Validation
@@ -599,7 +605,7 @@ class UserProfileController extends ChangeNotifier {
       final fieldSchema = _profileSchema.shape[field];
       if (fieldSchema != null) {
         final result = fieldSchema.validate(value);
-        return result.isSuccess ? null : result.errors!.firstError?.message;
+        return result.isSuccess ? null : result.errors!.first?.message;
       }
     } catch (e) {
       return 'Invalid field';
@@ -634,23 +640,18 @@ if (result.isFailure) {
     print('Context: ${error.context}');        // Additional context
   }
   
-  // Error filtering and grouping
+  // Error filtering (available methods)
   final emailErrors = errors.filterByPath(['email']);
-  final typeErrors = errors.filterByCode(ValidationErrorCode.invalidEmail);
-  final criticalErrors = errors.filterBySeverity(ErrorSeverity.critical);
+  final typeErrors = errors.filterByCode('invalid_email');
   
-  // Group errors by field
-  final groupedByField = errors.groupByPath();
-  final groupedByCode = errors.groupByCode();
+  // Basic error analysis
+  print('Total errors: ${errors.length}');
+  print('Has errors: ${errors.hasErrors}');
+  print('First error: ${errors.first?.message}');
   
-  // Sort errors by priority
-  final sortedErrors = errors.sortByPriority();
-  
-  // Statistical analysis
-  final stats = errors.statistics;
-  print('Total errors: ${stats.total}');
-  print('Critical errors: ${stats.critical}');
-  print('Most common error: ${stats.mostCommonCode}');
+  // Error codes analysis
+  final errorCodes = errors.errors.map((e) => e.code).toSet();
+  print('Unique error codes: $errorCodes');
 }
 ```
 
@@ -666,30 +667,24 @@ final jsonErrors = errors.toJson();
 print(jsonErrors);
 // {"errors": [{"code": "invalid_email", "message": "Invalid email format", "path": ["email"]}]}
 
-// Human-readable format
-final readable = errors.toHumanReadable();
+// Human-readable format (using available methods)
+final readable = errors.formattedErrors;
 print(readable);
-// "Email: Invalid email format"
+// "ValidationError at email: Invalid email format (received: invalid-email, expected: valid email)"
 
-// Compact format
-final compact = errors.toCompact();
-print(compact);
-// "email: invalid_email"
+// Individual error formatting
+for (final error in errors.errors) {
+  print('${error.fullPath}: ${error.message}');
+}
+// "email: Invalid email format"
 
-// Developer format with full context
-final developer = errors.toDeveloperFormat();
-print(developer);
-// "ValidationError(code: invalid_email, path: [email], expected: email, received: invalid-email, context: {...})"
-
-// Custom formatting
-final custom = errors.format(ErrorFormatConfig(
-  includeCode: true,
-  includePath: true,
-  includeContext: false,
-  groupByField: true,
-  sortByPriority: true,
-  maxErrors: 5,
-));
+// Custom error collection analysis
+final errorsByPath = <String, List<ValidationError>>{};
+for (final error in errors.errors) {
+  final path = error.fullPath;
+  errorsByPath.putIfAbsent(path, () => []).add(error);
+}
+print('Errors by field: $errorsByPath');
 ```
 
 ### 🌐 **Global Error Configuration**
@@ -737,27 +732,28 @@ final userSchema = Z.object({
   'age': Z.number().min(18),
 }).describe('User profile schema');
 
-// Get schema information
-final info = userSchema.analyze();
-print('Schema type: ${info.type}');                    // 'object'
-print('Complexity score: ${info.complexityScore}');    // 0-100 scale
-print('Required fields: ${info.requiredFields}');      // ['name', 'email', 'age']
-print('Optional fields: ${info.optionalFields}');      // []
-print('Nested schemas: ${info.nestedSchemas}');        // 3
+// Get schema information (using available methods)
+print('Schema shape: ${userSchema.shape.keys}');           // Keys: [name, email, age]
+print('Required fields: ${userSchema.requiredKeys}');      // {name, email, age}
+print('Optional fields: ${userSchema.optionalKeys}');      // {}
+print('Total fields: ${userSchema.shape.length}');        // 3
 
-// Schema metadata
-final metadata = userSchema.allMetadata;
-print('Description: ${metadata['description']}');      // 'User profile schema'
-print('Created: ${metadata['createdAt']}');           // Timestamp
-print('Version: ${metadata['version']}');             // Schema version
+// Schema structure analysis
+for (final entry in userSchema.shape.entries) {
+  final field = entry.key;
+  final schema = entry.value;
+  final isRequired = userSchema.requiredKeys.contains(field);
+  print('Field $field: ${schema.runtimeType} (required: $isRequired)');
+}
 
-// Schema equivalence
+// Schema comparison (manual equivalence check)
 final otherSchema = Z.object({
   'name': Z.string().min(2).max(50),
   'email': Z.string().email(),
   'age': Z.number().min(18),
 });
-final isEquivalent = userSchema.isEquivalentTo(otherSchema); // true
+final sameKeys = userSchema.shape.keys.toSet().difference(otherSchema.shape.keys.toSet()).isEmpty;
+print('Schemas have same structure: $sameKeys');
 ```
 
 ### 🔧 **Schema Transformation**
@@ -851,29 +847,33 @@ final comprehensiveSchema = userSchema.toJsonSchema(JsonSchemaConfig(
 
 ### Example 26: Performance Optimization
 ```dart
-// Schema caching for repeated validations
+// Basic schema for repeated validations
 final userSchema = Z.object({
   'name': Z.string().min(2).max(50),
   'email': Z.string().email(),
-}).withCaching();  // Enable result caching
+});
 
-// Lazy evaluation
+// Lazy evaluation (available)
 final expensiveSchema = Z.lazy(() => 
   Z.object({
-    'data': Z.array(Z.string()).transform(computeExpensiveTransformation),
+    'data': Z.array(Z.string()).transform((data) => data.map((s) => s.trim()).toList()),
   })
 );
 
-// Recursive schema with memoization
-final treeSchema = Z.recursive<Map<String, dynamic>>((schema) =>
-  Z.object({
+// Recursive schema with built-in optimization
+final treeSchema = Z.recursive<Map<String, dynamic>>(
+  () => Z.object({
     'value': Z.string(),
-    'children': Z.array(schema).optional(),
-  })
-)
-.withMemoization()    // Cache validation results
-.withDepthLimit(1000) // Prevent stack overflow
-.withStats();         // Collect performance metrics
+    'children': Z.array(Z.recursive<Map<String, dynamic>>(
+      () => Z.object({
+        'value': Z.string(),
+      })
+    )).optional(),
+  }),
+  maxDepth: 1000,                   // Prevent infinite recursion
+  enableCircularDetection: true,    // Detect circular references
+  enableMemoization: true,          // Cache validation results
+);
 ```
 
 ### 📊 **Performance Monitoring**
