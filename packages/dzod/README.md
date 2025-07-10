@@ -50,6 +50,7 @@ Dzod is an **enterprise-grade** Dart schema validation library that provides **1
 dart pub add dzod
 ```
 
+### Example 1: Basic User Schema Validation
 ```dart
 import 'package:dzod/dzod.dart';
 
@@ -115,6 +116,7 @@ if (result.isSuccess) {
 
 ### 🎯 **Basic Types**
 
+### Example 2: String Validations
 ```dart
 // String with advanced validations
 final schema = z.string()
@@ -132,7 +134,10 @@ final schema = z.string()
   .emoji()                    // Emoji validation
   .json()                     // JSON string validation
   .nanoid();                  // NanoID validation
+```
 
+### Example 3: Number Validations
+```dart
 // Number with mathematical validations
 final numberSchema = z.number()
   .min(0).max(100)
@@ -148,7 +153,10 @@ final numberSchema = z.number()
   .powerOfTwo()               // Power of 2 validation
   .prime()                    // Prime number validation
   .perfectSquare();           // Perfect square validation
+```
 
+### Example 4: Boolean and Null Types
+```dart
 // Boolean and null types
 final boolSchema = z.boolean();
 final nullSchema = z.null_();
@@ -156,6 +164,7 @@ final nullSchema = z.null_();
 
 ### 🏗️ **Complex Types**
 
+### Example 5: Advanced Object Manipulation
 ```dart
 // Advanced object manipulation
 final userSchema = z.object({
@@ -179,7 +188,10 @@ final userSchema = z.object({
 .passthrough()                  // Allow unknown properties
 .strip()                        // Remove unknown properties
 .catchall(z.string());          // Validate unknown properties
+```
 
+### Example 6: Advanced Arrays
+```dart
 // Advanced arrays
 final arraySchema = z.array(z.string())
   .min(1).max(10)
@@ -193,7 +205,10 @@ final arraySchema = z.array(z.string())
   .mapElements(s => s.trim())   // Transform elements
   .filter(s => s.length > 0)    // Filter elements
   .sort((a, b) => a.compareTo(b)); // Sort elements
+```
 
+### Example 7: Type-safe Tuples
+```dart
 // Type-safe tuples
 final tupleSchema = z.tuple([
   z.string(),
@@ -204,13 +219,19 @@ final tupleSchema = z.tuple([
 .exactLength(3)                 // Exact length constraint
 .minLength(2)                   // Minimum length
 .maxLength(5);                  // Maximum length
+```
 
+### Example 8: Flexible Enums
+```dart
 // Flexible enums
 final roleSchema = z.enum_(['admin', 'user', 'guest'])
   .exclude(['guest'])           // Remove values
   .include(['moderator'])       // Add values
   .caseInsensitive();          // Case-insensitive matching
+```
 
+### Example 9: Key-value Records
+```dart
 // Key-value records
 final recordSchema = z.record(z.string(), z.number())
   .minSize(1)                   // Minimum entries
@@ -222,6 +243,7 @@ final recordSchema = z.record(z.string(), z.number())
 
 ### 🎭 **Advanced Schema Types**
 
+### Example 10: Discriminated Unions
 ```dart
 // Discriminated unions for efficient parsing
 final messageSchema = z.discriminatedUnion('type', [
@@ -247,7 +269,10 @@ final messageSchema = z.discriminatedUnion('type', [
 }))
 .exclude(['video'])                // Remove variants
 .discriminatorIn(['text', 'image']); // Filter variants
+```
 
+### Example 11: Multi-stage Validation Pipelines
+```dart
 // Multi-stage validation pipelines
 final userPipeline = z.pipeline([
   z.string().transform(s => s.trim()),
@@ -259,7 +284,10 @@ final userPipeline = z.pipeline([
 .prepend(z.string().trim())        // Prepend stage
 .insert(1, z.string().min(1))      // Insert at index
 .replace(0, z.string().trim().toLowerCase()); // Replace stage
+```
 
+### Example 12: Enhanced Recursive Schemas
+```dart
 // Enhanced recursive schemas with circular detection
 final categorySchema = z.recursive<Map<String, dynamic>>((schema) => 
   z.object({
@@ -271,7 +299,10 @@ final categorySchema = z.recursive<Map<String, dynamic>>((schema) =>
 .withCircularDetection()           // Detect circular references
 .withMemoization()                 // Cache validation results
 .withStats();                      // Collect validation statistics
+```
 
+### Example 13: Automatic Type Coercion
+```dart
 // Automatic type coercion
 final coercedSchema = z.coerce.number()  // String -> Number
   .or(z.coerce.boolean())              // String -> Boolean
@@ -284,6 +315,7 @@ final coercedSchema = z.coerce.number()  // String -> Number
 
 ## ⚡ Async Validation
 
+### Example 14: Database Validation
 ```dart
 // Database validation example
 final userSchema = z.object({
@@ -304,7 +336,10 @@ final userSchema = z.object({
       message: 'Username not available',
     ),
 });
+```
 
+### Example 15: API Validation with External Service
+```dart
 // API validation with external service
 final apiSchema = z.string().url()
   .transformAsync((url) async {
@@ -315,7 +350,10 @@ final apiSchema = z.string().url()
     (result) async => result != null,
     message: 'URL is not accessible',
   );
+```
 
+### Example 16: Async Validation Methods
+```dart
 // Validate with async methods
 final result = await userSchema.validateAsync({
   'email': 'user@example.com',
@@ -335,6 +373,7 @@ if (data != null) {
 
 ### 📱 **Custom Validation Widgets**
 
+### Example 17: User Registration Form
 ```dart
 import 'package:dzod/dzod.dart';
 
@@ -440,6 +479,7 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
 
 ### 🔄 **State Management Integration**
 
+### Example 18: Flutter Widget-specific Schemas
 ```dart
 // Flutter widget-specific schemas
 final colorSchema = z.color()
@@ -457,7 +497,10 @@ final durationSchema = z.duration()
   .max(Duration(minutes: 5))    // Maximum duration
   .iso8601()                    // ISO 8601 parsing
   .range(Duration(seconds: 30), Duration(minutes: 2));
+```
 
+### Example 19: State Management with Validation
+```dart
 // State management with validation
 class UserProfileController extends ChangeNotifier {
   final _profileSchema = z.object({
@@ -512,6 +555,7 @@ class UserProfileController extends ChangeNotifier {
 
 ### 🎯 **Advanced Error System**
 
+### Example 20: Error Code System
 ```dart
 // 100+ standardized error codes
 final schema = z.string().email();
@@ -552,6 +596,7 @@ if (result.isFailure) {
 
 ### 🎨 **Custom Error Formatting**
 
+### Example 21: Multiple Error Output Formats
 ```dart
 // Multiple error output formats
 final errors = result.errors!;
@@ -589,6 +634,7 @@ final custom = errors.format(ErrorFormatConfig(
 
 ### 🌐 **Global Error Configuration**
 
+### Example 22: Global Error Configuration
 ```dart
 // Configure global error messages
 ErrorMessages.setGlobalMessages({
@@ -622,6 +668,7 @@ final result = schema.validate('invalid', context: context);
 
 ### 📊 **Schema Analysis**
 
+### Example 23: Schema Introspection
 ```dart
 // Schema introspection
 final userSchema = z.object({
@@ -655,6 +702,7 @@ final isEquivalent = userSchema.isEquivalentTo(otherSchema); // true
 
 ### 🔧 **Schema Transformation**
 
+### Example 24: Schema Transformation and Composition
 ```dart
 // Branded types for type safety
 final UserIdSchema = z.string().cuid2().brand<'UserId'>();
@@ -696,6 +744,7 @@ final conditionalSchema = z.conditional(
 
 ### 📄 **JSON Schema Generation**
 
+### Example 25: JSON Schema Generation
 ```dart
 // Generate JSON Schema for OpenAPI documentation
 final userSchema = z.object({
@@ -740,6 +789,7 @@ final comprehensiveSchema = userSchema.toJsonSchema(JsonSchemaConfig(
 
 ### ⚡ **Caching & Memoization**
 
+### Example 26: Performance Optimization
 ```dart
 // Schema caching for repeated validations
 final userSchema = z.object({
@@ -768,6 +818,7 @@ final treeSchema = z.recursive<Map<String, dynamic>>((schema) =>
 
 ### 📊 **Performance Monitoring**
 
+### Example 27: Performance Monitoring
 ```dart
 // Enable performance monitoring
 final schema = z.object({
@@ -793,6 +844,7 @@ print('Cache misses: ${metrics.cacheMisses}');
 
 ### 🔄 **From json_annotation**
 
+### Example 28: Migration from json_annotation
 ```dart
 // Before: json_annotation
 @JsonSerializable()
@@ -824,6 +876,7 @@ if (result.isSuccess) {
 
 ### 🔄 **From built_value**
 
+### Example 29: Migration from built_value
 ```dart
 // Before: built_value
 abstract class User implements Built<User, UserBuilder> {
@@ -852,6 +905,7 @@ final user = userSchema.parse(data);
 
 ### 🔒 **Security & Validation**
 
+### Example 30: Security Best Practices
 ```dart
 // Input sanitization
 final sanitizedSchema = z.string()
@@ -883,6 +937,7 @@ final apiKeySchema = z.string()
 
 ### 🎨 **Error Handling Best Practices**
 
+### Example 31: Comprehensive Error Handling
 ```dart
 // Comprehensive error handling
 Future<void> handleUserInput(Map<String, dynamic> input) async {
@@ -915,6 +970,7 @@ Future<void> handleUserInput(Map<String, dynamic> input) async {
 
 ### 🔐 **Authentication Schema**
 
+### Example 32: Advanced Authentication Schema
 ```dart
 final authSchema = z.discriminatedUnion('method', [
   // Email/password authentication
@@ -955,6 +1011,7 @@ final oauthAuth = authSchema.parse({
 
 ### 📊 **Data Processing Pipeline**
 
+### Example 33: Multi-stage Data Processing
 ```dart
 // Multi-stage data processing
 final dataProcessingPipeline = z.pipeline([
@@ -1009,6 +1066,7 @@ final result = dataProcessingPipeline.validate(rawJsonData);
 
 ### 🔧 **Schema Testing Utilities**
 
+### Example 34: Testing Schema Validation
 ```dart
 // Test schema with sample data
 void testUserSchema() {
@@ -1040,6 +1098,7 @@ void testUserSchema() {
 
 ### 📄 **Schema Documentation Generator**
 
+### Example 35: Generate Schema Documentation
 ```dart
 // Generate documentation for your schemas
 final userSchema = z.object({
