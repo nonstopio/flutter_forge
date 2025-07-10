@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ResultDisplay extends StatelessWidget {
   final Schema schema;
   final String title;
-  final String value;
+  final dynamic value;
 
   const ResultDisplay({
     super.key,
