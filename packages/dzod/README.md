@@ -55,18 +55,18 @@ dart pub add dzod
 import 'package:dzod/dzod.dart';
 
 // Define an enterprise-grade user schema
-final userSchema = z.object({
-  'id': z.string().cuid2(),              // CUID2 validation
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
-  'age': z.number().min(18).max(120),
-  'role': z.enum_(['admin', 'user', 'guest']),
-  'preferences': z.object({
-    'theme': z.enum_(['light', 'dark']).default('light'),
-    'notifications': z.boolean().default(true),
+final userSchema = Z.object({
+  'id': Z.string().cuid2(),              // CUID2 validation
+  'name': Z.string().min(2).max(50),
+  'email': Z.string().email(),
+  'age': Z.number().min(18).max(120),
+  'role': Z.enum_(['admin', 'user', 'guest']),
+  'preferences': Z.object({
+    'theme': Z.enum_(['light', 'dark']).defaultTo('light'),
+    'notifications': Z.boolean().defaultTo(true),
   }).partial(),
-  'createdAt': z.string().datetime(),
-}).describe('User account schema');
+  'createdAt': Z.string().datetime(),
+});
 
 // Validate with detailed error reporting
 final result = userSchema.validate({
@@ -118,127 +118,151 @@ if (result.isSuccess) {
 
 ### Example 2: String Validations
 ```dart
-// String with advanced validations
-final schema = z.string()
-  .min(2).max(50)
-  .email()                    // Email validation
-  .url()                      // URL validation
-  .uuid()                     // UUID validation
-  .cuid()                     // CUID validation
-  .cuid2()                    // CUID2 validation
-  .ulid()                     // ULID validation
-  .jwt()                      // JWT token validation
-  .base64()                   // Base64 validation
-  .hex()                      // Hexadecimal validation
-  .hexColor()                 // Hex color validation
-  .emoji()                    // Emoji validation
-  .json()                     // JSON string validation
-  .nanoid();                  // NanoID validation
+// String validations (separate examples)
+final emailSchema = Z.string().min(2).max(50).email();
+final urlSchema = Z.string().url();
+final uuidSchema = Z.string().uuid();
+final cuidSchema = Z.string().cuid();
+final cuid2Schema = Z.string().cuid2();
+final ulidSchema = Z.string().ulid();
+final jwtSchema = Z.string().jwt();
+final base64Schema = Z.string().base64();
+final hexSchema = Z.string().hex();
+final hexColorSchema = Z.string().hexColor();
+final emojiSchema = Z.string().emoji();
+final jsonSchema = Z.string().json();
+final nanoidSchema = Z.string().nanoid();
 ```
 
 ### Example 3: Number Validations
 ```dart
-// Number with mathematical validations
-final numberSchema = z.number()
-  .min(0).max(100)
-  .int()                      // Integer validation
-  .positive()                 // Positive numbers
-  .step(0.1)                  // Step validation
-  .precision(2)               // Decimal precision
-  .safeInteger()              // JS safe integer range
-  .percentage()               // 0-100 range
-  .probability()              // 0-1 range
-  .latitude()                 // Geographic latitude
-  .longitude()                // Geographic longitude
-  .powerOfTwo()               // Power of 2 validation
-  .prime()                    // Prime number validation
-  .perfectSquare();           // Perfect square validation
+// Number validations (separate examples)
+final basicNumberSchema = Z.number().min(0).max(100).integer().positive();
+final stepSchema = Z.number().step(0.1);
+final precisionSchema = Z.number().precision(2);
+final safeIntSchema = Z.number().safeInt();
+final percentageSchema = Z.number().percentage();
+final probabilitySchema = Z.number().probability();
+final latitudeSchema = Z.number().latitude();
+final longitudeSchema = Z.number().longitude();
+final powerOfTwoSchema = Z.number().powerOfTwo();
+final primeSchema = Z.number().prime();
+final perfectSquareSchema = Z.number().perfectSquare();
 ```
 
 ### Example 4: Boolean and Null Types
 ```dart
 // Boolean and null types
-final boolSchema = z.boolean();
-final nullSchema = z.null_();
+final boolSchema = Z.boolean();
+final nullSchema = Z.null_();
 ```
 
 ### 🏗️ **Complex Types**
 
 ### Example 5: Advanced Object Manipulation
 ```dart
-// Advanced object manipulation
-final userSchema = z.object({
-  'name': z.string(),
-  'email': z.string().email(),
-  'age': z.number().min(18),
-  'address': z.object({
-    'street': z.string(),
-    'city': z.string(),
-    'country': z.string(),
+// Advanced object manipulation (separate examples)
+final baseUserSchema = Z.object({
+  'name': Z.string(),
+  'email': Z.string().email(),
+  'age': Z.number().min(18),
+  'address': Z.object({
+    'street': Z.string(),
+    'city': Z.string(),
+    'country': Z.string(),
   }),
-})
-.pick(['name', 'email'])        // Select specific fields
-.omit(['age'])                  // Remove specific fields
-.partial()                      // Make all fields optional
-.deepPartial()                  // Deep optional (nested objects)
-.required()                     // Make optional fields required
-.extend({'phone': z.string()})  // Add new fields
-.merge(addressSchema)           // Merge with another schema
-.strict()                       // Reject unknown properties
-.passthrough()                  // Allow unknown properties
-.strip()                        // Remove unknown properties
-.catchall(z.string());          // Validate unknown properties
+});
+
+// Field selection and manipulation
+final pickedSchema = baseUserSchema.pick(['name', 'email']);
+final omittedSchema = baseUserSchema.omit(['age']);
+final extendedSchema = baseUserSchema.extend({'phone': Z.string()});
+
+// Optional/required variations
+final partialSchema = baseUserSchema.partial();
+final deepPartialSchema = baseUserSchema.deepPartial();
+final requiredSchema = partialSchema.required(['name', 'email']);
+
+// Different handling modes for unknown properties
+final strictSchema = baseUserSchema.strict();
+final passthroughSchema = baseUserSchema.passthrough();
+final stripSchema = baseUserSchema.strip();
+final catchallSchema = baseUserSchema.catchall(Z.string());
 ```
 
 ### Example 6: Advanced Arrays
 ```dart
-// Advanced arrays
-final arraySchema = z.array(z.string())
-  .min(1).max(10)
-  .length(5)                    // Exact length
-  .nonempty()                   // Non-empty array
-  .unique()                     // Unique elements
-  .includes('required')         // Must include value
-  .excludes('forbidden')        // Must not include value
-  .some(z.string().email())     // At least one email
-  .every(z.string().min(2))     // All elements min length 2
-  .mapElements(s => s.trim())   // Transform elements
-  .filter(s => s.length > 0)    // Filter elements
-  .sort((a, b) => a.compareTo(b)); // Sort elements
+// Advanced arrays (separate examples)
+final baseArraySchema = Z.array(Z.string());
+
+// Length constraints
+final rangeArraySchema = baseArraySchema.min(1).max(10);
+final exactLengthSchema = baseArraySchema.length(5);
+final nonemptySchema = baseArraySchema.nonempty();
+
+// Element validation
+final uniqueSchema = baseArraySchema.unique();
+final includesSchema = baseArraySchema.includes('required');
+final excludesSchema = baseArraySchema.excludes('forbidden');
+
+// Conditional validation (correct predicate functions)
+final someEmailSchema = baseArraySchema.some((element) => element.contains('@'));
+final everyMinLengthSchema = baseArraySchema.every((element) => element.length >= 2);
+
+// Transformation and filtering
+final mappedSchema = baseArraySchema.mapElements((s) => s.trim());
+final filteredSchema = baseArraySchema.filter((s) => s.length > 0);
+final sortedSchema = baseArraySchema.sort((a, b) => a.compareTo(b));
 ```
 
 ### Example 7: Type-safe Tuples
 ```dart
 // Type-safe tuples
-final tupleSchema = z.tuple([
-  z.string(),
-  z.number(),
-  z.boolean(),
-])
-.rest(z.string())               // Rest elements
-.exactLength(3)                 // Exact length constraint
-.minLength(2)                   // Minimum length
-.maxLength(5);                  // Maximum length
+final tupleSchema = Z.tuple([
+  Z.string(),
+  Z.number(),
+  Z.boolean(),
+]);
+
+// Rest elements for additional values
+final tupleWithRest = tupleSchema.rest(Z.string());
+
+// Length constraints
+final exactLengthTuple = tupleSchema.exactLength(3);
+final minLengthTuple = tupleSchema.minLength(2);
+final maxLengthTuple = tupleSchema.maxLength(5);
 ```
 
 ### Example 8: Flexible Enums
 ```dart
 // Flexible enums
-final roleSchema = z.enum_(['admin', 'user', 'guest'])
-  .exclude(['guest'])           // Remove values
-  .include(['moderator'])       // Add values
-  .caseInsensitive();          // Case-insensitive matching
+final roleSchema = Z.enum_(['admin', 'user', 'guest']);
+
+// Remove specific values
+final restrictedRoles = roleSchema.exclude(['guest']);
+
+// Add new values
+final extendedRoles = roleSchema.extend(['moderator', 'supervisor']);
+
+// Case-insensitive matching
+final caseInsensitiveRoles = roleSchema.caseInsensitive();
 ```
 
 ### Example 9: Key-value Records
 ```dart
 // Key-value records
-final recordSchema = z.record(z.string(), z.number())
-  .minSize(1)                   // Minimum entries
-  .maxSize(10)                  // Maximum entries
-  .requiredKeys(['id'])         // Required keys
-  .optionalKeys(['meta'])       // Optional keys
-  .strict();                    // Strict key validation
+final recordSchema = Z.record(Z.number());
+
+// Size constraints
+final sizedRecord = recordSchema.min(1).max(10);
+
+// Key requirements
+final keyConstrainedRecord = recordSchema
+  .requiredKeys({'id'})
+  .optionalKeys({'meta'});
+
+// Strict validation (no additional keys)
+final strictRecord = recordSchema.strict();
 ```
 
 ### 🎭 **Advanced Schema Types**
@@ -246,69 +270,105 @@ final recordSchema = z.record(z.string(), z.number())
 ### Example 10: Discriminated Unions
 ```dart
 // Discriminated unions for efficient parsing
-final messageSchema = z.discriminatedUnion('type', [
-  z.object({
-    'type': z.literal('text'),
-    'content': z.string(),
+final messageSchema = Z.discriminatedUnion('type', [
+  Z.object({
+    'type': Z.literal('text'),
+    'content': Z.string(),
   }),
-  z.object({
-    'type': z.literal('image'),
-    'url': z.string().url(),
-    'alt': z.string().optional(),
+  Z.object({
+    'type': Z.literal('image'),
+    'url': Z.string().url(),
+    'alt': Z.string().optional(),
   }),
-  z.object({
-    'type': z.literal('video'),
-    'url': z.string().url(),
-    'duration': z.number().positive(),
+  Z.object({
+    'type': Z.literal('video'),
+    'url': Z.string().url(),
+    'duration': Z.number().positive(),
   }),
-])
-.extend('audio', z.object({        // Add new variant
-  'type': z.literal('audio'),
-  'url': z.string().url(),
-  'duration': z.number(),
-}))
-.exclude(['video'])                // Remove variants
-.discriminatorIn(['text', 'image']); // Filter variants
+]);
+
+// Add new variants
+final extendedMessages = messageSchema.extend([
+  Z.object({
+    'type': Z.literal('audio'),
+    'url': Z.string().url(),
+    'duration': Z.number(),
+  })
+]);
+
+// Remove specific variants
+final restrictedMessages = messageSchema.exclude(['video']);
+
+// Filter to specific variants only
+final filteredMessages = messageSchema.discriminatorIn(['text', 'image']);
 ```
 
 ### Example 11: Multi-stage Validation Pipelines
 ```dart
 // Multi-stage validation pipelines
-final userPipeline = z.pipeline([
-  z.string().transform(s => s.trim()),
-  z.string().min(2).max(50),
-  z.string().refine(s => !s.contains('admin')),
-  z.string().transform(s => s.toLowerCase()),
-])
-.pipe(z.string().email())          // Add stage
-.prepend(z.string().trim())        // Prepend stage
-.insert(1, z.string().min(1))      // Insert at index
-.replace(0, z.string().trim().toLowerCase()); // Replace stage
+final userPipeline = Z.pipeline([
+  Z.string().transform((s) => s.trim()),
+  Z.string().min(2).max(50),
+  Z.string().refine((s) => !s.contains('admin')),
+  Z.string().transform((s) => s.toLowerCase()),
+]);
+
+// Add additional stages
+final emailPipeline = userPipeline.pipe([Z.string().email()]);
+
+// Prepend a stage
+final trimmedPipeline = userPipeline.prepend([Z.string().trim()]);
+
+// Insert stage at specific index
+final modifiedPipeline = userPipeline.insertAt(1, [Z.string().min(1)]);
+
+// Replace stage at specific index
+final replacedPipeline = userPipeline.replaceStageAt(0, 
+  Z.string().transform((s) => s.trim().toLowerCase()));
 ```
 
 ### Example 12: Enhanced Recursive Schemas
 ```dart
 // Enhanced recursive schemas with circular detection
-final categorySchema = z.recursive<Map<String, dynamic>>((schema) => 
-  z.object({
-    'name': z.string(),
-    'children': z.array(schema).optional(),
-  })
-)
-.withDepthLimit(100)               // Prevent infinite recursion
-.withCircularDetection()           // Detect circular references
-.withMemoization()                 // Cache validation results
-.withStats();                      // Collect validation statistics
+final categorySchema = Z.recursive<Map<String, dynamic>>(
+  () => Z.object({
+    'name': Z.string(),
+    'children': Z.array(Z.recursive<Map<String, dynamic>>(
+      () => Z.object({
+        'name': Z.string(),
+      })
+    )).optional(),
+  }),
+  maxDepth: 100,                   // Prevent infinite recursion
+  enableCircularDetection: true,   // Detect circular references
+  enableMemoization: true,         // Cache validation results
+);
+
+// Modify settings with fluent API
+final modifiedSchema = categorySchema
+  .withMaxDepth(50)                // Change max depth
+  .withCircularDetection(false)    // Disable circular detection
+  .withMemoization(false);         // Disable memoization
 ```
 
 ### Example 13: Automatic Type Coercion
 ```dart
 // Automatic type coercion
-final coercedSchema = z.coerce.number()  // String -> Number
-  .or(z.coerce.boolean())              // String -> Boolean
-  .or(z.coerce.date())                 // String -> DateTime
-  .or(z.coerce.list(z.string()))       // String -> List<String>
-  .strict();                           // Strict coercion mode
+final numberCoercion = Z.coerce.number();     // String -> Number
+final booleanCoercion = Z.coerce.boolean();   // String -> Boolean
+final dateCoercion = Z.coerce.date();         // String -> DateTime
+final listCoercion = Z.coerce.list();         // String -> List
+
+// Strict coercion mode
+final strictNumberCoercion = Z.coerce.number(strict: true);
+
+// Advanced coercion with options
+final advancedNumber = Z.coerce.number(
+  precision: 2,
+  min: 0,
+  max: 100,
+  strict: false,
+);
 ```
 
 ---
@@ -318,8 +378,8 @@ final coercedSchema = z.coerce.number()  // String -> Number
 ### Example 14: Database Validation
 ```dart
 // Database validation example
-final userSchema = z.object({
-  'email': z.string().email()
+final userSchema = Z.object({
+  'email': Z.string().email()
     .refineAsync(
       (email) async {
         final exists = await checkEmailExists(email);
@@ -327,7 +387,7 @@ final userSchema = z.object({
       },
       message: 'Email already exists',
     ),
-  'username': z.string().min(3)
+  'username': Z.string().min(3)
     .refineAsync(
       (username) async {
         final available = await checkUsernameAvailable(username);
@@ -341,7 +401,7 @@ final userSchema = z.object({
 ### Example 15: API Validation with External Service
 ```dart
 // API validation with external service
-final apiSchema = z.string().url()
+final apiSchema = Z.string().url()
   .transformAsync((url) async {
     final response = await http.get(Uri.parse(url));
     return response.statusCode == 200 ? url : null;
@@ -384,11 +444,11 @@ class UserRegistrationForm extends StatefulWidget {
 
 class _UserRegistrationFormState extends State<UserRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userSchema = z.object({
-    'name': z.string().min(2).max(50),
-    'email': z.string().email(),
-    'password': z.string().min(8),
-    'confirmPassword': z.string(),
+  final _userSchema = Z.object({
+    'name': Z.string().min(2).max(50),
+    'email': Z.string().email(),
+    'password': Z.string().min(8),
+    'confirmPassword': Z.string(),
   }).refine((data) => data['password'] == data['confirmPassword'], 
     message: 'Passwords do not match');
 
@@ -400,7 +460,7 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
         children: [
           // Advanced text field with real-time validation
           ZodTextFormField(
-            schema: z.string().min(2).max(50),
+            schema: Z.string().min(2).max(50),
             decoration: InputDecoration(
               labelText: 'Full Name',
               hintText: 'Enter your full name',
@@ -410,7 +470,7 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
           
           // Email field with async validation
           ZodTextFormField(
-            schema: z.string().email().refineAsync(
+            schema: Z.string().email().refineAsync(
               (email) => checkEmailAvailability(email),
               message: 'Email already taken',
             ),
@@ -482,17 +542,17 @@ class _UserRegistrationFormState extends State<UserRegistrationForm> {
 ### Example 18: Flutter Widget-specific Schemas
 ```dart
 // Flutter widget-specific schemas
-final colorSchema = z.color()
+final colorSchema = Z.color()
   .hex()                        // Hex color validation
   .alpha(0.5, 1.0)             // Alpha range
   .namedColor('blue');         // Named color validation
 
-final edgeInsetsSchema = z.edgeInsets()
+final edgeInsetsSchema = Z.edgeInsets()
   .uniform(8.0, 16.0)          // Uniform padding range
   .symmetric(horizontal: 16.0) // Symmetric constraints
   .only(left: 8.0, right: 8.0); // Specific edge constraints
 
-final durationSchema = z.duration()
+final durationSchema = Z.duration()
   .min(Duration(seconds: 1))    // Minimum duration
   .max(Duration(minutes: 5))    // Maximum duration
   .iso8601()                    // ISO 8601 parsing
@@ -503,13 +563,13 @@ final durationSchema = z.duration()
 ```dart
 // State management with validation
 class UserProfileController extends ChangeNotifier {
-  final _profileSchema = z.object({
-    'name': z.string().min(2).max(50),
-    'bio': z.string().max(500).optional(),
-    'avatar': z.string().url().optional(),
-    'preferences': z.object({
-      'theme': z.enum_(['light', 'dark']),
-      'notifications': z.boolean(),
+  final _profileSchema = Z.object({
+    'name': Z.string().min(2).max(50),
+    'bio': Z.string().max(500).optional(),
+    'avatar': Z.string().url().optional(),
+    'preferences': Z.object({
+      'theme': Z.enum_(['light', 'dark']),
+      'notifications': Z.boolean(),
     }),
   });
 
@@ -558,7 +618,7 @@ class UserProfileController extends ChangeNotifier {
 ### Example 20: Error Code System
 ```dart
 // 100+ standardized error codes
-final schema = z.string().email();
+final schema = Z.string().email();
 final result = schema.validate('invalid-email');
 
 if (result.isFailure) {
@@ -671,10 +731,10 @@ final result = schema.validate('invalid', context: context);
 ### Example 23: Schema Introspection
 ```dart
 // Schema introspection
-final userSchema = z.object({
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
-  'age': z.number().min(18),
+final userSchema = Z.object({
+  'name': Z.string().min(2).max(50),
+  'email': Z.string().email(),
+  'age': Z.number().min(18),
 }).describe('User profile schema');
 
 // Get schema information
@@ -692,10 +752,10 @@ print('Created: ${metadata['createdAt']}');           // Timestamp
 print('Version: ${metadata['version']}');             // Schema version
 
 // Schema equivalence
-final otherSchema = z.object({
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
-  'age': z.number().min(18),
+final otherSchema = Z.object({
+  'name': Z.string().min(2).max(50),
+  'email': Z.string().email(),
+  'age': Z.number().min(18),
 });
 final isEquivalent = userSchema.isEquivalentTo(otherSchema); // true
 ```
@@ -705,8 +765,8 @@ final isEquivalent = userSchema.isEquivalentTo(otherSchema); // true
 ### Example 24: Schema Transformation and Composition
 ```dart
 // Branded types for type safety
-final UserIdSchema = z.string().cuid2().brand<'UserId'>();
-final ProductIdSchema = z.string().cuid2().brand<'ProductId'>();
+final UserIdSchema = Z.string().cuid2().brand<'UserId'>();
+final ProductIdSchema = Z.string().cuid2().brand<'ProductId'>();
 
 // This prevents mixing up IDs
 final userId = UserIdSchema.parse('user_123');          // UserId
@@ -718,26 +778,26 @@ final readonlyUserSchema = userSchema.readonly();
 // This creates an immutable version that can't be modified
 
 // Schema composition
-final basicUserSchema = z.object({
-  'name': z.string(),
-  'email': z.string().email(),
+final basicUserSchema = Z.object({
+  'name': Z.string(),
+  'email': Z.string().email(),
 });
 
 final extendedUserSchema = basicUserSchema.extend({
-  'age': z.number().min(18),
-  'role': z.enum_(['admin', 'user']),
+  'age': Z.number().min(18),
+  'role': Z.enum_(['admin', 'user']),
 });
 
 // Conditional schemas
-final conditionalSchema = z.conditional(
-  z.string().equals('admin'),
-  z.object({
-    'name': z.string(),
-    'permissions': z.array(z.string()),
+final conditionalSchema = Z.conditional(
+  Z.string().equals('admin'),
+  Z.object({
+    'name': Z.string(),
+    'permissions': Z.array(Z.string()),
   }),
-  z.object({
-    'name': z.string(),
-    'department': z.string(),
+  Z.object({
+    'name': Z.string(),
+    'department': Z.string(),
   })
 );
 ```
@@ -747,12 +807,12 @@ final conditionalSchema = z.conditional(
 ### Example 25: JSON Schema Generation
 ```dart
 // Generate JSON Schema for OpenAPI documentation
-final userSchema = z.object({
-  'id': z.string().cuid2(),
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
-  'age': z.number().min(18).optional(),
-  'roles': z.array(z.enum_(['admin', 'user', 'guest'])),
+final userSchema = Z.object({
+  'id': Z.string().cuid2(),
+  'name': Z.string().min(2).max(50),
+  'email': Z.string().email(),
+  'age': Z.number().min(18).optional(),
+  'roles': Z.array(Z.enum_(['admin', 'user', 'guest'])),
 }).describe('User account information');
 
 // OpenAPI-compatible JSON Schema
@@ -792,23 +852,23 @@ final comprehensiveSchema = userSchema.toJsonSchema(JsonSchemaConfig(
 ### Example 26: Performance Optimization
 ```dart
 // Schema caching for repeated validations
-final userSchema = z.object({
-  'name': z.string().min(2).max(50),
-  'email': z.string().email(),
+final userSchema = Z.object({
+  'name': Z.string().min(2).max(50),
+  'email': Z.string().email(),
 }).withCaching();  // Enable result caching
 
 // Lazy evaluation
-final expensiveSchema = z.lazy(() => 
-  z.object({
-    'data': z.array(z.string()).transform(computeExpensiveTransformation),
+final expensiveSchema = Z.lazy(() => 
+  Z.object({
+    'data': Z.array(Z.string()).transform(computeExpensiveTransformation),
   })
 );
 
 // Recursive schema with memoization
-final treeSchema = z.recursive<Map<String, dynamic>>((schema) =>
-  z.object({
-    'value': z.string(),
-    'children': z.array(schema).optional(),
+final treeSchema = Z.recursive<Map<String, dynamic>>((schema) =>
+  Z.object({
+    'value': Z.string(),
+    'children': Z.array(schema).optional(),
   })
 )
 .withMemoization()    // Cache validation results
@@ -821,10 +881,10 @@ final treeSchema = z.recursive<Map<String, dynamic>>((schema) =>
 ### Example 27: Performance Monitoring
 ```dart
 // Enable performance monitoring
-final schema = z.object({
-  'users': z.array(z.object({
-    'name': z.string(),
-    'email': z.string().email(),
+final schema = Z.object({
+  'users': Z.array(Z.object({
+    'name': Z.string(),
+    'email': Z.string().email(),
   })).min(1).max(1000),
 }).withPerformanceMonitoring();
 
@@ -860,10 +920,10 @@ class User {
 }
 
 // After: Dzod
-final userSchema = z.object({
-  'name': z.string().min(1),
-  'email': z.string().email(),
-  'age': z.number().min(0).optional(),
+final userSchema = Z.object({
+  'name': Z.string().min(1),
+  'email': Z.string().email(),
+  'age': Z.number().min(0).optional(),
 });
 
 // Type-safe parsing with validation
@@ -889,10 +949,10 @@ abstract class User implements Built<User, UserBuilder> {
 }
 
 // After: Dzod
-final userSchema = z.object({
-  'name': z.string().min(1),
-  'email': z.string().email(),
-  'age': z.number().min(0).optional(),
+final userSchema = Z.object({
+  'name': Z.string().min(1),
+  'email': Z.string().email(),
+  'age': Z.number().min(0).optional(),
 });
 
 // No code generation needed
@@ -908,7 +968,7 @@ final user = userSchema.parse(data);
 ### Example 30: Security Best Practices
 ```dart
 // Input sanitization
-final sanitizedSchema = z.string()
+final sanitizedSchema = Z.string()
   .trim()                     // Remove whitespace
   .max(1000)                  // Prevent DoS
   .refine(
@@ -917,16 +977,16 @@ final sanitizedSchema = z.string()
   );
 
 // Rate limiting validation
-final rateLimitedSchema = z.object({
-  'email': z.string().email(),
-  'message': z.string().max(5000),
+final rateLimitedSchema = Z.object({
+  'email': Z.string().email(),
+  'message': Z.string().max(5000),
 }).refine(
   (data) => checkRateLimit(data['email']),
   message: 'Rate limit exceeded',
 );
 
 // API key validation
-final apiKeySchema = z.string()
+final apiKeySchema = Z.string()
   .length(32)                 // Exact length
   .hex()                      // Hexadecimal format
   .refineAsync(
@@ -972,26 +1032,26 @@ Future<void> handleUserInput(Map<String, dynamic> input) async {
 
 ### Example 32: Advanced Authentication Schema
 ```dart
-final authSchema = z.discriminatedUnion('method', [
+final authSchema = Z.discriminatedUnion('method', [
   // Email/password authentication
-  z.object({
-    'method': z.literal('email'),
-    'email': z.string().email(),
-    'password': z.string().min(8).max(128),
+  Z.object({
+    'method': Z.literal('email'),
+    'email': Z.string().email(),
+    'password': Z.string().min(8).max(128),
   }),
   
   // OAuth authentication
-  z.object({
-    'method': z.literal('oauth'),
-    'provider': z.enum_(['google', 'github', 'facebook']),
-    'token': z.string().jwt(),
+  Z.object({
+    'method': Z.literal('oauth'),
+    'provider': Z.enum_(['google', 'github', 'facebook']),
+    'token': Z.string().jwt(),
   }),
   
   // API key authentication
-  z.object({
-    'method': z.literal('apikey'),
-    'key': z.string().length(32).hex(),
-    'secret': z.string().length(64).hex(),
+  Z.object({
+    'method': Z.literal('apikey'),
+    'key': Z.string().length(32).hex(),
+    'secret': Z.string().length(64).hex(),
   }),
 ]);
 
@@ -1014,29 +1074,29 @@ final oauthAuth = authSchema.parse({
 ### Example 33: Multi-stage Data Processing
 ```dart
 // Multi-stage data processing
-final dataProcessingPipeline = z.pipeline([
+final dataProcessingPipeline = Z.pipeline([
   // Stage 1: Parse JSON
-  z.string().transform((json) => jsonDecode(json)),
+  Z.string().transform((json) => jsonDecode(json)),
   
   // Stage 2: Validate structure
-  z.object({
-    'users': z.array(z.object({
-      'name': z.string(),
-      'email': z.string(),
-      'age': z.number(),
+  Z.object({
+    'users': Z.array(Z.object({
+      'name': Z.string(),
+      'email': Z.string(),
+      'age': Z.number(),
     })),
-    'metadata': z.object({
-      'version': z.string(),
-      'timestamp': z.string().datetime(),
+    'metadata': Z.object({
+      'version': Z.string(),
+      'timestamp': Z.string().datetime(),
     }),
   }),
   
   // Stage 3: Transform data
-  z.object({
-    'users': z.array(z.object({
-      'name': z.string(),
-      'email': z.string().email(),
-      'age': z.number().min(0).max(150),
+  Z.object({
+    'users': Z.array(Z.object({
+      'name': Z.string(),
+      'email': Z.string().email(),
+      'age': Z.number().min(0).max(150),
     })),
   }).transform((data) => {
     'processedUsers': data['users'],
@@ -1045,14 +1105,14 @@ final dataProcessingPipeline = z.pipeline([
   }),
   
   // Stage 4: Final validation
-  z.object({
-    'processedUsers': z.array(z.object({
-      'name': z.string().min(1),
-      'email': z.string().email(),
-      'age': z.number().min(0),
+  Z.object({
+    'processedUsers': Z.array(Z.object({
+      'name': Z.string().min(1),
+      'email': Z.string().email(),
+      'age': Z.number().min(0),
     })),
-    'count': z.number().min(0),
-    'processedAt': z.string().datetime(),
+    'count': Z.number().min(0),
+    'processedAt': Z.string().datetime(),
   }),
 ]);
 
@@ -1070,10 +1130,10 @@ final result = dataProcessingPipeline.validate(rawJsonData);
 ```dart
 // Test schema with sample data
 void testUserSchema() {
-  final schema = z.object({
-    'name': z.string().min(2).max(50),
-    'email': z.string().email(),
-    'age': z.number().min(18),
+  final schema = Z.object({
+    'name': Z.string().min(2).max(50),
+    'email': Z.string().email(),
+    'age': Z.number().min(18),
   });
 
   // Test valid data
@@ -1101,12 +1161,12 @@ void testUserSchema() {
 ### Example 35: Generate Schema Documentation
 ```dart
 // Generate documentation for your schemas
-final userSchema = z.object({
-  'id': z.string().cuid2().describe('Unique user identifier'),
-  'name': z.string().min(2).max(50).describe('User full name'),
-  'email': z.string().email().describe('User email address'),
-  'age': z.number().min(18).describe('User age in years'),
-  'roles': z.array(z.enum_(['admin', 'user', 'guest']))
+final userSchema = Z.object({
+  'id': Z.string().cuid2().describe('Unique user identifier'),
+  'name': Z.string().min(2).max(50).describe('User full name'),
+  'email': Z.string().email().describe('User email address'),
+  'age': Z.number().min(18).describe('User age in years'),
+  'roles': Z.array(Z.enum_(['admin', 'user', 'guest']))
     .describe('User roles and permissions'),
 }).describe('User account schema');
 
