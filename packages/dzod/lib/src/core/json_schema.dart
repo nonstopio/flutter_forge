@@ -345,8 +345,7 @@ class JsonSchemaGenerator {
 
     // Add item schema
     try {
-      // This requires access to the element schema in ArraySchema
-      // result['items'] = _generateSchema(schema.elementSchema, context);
+      result['items'] = _generateSchema(schema.elementSchema, context);
     } catch (e) {
       result['items'] = {'type': 'object'};
     }
