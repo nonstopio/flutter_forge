@@ -13,8 +13,6 @@ export 'src/core/parser.dart';
 export 'src/core/schema.dart';
 export 'src/core/schema_composition.dart';
 export 'src/core/validation_result.dart';
-// Flutter schemas
-export 'src/flutter/index.dart';
 // Advanced schemas
 export 'src/schemas/advanced/coercion_schema.dart';
 export 'src/schemas/advanced/discriminated_union_schema.dart';

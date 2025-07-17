@@ -42,13 +42,14 @@ void main() {
           ValidationError.typeMismatch(
               expected: 'string', received: 123, path: []),
           isA<ValidationError>());
-      expect(ValidationErrorCollection([]), isA<ValidationErrorCollection>());
-      expect(ValidationException('test'), isA<ValidationException>());
+      expect(const ValidationErrorCollection([]),
+          isA<ValidationErrorCollection>());
+      expect(const ValidationException('test'), isA<ValidationException>());
     });
 
     test('should export validation result', () {
-      expect(ValidationResult.success('test'), isA<ValidationResult>());
-      expect(ValidationResult.failure(ValidationErrorCollection([])),
+      expect(const ValidationResult.success('test'), isA<ValidationResult>());
+      expect(const ValidationResult.failure(ValidationErrorCollection([])),
           isA<ValidationResult>());
     });
   });
