@@ -24,7 +24,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript_Zod-105%25_Parity-green.svg?style=for-the-badge" alt="Zod Parity">
-  <img src="https://img.shields.io/badge/Test_Coverage-98.5%25-brightgreen.svg?style=for-the-badge" alt="Test Coverage">
+  <img src="https://img.shields.io/badge/Test_Coverage-81.0%25-green.svg?style=for-the-badge" alt="Test Coverage">
   <img src="https://img.shields.io/badge/Tests-566+-blue.svg?style=for-the-badge" alt="Tests">
 </p>
 
@@ -36,7 +36,7 @@ Dzod is an **enterprise-grade** Dart schema validation library that provides **1
 
 ### 🏆 **Key Achievements**
 - **🚀 105%+ Zod Feature Parity**: Complete compatibility with original Zod API plus additional features
-- **⚡ 566+ Comprehensive Tests**: 98.5% test coverage with enterprise-grade quality assurance
+- **⚡ 566+ Comprehensive Tests**: 81.0% test coverage with enterprise-grade quality assurance
 - **🎨 Flutter-First Design**: Native Flutter integration with form validation, state management, and custom widgets
 - **🔧 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
 - **💡 Developer Experience**: Intuitive API design with comprehensive documentation and examples

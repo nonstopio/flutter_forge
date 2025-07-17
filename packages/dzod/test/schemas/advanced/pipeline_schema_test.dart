@@ -573,5 +573,421 @@ void main() {
         );
       });
     });
+
+    group('Edge Cases and Error Handling', () {
+      test('should handle single stage pipeline', () {
+        final pipeline = Z.pipeline([Z.string()]);
+
+        expect(pipeline.length, equals(1));
+        expect(pipeline.first, isA<StringSchema>());
+        expect(pipeline.last, isA<StringSchema>());
+        expect(pipeline.first, equals(pipeline.last));
+
+        final result = pipeline.parse('test');
+        expect(result, equals('test'));
+      });
+
+      test('should handle intermediate results with single stage', () {
+        final pipeline = Z.pipeline([Z.string()]);
+
+        final result = pipeline.validateWithIntermediateResults('test');
+        expect(result.isSuccess, isTrue);
+
+        final intermediates = result.data!;
+        expect(intermediates, hasLength(2)); // Input + 1 stage
+        expect(intermediates[0], equals('test'));
+        expect(intermediates[1], equals('test'));
+      });
+
+      test('should handle async intermediate results with single stage',
+          () async {
+        final pipeline = Z.pipeline([Z.string()]);
+
+        final result =
+            await pipeline.validateWithIntermediateResultsAsync('test');
+        expect(result.isSuccess, isTrue);
+
+        final intermediates = result.data!;
+        expect(intermediates, hasLength(2));
+        expect(intermediates[0], equals('test'));
+        expect(intermediates[1], equals('test'));
+      });
+
+      test('should handle validation failure in intermediate results', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refine<String>((s) => s.length > 10, message: 'Too short'),
+        ]);
+
+        final result = pipeline.validateWithIntermediateResults('short');
+        expect(result.isFailure, isTrue);
+      });
+
+      test('should handle async validation failure in intermediate results',
+          () async {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refineAsync<String>((s) async => s.length > 10,
+              message: 'Too short'),
+        ]);
+
+        final result =
+            await pipeline.validateWithIntermediateResultsAsync('short');
+        expect(result.isFailure, isTrue);
+      });
+
+      test('should handle path propagation correctly', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refine<String>((s) => s.length > 5, message: 'Too short'),
+        ]);
+
+        final result = pipeline.validate('hi', ['root']);
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['root', 'stage_1']));
+      });
+
+      test('should handle async path propagation correctly', () async {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refineAsync<String>((s) async => s.length > 5,
+              message: 'Too short'),
+        ]);
+
+        final result = await pipeline.validateAsync('hi', ['root']);
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['root', 'stage_1']));
+      });
+    });
+
+    group('Pipeline Statistics Edge Cases', () {
+      test('should detect transform schemas in statistics', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, int>((s) => s.length),
+        ]);
+
+        final stats = pipeline.statistics;
+        expect(stats['hasTransformations'], isTrue);
+        expect(stats['hasRefinements'], isFalse);
+        expect(stats['hasAsyncStages'], isFalse);
+      });
+
+      test('should detect refine schemas in statistics', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refine<String>((s) => s.isNotEmpty, message: 'Not empty'),
+        ]);
+
+        final stats = pipeline.statistics;
+        expect(stats['hasTransformations'], isFalse);
+        expect(stats['hasRefinements'], isTrue);
+        expect(stats['hasAsyncStages'], isFalse);
+      });
+
+      test('should detect async schemas in statistics', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refineAsync<String>((s) async => s.isNotEmpty,
+              message: 'Not empty'),
+        ]);
+
+        final stats = pipeline.statistics;
+        expect(stats['hasTransformations'], isFalse);
+        expect(stats['hasRefinements'], isFalse);
+        expect(stats['hasAsyncStages'], isTrue);
+      });
+
+      test('should handle mixed schema types in statistics', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.refine<String>((s) => s.isNotEmpty, message: 'Not empty'),
+          Z.refineAsync<String>((s) async => s.isNotEmpty,
+              message: 'Must have length'),
+        ]);
+
+        final stats = pipeline.statistics;
+        expect(stats['hasTransformations'], isTrue);
+        expect(stats['hasRefinements'], isTrue);
+        expect(stats['hasAsyncStages'], isTrue);
+        expect(stats['stageCount'], equals(4));
+      });
+    });
+
+    group('Advanced Pipeline Manipulation', () {
+      test('should handle slice with end parameter', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, String>((s) => s.toLowerCase()),
+          Z.transform<String, int>((s) => s.length),
+        ]);
+
+        final sliced = pipeline.slice(1, 3);
+        expect(sliced.length, equals(2));
+        expect(sliced.stages.length, equals(2));
+      });
+
+      test('should handle slice without end parameter', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, String>((s) => s.toLowerCase()),
+          Z.transform<String, int>((s) => s.length),
+        ]);
+
+        final sliced = pipeline.slice(1);
+        expect(sliced.length, equals(3));
+        expect(sliced.stages.length, equals(3));
+      });
+
+      test('should preserve description and metadata in manipulations', () {
+        final pipeline = Z.pipeline(
+            [
+              Z.string(),
+              Z.transform<String, String>((s) => s.trim()),
+            ],
+            description: 'Test pipeline',
+            metadata: {'version': '1.0'});
+
+        final extended =
+            pipeline.pipe([Z.transform<String, int>((s) => s.length)]);
+        expect(extended.description, equals('Test pipeline'));
+        expect(extended.metadata, equals({'version': '1.0'}));
+
+        final prepended = pipeline
+            .prepend([Z.transform<String, String>((s) => s.toUpperCase())]);
+        expect(prepended.description, equals('Test pipeline'));
+        expect(prepended.metadata, equals({'version': '1.0'}));
+
+        final inserted = pipeline
+            .insertAt(1, [Z.transform<String, String>((s) => s.toLowerCase())]);
+        expect(inserted.description, equals('Test pipeline'));
+        expect(inserted.metadata, equals({'version': '1.0'}));
+
+        final removed = pipeline.removeAt(1);
+        expect(removed.description, equals('Test pipeline'));
+        expect(removed.metadata, equals({'version': '1.0'}));
+
+        final sliced = pipeline.slice(0, 1);
+        expect(sliced.description, equals('Test pipeline'));
+        expect(sliced.metadata, equals({'version': '1.0'}));
+
+        final replaced = pipeline.replaceRange(0, 1, [Z.number()]);
+        expect(replaced.description, equals('Test pipeline'));
+        expect(replaced.metadata, equals({'version': '1.0'}));
+
+        final filtered = pipeline.filterStages((stage, index) => index == 0);
+        expect(filtered.description, equals('Test pipeline'));
+        expect(filtered.metadata, equals({'version': '1.0'}));
+
+        final mapped = pipeline.mapStages((stage, index) => stage);
+        expect(mapped.description, equals('Test pipeline'));
+        expect(mapped.metadata, equals({'version': '1.0'}));
+
+        final reversed = pipeline.reverse();
+        expect(reversed.description, equals('Test pipeline'));
+        expect(reversed.metadata, equals({'version': '1.0'}));
+      });
+
+      test('should handle all predicate-based methods', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.number(),
+          Z.boolean(),
+        ]);
+
+        // Test anyStage
+        expect(pipeline.anyStage((stage) => stage is StringSchema), isTrue);
+        expect(pipeline.anyStage((stage) => stage is ArraySchema), isFalse);
+
+        // Test everyStage
+        expect(pipeline.everyStage((stage) => stage is StringSchema), isFalse);
+        expect(pipeline.everyStage((stage) => true), isTrue);
+
+        // Test findStage
+        final stringSchema =
+            pipeline.findStage((stage) => stage is StringSchema);
+        expect(stringSchema, isNotNull);
+        expect(stringSchema, isA<StringSchema>());
+
+        final arraySchema = pipeline.findStage((stage) => stage is ArraySchema);
+        expect(arraySchema, isNull);
+
+        // Test findStageIndex
+        final stringIndex =
+            pipeline.findStageIndex((stage) => stage is StringSchema);
+        expect(stringIndex, equals(0));
+
+        final arrayIndex =
+            pipeline.findStageIndex((stage) => stage is ArraySchema);
+        expect(arrayIndex, equals(-1));
+
+        // Test forEachStage
+        var count = 0;
+        pipeline.forEachStage((stage, index) {
+          count++;
+          expect(index, greaterThanOrEqualTo(0));
+          expect(index, lessThan(pipeline.length));
+        });
+        expect(count, equals(pipeline.length));
+      });
+    });
+
+    group('Type Safety and Generics', () {
+      test('should maintain type safety through transformations', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, int>((s) => s.length),
+          Z.transform<int, String>((i) => i.toString()),
+        ]);
+
+        final result = pipeline.parse('hello');
+        expect(result, equals('5'));
+        expect(result, isA<String>());
+      });
+
+      test('should handle different input and output types', () {
+        final pipeline = PipelineExtension.pipe2<String, int, String>(
+          Z.transform<String, int>((s) => s.length),
+          Z.transform<int, String>((i) => 'Length: $i'),
+        );
+
+        final result = pipeline.parse('hello world');
+        expect(result, equals('Length: 11'));
+      });
+
+      test('should work with complex generic types', () {
+        final pipeline = Z.pipeline([
+          Z.array(Z.string()),
+          Z.transform<List<String>, List<int>>(
+              (arr) => arr.map((s) => s.length).toList()),
+          Z.transform<List<int>, int>((arr) => arr.reduce((a, b) => a + b)),
+        ]);
+
+        final result = pipeline.parse(['hello', 'world', 'test']);
+        expect(result, equals(14)); // 5 + 5 + 4
+      });
+    });
+
+    group('Error Propagation and Context', () {
+      test('should propagate errors from early stages', () {
+        final pipeline = Z.pipeline([
+          Z.string().min(10),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, int>((s) => s.length),
+        ]);
+
+        final result = pipeline.validate('short');
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['stage_0']));
+      });
+
+      test('should propagate errors from middle stages', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refine<String>((s) => s.length > 10, message: 'Too short'),
+          Z.transform<String, int>((s) => s.length),
+        ]);
+
+        final result = pipeline.validate('short');
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['stage_1']));
+      });
+
+      test('should propagate errors from final stages', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.refine<String>((s) => s.length > 10, message: 'Too short'),
+        ]);
+
+        final result = pipeline.validate('short');
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['stage_2']));
+      });
+
+      test('should handle nested path contexts', () {
+        final pipeline = Z.pipeline([
+          Z.string(),
+          Z.refine<String>((s) => s.length > 5, message: 'Too short'),
+        ]);
+
+        final result = pipeline.validate('hi', ['root', 'field']);
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path,
+            equals(['root', 'field', 'stage_1']));
+      });
+    });
+
+    group('Equality Testing', () {
+      test('should correctly implement equality for pipelines', () {
+        final pipeline1 = Z.pipeline([Z.string(), Z.number()]);
+        final pipeline2 = Z.pipeline([Z.string(), Z.number()]);
+        final pipeline3 = Z.pipeline([Z.string(), Z.boolean()]);
+        final pipeline4 = Z.pipeline([Z.string()]);
+
+        // Same reference
+        expect(pipeline1 == pipeline1, isTrue);
+
+        // Different content
+        expect(pipeline1 == pipeline3, isFalse);
+
+        // Different lengths
+        expect(pipeline1 == pipeline4, isFalse);
+
+        // Hash codes should be consistent
+        expect(pipeline1.hashCode, equals(pipeline1.hashCode));
+        expect(pipeline2.hashCode, equals(pipeline2.hashCode));
+      });
+    });
+
+    group('Comprehensive Factory Method Tests', () {
+      test('should create pipelines with all factory methods', () {
+        // Test all factory methods work correctly
+        final pipe2 = PipelineExtension.pipe2(
+          Z.string(),
+          Z.transform<String, int>((s) => s.length),
+          description: 'Pipe2 test',
+          metadata: {'type': 'pipe2'},
+        );
+        expect(pipe2.length, equals(2));
+        expect(pipe2.description, equals('Pipe2 test'));
+        expect(pipe2.metadata, equals({'type': 'pipe2'}));
+
+        final pipe3 = PipelineExtension.pipe3(
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, int>((s) => s.length),
+          description: 'Pipe3 test',
+          metadata: {'type': 'pipe3'},
+        );
+        expect(pipe3.length, equals(3));
+
+        final pipe4 = PipelineExtension.pipe4(
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, String>((s) => s.toLowerCase()),
+          Z.transform<String, int>((s) => s.length),
+          description: 'Pipe4 test',
+          metadata: {'type': 'pipe4'},
+        );
+        expect(pipe4.length, equals(4));
+
+        final pipe5 = PipelineExtension.pipe5(
+          Z.string(),
+          Z.transform<String, String>((s) => s.trim()),
+          Z.transform<String, String>((s) => s.toLowerCase()),
+          Z.transform<String, String>((s) => s.toUpperCase()),
+          Z.transform<String, int>((s) => s.length),
+          description: 'Pipe5 test',
+          metadata: {'type': 'pipe5'},
+        );
+        expect(pipe5.length, equals(5));
+      });
+    });
   });
 }

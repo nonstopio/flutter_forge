@@ -22,18 +22,18 @@ class _NumberValidationsExampleState extends State<NumberValidationsExample> {
 
   // All number validation schemas from README Example 3
   Map<String, Schema> get _validators => {
-    'basicNumber': Z.number().min(0).max(100),
-    'step': Z.number().step(0.1),
-    'precision': Z.number().precision(2),
-    'safeInt': Z.number().safeInt(),
-    'percentage': Z.number().percentage(),
-    'probability': Z.number().probability(),
-    'latitude': Z.number().latitude(),
-    'longitude': Z.number().longitude(),
-    'powerOfTwo': Z.number().powerOfTwo(),
-    'prime': Z.number().prime(),
-    'perfectSquare': Z.number().perfectSquare(),
-  };
+        'basicNumber': Z.number().min(0).max(100),
+        'step': Z.number().step(0.1),
+        'precision': Z.number().precision(2),
+        'safeInt': Z.number().safeInt(),
+        'percentage': Z.number().percentage(),
+        'probability': Z.number().probability(),
+        'latitude': Z.number().latitude(),
+        'longitude': Z.number().longitude(),
+        'powerOfTwo': Z.number().powerOfTwo(),
+        'prime': Z.number().prime(),
+        'perfectSquare': Z.number().perfectSquare(),
+      };
 
   final Map<String, String> _examples = {
     'basicNumber': '42',

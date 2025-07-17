@@ -17,7 +17,7 @@ class _EnumExampleState extends State<EnumExample> {
   final _textController = TextEditingController();
 
   String _selectedEnumType = 'basic';
-  
+
   // Basic enum schema from README Example 8
   final _basicRoleSchema = Z.enum_(['admin', 'user', 'guest']);
 
@@ -76,7 +76,7 @@ class _EnumExampleState extends State<EnumExample> {
   Widget build(BuildContext context) {
     final currentSchema = _getCurrentSchema();
     final availableValues = _availableValues[_selectedEnumType] ?? [];
-    
+
     return ValidationCard(
       title: 'Example 8: Flexible Enums',
       description: _descriptions[_selectedEnumType] ?? '',
@@ -151,10 +151,13 @@ class _EnumExampleState extends State<EnumExample> {
                         const SizedBox(width: 8),
                         Text(
                           'Valid Values',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                       ],
                     ),
@@ -164,23 +167,30 @@ class _EnumExampleState extends State<EnumExample> {
                       runSpacing: 8,
                       children: availableValues.map((value) {
                         final isSelected = _textController.text == value ||
-                            (_selectedEnumType == 'caseInsensitive' && 
-                             _textController.text.toLowerCase() == value.toLowerCase());
-                        
+                            (_selectedEnumType == 'caseInsensitive' &&
+                                _textController.text.toLowerCase() ==
+                                    value.toLowerCase());
+
                         return ActionChip(
                           label: Text(value),
                           onPressed: () {
                             _textController.text = value;
                             setState(() {});
                           },
-                          backgroundColor: isSelected 
+                          backgroundColor: isSelected
                               ? Theme.of(context).colorScheme.primaryContainer
-                              : Theme.of(context).colorScheme.surfaceContainerHighest,
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                           labelStyle: TextStyle(
                             color: isSelected
-                                ? Theme.of(context).colorScheme.onPrimaryContainer
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
                                 : Theme.of(context).colorScheme.onSurface,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
                           ),
                         );
                       }).toList(),
@@ -197,10 +207,16 @@ class _EnumExampleState extends State<EnumExample> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -216,10 +232,13 @@ class _EnumExampleState extends State<EnumExample> {
                         const SizedBox(width: 8),
                         Text(
                           'Case Insensitive Mode',
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                       ],
                     ),
@@ -227,8 +246,8 @@ class _EnumExampleState extends State<EnumExample> {
                     Text(
                       'Try typing: ADMIN, User, guest, AdMiN - all variations will be accepted!',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                     ),
                   ],
                 ),
@@ -241,10 +260,16 @@ class _EnumExampleState extends State<EnumExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -260,10 +285,13 @@ class _EnumExampleState extends State<EnumExample> {
                       const SizedBox(width: 8),
                       Text(
                         'Enum Rules:',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
                       ),
                     ],
                   ),
@@ -271,8 +299,8 @@ class _EnumExampleState extends State<EnumExample> {
                   Text(
                     _getEnumRules(_selectedEnumType),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -297,11 +325,16 @@ class _EnumExampleState extends State<EnumExample> {
 
   String _getDisplayName(String enumType) {
     switch (enumType) {
-      case 'basic': return 'Basic Enum';
-      case 'excluded': return 'Exclude Values';
-      case 'extended': return 'Extend Values';
-      case 'caseInsensitive': return 'Case Insensitive';
-      default: return enumType;
+      case 'basic':
+        return 'Basic Enum';
+      case 'excluded':
+        return 'Exclude Values';
+      case 'extended':
+        return 'Extend Values';
+      case 'caseInsensitive':
+        return 'Case Insensitive';
+      default:
+        return enumType;
     }
   }
 
@@ -321,8 +354,9 @@ class _EnumExampleState extends State<EnumExample> {
   }
 
   String _getSchemaCode(String enumType) {
-    const baseSchema = "final roleSchema = Z.enum_(['admin', 'user', 'guest']);";
-    
+    const baseSchema =
+        "final roleSchema = Z.enum_(['admin', 'user', 'guest']);";
+
     switch (enumType) {
       case 'basic':
         return baseSchema;

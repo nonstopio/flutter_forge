@@ -9,12 +9,13 @@ class ObjectManipulationExample extends StatefulWidget {
   const ObjectManipulationExample({super.key});
 
   @override
-  State<ObjectManipulationExample> createState() => _ObjectManipulationExampleState();
+  State<ObjectManipulationExample> createState() =>
+      _ObjectManipulationExampleState();
 }
 
 class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
   final _objectFormKey = GlobalKey<FormState>();
-  
+
   // Controllers for base user fields
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -25,7 +26,7 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
   final _phoneController = TextEditingController(); // For extended schema
 
   String _selectedManipulation = 'base';
-  
+
   // Base user schema from README Example 5
   final _baseUserSchema = Z.object({
     'name': Z.string(),
@@ -128,7 +129,8 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
     }
 
     // Add phone for extended schema
-    if (_selectedManipulation == 'extended' && _phoneController.text.isNotEmpty) {
+    if (_selectedManipulation == 'extended' &&
+        _phoneController.text.isNotEmpty) {
       baseData['phone'] = _phoneController.text;
     }
 
@@ -144,7 +146,7 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
   @override
   Widget build(BuildContext context) {
     final currentSchema = _getCurrentSchema();
-    
+
     return ValidationCard(
       title: 'Example 5: Advanced Object Manipulation',
       description: _descriptions[_selectedManipulation] ?? '',
@@ -197,8 +199,8 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                     Text(
                       'User Information',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 16),
 
@@ -210,8 +212,9 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                         labelText: 'Name',
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.person),
-                        enabled: !['picked', 'omitted'].contains(_selectedManipulation) || 
-                                ['picked'].contains(_selectedManipulation),
+                        enabled: !['picked', 'omitted']
+                                .contains(_selectedManipulation) ||
+                            ['picked'].contains(_selectedManipulation),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -224,8 +227,9 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                         labelText: 'Email',
                         border: const OutlineInputBorder(),
                         prefixIcon: const Icon(Icons.email),
-                        enabled: !['picked', 'omitted'].contains(_selectedManipulation) || 
-                                ['picked'].contains(_selectedManipulation),
+                        enabled: !['picked', 'omitted']
+                                .contains(_selectedManipulation) ||
+                            ['picked'].contains(_selectedManipulation),
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
@@ -284,12 +288,12 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                     children: [
                       Text(
                         'Address Information',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 16),
-
                       TextFormField(
                         controller: _streetController,
                         onChanged: (_) => setState(() {}),
@@ -300,7 +304,6 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
                       TextFormField(
                         controller: _cityController,
                         onChanged: (_) => setState(() {}),
@@ -311,7 +314,6 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
                       TextFormField(
                         controller: _countryController,
                         onChanged: (_) => setState(() {}),
@@ -332,10 +334,16 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -351,10 +359,13 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                       const SizedBox(width: 8),
                       Text(
                         'Schema Manipulation:',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
                       ),
                     ],
                   ),
@@ -362,8 +373,8 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
                   Text(
                     _getManipulationExplanation(_selectedManipulation),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -388,18 +399,30 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
 
   String _getDisplayName(String manipulation) {
     switch (manipulation) {
-      case 'base': return 'Base Schema';
-      case 'picked': return 'Pick Fields';
-      case 'omitted': return 'Omit Fields';
-      case 'extended': return 'Extend Schema';
-      case 'partial': return 'Partial Schema';
-      case 'deepPartial': return 'Deep Partial';
-      case 'required': return 'Required Fields';
-      case 'strict': return 'Strict Mode';
-      case 'passthrough': return 'Passthrough Mode';
-      case 'strip': return 'Strip Unknown';
-      case 'catchall': return 'Catchall Validation';
-      default: return manipulation;
+      case 'base':
+        return 'Base Schema';
+      case 'picked':
+        return 'Pick Fields';
+      case 'omitted':
+        return 'Omit Fields';
+      case 'extended':
+        return 'Extend Schema';
+      case 'partial':
+        return 'Partial Schema';
+      case 'deepPartial':
+        return 'Deep Partial';
+      case 'required':
+        return 'Required Fields';
+      case 'strict':
+        return 'Strict Mode';
+      case 'passthrough':
+        return 'Passthrough Mode';
+      case 'strip':
+        return 'Strip Unknown';
+      case 'catchall':
+        return 'Catchall Validation';
+      default:
+        return manipulation;
     }
   }
 

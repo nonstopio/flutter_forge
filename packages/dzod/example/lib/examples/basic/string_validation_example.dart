@@ -21,20 +21,20 @@ class _StringValidationExampleState extends State<StringValidationExample> {
 
   // All string validation schemas from README Example 2
   Map<String, Schema> get _validators => {
-    'email': Z.string().email(),
-    'url': Z.string().url(),
-    'uuid': Z.string().uuid(),
-    'cuid': Z.string().cuid(),
-    'cuid2': Z.string().cuid2(),
-    'ulid': Z.string().ulid(),
-    'jwt': Z.string().jwt(),
-    'base64': Z.string().base64(),
-    'hex': Z.string().hex(),
-    'hexColor': Z.string().hexColor(),
-    'emoji': Z.string().emoji(),
-    'json': Z.string().json(),
-    'nanoid': Z.string().nanoid(),
-  };
+        'email': Z.string().email(),
+        'url': Z.string().url(),
+        'uuid': Z.string().uuid(),
+        'cuid': Z.string().cuid(),
+        'cuid2': Z.string().cuid2(),
+        'ulid': Z.string().ulid(),
+        'jwt': Z.string().jwt(),
+        'base64': Z.string().base64(),
+        'hex': Z.string().hex(),
+        'hexColor': Z.string().hexColor(),
+        'emoji': Z.string().emoji(),
+        'json': Z.string().json(),
+        'nanoid': Z.string().nanoid(),
+      };
 
   final Map<String, String> _examples = {
     'email': 'user@example.com',

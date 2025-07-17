@@ -17,7 +17,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
   final _textController = TextEditingController();
 
   String _selectedArrayType = 'base';
-  
+
   // Base array schema from README Example 6
   final _baseArraySchema = Z.array(Z.string());
 
@@ -105,7 +105,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
   @override
   Widget build(BuildContext context) {
     final currentSchema = _getCurrentSchema();
-    
+
     return ValidationCard(
       title: 'Example 6: Advanced Arrays',
       description: _descriptions[_selectedArrayType] ?? '',
@@ -169,10 +169,16 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -181,24 +187,24 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
                   Text(
                     'Array Preview:',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _parseArrayInput(_textController.text).toString(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'monospace',
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                          fontFamily: 'monospace',
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Length: ${_parseArrayInput(_textController.text).length}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -210,10 +216,16 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -229,10 +241,13 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
                       const SizedBox(width: 8),
                       Text(
                         'Validation Rules:',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
                       ),
                     ],
                   ),
@@ -240,8 +255,8 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
                   Text(
                     _getValidationRules(_selectedArrayType),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -266,19 +281,32 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
 
   String _getDisplayName(String arrayType) {
     switch (arrayType) {
-      case 'base': return 'Base Array';
-      case 'range': return 'Length Range';
-      case 'exactLength': return 'Exact Length';
-      case 'nonempty': return 'Non-empty';
-      case 'unique': return 'Unique Elements';
-      case 'includes': return 'Must Include';
-      case 'excludes': return 'Must Exclude';
-      case 'someEmail': return 'Some Email';
-      case 'everyMinLength': return 'Every Min Length';
-      case 'mapped': return 'Mapped (Trim)';
-      case 'filtered': return 'Filtered';
-      case 'sorted': return 'Sorted';
-      default: return arrayType;
+      case 'base':
+        return 'Base Array';
+      case 'range':
+        return 'Length Range';
+      case 'exactLength':
+        return 'Exact Length';
+      case 'nonempty':
+        return 'Non-empty';
+      case 'unique':
+        return 'Unique Elements';
+      case 'includes':
+        return 'Must Include';
+      case 'excludes':
+        return 'Must Exclude';
+      case 'someEmail':
+        return 'Some Email';
+      case 'everyMinLength':
+        return 'Every Min Length';
+      case 'mapped':
+        return 'Mapped (Trim)';
+      case 'filtered':
+        return 'Filtered';
+      case 'sorted':
+        return 'Sorted';
+      default:
+        return arrayType;
     }
   }
 
@@ -315,7 +343,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
 
   String _getSchemaCode(String arrayType) {
     const baseSchema = 'final baseArraySchema = Z.array(Z.string());';
-    
+
     switch (arrayType) {
       case 'base':
         return baseSchema;

@@ -589,5 +589,396 @@ void main() {
         expect(Z.coerce.map().parse([1, 2]), equals({'0': 1, '1': 2}));
       });
     });
+
+    group('Advanced String Coercion', () {
+      test('should handle advanced string coercion options', () {
+        final stringCoercion = Z.coerce.string(
+          preserveWhitespace: true,
+          trimWhitespace: true,
+          joinSeparator: ' | ',
+          formatNumbers: true,
+          numberPrecision: 2,
+          prettifyJson: true,
+        );
+
+        expect(stringCoercion.parse('  hello  '), equals('hello'));
+        expect(stringCoercion.parse(3.14159), equals('3.14'));
+        expect(stringCoercion.parse([1, 2, 3]), equals('1 | 2 | 3'));
+      });
+
+      test('should handle fallback strategies', () {
+        final stringCoercion = Z.coerce.string(
+          fallbackStrategies: [
+            (input) => 'fallback: $input',
+          ],
+        );
+
+        expect(stringCoercion.parse('test'), equals('test'));
+        expect(stringCoercion.parse(123), equals('123'));
+      });
+    });
+
+    group('Advanced Number Coercion', () {
+      test('should handle precision, step, and range validation', () {
+        final numberCoercion = Z.coerce.number(
+          precision: 2,
+          step: 0.5,
+          min: 0,
+          max: 100,
+          allowInfinity: false,
+          allowNaN: false,
+        );
+
+        expect(numberCoercion.parse('5.567'), equals(5.57));
+        expect(numberCoercion.parse('2.25'), equals(2.0)); // Rounded to step
+        expect(numberCoercion.parse('-5'), equals(0)); // Clamped to min
+        expect(numberCoercion.parse('150'), equals(100)); // Clamped to max
+      });
+
+      test('should handle special number values', () {
+        final numberCoercion = Z.coerce.number(
+          allowInfinity: true,
+          allowNaN: true,
+        );
+
+        expect(numberCoercion.parse('infinity'), equals(double.infinity));
+        expect(
+            numberCoercion.parse('-infinity'), equals(double.negativeInfinity));
+        expect(numberCoercion.parse('nan'), isNaN);
+        expect(numberCoercion.parse('∞'), equals(double.infinity));
+        expect(numberCoercion.parse('-∞'), equals(double.negativeInfinity));
+      });
+
+      test('should handle strict mode for numbers', () {
+        final strictNumberCoercion = Z.coerce.number(strict: true);
+
+        expect(() => strictNumberCoercion.parse('infinity'),
+            throwsA(isA<ValidationException>()));
+        expect(() => strictNumberCoercion.parse('nan'),
+            throwsA(isA<ValidationException>()));
+      });
+
+      test('should handle fallback strategies for numbers', () {
+        final numberCoercion = Z.coerce.number(
+          fallbackStrategies: [
+            (input) => 42,
+          ],
+        );
+
+        expect(numberCoercion.parse('123'), equals(123));
+        expect(numberCoercion.parse(456), equals(456));
+      });
+    });
+
+    group('Advanced Integer Coercion', () {
+      test('should handle integer with step and range validation', () {
+        final intCoercion = Z.coerce.integer(
+          step: 5,
+          min: 0,
+          max: 100,
+        );
+
+        expect(intCoercion.parse('7'), equals(5)); // Rounded to step
+        expect(intCoercion.parse('-10'), equals(0)); // Clamped to min
+        expect(intCoercion.parse('150'), equals(100)); // Clamped to max
+      });
+
+      test('should handle strict mode for integers', () {
+        final strictIntCoercion = Z.coerce.integer(strict: true);
+
+        expect(() => strictIntCoercion.parse('not-a-number'),
+            throwsA(isA<ValidationException>()));
+      });
+    });
+
+    group('Advanced Double Coercion', () {
+      test('should handle double with precision and special values', () {
+        final doubleCoercion = Z.coerce.decimal(
+          precision: 3,
+          allowInfinity: true,
+          allowNaN: true,
+        );
+
+        expect(doubleCoercion.parse('3.14159'), equals(3.142));
+        expect(doubleCoercion.parse('infinity'), equals(double.infinity));
+        expect(doubleCoercion.parse('nan'), isNaN);
+      });
+
+      test('should handle strict mode for doubles', () {
+        final strictDoubleCoercion = Z.coerce.decimal(strict: true);
+
+        expect(() => strictDoubleCoercion.parse('not-a-number'),
+            throwsA(isA<ValidationException>()));
+      });
+    });
+
+    group('Smart Coercion', () {
+      test('should handle smart coercion with fallback strategies', () {
+        final smartCoercion = Z.coerce.smart<String>(
+          String,
+          fallbackStrategies: [
+            (input) => 'fallback: $input',
+          ],
+          defaultValue: 'default',
+        );
+
+        expect(smartCoercion.parse('test'), equals('test'));
+        expect(smartCoercion.parse(123), equals('123'));
+      });
+
+      test('should handle smart coercion with strict mode', () {
+        final strictSmartCoercion = Z.coerce.smart<String>(
+          String,
+          strict: true,
+        );
+
+        expect(strictSmartCoercion.parse('test'), equals('test'));
+        expect(strictSmartCoercion.parse(123), equals('123'));
+      });
+
+      test('should handle smart coercion for different types', () {
+        final intCoercion = Z.coerce.smart<int>(int);
+        final doubleCoercion = Z.coerce.smart<double>(double);
+        final boolCoercion = Z.coerce.smart<bool>(bool);
+        final dateCoercion = Z.coerce.smart<DateTime>(DateTime);
+        final bigIntCoercion = Z.coerce.smart<BigInt>(BigInt);
+        final listCoercion = Z.coerce.smart<List>(List);
+        final setCoercion = Z.coerce.smart<Set>(Set);
+        final mapCoercion = Z.coerce.smart<Map>(Map);
+
+        expect(intCoercion.parse('123'), equals(123));
+        expect(doubleCoercion.parse('123.45'), equals(123.45));
+        expect(boolCoercion.parse('true'), equals(true));
+        expect(dateCoercion.parse('2021-01-01'), isA<DateTime>());
+        expect(bigIntCoercion.parse('123'), equals(BigInt.from(123)));
+        expect(listCoercion.parse('a,b,c'), equals(['a', 'b', 'c']));
+        expect(setCoercion.parse([1, 1, 2]), equals({1, 2}));
+        expect(mapCoercion.parse([1, 2]), equals({'0': 1, '1': 2}));
+      });
+
+      test('should handle unsupported smart coercion types', () {
+        expect(() => Z.coerce.smart<Object>(Object),
+            throwsA(isA<ArgumentError>()));
+      });
+    });
+
+    group('CoercionUtils Advanced Features', () {
+      test('should handle advanced string coercion with options', () {
+        expect(
+            CoercionUtils.coerceToString(123.456,
+                formatNumbers: true, numberPrecision: 2),
+            equals('123.46'));
+        expect(CoercionUtils.coerceToString('  hello  ', trimWhitespace: true),
+            equals('hello'));
+        expect(
+            CoercionUtils.coerceToString('hello\n\nworld',
+                preserveWhitespace: false),
+            equals('hello world'));
+        expect(CoercionUtils.coerceToString([1, 2, 3], joinSeparator: ' | '),
+            equals('1 | 2 | 3'));
+      });
+
+      test('should handle advanced string coercion with fallback strategies',
+          () {
+        final fallbackStrategies = [
+          (input) => 'fallback: $input',
+        ];
+
+        expect(
+            CoercionUtils.coerceToStringAdvanced('test',
+                fallbackStrategies: fallbackStrategies),
+            equals('test'));
+        expect(CoercionUtils.coerceToStringAdvanced('test', strict: true),
+            equals('test'));
+      });
+
+      test('should handle advanced number coercion with options', () {
+        expect(
+            CoercionUtils.coerceToNumber('5.567', precision: 2), equals(5.57));
+        expect(CoercionUtils.coerceToNumber('2.25', step: 0.5), equals(2.0));
+        expect(CoercionUtils.coerceToNumber('-5', min: 0), equals(0));
+        expect(CoercionUtils.coerceToNumber('150', max: 100), equals(100));
+        expect(CoercionUtils.coerceToNumber('infinity', allowInfinity: true),
+            equals(double.infinity));
+        expect(CoercionUtils.coerceToNumber('nan', allowNaN: true), isNaN);
+      });
+
+      test('should handle advanced number coercion with strict mode', () {
+        expect(
+            () => CoercionUtils.coerceToNumber('2.25', step: 0.5, strict: true),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToNumber('-5', min: 0, strict: true),
+            throwsA(isA<FormatException>()));
+        expect(
+            () => CoercionUtils.coerceToNumber('150', max: 100, strict: true),
+            throwsA(isA<FormatException>()));
+        expect(
+            () => CoercionUtils.coerceToNumber('infinity',
+                allowInfinity: false, strict: true),
+            throwsA(isA<FormatException>()));
+        expect(
+            () => CoercionUtils.coerceToNumber('nan',
+                allowNaN: false, strict: true),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle advanced number coercion with fallback strategies',
+          () {
+        final fallbackStrategies = [
+          (input) => 42,
+        ];
+
+        expect(
+            CoercionUtils.coerceToNumberAdvanced('123',
+                fallbackStrategies: fallbackStrategies),
+            equals(123));
+        expect(CoercionUtils.coerceToNumberAdvanced('123', strict: true),
+            equals(123));
+      });
+
+      test('should handle type coercion with fallback strategies', () {
+        final fallbackStrategies = [
+          (input) => 'fallback: $input',
+        ];
+
+        expect(
+            CoercionUtils.coerceToType<String>(
+              'test',
+              primaryCoercer: (input) => input.toString(),
+              fallbackStrategies: fallbackStrategies,
+            ),
+            equals('test'));
+
+        expect(
+            CoercionUtils.coerceToType<String>(
+              'test',
+              primaryCoercer: (input) => input.toString(),
+              defaultValue: 'default',
+            ),
+            equals('test'));
+      });
+
+      test('should handle smart coercion for all supported types', () {
+        expect(
+            CoercionUtils.smartCoerce<String>('test', String), equals('test'));
+        expect(CoercionUtils.smartCoerce<int>('123', int), equals(123));
+        expect(CoercionUtils.smartCoerce<double>('123.45', double),
+            equals(123.45));
+        expect(CoercionUtils.smartCoerce<num>('123', num), equals(123));
+        expect(CoercionUtils.smartCoerce<bool>('true', bool), equals(true));
+        expect(CoercionUtils.smartCoerce<DateTime>('2021-01-01', DateTime),
+            isA<DateTime>());
+        expect(CoercionUtils.smartCoerce<BigInt>('123', BigInt),
+            equals(BigInt.from(123)));
+        expect(CoercionUtils.smartCoerce<List>('a,b,c', List),
+            equals(['a', 'b', 'c']));
+        expect(CoercionUtils.smartCoerce<Set>([1, 1, 2], Set), equals({1, 2}));
+        expect(CoercionUtils.smartCoerce<Map>([1, 2], Map),
+            equals({'0': 1, '1': 2}));
+      });
+
+      test('should handle unsupported smart coercion types', () {
+        expect(() => CoercionUtils.smartCoerce<Object>('test', Object),
+            throwsA(isA<FormatException>()));
+      });
+    });
+
+    group('Edge Cases and Error Handling', () {
+      test('should handle edge cases in map coercion', () {
+        expect(() => CoercionUtils.coerceToMap(''),
+            throwsA(isA<FormatException>()));
+        expect(CoercionUtils.coerceToMap('test'), equals({'value': 'test'}));
+        expect(() => CoercionUtils.coerceToMap(123),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle double.infinity and double.nan in number coercion',
+          () {
+        expect(
+            CoercionUtils.coerceToNumber(double.infinity, allowInfinity: true),
+            equals(double.infinity));
+        expect(CoercionUtils.coerceToNumber(double.nan, allowNaN: true), isNaN);
+        expect(
+            () => CoercionUtils.coerceToNumber(double.infinity,
+                allowInfinity: false),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToNumber(double.nan, allowNaN: false),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in date coercion', () {
+        expect(CoercionUtils.coerceToDateTime(DateTime.now()), isA<DateTime>());
+        expect(() => CoercionUtils.coerceToDateTime(''),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToDateTime('invalid'),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToDateTime([]),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in BigInt coercion', () {
+        expect(CoercionUtils.coerceToBigInt(BigInt.from(123)),
+            equals(BigInt.from(123)));
+        expect(CoercionUtils.coerceToBigInt(123), equals(BigInt.from(123)));
+        expect(CoercionUtils.coerceToBigInt(123.456), equals(BigInt.from(123)));
+        expect(CoercionUtils.coerceToBigInt(''), equals(BigInt.zero));
+        expect(() => CoercionUtils.coerceToBigInt('invalid'),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToBigInt([]),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in boolean coercion', () {
+        expect(CoercionUtils.coerceToBoolean(true), equals(true));
+        expect(CoercionUtils.coerceToBoolean(false), equals(false));
+        expect(CoercionUtils.coerceToBoolean(1), equals(true));
+        expect(CoercionUtils.coerceToBoolean(0), equals(false));
+        expect(CoercionUtils.coerceToBoolean(-1), equals(true));
+        expect(CoercionUtils.coerceToBoolean(null), equals(false));
+        expect(() => CoercionUtils.coerceToBoolean('invalid'),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToBoolean([]),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in list coercion', () {
+        expect(CoercionUtils.coerceToList([]), equals([]));
+        expect(CoercionUtils.coerceToList(''), equals([]));
+        expect(CoercionUtils.coerceToList('single'), equals(['single']));
+        expect(CoercionUtils.coerceToList({1, 2, 3}), equals([1, 2, 3]));
+        expect(CoercionUtils.coerceToList({'a': 1, 'b': 2}), equals([1, 2]));
+        expect(CoercionUtils.coerceToList(123), equals([123]));
+      });
+
+      test('should handle edge cases in set coercion', () {
+        expect(CoercionUtils.coerceToSet(<dynamic>{}), equals(<dynamic>{}));
+        expect(CoercionUtils.coerceToSet([1, 2, 3]), equals({1, 2, 3}));
+        expect(CoercionUtils.coerceToSet(''), equals(<dynamic>{}));
+        expect(CoercionUtils.coerceToSet('single'), equals({'single'}));
+        expect(CoercionUtils.coerceToSet({'a': 1, 'b': 2}), equals({1, 2}));
+        expect(CoercionUtils.coerceToSet(123), equals({123}));
+      });
+
+      test('should handle edge cases in number coercion', () {
+        expect(() => CoercionUtils.coerceToNumber('not-a-number'),
+            throwsA(isA<FormatException>()));
+        expect(() => CoercionUtils.coerceToNumber([]),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in int coercion', () {
+        expect(CoercionUtils.coerceToInt(123), equals(123));
+        expect(CoercionUtils.coerceToInt(123.456), equals(123));
+        expect(() => CoercionUtils.coerceToInt('not-a-number'),
+            throwsA(isA<FormatException>()));
+      });
+
+      test('should handle edge cases in double coercion', () {
+        expect(CoercionUtils.coerceToDouble(123), equals(123.0));
+        expect(CoercionUtils.coerceToDouble(123.456), equals(123.456));
+        expect(() => CoercionUtils.coerceToDouble('not-a-number'),
+            throwsA(isA<FormatException>()));
+      });
+    });
   });
 }

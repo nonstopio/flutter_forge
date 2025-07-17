@@ -487,5 +487,360 @@ void main() {
         expect(result['processed'], equals(true));
       });
     });
+
+    group('Boolean Discriminator Edge Cases', () {
+      test('should handle boolean discriminators', () {
+        final schema = Z.discriminatedUnion('isActive', [
+          Z.object({
+            'isActive': Z.literal(true),
+            'activeData': Z.string(),
+          }),
+          Z.object({
+            'isActive': Z.literal(false),
+            'inactiveData': Z.string(),
+          }),
+        ]);
+
+        final activeResult = schema.parse({
+          'isActive': true,
+          'activeData': 'active content',
+        });
+        expect(activeResult['isActive'], equals(true));
+        expect(activeResult['activeData'], equals('active content'));
+
+        final inactiveResult = schema.parse({
+          'isActive': false,
+          'inactiveData': 'inactive content',
+        });
+        expect(inactiveResult['isActive'], equals(false));
+        expect(inactiveResult['inactiveData'], equals('inactive content'));
+      });
+
+      test('should handle boolean schemas with mixed literal values', () {
+        final schema = Z.discriminatedUnion('flag', [
+          Z.object({
+            'flag': Z
+                .boolean()
+                .refine((val) => val == true, message: 'Must be true'),
+            'trueData': Z.string(),
+          }),
+          Z.object({
+            'flag': Z
+                .boolean()
+                .refine((val) => val == false, message: 'Must be false'),
+            'falseData': Z.string(),
+          }),
+        ]);
+
+        final trueResult = schema.parse({
+          'flag': true,
+          'trueData': 'true content',
+        });
+        expect(trueResult['flag'], equals(true));
+        expect(trueResult['trueData'], equals('true content'));
+
+        final falseResult = schema.parse({
+          'flag': false,
+          'falseData': 'false content',
+        });
+        expect(falseResult['flag'], equals(false));
+        expect(falseResult['falseData'], equals('false content'));
+      });
+    });
+
+    group('Literal Value Extraction Edge Cases', () {
+      test('should handle schemas without literal values', () {
+        // This tests the fallback when no literal value can be extracted
+        final schema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.string(), // Non-literal schema
+            'data': Z.string(),
+          }),
+        ]);
+
+        // This should still work because the discriminator extraction falls back
+        final result = schema.parse({
+          'type': 'any-value',
+          'data': 'test data',
+        });
+        expect(result['type'], equals('any-value'));
+        expect(result['data'], equals('test data'));
+      });
+
+      test('should handle non-object schemas', () {
+        // This tests when schema is not an ObjectSchema
+        final schema = Z.discriminatedUnion('type', [
+          Z.string(), // Non-object schema
+        ]);
+
+        // This should handle gracefully
+        expect(schema.validDiscriminatorValues, isEmpty);
+      });
+
+      test('should handle literal extraction from string schemas', () {
+        final schema = Z.discriminatedUnion('mode', [
+          Z.object({
+            'mode': Z.literal('read'),
+            'file': Z.string(),
+          }),
+          Z.object({
+            'mode': Z.literal('write'),
+            'content': Z.string(),
+          }),
+        ]);
+
+        final readResult = schema.parse({
+          'mode': 'read',
+          'file': 'test.txt',
+        });
+        expect(readResult['mode'], equals('read'));
+        expect(readResult['file'], equals('test.txt'));
+      });
+
+      test('should handle candidate value testing', () {
+        // This tests the candidate value testing logic
+        final schema = Z.discriminatedUnion('status', [
+          Z.object({
+            'status': Z.literal('pending'),
+            'message': Z.string(),
+          }),
+          Z.object({
+            'status': Z.literal('approved'),
+            'approvedBy': Z.string(),
+          }),
+          Z.object({
+            'status': Z.literal('rejected'),
+            'reason': Z.string(),
+          }),
+        ]);
+
+        expect(schema.hasDiscriminatorValue('pending'), isTrue);
+        expect(schema.hasDiscriminatorValue('approved'), isTrue);
+        expect(schema.hasDiscriminatorValue('rejected'), isTrue);
+        expect(schema.hasDiscriminatorValue('unknown'), isFalse);
+      });
+    });
+
+    group('Schema Manipulation Edge Cases', () {
+      test('should handle extending with duplicate discriminator values', () {
+        final baseSchema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.literal('user'),
+            'name': Z.string(),
+          }),
+        ]);
+
+        final extendedSchema = baseSchema.extend([
+          Z.object({
+            'type': Z.literal('user'), // Duplicate discriminator value
+            'email': Z.string(),
+          }),
+        ]);
+
+        // The last schema with the same discriminator should win
+        final result = extendedSchema.parse({
+          'type': 'user',
+          'email': 'test@example.com',
+        });
+        expect(result['type'], equals('user'));
+        expect(result['email'], equals('test@example.com'));
+      });
+
+      test('should handle strict mode', () {
+        final schema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.literal('user'),
+            'name': Z.string(),
+          }),
+        ]).strict();
+
+        final result = schema.parse({
+          'type': 'user',
+          'name': 'John',
+        });
+        expect(result['type'], equals('user'));
+        expect(result['name'], equals('John'));
+      });
+
+      test('should handle empty schema list', () {
+        final schema =
+            Z.discriminatedUnion('type', <Schema<Map<String, dynamic>>>[]);
+
+        expect(schema.validDiscriminatorValues, isEmpty);
+        expect(schema.schemas, isEmpty);
+        expect(schema.schemaMapping, isEmpty);
+      });
+
+      test('should handle single schema list', () {
+        final schema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.literal('single'),
+            'value': Z.string(),
+          }),
+        ]);
+
+        expect(schema.validDiscriminatorValues, contains('single'));
+        expect(schema.schemas, hasLength(1));
+        expect(schema.schemaMapping, hasLength(1));
+      });
+    });
+
+    group('Error Path Testing', () {
+      test('should provide correct error paths for missing discriminator', () {
+        final schema = Z.discriminatedUnion('category', [
+          Z.object({
+            'category': Z.literal('A'),
+            'value': Z.string(),
+          }),
+        ]);
+
+        final result = schema.validate({'value': 'test'});
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, isEmpty);
+      });
+
+      test('should provide correct error paths for invalid discriminator', () {
+        final schema = Z.discriminatedUnion('category', [
+          Z.object({
+            'category': Z.literal('A'),
+            'value': Z.string(),
+          }),
+        ]);
+
+        final result = schema.validate({
+          'category': 'invalid',
+          'value': 'test',
+        });
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['category']));
+      });
+
+      test('should provide correct error paths for nested validation', () {
+        final schema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.literal('user'),
+            'profile': Z.object({
+              'name': Z.string(),
+              'age': Z.number(),
+            }),
+          }),
+        ]);
+
+        final result = schema.validate({
+          'type': 'user',
+          'profile': {
+            'name': 'John',
+            'age': 'invalid', // Should be number
+          },
+        });
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.path, equals(['profile', 'age']));
+      });
+    });
+
+    group('Comprehensive Type Testing', () {
+      test('should handle all supported discriminator types', () {
+        final stringSchema = Z.discriminatedUnion('stringType', [
+          Z.object({
+            'stringType': Z.literal('string'),
+            'value': Z.string(),
+          }),
+        ]);
+
+        final numberSchema = Z.discriminatedUnion('numberType', [
+          Z.object({
+            'numberType': Z.literal(42),
+            'value': Z.number(),
+          }),
+        ]);
+
+        final booleanSchema = Z.discriminatedUnion('booleanType', [
+          Z.object({
+            'booleanType': Z.literal(true),
+            'value': Z.boolean(),
+          }),
+        ]);
+
+        expect(stringSchema.hasDiscriminatorValue('string'), isTrue);
+        expect(numberSchema.hasDiscriminatorValue(42), isTrue);
+        expect(booleanSchema.hasDiscriminatorValue(true), isTrue);
+      });
+
+      test('should handle negative number discriminators', () {
+        final schema = Z.discriminatedUnion('id', [
+          Z.object({
+            'id': Z.literal(-1),
+            'errorType': Z.string(),
+          }),
+          Z.object({
+            'id': Z.literal(-2),
+            'warningType': Z.string(),
+          }),
+        ]);
+
+        final result = schema.parse({
+          'id': -1,
+          'errorType': 'fatal',
+        });
+        expect(result['id'], equals(-1));
+        expect(result['errorType'], equals('fatal'));
+      });
+
+      test('should handle zero as discriminator', () {
+        final schema = Z.discriminatedUnion('level', [
+          Z.object({
+            'level': Z.literal(0),
+            'message': Z.string(),
+          }),
+        ]);
+
+        final result = schema.parse({
+          'level': 0,
+          'message': 'baseline',
+        });
+        expect(result['level'], equals(0));
+        expect(result['message'], equals('baseline'));
+      });
+    });
+
+    group('Schema Properties Access', () {
+      test('should provide access to all schema properties', () {
+        final schema = Z.discriminatedUnion('type', [
+          Z.object({
+            'type': Z.literal('A'),
+            'value': Z.string(),
+          }),
+          Z.object({
+            'type': Z.literal('B'),
+            'value': Z.number(),
+          }),
+        ]);
+
+        expect(schema.schemas, hasLength(2));
+        expect(schema.discriminator, equals('type'));
+        expect(schema.validDiscriminatorValues, containsAll(['A', 'B']));
+        expect(schema.schemaMapping, hasLength(2));
+        expect(schema.statistics['discriminator'], equals('type'));
+        expect(schema.statistics['schemaCount'], equals(2));
+      });
+
+      test('should handle schema with description and metadata', () {
+        final schema = Z.discriminatedUnion(
+          'type',
+          [
+            Z.object({
+              'type': Z.literal('test'),
+              'value': Z.string(),
+            }),
+          ],
+          description: 'Test discriminated union',
+          metadata: {'version': '1.0'},
+        );
+
+        expect(schema.description, equals('Test discriminated union'));
+        expect(schema.metadata, equals({'version': '1.0'}));
+        expect(schema.toString(), contains('Test discriminated union'));
+      });
+    });
   });
 }

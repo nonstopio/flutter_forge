@@ -15,7 +15,7 @@ class TupleExample extends StatefulWidget {
 
 class _TupleExampleState extends State<TupleExample> {
   final _tupleFormKey = GlobalKey<FormState>();
-  
+
   // Controllers for tuple elements
   final _element1Controller = TextEditingController();
   final _element2Controller = TextEditingController();
@@ -23,7 +23,7 @@ class _TupleExampleState extends State<TupleExample> {
   final _restElementsController = TextEditingController();
 
   String _selectedTupleType = 'basic';
-  
+
   // Basic tuple schema from README Example 7
   final _basicTupleSchema = Z.tuple([
     Z.string(),
@@ -65,7 +65,7 @@ class _TupleExampleState extends State<TupleExample> {
     _element1Controller.text = example.isNotEmpty ? example[0] : '';
     _element2Controller.text = example.length > 1 ? example[1] : '';
     _element3Controller.text = example.length > 2 ? example[2] : '';
-    
+
     if (example.length > 3) {
       _restElementsController.text = example.skip(3).join(', ');
     } else {
@@ -93,18 +93,18 @@ class _TupleExampleState extends State<TupleExample> {
 
   List<dynamic> _getCurrentTupleData() {
     final tuple = <dynamic>[];
-    
+
     // First element (string)
     if (_element1Controller.text.isNotEmpty) {
       tuple.add(_element1Controller.text);
     }
-    
+
     // Second element (number)
     if (_element2Controller.text.isNotEmpty) {
       final number = num.tryParse(_element2Controller.text);
       tuple.add(number ?? _element2Controller.text);
     }
-    
+
     // Third element (boolean)
     if (_element3Controller.text.isNotEmpty) {
       final boolText = _element3Controller.text.toLowerCase();
@@ -114,9 +114,10 @@ class _TupleExampleState extends State<TupleExample> {
         tuple.add(_element3Controller.text);
       }
     }
-    
+
     // Rest elements (strings, for withRest type)
-    if (_selectedTupleType == 'withRest' && _restElementsController.text.isNotEmpty) {
+    if (_selectedTupleType == 'withRest' &&
+        _restElementsController.text.isNotEmpty) {
       final restElements = _restElementsController.text
           .split(',')
           .map((s) => s.trim())
@@ -124,14 +125,14 @@ class _TupleExampleState extends State<TupleExample> {
           .toList();
       tuple.addAll(restElements);
     }
-    
+
     return tuple;
   }
 
   @override
   Widget build(BuildContext context) {
     final currentSchema = _getCurrentSchema();
-    
+
     return ValidationCard(
       title: 'Example 7: Type-safe Tuples',
       description: _descriptions[_selectedTupleType] ?? '',
@@ -185,8 +186,8 @@ class _TupleExampleState extends State<TupleExample> {
                     Text(
                       'Tuple Elements',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 16),
 
@@ -213,7 +214,8 @@ class _TupleExampleState extends State<TupleExample> {
                         prefixIcon: Icon(Icons.numbers),
                         helperText: 'Second element must be a number',
                       ),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: true),
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9.-]')),
                       ],
@@ -244,7 +246,8 @@ class _TupleExampleState extends State<TupleExample> {
                           hintText: 'extra1, extra2, extra3',
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.add),
-                          helperText: 'Additional string elements (comma-separated)',
+                          helperText:
+                              'Additional string elements (comma-separated)',
                         ),
                         maxLines: 2,
                       ),
@@ -260,10 +263,16 @@ class _TupleExampleState extends State<TupleExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -272,24 +281,24 @@ class _TupleExampleState extends State<TupleExample> {
                   Text(
                     'Tuple Preview:',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _getCurrentTupleData().toString(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontFamily: 'monospace',
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                          fontFamily: 'monospace',
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Length: ${_getCurrentTupleData().length}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -301,10 +310,16 @@ class _TupleExampleState extends State<TupleExample> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -320,10 +335,13 @@ class _TupleExampleState extends State<TupleExample> {
                       const SizedBox(width: 8),
                       Text(
                         'Tuple Rules:',
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
                       ),
                     ],
                   ),
@@ -331,8 +349,8 @@ class _TupleExampleState extends State<TupleExample> {
                   Text(
                     _getTupleRules(_selectedTupleType),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ],
               ),
@@ -357,12 +375,18 @@ class _TupleExampleState extends State<TupleExample> {
 
   String _getDisplayName(String tupleType) {
     switch (tupleType) {
-      case 'basic': return 'Basic Tuple';
-      case 'withRest': return 'With Rest Elements';
-      case 'exactLength': return 'Exact Length';
-      case 'minLength': return 'Minimum Length';
-      case 'maxLength': return 'Maximum Length';
-      default: return tupleType;
+      case 'basic':
+        return 'Basic Tuple';
+      case 'withRest':
+        return 'With Rest Elements';
+      case 'exactLength':
+        return 'Exact Length';
+      case 'minLength':
+        return 'Minimum Length';
+      case 'maxLength':
+        return 'Maximum Length';
+      default:
+        return tupleType;
     }
   }
 
@@ -389,7 +413,7 @@ class _TupleExampleState extends State<TupleExample> {
   Z.number(),
   Z.boolean(),
 ]);''';
-    
+
     switch (tupleType) {
       case 'basic':
         return baseSchema;
