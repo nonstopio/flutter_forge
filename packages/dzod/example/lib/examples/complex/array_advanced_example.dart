@@ -19,7 +19,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
   String _selectedArrayType = 'base';
 
   // Base array schema from README Example 6
-  final _baseArraySchema = Z.array(Z.string());
+  final _baseArraySchema = z.array(z.string());
 
   final Map<String, String> _descriptions = {
     'base': 'Basic string array validation',
@@ -342,7 +342,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
   }
 
   String _getSchemaCode(String arrayType) {
-    const baseSchema = 'final baseArraySchema = Z.array(Z.string());';
+    const baseSchema = 'final baseArraySchema = z.array(z.string());';
 
     switch (arrayType) {
       case 'base':

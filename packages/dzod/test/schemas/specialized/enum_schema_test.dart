@@ -8,7 +8,7 @@ void main() {
   group('Enum Schema Tests', () {
     group('Basic Enum Validation', () {
       test('validates string enum values', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final result = schema.validate('red');
 
         expect(result.isSuccess, true);
@@ -16,7 +16,7 @@ void main() {
       });
 
       test('validates numeric enum values', () {
-        final schema = Z.enum_([1, 2, 3]);
+        final schema = z.enum_([1, 2, 3]);
         final result = schema.validate(2);
 
         expect(result.isSuccess, true);
@@ -24,7 +24,7 @@ void main() {
       });
 
       test('validates boolean enum values', () {
-        final schema = Z.enum_([true, false]);
+        final schema = z.enum_([true, false]);
         final result = schema.validate(true);
 
         expect(result.isSuccess, true);
@@ -32,7 +32,7 @@ void main() {
       });
 
       test('fails on invalid enum value', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final result = schema.validate('yellow');
 
         expect(result.isSuccess, false);
@@ -40,7 +40,7 @@ void main() {
       });
 
       test('fails on wrong type', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final result = schema.validate(123);
 
         expect(result.isSuccess, false);
@@ -50,7 +50,7 @@ void main() {
 
     group('Case-Insensitive String Enum', () {
       test('validates case-insensitive string enum', () {
-        final schema = Z.enum_(['Red', 'Green', 'Blue']).caseInsensitive();
+        final schema = z.enum_(['Red', 'Green', 'Blue']).caseInsensitive();
         final result = schema.validate('red');
 
         expect(result.isSuccess, true);
@@ -58,7 +58,7 @@ void main() {
       });
 
       test('validates mixed case input', () {
-        final schema = Z.enum_(['Hello', 'World']).caseInsensitive();
+        final schema = z.enum_(['Hello', 'World']).caseInsensitive();
         final result = schema.validate('HELLO');
 
         expect(result.isSuccess, true);
@@ -66,7 +66,7 @@ void main() {
       });
 
       test('fails on invalid case-insensitive value', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).caseInsensitive();
+        final schema = z.enum_(['red', 'green', 'blue']).caseInsensitive();
         final result = schema.validate('yellow');
 
         expect(result.isSuccess, false);
@@ -74,7 +74,7 @@ void main() {
       });
 
       test('case-insensitive only works with string enums', () {
-        final schema = Z.enum_([1, 2, 3]).caseInsensitive();
+        final schema = z.enum_([1, 2, 3]).caseInsensitive();
         final result = schema.validate(1);
 
         expect(result.isSuccess, true);
@@ -85,7 +85,7 @@ void main() {
     group('Enum Manipulation Methods', () {
       test('exclude removes specific values', () {
         final schema =
-            Z.enum_(['red', 'green', 'blue', 'yellow']).exclude(['yellow']);
+            z.enum_(['red', 'green', 'blue', 'yellow']).exclude(['yellow']);
         final result1 = schema.validate('red');
         final result2 = schema.validate('yellow');
 
@@ -94,12 +94,12 @@ void main() {
       });
 
       test('exclude throws error when excluding all values', () {
-        final schema = Z.enum_(['red', 'green']);
+        final schema = z.enum_(['red', 'green']);
         expect(() => schema.exclude(['red', 'green']), throwsArgumentError);
       });
 
       test('include filters to specific values', () {
-        final schema = Z
+        final schema = z
             .enum_(['red', 'green', 'blue', 'yellow']).include(['red', 'blue']);
         final result1 = schema.validate('red');
         final result2 = schema.validate('green');
@@ -109,12 +109,12 @@ void main() {
       });
 
       test('include throws error when no valid values', () {
-        final schema = Z.enum_(['red', 'green']);
+        final schema = z.enum_(['red', 'green']);
         expect(() => schema.include(['yellow']), throwsArgumentError);
       });
 
       test('extend adds additional values', () {
-        final schema = Z.enum_(['red', 'green']).extend(['blue', 'yellow']);
+        final schema = z.enum_(['red', 'green']).extend(['blue', 'yellow']);
         final result1 = schema.validate('red');
         final result2 = schema.validate('blue');
 
@@ -123,7 +123,7 @@ void main() {
       });
 
       test('chaining manipulation methods', () {
-        final schema = Z.enum_(['red', 'green', 'blue', 'yellow']).exclude(
+        final schema = z.enum_(['red', 'green', 'blue', 'yellow']).exclude(
             ['yellow']).extend(['purple']).include(['red', 'purple']);
         final result1 = schema.validate('red');
         final result2 = schema.validate('purple');
@@ -137,32 +137,32 @@ void main() {
 
     group('Enum Property Access', () {
       test('gets enum values', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         expect(schema.values, ['red', 'green', 'blue']);
       });
 
       test('gets enum length', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         expect(schema.length, 3);
       });
 
       test('checks if enum contains value', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         expect(schema.contains('red'), true);
         expect(schema.contains('yellow'), false);
       });
 
       test('checks if enum is empty', () {
-        final schema1 = Z.enum_(['red']);
+        final schema1 = z.enum_(['red']);
 
         expect(schema1.isEmpty, false);
         expect(schema1.isNotEmpty, true);
-        expect(() => Z.enum_(['red']).exclude(['red']),
+        expect(() => z.enum_(['red']).exclude(['red']),
             throwsArgumentError); // Can't create empty enum
       });
 
       test('gets first and last values', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         expect(schema.first, 'red');
         expect(schema.last, 'blue');
       });
@@ -170,7 +170,7 @@ void main() {
       test('throws error for first/last on empty enum', () {
         // Note: We can't actually create an empty enum through normal means
         // This test demonstrates the error handling
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         expect(schema.first, 'red'); // This should work
         expect(schema.last, 'blue'); // This should work
       });
@@ -178,7 +178,7 @@ void main() {
 
     group('Enum Transformation Methods', () {
       test('map transforms enum values', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).map<String>(
+        final schema = z.enum_(['red', 'green', 'blue']).map<String>(
             (value) => value.toUpperCase());
         final result = schema.validate('red');
 
@@ -187,7 +187,7 @@ void main() {
       });
 
       test('where filters enum with condition', () {
-        final schema = Z
+        final schema = z
             .enum_(['red', 'green', 'blue']).where((value) => value.length > 3);
         final result1 = schema.validate('green');
         final result2 = schema.validate('red');
@@ -197,7 +197,7 @@ void main() {
       });
 
       test('nullable creates nullable enum', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).nullable();
+        final schema = z.enum_(['red', 'green', 'blue']).nullable();
         final result1 = schema.validate('red');
         final result2 = schema.validate(null);
 
@@ -206,7 +206,7 @@ void main() {
       });
 
       test('optional creates optional enum', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).optional();
+        final schema = z.enum_(['red', 'green', 'blue']).optional();
         final result1 = schema.validate('red');
         final result2 = schema.validate(null);
 
@@ -285,30 +285,30 @@ void main() {
 
     group('Enum Schema Equality and HashCode', () {
       test('schemas with same values are equal', () {
-        final schema1 = Z.enum_(['red', 'green', 'blue']);
-        final schema2 = Z.enum_(['red', 'green', 'blue']);
+        final schema1 = z.enum_(['red', 'green', 'blue']);
+        final schema2 = z.enum_(['red', 'green', 'blue']);
 
         expect(schema1 == schema2, true);
         expect(schema1.hashCode == schema2.hashCode, true);
       });
 
       test('schemas with different values are not equal', () {
-        final schema1 = Z.enum_(['red', 'green', 'blue']);
-        final schema2 = Z.enum_(['red', 'yellow', 'blue']);
+        final schema1 = z.enum_(['red', 'green', 'blue']);
+        final schema2 = z.enum_(['red', 'yellow', 'blue']);
 
         expect(schema1 == schema2, false);
       });
 
       test('schemas with different case sensitivity are not equal', () {
-        final schema1 = Z.enum_(['red', 'green', 'blue']);
-        final schema2 = Z.enum_(['red', 'green', 'blue']).caseInsensitive();
+        final schema1 = z.enum_(['red', 'green', 'blue']);
+        final schema2 = z.enum_(['red', 'green', 'blue']).caseInsensitive();
 
         expect(schema1 == schema2, false);
       });
 
       test('schemas with same values but different order are not equal', () {
-        final schema1 = Z.enum_(['red', 'green', 'blue']);
-        final schema2 = Z.enum_(['blue', 'green', 'red']);
+        final schema1 = z.enum_(['red', 'green', 'blue']);
+        final schema2 = z.enum_(['blue', 'green', 'red']);
 
         expect(schema1 == schema2, false);
       });
@@ -316,7 +316,7 @@ void main() {
 
     group('Enum Schema toString', () {
       test('displays enum values correctly', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final str = schema.toString();
 
         expect(str, contains('EnumSchema'));
@@ -326,14 +326,14 @@ void main() {
       });
 
       test('displays case-insensitive flag', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).caseInsensitive();
+        final schema = z.enum_(['red', 'green', 'blue']).caseInsensitive();
         final str = schema.toString();
 
         expect(str, contains('case-insensitive'));
       });
 
       test('truncates long enum lists', () {
-        final schema = Z.enum_(['a', 'b', 'c', 'd', 'e', 'f']);
+        final schema = z.enum_(['a', 'b', 'c', 'd', 'e', 'f']);
         final str = schema.toString();
 
         expect(str, contains('...'));
@@ -342,7 +342,7 @@ void main() {
 
     group('Enum Schema Error Handling', () {
       test('provides detailed error information', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final result = schema.validate('yellow');
 
         expect(result.isSuccess, false);
@@ -352,7 +352,7 @@ void main() {
       });
 
       test('includes case-insensitive flag in error context', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).caseInsensitive();
+        final schema = z.enum_(['red', 'green', 'blue']).caseInsensitive();
         final result = schema.validate('yellow');
 
         expect(result.isSuccess, false);
@@ -360,7 +360,7 @@ void main() {
       });
 
       test('preserves error context in refinement', () {
-        final schema = Z.enum_(['red', 'green', 'blue']).refine(
+        final schema = z.enum_(['red', 'green', 'blue']).refine(
             (value) => value != 'red',
             message: 'red not allowed');
         final result = schema.validate('red');
@@ -370,7 +370,7 @@ void main() {
       });
 
       test('provides proper error path in nested validation', () {
-        final schema = Z.array(Z.enum_(['red', 'green', 'blue']));
+        final schema = z.array(z.enum_(['red', 'green', 'blue']));
         final result = schema.validate(['red', 'yellow', 'blue']);
 
         expect(result.isSuccess, false);
@@ -382,7 +382,7 @@ void main() {
       test('works with complex objects', () {
         final userObj = {'type': 'user', 'id': 1};
         final adminObj = {'type': 'admin', 'id': 2};
-        final schema = Z.enum_([userObj, adminObj]);
+        final schema = z.enum_([userObj, adminObj]);
         final result = schema.validate(userObj);
 
         expect(result.isSuccess, true);
@@ -390,7 +390,7 @@ void main() {
       });
 
       test('works with mixed types', () {
-        final schema = Z.enum_([1, 'two', true, null]);
+        final schema = z.enum_([1, 'two', true, null]);
         final result1 = schema.validate(1);
         final result2 = schema.validate('two');
         final result3 = schema.validate(true);
@@ -403,7 +403,7 @@ void main() {
       });
 
       test('handles duplicate values', () {
-        final schema = Z.enum_(['red', 'red', 'green']);
+        final schema = z.enum_(['red', 'red', 'green']);
         final result = schema.validate('red');
 
         expect(result.isSuccess, true);
@@ -411,7 +411,7 @@ void main() {
       });
 
       test('works with refinement chains', () {
-        final schema = Z
+        final schema = z
             .enum_(['red', 'green', 'blue'])
             .refine((value) => value.length > 3, message: 'too short')
             .refine((value) => value != 'green', message: 'green not allowed');

@@ -5,7 +5,7 @@ void main() {
   group('Basic Schema Tests', () {
     group('String Schema', () {
       test('validates string values', () {
-        final schema = Z.string();
+        final schema = z.string();
         final result = schema.validate('hello');
 
         expect(result.isSuccess, true);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('rejects non-string values', () {
-        final schema = Z.string();
+        final schema = z.string();
         final result = schema.validate(123);
 
         expect(result.isFailure, true);
@@ -22,7 +22,7 @@ void main() {
       });
 
       test('validates min length', () {
-        final schema = Z.string().min(3);
+        final schema = z.string().min(3);
         final result = schema.validate('ab');
 
         expect(result.isFailure, true);
@@ -30,7 +30,7 @@ void main() {
       });
 
       test('validates max length', () {
-        final schema = Z.string().max(5);
+        final schema = z.string().max(5);
         final result = schema.validate('hello world');
 
         expect(result.isFailure, true);
@@ -38,7 +38,7 @@ void main() {
       });
 
       test('validates email', () {
-        final schema = Z.string().email();
+        final schema = z.string().email();
         final validResult = schema.validate('test@example.com');
         final invalidResult = schema.validate('invalid-email');
 
@@ -47,7 +47,7 @@ void main() {
       });
 
       test('validates URL', () {
-        final schema = Z.string().url();
+        final schema = z.string().url();
         final validResult = schema.validate('https://example.com');
         final invalidResult = schema.validate('not-a-url');
 
@@ -58,7 +58,7 @@ void main() {
 
     group('Number Schema', () {
       test('validates number values', () {
-        final schema = Z.number();
+        final schema = z.number();
         final result = schema.validate(42);
 
         expect(result.isSuccess, true);
@@ -66,7 +66,7 @@ void main() {
       });
 
       test('rejects non-number values', () {
-        final schema = Z.number();
+        final schema = z.number();
         final result = schema.validate('not a number');
 
         expect(result.isFailure, true);
@@ -75,7 +75,7 @@ void main() {
       });
 
       test('validates min value', () {
-        final schema = Z.number().min(10);
+        final schema = z.number().min(10);
         final result = schema.validate(5);
 
         expect(result.isFailure, true);
@@ -83,7 +83,7 @@ void main() {
       });
 
       test('validates max value', () {
-        final schema = Z.number().max(100);
+        final schema = z.number().max(100);
         final result = schema.validate(150);
 
         expect(result.isFailure, true);
@@ -91,7 +91,7 @@ void main() {
       });
 
       test('validates positive numbers', () {
-        final schema = Z.number().positive();
+        final schema = z.number().positive();
         final validResult = schema.validate(42);
         final invalidResult = schema.validate(-5);
 
@@ -100,7 +100,7 @@ void main() {
       });
 
       test('validates integers', () {
-        final schema = Z.number().integer();
+        final schema = z.number().integer();
         final validResult = schema.validate(42);
         final invalidResult = schema.validate(3.14);
 
@@ -111,7 +111,7 @@ void main() {
 
     group('Boolean Schema', () {
       test('validates boolean values', () {
-        final schema = Z.boolean();
+        final schema = z.boolean();
         final trueResult = schema.validate(true);
         final falseResult = schema.validate(false);
 
@@ -122,7 +122,7 @@ void main() {
       });
 
       test('rejects non-boolean values', () {
-        final schema = Z.boolean();
+        final schema = z.boolean();
         final result = schema.validate('not a boolean');
 
         expect(result.isFailure, true);
@@ -131,7 +131,7 @@ void main() {
       });
 
       test('validates true value', () {
-        final schema = Z.boolean().isTrue();
+        final schema = z.boolean().isTrue();
         final validResult = schema.validate(true);
         final invalidResult = schema.validate(false);
 
@@ -140,7 +140,7 @@ void main() {
       });
 
       test('validates false value', () {
-        final schema = Z.boolean().isFalse();
+        final schema = z.boolean().isFalse();
         final validResult = schema.validate(false);
         final invalidResult = schema.validate(true);
 
@@ -151,14 +151,14 @@ void main() {
 
     group('Null Schema', () {
       test('validates null values', () {
-        final schema = Z.null_();
+        final schema = z.null_();
         final result = schema.validate(null);
 
         expect(result.isSuccess, true);
       });
 
       test('rejects non-null values', () {
-        final schema = Z.null_();
+        final schema = z.null_();
         final result = schema.validate('not null');
 
         expect(result.isFailure, true);
@@ -168,7 +168,7 @@ void main() {
 
     group('Literal Schema', () {
       test('validates literal values', () {
-        final schema = Z.literal('hello');
+        final schema = z.literal('hello');
         final validResult = schema.validate('hello');
         final invalidResult = schema.validate('world');
 
@@ -180,7 +180,7 @@ void main() {
 
     group('Union Schema', () {
       test('validates union of schemas', () {
-        final schema = Z.union<dynamic>([Z.string(), Z.number()]);
+        final schema = z.union<dynamic>([z.string(), z.number()]);
         final stringResult = schema.validate('hello');
         final numberResult = schema.validate(42);
         final invalidResult = schema.validate(true);
@@ -193,7 +193,7 @@ void main() {
 
     group('Schema Composition', () {
       test('chains validation methods', () {
-        final schema = Z.string().min(2).max(25).email();
+        final schema = z.string().min(2).max(25).email();
 
         final validResult = schema.validate('test@example.com');
         final invalidResult = schema.validate('a'); // too short
@@ -203,7 +203,7 @@ void main() {
       });
 
       test('uses transform method', () {
-        final schema = Z.string().trim().toLowerCase();
+        final schema = z.string().trim().toLowerCase();
 
         final result = schema.validate('  HELLO  ');
 
@@ -212,7 +212,7 @@ void main() {
       });
 
       test('uses refine method', () {
-        final schema = Z.string().refine(
+        final schema = z.string().refine(
               (value) => value.contains('@'),
               message: 'must contain @ symbol',
             );
@@ -229,7 +229,7 @@ void main() {
 
     group('Error Handling', () {
       test('provides detailed error information', () {
-        final schema = Z.string().min(5).max(10);
+        final schema = z.string().min(5).max(10);
         final result = schema.validate('abc');
 
         expect(result.isFailure, true);
@@ -240,7 +240,7 @@ void main() {
       });
 
       test('handles multiple errors', () {
-        final schema = Z.string().min(5).max(10).email();
+        final schema = z.string().min(5).max(10).email();
         final result = schema.validate('abc');
 
         expect(result.isFailure, true);
@@ -251,7 +251,7 @@ void main() {
 
     group('Convenience Methods', () {
       test('email convenience method', () {
-        final schema = Z.email();
+        final schema = z.email();
         final validResult = schema.validate('test@example.com');
         final invalidResult = schema.validate('invalid');
 
@@ -260,7 +260,7 @@ void main() {
       });
 
       test('url convenience method', () {
-        final schema = Z.url();
+        final schema = z.url();
         final validResult = schema.validate('https://example.com');
         final invalidResult = schema.validate('not-a-url');
 
@@ -269,7 +269,7 @@ void main() {
       });
 
       test('int convenience method', () {
-        final schema = Z.integer();
+        final schema = z.integer();
         final validResult = schema.validate(42);
         final invalidResult = schema.validate(3.14);
 
@@ -278,7 +278,7 @@ void main() {
       });
 
       test('positive convenience method', () {
-        final schema = Z.positive();
+        final schema = z.positive();
         final validResult = schema.validate(42);
         final invalidResult = schema.validate(-5);
 

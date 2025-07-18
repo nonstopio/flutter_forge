@@ -1,11 +1,11 @@
-import 'package:dzod/dzod.dart' show StringSchema, ValidationException, Z;
+import 'package:dzod/dzod.dart' show StringSchema, ValidationException, z;
 import 'package:test/test.dart';
 
 void main() {
   group('Array Schema Tests', () {
     group('Basic Array Validation', () {
       test('validates array of strings', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final result = schema.validate(['hello', 'world']);
 
         expect(result.isSuccess, true);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('validates array of numbers', () {
-        final schema = Z.array(Z.number());
+        final schema = z.array(z.number());
         final result = schema.validate([1, 2, 3, 4.5]);
 
         expect(result.isSuccess, true);
@@ -21,7 +21,7 @@ void main() {
       });
 
       test('validates empty array', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final result = schema.validate([]);
 
         expect(result.isSuccess, true);
@@ -29,7 +29,7 @@ void main() {
       });
 
       test('rejects non-array values', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final result = schema.validate('not an array');
 
         expect(result.isFailure, true);
@@ -37,7 +37,7 @@ void main() {
       });
 
       test('validates mixed valid elements with union', () {
-        final schema = Z.array(Z.union<dynamic>([Z.string(), Z.number()]));
+        final schema = z.array(z.union<dynamic>([z.string(), z.number()]));
         final result = schema.validate(['hello', 42, 'world', 3.14]);
 
         expect(result.isSuccess, true);
@@ -45,7 +45,7 @@ void main() {
       });
 
       test('rejects arrays with invalid elements', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final result = schema.validate(['hello', 42, 'world']);
 
         expect(result.isFailure, true);
@@ -57,7 +57,7 @@ void main() {
 
     group('Length Constraints', () {
       test('validates min length constraint', () {
-        final schema = Z.array(Z.string()).min(2);
+        final schema = z.array(z.string()).min(2);
         final validResult = schema.validate(['a', 'b', 'c']);
         final invalidResult = schema.validate(['a']);
 
@@ -68,7 +68,7 @@ void main() {
       });
 
       test('validates max length constraint', () {
-        final schema = Z.array(Z.string()).max(2);
+        final schema = z.array(z.string()).max(2);
         final validResult = schema.validate(['a', 'b']);
         final invalidResult = schema.validate(['a', 'b', 'c']);
 
@@ -79,7 +79,7 @@ void main() {
       });
 
       test('validates exact length constraint', () {
-        final schema = Z.array(Z.string()).length(3);
+        final schema = z.array(z.string()).length(3);
         final validResult = schema.validate(['a', 'b', 'c']);
         final invalidShortResult = schema.validate(['a', 'b']);
         final invalidLongResult = schema.validate(['a', 'b', 'c', 'd']);
@@ -92,7 +92,7 @@ void main() {
       });
 
       test('validates range constraint', () {
-        final schema = Z.array(Z.string()).range(2, 4);
+        final schema = z.array(z.string()).range(2, 4);
 
         expect(schema.validate(['a']).isFailure, true); // Too short
         expect(schema.validate(['a', 'b']).isSuccess, true); // Valid
@@ -105,7 +105,7 @@ void main() {
 
     group('Non-empty Validation', () {
       test('validates non-empty constraint', () {
-        final schema = Z.array(Z.string()).nonempty();
+        final schema = z.array(z.string()).nonempty();
         final validResult = schema.validate(['a']);
         final invalidResult = schema.validate([]);
 
@@ -118,7 +118,7 @@ void main() {
 
     group('Advanced Array Methods', () {
       test('validates unique elements', () {
-        final schema = Z.array(Z.string()).unique();
+        final schema = z.array(z.string()).unique();
         final validResult = schema.validate(['a', 'b', 'c']);
         final invalidResult = schema.validate(['a', 'b', 'a']);
 
@@ -129,7 +129,7 @@ void main() {
       });
 
       test('validates includes constraint', () {
-        final schema = Z.array(Z.string()).includes('required');
+        final schema = z.array(z.string()).includes('required');
         final validResult = schema.validate(['a', 'required', 'b']);
         final invalidResult = schema.validate(['a', 'b']);
 
@@ -140,7 +140,7 @@ void main() {
       });
 
       test('validates excludes constraint', () {
-        final schema = Z.array(Z.string()).excludes('forbidden');
+        final schema = z.array(z.string()).excludes('forbidden');
         final validResult = schema.validate(['a', 'b', 'c']);
         final invalidResult = schema.validate(['a', 'forbidden', 'c']);
 
@@ -151,7 +151,7 @@ void main() {
       });
 
       test('validates some constraint', () {
-        final schema = Z.array(Z.number()).some(
+        final schema = z.array(z.number()).some(
               (n) => n > 10,
               message: 'must have at least one number > 10',
             );
@@ -165,7 +165,7 @@ void main() {
       });
 
       test('validates every constraint', () {
-        final schema = Z.array(Z.number()).every(
+        final schema = z.array(z.number()).every(
               (n) => n > 0,
               message: 'all numbers must be positive',
             );
@@ -181,7 +181,7 @@ void main() {
 
     group('Array Transformations', () {
       test('transforms array elements', () {
-        final schema = Z.array(Z.string()).mapElements((s) => s.toUpperCase());
+        final schema = z.array(z.string()).mapElements((s) => s.toUpperCase());
         final result = schema.validate(['hello', 'world']);
 
         expect(result.isSuccess, true);
@@ -189,7 +189,7 @@ void main() {
       });
 
       test('filters array elements', () {
-        final schema = Z.array(Z.number()).filter((n) => n > 5);
+        final schema = z.array(z.number()).filter((n) => n > 5);
         final result = schema.validate([1, 10, 3, 8, 2]);
 
         expect(result.isSuccess, true);
@@ -197,7 +197,7 @@ void main() {
       });
 
       test('sorts array elements', () {
-        final schema = Z.array(Z.number()).sort();
+        final schema = z.array(z.number()).sort();
         final result = schema.validate([3, 1, 4, 1, 5]);
 
         expect(result.isSuccess, true);
@@ -206,7 +206,7 @@ void main() {
 
       test('sorts array with custom comparator', () {
         final schema =
-            Z.array(Z.string()).sort((a, b) => b.compareTo(a)); // Reverse order
+            z.array(z.string()).sort((a, b) => b.compareTo(a)); // Reverse order
         final result = schema.validate(['c', 'a', 'b']);
 
         expect(result.isSuccess, true);
@@ -216,7 +216,7 @@ void main() {
 
     group('Nested Arrays', () {
       test('validates nested arrays', () {
-        final schema = Z.array(Z.array(Z.string()));
+        final schema = z.array(z.array(z.string()));
         final result = schema.validate([
           ['a', 'b'],
           ['c', 'd', 'e'],
@@ -232,7 +232,7 @@ void main() {
       });
 
       test('provides nested error paths', () {
-        final schema = Z.array(Z.array(Z.string()));
+        final schema = z.array(z.array(z.string()));
         final result = schema.validate([
           ['a', 'b'],
           ['c', 42, 'e'], // Invalid element at [1][1]
@@ -246,7 +246,7 @@ void main() {
     group('Schema Composition', () {
       test('chains multiple constraints', () {
         final schema =
-            Z.array(Z.string().min(2)).min(1).max(3).nonempty().unique();
+            z.array(z.string().min(2)).min(1).max(3).nonempty().unique();
 
         final validResult = schema.validate(['ab', 'cd']);
         final invalidResult = schema.validate(['a', 'b']); // Strings too short
@@ -256,7 +256,7 @@ void main() {
       });
 
       test('works with refinements', () {
-        final schema = Z.array(Z.string()).refine(
+        final schema = z.array(z.string()).refine(
               (arr) => arr.isNotEmpty && arr.first.startsWith('prefix_'),
               message: 'first element must start with prefix_',
             );
@@ -272,7 +272,7 @@ void main() {
 
     group('Error Handling', () {
       test('provides detailed error information', () {
-        final schema = Z.array(Z.string().min(3)).min(2);
+        final schema = z.array(z.string().min(3)).min(2);
         final result = schema.validate(['ab']); // Too short array and string
 
         expect(result.isFailure, true);
@@ -287,7 +287,7 @@ void main() {
       });
 
       test('handles multiple element errors', () {
-        final schema = Z.array(Z.string().min(3));
+        final schema = z.array(z.string().min(3));
         final result =
             schema.validate(['ab', 'cd', 'efg']); // First two strings too short
 
@@ -302,8 +302,8 @@ void main() {
 
     group('Type Safety', () {
       test('maintains type safety with generics', () {
-        final stringArraySchema = Z.array(Z.string());
-        final numberArraySchema = Z.array(Z.number());
+        final stringArraySchema = z.array(z.string());
+        final numberArraySchema = z.array(z.number());
 
         // This should work fine
         final stringResult = stringArraySchema.validate(['a', 'b']);
@@ -314,7 +314,7 @@ void main() {
       });
 
       test('provides correct element schema access', () {
-        final schema = Z.array(Z.string().email());
+        final schema = z.array(z.string().email());
         final elementSchema = schema.elementSchema;
 
         expect(elementSchema.runtimeType, StringSchema);
@@ -323,7 +323,7 @@ void main() {
 
     group('toString and Equality', () {
       test('provides meaningful toString', () {
-        final schema = Z.array(Z.string()).min(1).max(5).nonempty();
+        final schema = z.array(z.string()).min(1).max(5).nonempty();
         final string = schema.toString();
 
         expect(string, contains('ArraySchema'));
@@ -334,7 +334,7 @@ void main() {
       });
 
       test('toString with exact length constraint', () {
-        final schema = Z.array(Z.string()).length(3);
+        final schema = z.array(z.string()).length(3);
         final string = schema.toString();
 
         expect(string, contains('ArraySchema'));
@@ -342,7 +342,7 @@ void main() {
       });
 
       test('toString without constraints', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final string = schema.toString();
 
         expect(string, contains('ArraySchema'));
@@ -352,26 +352,26 @@ void main() {
       });
 
       test('supports equality comparison', () {
-        final schema1 = Z.array(Z.string()).min(1);
-        final schema2 = Z.array(Z.string()).min(1);
-        final schema3 = Z.array(Z.string()).min(2);
+        final schema1 = z.array(z.string()).min(1);
+        final schema2 = z.array(z.string()).min(1);
+        final schema3 = z.array(z.string()).min(2);
 
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false);
       });
 
       test('equality with different element schemas', () {
-        final schema1 = Z.array(Z.string());
-        final schema2 = Z.array(Z.number());
+        final schema1 = z.array(z.string());
+        final schema2 = z.array(z.number());
 
         expect(schema1, isNot(equals(schema2)));
       });
 
       test('equality with different constraints', () {
-        final schema1 = Z.array(Z.string()).min(1);
-        final schema2 = Z.array(Z.string()).max(5);
-        final schema3 = Z.array(Z.string()).length(3);
-        final schema4 = Z.array(Z.string()).nonempty();
+        final schema1 = z.array(z.string()).min(1);
+        final schema2 = z.array(z.string()).max(5);
+        final schema3 = z.array(z.string()).length(3);
+        final schema4 = z.array(z.string()).nonempty();
 
         expect(schema1, isNot(equals(schema2)));
         expect(schema1 == schema3, false);
@@ -379,8 +379,8 @@ void main() {
       });
 
       test('hashCode consistency', () {
-        final schema1 = Z.array(Z.string()).min(1);
-        final schema2 = Z.array(Z.string()).min(1);
+        final schema1 = z.array(z.string()).min(1);
+        final schema2 = z.array(z.string()).min(1);
 
         expect(schema1.hashCode, equals(schema2.hashCode));
       });
@@ -388,8 +388,8 @@ void main() {
 
     group('Advanced Element Schema Operations', () {
       test('element schema modification', () {
-        final schema = Z.array(Z.string());
-        final newSchema = schema.element(Z.string().min(3));
+        final schema = z.array(z.string());
+        final newSchema = schema.element(z.string().min(3));
 
         final validResult = newSchema.validate(['hello', 'world']);
         final invalidResult = newSchema.validate(['hi', 'bye']);
@@ -399,8 +399,8 @@ void main() {
       });
 
       test('element schema preserves constraints', () {
-        final schema = Z.array(Z.string()).min(2).max(4);
-        final newSchema = schema.element(Z.string().min(3));
+        final schema = z.array(z.string()).min(2).max(4);
+        final newSchema = schema.element(z.string().min(3));
 
         expect(
             newSchema.validate(['hello']).isFailure, true); // Too short array
@@ -414,7 +414,7 @@ void main() {
 
     group('Async Validation', () {
       test('validates array asynchronously', () async {
-        final schema = Z.array(Z.string().refineAsync(
+        final schema = z.array(z.string().refineAsync(
           (s) async {
             await Future.delayed(const Duration(milliseconds: 1));
             return s.length > 2;
@@ -432,8 +432,8 @@ void main() {
       });
 
       test('async validation handles length constraints', () async {
-        final schema = Z
-            .array(Z.string().refineAsync(
+        final schema = z
+            .array(z.string().refineAsync(
                   (s) async => s.isNotEmpty,
                   message: 'String cannot be empty',
                 ))
@@ -449,7 +449,7 @@ void main() {
       });
 
       test('async validation with non-array input', () async {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
 
         await expectLater(
           schema.parseAsync('not an array'),
@@ -458,7 +458,7 @@ void main() {
       });
 
       test('async validation with exact length constraint', () async {
-        final schema = Z.array(Z.string()).length(2);
+        final schema = z.array(z.string()).length(2);
 
         await expectLater(
           schema.parseAsync(['hello']),
@@ -475,7 +475,7 @@ void main() {
       });
 
       test('async validation with nonempty constraint', () async {
-        final schema = Z.array(Z.string()).nonempty();
+        final schema = z.array(z.string()).nonempty();
 
         await expectLater(
           schema.parseAsync([]),
@@ -487,7 +487,7 @@ void main() {
       });
 
       test('async validation with multiple element errors', () async {
-        final schema = Z.array(Z.string().refineAsync(
+        final schema = z.array(z.string().refineAsync(
               (s) async => s.length > 3,
               message: 'String must be longer than 3 characters',
             ));

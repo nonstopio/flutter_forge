@@ -21,8 +21,8 @@ class _BooleanNullExampleState extends State<BooleanNullExample> {
 
   // Boolean and null validation schemas from README Example 4
   final Map<String, Schema> _validators = {
-    'boolean': Z.boolean(),
-    'null': Z.null_(),
+    'boolean': z.boolean(),
+    'null': z.null_(),
   };
 
   final Map<String, String> _descriptions = {
@@ -280,11 +280,11 @@ class _BooleanNullExampleState extends State<BooleanNullExample> {
   String _getSchemaCode(String validator) {
     switch (validator) {
       case 'boolean':
-        return 'final boolSchema = Z.boolean();';
+        return 'final boolSchema = z.boolean();';
       case 'null':
-        return 'final nullSchema = Z.null_();';
+        return 'final nullSchema = z.null_();';
       default:
-        return 'final schema = Z.any();';
+        return 'final schema = z.any();';
     }
   }
 }

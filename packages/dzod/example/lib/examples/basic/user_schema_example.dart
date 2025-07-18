@@ -28,17 +28,17 @@ class _UserSchemaExampleState extends State<UserSchemaExample> {
   final List<String> _roles = ['admin', 'user', 'guest'];
 
   // Define the enterprise-grade user schema from README Example 1
-  final _userSchema = Z.object({
-    'id': Z.string(),
-    'name': Z.string().min(2).max(50),
-    'email': Z.string().email(),
-    'age': Z.number().min(18).max(120),
-    'role': Z.enum_(['admin', 'user', 'guest']),
-    'preferences': Z.object({
-      'theme': Z.enum_(['light', 'dark']),
-      'notifications': Z.boolean(),
+  final _userSchema = z.object({
+    'id': z.string(),
+    'name': z.string().min(2).max(50),
+    'email': z.string().email(),
+    'age': z.number().min(18).max(120),
+    'role': z.enum_(['admin', 'user', 'guest']),
+    'preferences': z.object({
+      'theme': z.enum_(['light', 'dark']),
+      'notifications': z.boolean(),
     }).partial(),
-    'createdAt': Z.string(),
+    'createdAt': z.string(),
   });
 
   @override
@@ -269,17 +269,17 @@ class _UserSchemaExampleState extends State<UserSchemaExample> {
       schemaDisplay: const SchemaDisplay(
         title: 'User Schema Definition',
         code: '''
-final userSchema = Z.object({
-  'id': Z.string(),
-  'name': Z.string().min(2).max(50),
-  'email': Z.string().email(),
-  'age': Z.number().min(18).max(120),
-  'role': Z.enum_(['admin', 'user', 'guest']),
-  'preferences': Z.object({
-    'theme': Z.enum_(['light', 'dark']),
-    'notifications': Z.boolean(),
+final userSchema = z.object({
+  'id': z.string(),
+  'name': z.string().min(2).max(50),
+  'email': z.string().email(),
+  'age': z.number().min(18).max(120),
+  'role': z.enum_(['admin', 'user', 'guest']),
+  'preferences': z.object({
+    'theme': z.enum_(['light', 'dark']),
+    'notifications': z.boolean(),
   }).partial(),
-  'createdAt': Z.string(),
+  'createdAt': z.string(),
 });''',
         description:
             'Enterprise-grade user schema with nested objects, enums, and comprehensive validation rules.',

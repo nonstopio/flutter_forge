@@ -5,7 +5,7 @@ void main() {
   group('NumberSchema Advanced Validations', () {
     group('Step validation', () {
       test('should validate numbers that conform to step size', () {
-        final schema = Z.number().step(0.1);
+        final schema = z.number().step(0.1);
 
         final validNumbers = [0, 0.1, 0.2, 0.3, 0.5, 1.0, -0.1, -0.5];
 
@@ -17,7 +17,7 @@ void main() {
       });
 
       test('should validate numbers with custom start point', () {
-        final schema = Z.number().step(0.5, start: 1.0);
+        final schema = z.number().step(0.5, start: 1.0);
 
         final validNumbers = [1.0, 1.5, 2.0, 2.5, 0.5, -0.5, -1.0];
 
@@ -28,7 +28,7 @@ void main() {
       });
 
       test('should reject numbers that do not conform to step size', () {
-        final schema = Z.number().step(0.1);
+        final schema = z.number().step(0.1);
 
         final invalidNumbers = [0.05, 0.15, 0.33, 1.11, -0.05];
 
@@ -40,7 +40,7 @@ void main() {
       });
 
       test('should handle integer steps', () {
-        final schema = Z.number().step(5);
+        final schema = z.number().step(5);
 
         expect(schema.validate(0).isSuccess, isTrue);
         expect(schema.validate(5).isSuccess, isTrue);
@@ -55,8 +55,8 @@ void main() {
 
     group('Precision validation', () {
       test('should validate numbers with correct decimal precision', () {
-        final schema2 = Z.number().precision(2);
-        final schema0 = Z.number().precision(0);
+        final schema2 = z.number().precision(2);
+        final schema0 = z.number().precision(0);
 
         // 2 decimal places
         expect(schema2.validate(1.23).isSuccess, isTrue);
@@ -71,7 +71,7 @@ void main() {
       });
 
       test('should reject numbers with too many decimal places', () {
-        final schema = Z.number().precision(2);
+        final schema = z.number().precision(2);
 
         final invalidNumbers = [1.234, 0.123, 5.999999, -1.001];
 
@@ -83,7 +83,7 @@ void main() {
       });
 
       test('should handle edge cases in precision validation', () {
-        final schema = Z.number().precision(3);
+        final schema = z.number().precision(3);
 
         expect(schema.validate(1.000).isSuccess, isTrue);
         expect(schema.validate(0.001).isSuccess, isTrue);
@@ -94,7 +94,7 @@ void main() {
 
     group('Precise multipleOf validation', () {
       test('should validate multiples with floating-point precision', () {
-        final schema = Z.number().multipleOfPrecise(0.1);
+        final schema = z.number().multipleOfPrecise(0.1);
 
         expect(schema.validate(0.1).isSuccess, isTrue);
         expect(schema.validate(0.2).isSuccess, isTrue);
@@ -104,7 +104,7 @@ void main() {
       });
 
       test('should handle floating-point precision issues', () {
-        final schema = Z.number().multipleOfPrecise(0.1);
+        final schema = z.number().multipleOfPrecise(0.1);
 
         // These might fail with regular modulo due to floating-point precision
         expect(schema.validate(0.3).isSuccess, isTrue);
@@ -113,7 +113,7 @@ void main() {
       });
 
       test('should allow custom tolerance', () {
-        final schema = Z.number().multipleOfPrecise(0.3, tolerance: 1e-5);
+        final schema = z.number().multipleOfPrecise(0.3, tolerance: 1e-5);
 
         expect(schema.validate(0.3).isSuccess, isTrue);
         expect(schema.validate(0.6).isSuccess, isTrue);
@@ -121,7 +121,7 @@ void main() {
       });
 
       test('should reject non-multiples', () {
-        final schema = Z.number().multipleOfPrecise(0.1);
+        final schema = z.number().multipleOfPrecise(0.1);
 
         final invalidNumbers = [0.05, 0.15, 0.33, 0.77];
 
@@ -135,7 +135,7 @@ void main() {
 
     group('Safe integer validation', () {
       test('should validate safe JavaScript integers', () {
-        final schema = Z.number().safeInteger();
+        final schema = z.number().safeInteger();
 
         final validIntegers = [
           0, 1, -1, 100, -100,
@@ -150,7 +150,7 @@ void main() {
       });
 
       test('should reject unsafe integers and non-integers', () {
-        final schema = Z.number().safeInteger();
+        final schema = z.number().safeInteger();
 
         final invalidNumbers = [
           9007199254740992, // Beyond MAX_SAFE_INTEGER
@@ -171,7 +171,7 @@ void main() {
 
     group('Percentage validation', () {
       test('should validate valid percentages', () {
-        final schema = Z.number().percentage();
+        final schema = z.number().percentage();
 
         final validPercentages = [0, 25, 50, 75, 100, 0.5, 99.99];
 
@@ -183,7 +183,7 @@ void main() {
       });
 
       test('should reject invalid percentages', () {
-        final schema = Z.number().percentage();
+        final schema = z.number().percentage();
 
         final invalidPercentages = [-1, 101, -0.1, 100.1, 150];
 
@@ -197,7 +197,7 @@ void main() {
 
     group('Probability validation', () {
       test('should validate valid probabilities', () {
-        final schema = Z.number().probability();
+        final schema = z.number().probability();
 
         final validProbabilities = [0, 0.25, 0.5, 0.75, 1, 0.001, 0.999];
 
@@ -209,7 +209,7 @@ void main() {
       });
 
       test('should reject invalid probabilities', () {
-        final schema = Z.number().probability();
+        final schema = z.number().probability();
 
         final invalidProbabilities = [-0.1, 1.1, -1, 2, 1.001];
 
@@ -224,7 +224,7 @@ void main() {
 
     group('Latitude validation', () {
       test('should validate valid latitudes', () {
-        final schema = Z.number().latitude();
+        final schema = z.number().latitude();
 
         final validLatitudes = [-90, -45, 0, 45, 90, -89.999, 89.999];
 
@@ -235,7 +235,7 @@ void main() {
       });
 
       test('should reject invalid latitudes', () {
-        final schema = Z.number().latitude();
+        final schema = z.number().latitude();
 
         final invalidLatitudes = [-91, 91, -90.1, 90.1, 180, -180];
 
@@ -249,7 +249,7 @@ void main() {
 
     group('Longitude validation', () {
       test('should validate valid longitudes', () {
-        final schema = Z.number().longitude();
+        final schema = z.number().longitude();
 
         final validLongitudes = [-180, -90, 0, 90, 180, -179.999, 179.999];
 
@@ -261,7 +261,7 @@ void main() {
       });
 
       test('should reject invalid longitudes', () {
-        final schema = Z.number().longitude();
+        final schema = z.number().longitude();
 
         final invalidLongitudes = [-181, 181, -180.1, 180.1, 270, -270];
 
@@ -275,7 +275,7 @@ void main() {
 
     group('Power of two validation', () {
       test('should validate powers of two', () {
-        final schema = Z.number().powerOfTwo();
+        final schema = z.number().powerOfTwo();
 
         final validPowers = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
 
@@ -286,7 +286,7 @@ void main() {
       });
 
       test('should reject non-powers of two', () {
-        final schema = Z.number().powerOfTwo();
+        final schema = z.number().powerOfTwo();
 
         final invalidPowers = [0, 3, 5, 6, 7, 9, 10, 15, 17, -1, -2, 1.5];
 
@@ -300,7 +300,7 @@ void main() {
 
     group('Prime number validation', () {
       test('should validate prime numbers', () {
-        final schema = Z.number().prime();
+        final schema = z.number().prime();
 
         final validPrimes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 97];
 
@@ -311,7 +311,7 @@ void main() {
       });
 
       test('should reject non-prime numbers', () {
-        final schema = Z.number().prime();
+        final schema = z.number().prime();
 
         final invalidPrimes = [0, 1, 4, 6, 8, 9, 10, 12, 14, 15, 16, -2, 2.5];
 
@@ -325,7 +325,7 @@ void main() {
 
     group('Perfect square validation', () {
       test('should validate perfect squares', () {
-        final schema = Z.number().perfectSquare();
+        final schema = z.number().perfectSquare();
 
         final validSquares = [0, 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 144];
 
@@ -336,7 +336,7 @@ void main() {
       });
 
       test('should reject non-perfect squares', () {
-        final schema = Z.number().perfectSquare();
+        final schema = z.number().perfectSquare();
 
         final invalidSquares = [
           2,
@@ -365,7 +365,7 @@ void main() {
 
     group('Range with step validation', () {
       test('should validate numbers in range with step', () {
-        final schema = Z.number().rangeWithStep(0, 10, 2);
+        final schema = z.number().rangeWithStep(0, 10, 2);
 
         final validNumbers = [0, 2, 4, 6, 8, 10];
 
@@ -376,7 +376,7 @@ void main() {
       });
 
       test('should reject numbers outside range or not matching step', () {
-        final schema = Z.number().rangeWithStep(0, 10, 2);
+        final schema = z.number().rangeWithStep(0, 10, 2);
 
         final invalidNumbers = [-1, 1, 3, 5, 7, 9, 11, 12];
 
@@ -388,7 +388,7 @@ void main() {
       });
 
       test('should handle decimal ranges with steps', () {
-        final schema = Z.number().rangeWithStep(0.5, 2.5, 0.5);
+        final schema = z.number().rangeWithStep(0.5, 2.5, 0.5);
 
         expect(schema.validate(0.5).isSuccess, isTrue);
         expect(schema.validate(1.0).isSuccess, isTrue);
@@ -404,7 +404,7 @@ void main() {
 
     group('Enhanced existing validations', () {
       test('should work with existing finite validation', () {
-        final schema = Z.number().finite();
+        final schema = z.number().finite();
 
         expect(schema.validate(123).isSuccess, isTrue);
         expect(schema.validate(-456.789).isSuccess, isTrue);
@@ -415,7 +415,7 @@ void main() {
       });
 
       test('should work with existing safeInt validation', () {
-        final schema = Z.number().safeInt();
+        final schema = z.number().safeInt();
 
         expect(schema.validate(123).isSuccess, isTrue);
         expect(schema.validate(-456).isSuccess, isTrue);
@@ -428,7 +428,7 @@ void main() {
 
     group('Chaining validations', () {
       test('should chain multiple validations', () {
-        final schema = Z.number().positive().step(0.5);
+        final schema = z.number().positive().step(0.5);
 
         expect(schema.validate(1.0).isSuccess, isTrue);
         expect(schema.validate(2.5).isSuccess, isTrue);
@@ -439,8 +439,8 @@ void main() {
       });
 
       test('should chain with coordinate validations', () {
-        final latSchema = Z.number().latitude();
-        final lngSchema = Z.number().longitude();
+        final latSchema = z.number().latitude();
+        final lngSchema = z.number().longitude();
 
         expect(latSchema.validate(40.712776).isSuccess, isTrue);
         expect(lngSchema.validate(-74.005974).isSuccess, isTrue);
@@ -450,7 +450,7 @@ void main() {
       });
 
       test('should chain mathematical validations', () {
-        final schema = Z.number().positive().integer().prime();
+        final schema = z.number().positive().integer().prime();
 
         expect(schema.validate(2).isSuccess, isTrue);
         expect(schema.validate(7).isSuccess, isTrue);
@@ -464,12 +464,12 @@ void main() {
 
     group('Error handling', () {
       test('should provide appropriate error codes', () {
-        expect(Z.number().step(0.1).validate(0.05).errors?.first?.code,
+        expect(z.number().step(0.1).validate(0.05).errors?.first?.code,
             equals('invalid_step'));
-        expect(Z.number().precision(2).validate(1.234).errors?.first?.code,
+        expect(z.number().precision(2).validate(1.234).errors?.first?.code,
             equals('invalid_precision'));
         expect(
-            Z
+            z
                 .number()
                 .multipleOfPrecise(0.1)
                 .validate(0.05)
@@ -477,24 +477,24 @@ void main() {
                 ?.first
                 ?.code,
             equals('not_multiple_of_precise'));
-        expect(Z.number().safeInteger().validate(1.5).errors?.first?.code,
+        expect(z.number().safeInteger().validate(1.5).errors?.first?.code,
             equals('not_safe_js_integer'));
-        expect(Z.number().percentage().validate(101).errors?.first?.code,
+        expect(z.number().percentage().validate(101).errors?.first?.code,
             equals('invalid_percentage'));
-        expect(Z.number().probability().validate(1.1).errors?.first?.code,
+        expect(z.number().probability().validate(1.1).errors?.first?.code,
             equals('invalid_probability'));
-        expect(Z.number().latitude().validate(91).errors?.first?.code,
+        expect(z.number().latitude().validate(91).errors?.first?.code,
             equals('invalid_latitude'));
-        expect(Z.number().longitude().validate(181).errors?.first?.code,
+        expect(z.number().longitude().validate(181).errors?.first?.code,
             equals('invalid_longitude'));
-        expect(Z.number().powerOfTwo().validate(3).errors?.first?.code,
+        expect(z.number().powerOfTwo().validate(3).errors?.first?.code,
             equals('not_power_of_two'));
-        expect(Z.number().prime().validate(4).errors?.first?.code,
+        expect(z.number().prime().validate(4).errors?.first?.code,
             equals('not_prime'));
-        expect(Z.number().perfectSquare().validate(5).errors?.first?.code,
+        expect(z.number().perfectSquare().validate(5).errors?.first?.code,
             equals('not_perfect_square'));
         expect(
-            Z.number().rangeWithStep(0, 10, 2).validate(1).errors?.first?.code,
+            z.number().rangeWithStep(0, 10, 2).validate(1).errors?.first?.code,
             equals('invalid_range_step'));
       });
     });

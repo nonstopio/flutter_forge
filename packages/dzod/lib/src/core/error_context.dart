@@ -393,13 +393,13 @@ class ErrorContext {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! ErrorContext) return false;
-    
+
     // Compare path contents
     if (other.path.length != path.length) return false;
     for (int i = 0; i < path.length; i++) {
       if (other.path[i] != path[i]) return false;
     }
-    
+
     return other.schemaType == schemaType &&
         other.fieldName == fieldName &&
         other.index == index &&

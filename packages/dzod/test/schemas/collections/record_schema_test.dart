@@ -5,7 +5,7 @@ void main() {
   group('Record Schema Tests', () {
     group('Basic Record Validation', () {
       test('validates simple string-to-dynamic record', () {
-        final schema = Z.record();
+        final schema = z.record();
         final result = schema.validate({'name': 'John', 'age': 30});
 
         expect(result.isSuccess, true);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('validates empty record', () {
-        final schema = Z.record();
+        final schema = z.record();
         final result = schema.validate({});
 
         expect(result.isSuccess, true);
@@ -21,7 +21,7 @@ void main() {
       });
 
       test('fails on non-map input', () {
-        final schema = Z.record();
+        final schema = z.record();
         final result = schema.validate('not a map');
 
         expect(result.isSuccess, false);
@@ -30,8 +30,8 @@ void main() {
 
       test('validates with typed key and value schemas', () {
         final schema = RecordSchema<String, num>(
-          keySchema: Z.string(),
-          valueSchema: Z.number(),
+          keySchema: z.string(),
+          valueSchema: z.number(),
         );
         final result = schema.validate({'count': 5, 'total': 10});
 
@@ -43,7 +43,7 @@ void main() {
     group('Key and Value Schema Validation', () {
       test('validates keys with key schema', () {
         final schema = RecordSchema<String, dynamic>(
-          keySchema: Z.string().min(2),
+          keySchema: z.string().min(2),
         );
         final result1 = schema.validate({'hello': 'world'});
         final result2 = schema.validate({'a': 'world'});
@@ -54,7 +54,7 @@ void main() {
 
       test('validates values with value schema', () {
         final schema = RecordSchema<String, num>(
-          valueSchema: Z.number().min(0),
+          valueSchema: z.number().min(0),
         );
         final result1 = schema.validate({'count': 5});
         final result2 = schema.validate({'count': -1});
@@ -65,8 +65,8 @@ void main() {
 
       test('validates both keys and values together', () {
         final schema = RecordSchema<String, num>(
-          keySchema: Z.string().min(3),
-          valueSchema: Z.number().positive(),
+          keySchema: z.string().min(3),
+          valueSchema: z.number().positive(),
         );
         final result1 = schema.validate({'count': 5, 'total': 10});
         final result2 = schema.validate({'ab': 5}); // key too short
@@ -79,8 +79,8 @@ void main() {
 
       test('provides detailed error paths for key/value validation', () {
         final schema = RecordSchema<String, num>(
-          keySchema: Z.string().min(3),
-          valueSchema: Z.number().positive(),
+          keySchema: z.string().min(3),
+          valueSchema: z.number().positive(),
         );
         final result = schema.validate({'ab': -1});
 
@@ -138,7 +138,7 @@ void main() {
 
     group('Size Constraints', () {
       test('validates minimum entries', () {
-        final schema = Z.record().min(2);
+        final schema = z.record().min(2);
         final result1 = schema.validate({'a': 1, 'b': 2});
         final result2 = schema.validate({'a': 1});
 
@@ -147,7 +147,7 @@ void main() {
       });
 
       test('validates maximum entries', () {
-        final schema = Z.record().max(2);
+        final schema = z.record().max(2);
         final result1 = schema.validate({'a': 1, 'b': 2});
         final result2 = schema.validate({'a': 1, 'b': 2, 'c': 3});
 
@@ -156,7 +156,7 @@ void main() {
       });
 
       test('validates exact length', () {
-        final schema = Z.record().length(2);
+        final schema = z.record().length(2);
         final result1 = schema.validate({'a': 1, 'b': 2});
         final result2 = schema.validate({'a': 1});
         final result3 = schema.validate({'a': 1, 'b': 2, 'c': 3});
@@ -167,7 +167,7 @@ void main() {
       });
 
       test('validates non-empty record', () {
-        final schema = Z.record().nonempty();
+        final schema = z.record().nonempty();
         final result1 = schema.validate({'a': 1});
         final result2 = schema.validate({});
 
@@ -176,7 +176,7 @@ void main() {
       });
 
       test('chaining size constraints', () {
-        final schema = Z.record().min(2).max(4);
+        final schema = z.record().min(2).max(4);
         final result1 = schema.validate({'a': 1, 'b': 2, 'c': 3});
         final result2 = schema.validate({'a': 1});
         final result3 =
@@ -190,7 +190,7 @@ void main() {
 
     group('Record Constraint Methods', () {
       test('containsKeys validates required keys presence', () {
-        final schema = Z.record().containsKeys({'name', 'email'});
+        final schema = z.record().containsKeys({'name', 'email'});
         final result1 = schema
             .validate({'name': 'John', 'email': 'john@example.com', 'age': 30});
         final result2 = schema.validate({'name': 'John', 'age': 30});
@@ -200,7 +200,7 @@ void main() {
       });
 
       test('containsValues validates required values presence', () {
-        final schema = Z.record().containsValues({'admin', 'user'});
+        final schema = z.record().containsValues({'admin', 'user'});
         final result1 = schema
             .validate({'role1': 'admin', 'role2': 'user', 'extra': 'data'});
         final result2 = schema.validate({'role1': 'admin', 'role2': 'guest'});
@@ -212,7 +212,7 @@ void main() {
 
     group('Record Transformation Methods', () {
       test('mapEntries transforms key-value pairs', () {
-        final schema = Z.record().mapEntries<String, String>(
+        final schema = z.record().mapEntries<String, String>(
               (key, value) =>
                   MapEntry('prefix_$key', value.toString().toUpperCase()),
             );
@@ -223,7 +223,7 @@ void main() {
       });
 
       test('mapKeys transforms only keys', () {
-        final schema = Z.record().mapKeys<String>(
+        final schema = z.record().mapKeys<String>(
               (key) => key.toUpperCase(),
             );
         final result = schema.validate({'name': 'john', 'city': 'nyc'});
@@ -233,7 +233,7 @@ void main() {
       });
 
       test('mapValues transforms only values', () {
-        final schema = Z.record().mapValues<String>(
+        final schema = z.record().mapValues<String>(
               (value) => value.toString().toUpperCase(),
             );
         final result = schema.validate({'name': 'john', 'city': 'nyc'});
@@ -243,7 +243,7 @@ void main() {
       });
 
       test('filterEntries filters key-value pairs', () {
-        final schema = Z.record().filterEntries(
+        final schema = z.record().filterEntries(
               (key, value) => key.length > 3,
             );
         final result = schema.validate({'name': 'john', 'age': 30, 'id': 1});
@@ -256,7 +256,7 @@ void main() {
     group('Record Schema Builder Methods', () {
       test('keySchema sets key validation', () {
         final schema =
-            const RecordSchema<String, dynamic>().keySchema(Z.string().min(3));
+            const RecordSchema<String, dynamic>().keySchema(z.string().min(3));
         final result1 = schema.validate({'name': 'john'});
         final result2 = schema.validate({'ab': 'short'});
 
@@ -266,7 +266,7 @@ void main() {
 
       test('valueSchema sets value validation', () {
         final schema = const RecordSchema<String, num>()
-            .valueSchema(Z.number().positive());
+            .valueSchema(z.number().positive());
         final result1 = schema.validate({'count': 5});
         final result2 = schema.validate({'count': -1});
 
@@ -276,8 +276,8 @@ void main() {
 
       test('chaining builder methods', () {
         final schema = const RecordSchema<String, num>()
-            .keySchema(Z.string().min(2))
-            .valueSchema(Z.number().positive())
+            .keySchema(z.string().min(2))
+            .valueSchema(z.number().positive())
             .min(1)
             .max(3)
             .strict();
@@ -322,7 +322,7 @@ void main() {
 
     group('Record Factory Methods', () {
       test('creates string record with typed values', () {
-        final schema = RecordFactories.stringRecord<num>(Z.number());
+        final schema = RecordFactories.stringRecord<num>(z.number());
         final result = schema.validate({'count': 5, 'total': 10});
 
         expect(result.isSuccess, true);
@@ -348,8 +348,8 @@ void main() {
 
       test('creates typed record', () {
         final schema = RecordFactories.typedRecord<String, num>(
-          keySchema: Z.string(),
-          valueSchema: Z.number(),
+          keySchema: z.string(),
+          valueSchema: z.number(),
         );
         final result = schema.validate({'count': 5, 'total': 10});
 
@@ -361,12 +361,12 @@ void main() {
     group('Record Schema Equality and HashCode', () {
       test('schemas with same configuration are equal', () {
         final schema1 = const RecordSchema<String, num>()
-            .keySchema(Z.string())
-            .valueSchema(Z.number())
+            .keySchema(z.string())
+            .valueSchema(z.number())
             .min(1);
         final schema2 = const RecordSchema<String, num>()
-            .keySchema(Z.string())
-            .valueSchema(Z.number())
+            .keySchema(z.string())
+            .valueSchema(z.number())
             .min(1);
 
         expect(schema1 == schema2, true);
@@ -425,7 +425,7 @@ void main() {
 
     group('Record Schema Error Handling', () {
       test('provides detailed error information for type mismatch', () {
-        final schema = Z.record();
+        final schema = z.record();
         final result = schema.validate('not a map');
 
         expect(result.isSuccess, false);
@@ -434,7 +434,7 @@ void main() {
       });
 
       test('provides error context for size violations', () {
-        final schema = Z.record().min(2);
+        final schema = z.record().min(2);
         final result = schema.validate({'a': 1});
 
         expect(result.isSuccess, false);
@@ -460,7 +460,7 @@ void main() {
       });
 
       test('preserves error paths in nested validation', () {
-        final schema = Z.array(Z.record().min(1));
+        final schema = z.array(z.record().min(1));
         final result = schema.validate([
           {'a': 1},
           {}
@@ -474,7 +474,7 @@ void main() {
     group('Record Schema Complex Scenarios', () {
       test('validates nested records', () {
         final schema = RecordSchema<String, Map<String, dynamic>>(
-          valueSchema: Z.record().min(1),
+          valueSchema: z.record().min(1),
         );
         final result = schema.validate({
           'user': {'name': 'john', 'age': 30},
@@ -521,7 +521,7 @@ void main() {
       });
 
       test('works with refinement chains', () {
-        final schema = Z
+        final schema = z
             .record()
             .min(1)
             .refine((record) => record.containsKey('id'),
@@ -564,8 +564,8 @@ void main() {
 
       test('validates with mixed constraint types', () {
         final schema = const RecordSchema<String, dynamic>()
-            .keySchema(Z.string().min(2))
-            .valueSchema(Z.union([Z.string(), Z.number()]))
+            .keySchema(z.string().min(2))
+            .valueSchema(z.union([z.string(), z.number()]))
             .requiredKeys({'name'})
             .optionalKeys({'age', 'email'})
             .min(1)

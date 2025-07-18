@@ -126,7 +126,7 @@ class _BigIntSchema extends Schema<BigInt> {
 ///
 /// Example:
 /// ```dart
-/// final schema = Z.coerce.number();
+/// final schema = z.coerce.number();
 /// schema.parse('123'); // Returns 123 (number)
 /// schema.parse(true);  // Returns 1 (number)
 /// ```

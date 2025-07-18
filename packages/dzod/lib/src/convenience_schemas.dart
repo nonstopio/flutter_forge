@@ -4,63 +4,62 @@ import 'package:dzod/dzod.dart';
 ///
 /// This class provides a Zod-like API for creating schemas:
 /// ```dart
-/// final userSchema = Z.object({
-///   'name': Z.string().min(2).max(50),
-///   'email': Z.string().email(),
-///   'age': Z.number().min(18).max(120),
-///   'isActive': Z.boolean(),
+/// final userSchema = z.object({
+///   'name': z.string().min(2).max(50),
+///   'email': z.string().email(),
+///   'age': z.number().min(18).max(120),
+///   'isActive': z.boolean(),
 /// });
 /// ```
-class Z {
-  const Z._();
+class DZod {
+  DZod._();
+
+  static DZod instance = DZod._();
 
   /// Creates a string schema
-  static StringSchema string() => const StringSchema();
+  StringSchema string() => const StringSchema();
 
   /// Creates a number schema
-  static NumberSchema number() => const NumberSchema();
+  NumberSchema number() => const NumberSchema();
 
   /// Creates a boolean schema
-  static BooleanSchema boolean() => const BooleanSchema();
+  BooleanSchema boolean() => const BooleanSchema();
 
   /// Creates a null schema
-  static NullSchema null_() => const NullSchema();
+  NullSchema null_() => const NullSchema();
 
   /// Creates a null schema (alias for null_)
-  static NullSchema get nullValue => const NullSchema();
+  NullSchema get nullValue => const NullSchema();
 
   /// Creates an array schema with element validation
-  static ArraySchema<T> array<T>(Schema<T> elementSchema) =>
+  ArraySchema<T> array<T>(Schema<T> elementSchema) =>
       ArraySchema<T>(elementSchema);
 
   /// Creates a tuple schema with fixed-length typed elements
-  static TupleSchema<List<dynamic>> tuple(
-          List<Schema<dynamic>> elementSchemas) =>
+  TupleSchema<List<dynamic>> tuple(List<Schema<dynamic>> elementSchemas) =>
       TupleSchema<List<dynamic>>(elementSchemas);
 
   /// Creates an enum schema from a list of values
-  static EnumSchema<T> enum_<T>(List<T> values) => EnumSchema<T>(values);
+  EnumSchema<T> enum_<T>(List<T> values) => EnumSchema<T>(values);
 
   /// Creates a true boolean schema
-  static BooleanSchema get trueValue =>
-      const BooleanSchema(expectedValue: true);
+  BooleanSchema get trueValue => const BooleanSchema(expectedValue: true);
 
   /// Creates a false boolean schema
-  static BooleanSchema get falseValue =>
-      const BooleanSchema(expectedValue: false);
+  BooleanSchema get falseValue => const BooleanSchema(expectedValue: false);
 
   /// Creates a literal schema for any value
-  static Schema<T> literal<T>(T value) {
+  Schema<T> literal<T>(T value) {
     return _LiteralSchema<T>(value);
   }
 
   /// Creates a union schema from multiple schemas
-  static Schema<T> union<T>(List<Schema<T>> schemas) {
+  Schema<T> union<T>(List<Schema<T>> schemas) {
     return Schema.union(schemas);
   }
 
   /// Creates a discriminated union schema for efficient union parsing
-  static DiscriminatedUnionSchema<T> discriminatedUnion<T>(
+  DiscriminatedUnionSchema<T> discriminatedUnion<T>(
     String discriminator,
     List<Schema<T>> schemas, {
     String? description,
@@ -75,7 +74,7 @@ class Z {
   }
 
   /// Creates a pipeline schema for multi-stage validation
-  static PipelineSchema<TInput, TOutput> pipeline<TInput, TOutput>(
+  PipelineSchema<TInput, TOutput> pipeline<TInput, TOutput>(
     List<Schema<dynamic>> stages, {
     String? description,
     Map<String, dynamic>? metadata,
@@ -91,7 +90,7 @@ class Z {
   }
 
   /// Creates a recursive schema with enhanced circular reference handling
-  static RecursiveSchema<T> recursive<T>(
+  RecursiveSchema<T> recursive<T>(
     Schema<T> Function() schemaFactory, {
     int maxDepth = 1000,
     bool enableCircularDetection = true,
@@ -110,27 +109,27 @@ class Z {
   }
 
   /// Access to coercion schemas
-  static const Coerce coerce = Coerce();
+  Coerce coerce = const Coerce();
 
   /// Creates an intersection schema from multiple schemas
-  static Schema<T> intersection<T>(List<Schema<T>> schemas) {
+  Schema<T> intersection<T>(List<Schema<T>> schemas) {
     return Schema.intersection(schemas);
   }
 
   /// Creates a lazy schema that is evaluated only when needed
-  static Schema<T> lazy<T>(Schema<T> Function() schemaFactory) {
+  Schema<T> lazy<T>(Schema<T> Function() schemaFactory) {
     return Schema.lazy(schemaFactory);
   }
 
   /// Creates a custom schema with a validation function
-  static Schema<T> custom<T>(
+  Schema<T> custom<T>(
       ValidationResult<T> Function(dynamic input, List<String> path)
           validator) {
     return _CustomSchema<T>(validator);
   }
 
   /// Creates an object schema with comprehensive manipulation methods
-  static ObjectSchema object(
+  ObjectSchema object(
     Map<String, Schema<dynamic>> shape, {
     Set<String>? optionalKeys,
   }) {
@@ -152,141 +151,141 @@ class Z {
   }
 
   /// Creates an any schema that accepts any value
-  static Schema<dynamic> any() => const _AnySchema();
+  Schema<dynamic> any() => const _AnySchema();
 
   /// Creates an unknown schema that accepts any value but provides better type safety
-  static Schema<dynamic> unknown() => const _UnknownSchema();
+  Schema<dynamic> unknown() => const _UnknownSchema();
 
   /// Creates a never schema that never accepts any value
-  static Schema<Never> never() => const _NeverSchema();
+  Schema<Never> never() => const _NeverSchema();
 
   /// Creates a void schema that only accepts undefined/null
-  static Schema<void> void_() => const _VoidSchema();
+  Schema<void> void_() => const _VoidSchema();
 
   /// Creates a void schema (alias for void_)
-  static Schema<void> get voidValue => const _VoidSchema();
+  Schema<void> get voidValue => const _VoidSchema();
 
   /// Creates a date schema
-  static Schema<DateTime> date() => const _DateSchema();
+  Schema<DateTime> date() => const _DateSchema();
 
   /// Creates a bigint schema
-  static Schema<BigInt> bigint() => const _BigIntSchema();
+  Schema<BigInt> bigint() => const _BigIntSchema();
 
   /// Creates a symbol schema
-  static Schema<Symbol> symbol() => const _SymbolSchema();
+  Schema<Symbol> symbol() => const _SymbolSchema();
 
   /// Creates a function schema
-  static Schema<Function> function() => const _FunctionSchema();
+  Schema<Function> function() => const _FunctionSchema();
 
   /// Creates a regex schema
-  static Schema<RegExp> regex() => const _RegexSchema();
+  Schema<RegExp> regex() => const _RegexSchema();
 
   /// Creates a map schema
-  static Schema<Map<String, dynamic>> map() => const _MapSchema();
+  Schema<Map<String, dynamic>> map() => const _MapSchema();
 
   /// Creates a set schema
-  static Schema<Set<dynamic>> set() => const _SetSchema();
+  Schema<Set<dynamic>> set() => const _SetSchema();
 
   /// Creates a record schema for key-value pairs
-  static RecordSchema<String, dynamic> record([Schema<dynamic>? valueSchema]) =>
+  RecordSchema<String, dynamic> record([Schema<dynamic>? valueSchema]) =>
       RecordSchema<String, dynamic>(valueSchema: valueSchema);
 
   /// Creates a promise schema (for async values)
-  static Schema<Future<dynamic>> promise() => const _PromiseSchema();
+  Schema<Future<dynamic>> promise() => const _PromiseSchema();
 
   /// Creates an undefined schema
-  static Schema<void> undefined() => const _UndefinedSchema();
+  Schema<void> undefined() => const _UndefinedSchema();
 
   /// Creates a nan schema
-  static Schema<double> nan() => const _NanSchema();
+  Schema<double> nan() => const _NanSchema();
 
   /// Creates an infinity schema
-  static Schema<double> infinity() => const _InfinitySchema();
+  Schema<double> infinity() => const _InfinitySchema();
 
   /// Creates a negative infinity schema
-  static Schema<double> negativeInfinity() => const _NegativeInfinitySchema();
+  Schema<double> negativeInfinity() => const _NegativeInfinitySchema();
 
   /// Creates a positive infinity schema
-  static Schema<double> positiveInfinity() => const _PositiveInfinitySchema();
+  Schema<double> positiveInfinity() => const _PositiveInfinitySchema();
 
   /// Creates a zero schema
-  static Schema<num> zero() => const _ZeroSchema();
+  Schema<num> zero() => const _ZeroSchema();
 
   /// Creates a one schema
-  static Schema<num> one() => const _OneSchema();
+  Schema<num> one() => const _OneSchema();
 
   /// Creates a negative one schema
-  static Schema<num> negativeOne() => const _NegativeOneSchema();
+  Schema<num> negativeOne() => const _NegativeOneSchema();
 
   /// Creates an empty string schema
-  static StringSchema emptyString() => const StringSchema(exactLength: 0);
+  StringSchema emptyString() => const StringSchema(exactLength: 0);
 
   /// Creates a non-empty string schema
-  static Schema<String> nonEmptyString() => const StringSchema().nonempty();
+  Schema<String> nonEmptyString() => const StringSchema().nonempty();
 
   /// Creates an email string schema
-  static StringSchema email() => const StringSchema(isEmail: true);
+  StringSchema email() => const StringSchema(isEmail: true);
 
   /// Creates a URL string schema
-  static StringSchema url() => const StringSchema(isUrl: true);
+  StringSchema url() => const StringSchema(isUrl: true);
 
   /// Creates a UUID string schema
-  static StringSchema uuid() => const StringSchema(isUuid: true);
+  StringSchema uuid() => const StringSchema(isUuid: true);
 
   /// Creates an integer schema
-  static NumberSchema integer() => const NumberSchema(isInt: true);
+  NumberSchema integer() => const NumberSchema(isInt: true);
 
   /// Creates a positive number schema
-  static NumberSchema positive() => const NumberSchema(isPositive: true);
+  NumberSchema positive() => const NumberSchema(isPositive: true);
 
   /// Creates a negative number schema
-  static NumberSchema negative() => const NumberSchema(isNegative: true);
+  NumberSchema negative() => const NumberSchema(isNegative: true);
 
   /// Creates a non-negative number schema
-  static NumberSchema nonNegative() => const NumberSchema(isNonNegative: true);
+  NumberSchema nonNegative() => const NumberSchema(isNonNegative: true);
 
   /// Creates a non-positive number schema
-  static NumberSchema nonPositive() => const NumberSchema(isNonPositive: true);
+  NumberSchema nonPositive() => const NumberSchema(isNonPositive: true);
 
   /// Creates a finite number schema
-  static NumberSchema finite() => const NumberSchema(isFinite: true);
+  NumberSchema finite() => const NumberSchema(isFinite: true);
 
   /// Creates a safe integer schema
-  static NumberSchema safeInt() => const NumberSchema(isSafeInt: true);
+  NumberSchema safeInt() => const NumberSchema(isSafeInt: true);
 
   /// Creates a port number schema
-  static Schema<num> port() => const NumberSchema().port();
+  Schema<num> port() => const NumberSchema().port();
 
   /// Creates a year schema
-  static Schema<num> year() => const NumberSchema().year();
+  Schema<num> year() => const NumberSchema().year();
 
   /// Creates a month schema
-  static Schema<num> month() => const NumberSchema().month();
+  Schema<num> month() => const NumberSchema().month();
 
   /// Creates a day schema
-  static Schema<num> day() => const NumberSchema().day();
+  Schema<num> day() => const NumberSchema().day();
 
   /// Creates an hour schema
-  static Schema<num> hour() => const NumberSchema().hour();
+  Schema<num> hour() => const NumberSchema().hour();
 
   /// Creates a minute schema
-  static Schema<num> minute() => const NumberSchema().minute();
+  Schema<num> minute() => const NumberSchema().minute();
 
   /// Creates a second schema
-  static Schema<num> second() => const NumberSchema().second();
+  Schema<num> second() => const NumberSchema().second();
 
   /// Creates a transform schema that can be used in pipelines
-  static TransformSchema<T, R> transform<T, R>(R Function(T) transformer) =>
+  TransformSchema<T, R> transform<T, R>(R Function(T) transformer) =>
       TransformSchema<T, R>(_TypedSchema<T>(), transformer);
 
   /// Creates a refine schema that can be used in pipelines
-  static RefineSchema<T> refine<T>(bool Function(T) validator,
+  RefineSchema<T> refine<T>(bool Function(T) validator,
           {String? message, String? code}) =>
       RefineSchema<T>(_TypedSchema<T>(), validator,
           message: message, code: code);
 
   /// Creates an async refine schema that can be used in pipelines
-  static AsyncRefineSchema<T> refineAsync<T>(Future<bool> Function(T) validator,
+  AsyncRefineSchema<T> refineAsync<T>(Future<bool> Function(T) validator,
           {String? message, String? code}) =>
       AsyncRefineSchema<T>(_TypedSchema<T>(), validator,
           message: message, code: code);

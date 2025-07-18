@@ -6,9 +6,9 @@ void main() {
     group('Basic Recursive Validation', () {
       test('should validate simple recursive structure', () {
         late Schema<Map<String, dynamic>> treeSchema;
-        treeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
-              'children': Z.array(treeSchema).optional(),
+        treeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
+              'children': z.array(treeSchema).optional(),
             }));
 
         final validTree = {
@@ -32,8 +32,8 @@ void main() {
 
       test('should validate recursive structure without optional children', () {
         late Schema<Map<String, dynamic>> nodeSchema;
-        nodeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'id': Z.number(),
+        nodeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'id': z.number(),
               'parent': nodeSchema.optional(),
             }));
 
@@ -51,9 +51,9 @@ void main() {
 
       test('should fail validation for invalid recursive structure', () {
         late Schema<Map<String, dynamic>> treeSchema;
-        treeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
-              'children': Z.array(treeSchema).optional(),
+        treeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
+              'children': z.array(treeSchema).optional(),
             }));
 
         final invalidTree = {
@@ -73,9 +73,9 @@ void main() {
     group('Circular Reference Detection', () {
       test('should detect circular references when enabled', () {
         late Schema<Map<String, dynamic>> nodeSchema;
-        nodeSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'id': Z.string(),
+        nodeSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'id': z.string(),
                   'ref': nodeSchema.optional(),
                 }),
             enableCircularDetection: true);
@@ -93,9 +93,9 @@ void main() {
 
       test('should allow circular structures when detection is disabled', () {
         late Schema<Map<String, dynamic>> nodeSchema;
-        nodeSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'id': Z.string(),
+        nodeSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'id': z.string(),
                   'ref': nodeSchema.optional(),
                 }),
             enableCircularDetection: false,
@@ -122,9 +122,9 @@ void main() {
     group('Depth Limits', () {
       test('should enforce maximum depth limit', () {
         late Schema<Map<String, dynamic>> deepSchema;
-        deepSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'level': Z.number(),
+        deepSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'level': z.number(),
                   'next': deepSchema.optional(),
                 }),
             maxDepth: 3);
@@ -154,9 +154,9 @@ void main() {
 
       test('should validate within depth limit', () {
         late Schema<Map<String, dynamic>> deepSchema;
-        deepSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'level': Z.number(),
+        deepSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'level': z.number(),
                   'next': deepSchema.optional(),
                 }),
             maxDepth: 5);
@@ -180,9 +180,9 @@ void main() {
 
     group('Memoization', () {
       test('should cache schema instances when memoization is enabled', () {
-        final recursiveSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final recursiveSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             enableMemoization: true);
 
@@ -203,9 +203,9 @@ void main() {
       });
 
       test('should clear cache when requested', () {
-        final recursiveSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final recursiveSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             enableMemoization: true);
 
@@ -218,9 +218,9 @@ void main() {
       });
 
       test('should not cache when memoization is disabled', () {
-        final recursiveSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final recursiveSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             enableMemoization: false);
 
@@ -233,9 +233,9 @@ void main() {
 
     group('Schema Configuration', () {
       test('should create schema with custom settings', () {
-        final customSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final customSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 50,
             enableCircularDetection: false,
@@ -251,8 +251,8 @@ void main() {
       });
 
       test('should create schema with updated settings', () {
-        final baseSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
+        final baseSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
             }));
 
         final updatedSchema = baseSchema.withSettings(
@@ -267,8 +267,8 @@ void main() {
       });
 
       test('should create schema with specific depth limit', () {
-        final baseSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
+        final baseSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
             }));
 
         final limitedSchema = baseSchema.withMaxDepth(10);
@@ -276,8 +276,8 @@ void main() {
       });
 
       test('should toggle circular detection', () {
-        final baseSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
+        final baseSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
             }));
 
         final withoutDetection = baseSchema.withCircularDetection(false);
@@ -288,8 +288,8 @@ void main() {
       });
 
       test('should toggle memoization', () {
-        final baseSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
+        final baseSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
             }));
 
         final withoutMemo = baseSchema.withMemoization(false);
@@ -302,9 +302,9 @@ void main() {
 
     group('Preset Configurations', () {
       test('should create safe recursive schema', () {
-        final safeSchema = Z
-            .recursive<Map<String, dynamic>>(() => Z.object({
-                  'value': Z.string(),
+        final safeSchema = z
+            .recursive<Map<String, dynamic>>(() => z.object({
+                  'value': z.string(),
                 }))
             .safe();
 
@@ -314,9 +314,9 @@ void main() {
       });
 
       test('should create optimized recursive schema', () {
-        final optimizedSchema = Z
-            .recursive<Map<String, dynamic>>(() => Z.object({
-                  'value': Z.string(),
+        final optimizedSchema = z
+            .recursive<Map<String, dynamic>>(() => z.object({
+                  'value': z.string(),
                 }))
             .optimized();
 
@@ -329,9 +329,9 @@ void main() {
     group('Validation with Statistics', () {
       test('should validate and return statistics', () {
         late RecursiveSchema<Map<String, dynamic>> treeSchema;
-        treeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
-              'children': Z.array(treeSchema).optional(),
+        treeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
+              'children': z.array(treeSchema).optional(),
             }));
 
         final tree = {
@@ -360,9 +360,9 @@ void main() {
 
       test('should validate async and return statistics', () async {
         late RecursiveSchema<Map<String, dynamic>> treeSchema;
-        treeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
-              'children': Z.array(treeSchema).optional(),
+        treeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
+              'children': z.array(treeSchema).optional(),
             }));
 
         final tree = {
@@ -381,12 +381,12 @@ void main() {
     group('Async Validation', () {
       test('should support async validation', () async {
         late Schema<Map<String, dynamic>> asyncTreeSchema;
-        asyncTreeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string().refineAsync((s) async {
+        asyncTreeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string().refineAsync((s) async {
                 await Future.delayed(const Duration(milliseconds: 1));
                 return s.isNotEmpty;
               }, message: 'Value cannot be empty'),
-              'children': Z.array(asyncTreeSchema).optional(),
+              'children': z.array(asyncTreeSchema).optional(),
             }));
 
         final tree = {
@@ -403,11 +403,11 @@ void main() {
 
       test('should handle async validation errors', () async {
         late Schema<Map<String, dynamic>> asyncTreeSchema;
-        asyncTreeSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z
+        asyncTreeSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z
                   .string()
                   .refineAsync((s) async => false, message: 'Always fails'),
-              'children': Z.array(asyncTreeSchema).optional(),
+              'children': z.array(asyncTreeSchema).optional(),
             }));
 
         final tree = {
@@ -424,7 +424,7 @@ void main() {
     group('Factory Methods', () {
       test('should create recursive schema with factory method', () {
         final schema = RecursiveExtension.recursive<Map<String, dynamic>>(
-          () => Z.object({'value': Z.string()}),
+          () => z.object({'value': z.string()}),
           maxDepth: 50,
           enableCircularDetection: true,
           description: 'Factory created',
@@ -437,7 +437,7 @@ void main() {
 
       test('should create safe recursive schema with factory', () {
         final schema = RecursiveExtension.recursiveSafe<Map<String, dynamic>>(
-          () => Z.object({'value': Z.string()}),
+          () => z.object({'value': z.string()}),
           description: 'Safe schema',
         );
 
@@ -450,7 +450,7 @@ void main() {
       test('should create optimized recursive schema with factory', () {
         final schema =
             RecursiveExtension.recursiveOptimized<Map<String, dynamic>>(
-          () => Z.object({'value': Z.string()}),
+          () => z.object({'value': z.string()}),
           description: 'Optimized schema',
         );
 
@@ -463,9 +463,9 @@ void main() {
 
     group('Schema Properties', () {
       test('should provide schema statistics', () {
-        final schema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 42,
             enableCircularDetection: true,
@@ -480,17 +480,17 @@ void main() {
       });
 
       test('should have correct schema type', () {
-        final schema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'value': Z.string(),
+        final schema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'value': z.string(),
             }));
 
         expect(schema.schemaType, equals('RecursiveSchema'));
       });
 
       test('should have proper string representation', () {
-        final schema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 50,
             description: 'Test schema');
@@ -504,23 +504,23 @@ void main() {
 
     group('Equality and Hash Code', () {
       test('should implement equality correctly', () {
-        final schema1 = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema1 = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 100,
             description: 'Test');
 
-        final schema2 = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema2 = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 100,
             description: 'Test');
 
-        final schema3 = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema3 = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 200,
             description: 'Test');
@@ -531,16 +531,16 @@ void main() {
       });
 
       test('should implement hash code correctly', () {
-        final schema1 = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema1 = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 100,
             description: 'Test');
 
-        final schema2 = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.string(),
+        final schema2 = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.string(),
                 }),
             maxDepth: 100,
             description: 'Test');
@@ -554,15 +554,15 @@ void main() {
         late Schema<Map<String, dynamic>> nodeASchema;
         late Schema<Map<String, dynamic>> nodeBSchema;
 
-        nodeASchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'type': Z.literal('A'),
-              'value': Z.string(),
+        nodeASchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'type': z.literal('A'),
+              'value': z.string(),
               'nodeB': nodeBSchema.optional(),
             }));
 
-        nodeBSchema = Z.recursive<Map<String, dynamic>>(() => Z.object({
-              'type': Z.literal('B'),
-              'value': Z.number(),
+        nodeBSchema = z.recursive<Map<String, dynamic>>(() => z.object({
+              'type': z.literal('B'),
+              'value': z.number(),
               'nodeA': nodeASchema.optional(),
             }));
 
@@ -587,10 +587,10 @@ void main() {
 
       test('should handle recursive arrays', () {
         late Schema<dynamic> recursiveArraySchema;
-        recursiveArraySchema = Z.recursive<dynamic>(() => Z.union([
-              Z.string(),
-              Z.number(),
-              Z.array(recursiveArraySchema),
+        recursiveArraySchema = z.recursive<dynamic>(() => z.union([
+              z.string(),
+              z.number(),
+              z.array(recursiveArraySchema),
             ]));
 
         final nestedArray = [
@@ -614,12 +614,12 @@ void main() {
 
       test('should handle recursive with refinements and transformations', () {
         late Schema<Map<String, dynamic>> commentSchema;
-        commentSchema = Z
-            .recursive<Map<String, dynamic>>(() => Z.object({
-                  'id': Z.string(),
-                  'text': Z.string().min(1),
-                  'author': Z.string(),
-                  'replies': Z.array(commentSchema).optional(),
+        commentSchema = z
+            .recursive<Map<String, dynamic>>(() => z.object({
+                  'id': z.string(),
+                  'text': z.string().min(1),
+                  'author': z.string(),
+                  'replies': z.array(commentSchema).optional(),
                 }))
             .transform((comment) => {
                   ...comment,
@@ -661,9 +661,9 @@ void main() {
 
       test('should handle very deep recursive structures within limits', () {
         late Schema<Map<String, dynamic>> chainSchema;
-        chainSchema = Z.recursive<Map<String, dynamic>>(
-            () => Z.object({
-                  'value': Z.number(),
+        chainSchema = z.recursive<Map<String, dynamic>>(
+            () => z.object({
+                  'value': z.number(),
                   'next': chainSchema.optional(),
                 }),
             maxDepth: 1000);

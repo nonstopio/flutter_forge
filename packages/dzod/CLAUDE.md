@@ -12,7 +12,7 @@ Dzod is an enterprise-grade Dart schema validation library with 105%+ feature pa
 lib/
 ├── dzod.dart                     # Main library export
 ├── src/
-│   ├── convenience_schemas.dart  # Z.* factory methods
+│   ├── convenience_schemas.dart  # z.* factory methods
 │   ├── core/                    # Core validation system
 │   │   ├── error.dart           # Error handling classes
 │   │   ├── error_codes.dart     # ValidationErrorCode enum
@@ -98,19 +98,19 @@ cd example && flutter test
 - `ValidationErrorCollection` - Collection of validation errors
 - `ValidationException` - Exception thrown during validation
 
-### Factory Methods (Z.*)
+### Factory Methods (z.*)
 All schema creation uses the `Z` class factory methods:
-- `Z.string()` - String schema
-- `Z.number()` - Number schema  
-- `Z.boolean()` - Boolean schema
-- `Z.object({})` - Object schema
-- `Z.array()` - Array schema
-- `Z.enum_()` - Enum schema
-- `Z.union()` - Union schema
-- `Z.discriminatedUnion()` - Discriminated union schema
-- `Z.pipeline()` - Pipeline schema
-- `Z.recursive()` - Recursive schema
-- `Z.coerce.*` - Coercion schemas
+- `z.string()` - String schema
+- `z.number()` - Number schema  
+- `z.boolean()` - Boolean schema
+- `z.object({})` - Object schema
+- `z.array()` - Array schema
+- `z.enum_()` - Enum schema
+- `z.union()` - Union schema
+- `z.discriminatedUnion()` - Discriminated union schema
+- `z.pipeline()` - Pipeline schema
+- `z.recursive()` - Recursive schema
+- `z.coerce.*` - Coercion schemas
 
 ### Validation Methods
 - `validate(data)` - Synchronous validation
@@ -134,7 +134,7 @@ All schema creation uses the `Z` class factory methods:
 
 ### Basic Validation
 ```dart
-final schema = Z.string().min(2).max(50);
+final schema = z.string().min(2).max(50);
 final result = schema.validate('hello');
 if (result.isSuccess) {
   print('Valid: ${result.data}');
@@ -145,17 +145,17 @@ if (result.isSuccess) {
 
 ### Complex Object Validation
 ```dart
-final userSchema = Z.object({
-  'name': Z.string().min(2).max(50),
-  'email': Z.string().email(),
-  'age': Z.number().min(18).max(120),
-  'role': Z.enum_(['admin', 'user', 'guest']),
+final userSchema = z.object({
+  'name': z.string().min(2).max(50),
+  'email': z.string().email(),
+  'age': z.number().min(18).max(120),
+  'role': z.enum_(['admin', 'user', 'guest']),
 });
 ```
 
 ### Async Validation
 ```dart
-final schema = Z.string().email().refineAsync(
+final schema = z.string().email().refineAsync(
   (email) => checkEmailExists(email),
   message: 'Email already exists',
 );
@@ -165,7 +165,7 @@ final result = await schema.validateAsync('user@example.com');
 ### Flutter Integration
 ```dart
 ZodTextFormField(
-  schema: Z.string().min(2).max(50),
+  schema: z.string().min(2).max(50),
   decoration: InputDecoration(labelText: 'Name'),
   onChanged: (value) => setState(() {}),
 )
@@ -183,14 +183,14 @@ ZodTextFormField(
 ```dart
 group('StringSchema', () {
   test('should validate valid string', () {
-    final schema = Z.string();
+    final schema = z.string();
     final result = schema.validate('hello');
     expect(result.isSuccess, true);
     expect(result.data, 'hello');
   });
 
   test('should fail on invalid type', () {
-    final schema = Z.string();
+    final schema = z.string();
     final result = schema.validate(123);
     expect(result.isFailure, true);
     expect(result.errors?.first.code, ValidationErrorCode.invalidType);
@@ -220,9 +220,9 @@ group('StringSchema', () {
 - `ZodValidationStatus` - Show validation status
 
 ### Widget Schemas
-- `Z.color()` - Flutter Color validation
-- `Z.edgeInsets()` - EdgeInsets validation
-- `Z.duration()` - Duration validation
+- `z.color()` - Flutter Color validation
+- `z.edgeInsets()` - EdgeInsets validation
+- `z.duration()` - Duration validation
 
 ### Form Integration
 - Real-time validation
@@ -264,7 +264,7 @@ ErrorMessages.setGlobalMessages({
 ## Important Notes
 
 ### Schema Creation
-- Always use `Z.*` factory methods for schema creation
+- Always use `z.*` factory methods for schema creation
 - Schemas are immutable - methods return new schema instances
 - Chain validation methods for complex requirements
 

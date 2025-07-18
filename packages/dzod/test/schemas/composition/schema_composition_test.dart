@@ -5,7 +5,7 @@ void main() {
   group('Schema Composition and Analysis', () {
     group('Schema Analysis', () {
       test('should analyze basic string schema', () {
-        final schema = Z.string();
+        final schema = z.string();
         final info = schema.analyze();
 
         expect(info.typeName, equals('string'));
@@ -16,7 +16,7 @@ void main() {
       });
 
       test('should analyze string schema with description', () {
-        final schema = Z.string().describe('User name');
+        final schema = z.string().describe('User name');
         final info = schema.analyze();
 
         expect(info.typeName, equals('string'));
@@ -24,7 +24,7 @@ void main() {
       });
 
       test('should analyze optional schema', () {
-        final schema = Z.string().optional();
+        final schema = z.string().optional();
         final info = schema.analyze();
 
         expect(info.typeName, equals('string'));
@@ -32,7 +32,7 @@ void main() {
       });
 
       test('should analyze readonly schema', () {
-        final schema = Z.string().readonly();
+        final schema = z.string().readonly();
         final info = schema.analyze();
 
         expect(info.typeName, equals('string'));
@@ -40,7 +40,7 @@ void main() {
       });
 
       test('should analyze branded schema', () {
-        final schema = Z.string().brand<String>();
+        final schema = z.string().brand<String>();
         final info = schema.analyze();
 
         expect(info.typeName, equals('string'));
@@ -48,7 +48,7 @@ void main() {
       });
 
       test('should analyze complex wrapper combinations', () {
-        final schema = Z
+        final schema = z
             .string()
             .describe('User ID')
             .brand<String>()
@@ -64,10 +64,10 @@ void main() {
       });
 
       test('should analyze different primitive types', () {
-        final stringInfo = Z.string().analyze();
-        final numberInfo = Z.number().analyze();
-        final boolInfo = Z.boolean().analyze();
-        final nullInfo = Z.null_().analyze();
+        final stringInfo = z.string().analyze();
+        final numberInfo = z.number().analyze();
+        final boolInfo = z.boolean().analyze();
+        final nullInfo = z.null_().analyze();
 
         expect(stringInfo.typeName, equals('string'));
         expect(numberInfo.typeName, equals('number'));
@@ -76,11 +76,11 @@ void main() {
       });
 
       test('should analyze collection types', () {
-        final arrayInfo = Z.array(Z.string()).analyze();
-        final objectInfo = Z.object({'name': Z.string()}).analyze();
-        final tupleInfo = Z.tuple([Z.string(), Z.number()]).analyze();
-        final recordInfo = Z.record(Z.number()).analyze();
-        final enumInfo = Z.enum_(['a', 'b', 'c']).analyze();
+        final arrayInfo = z.array(z.string()).analyze();
+        final objectInfo = z.object({'name': z.string()}).analyze();
+        final tupleInfo = z.tuple([z.string(), z.number()]).analyze();
+        final recordInfo = z.record(z.number()).analyze();
+        final enumInfo = z.enum_(['a', 'b', 'c']).analyze();
 
         expect(arrayInfo.typeName, equals('array'));
         expect(objectInfo.typeName, equals('object'));
@@ -92,13 +92,13 @@ void main() {
 
     group('Schema Extensions', () {
       test('should provide baseTypeName getter', () {
-        final schema = Z.string().describe('Test').brand<String>().readonly();
+        final schema = z.string().describe('Test').brand<String>().readonly();
 
         expect(schema.baseTypeName, equals('string'));
       });
 
       test('should provide wrapper type checks', () {
-        final schema = Z.string().brand<String>().readonly().optional();
+        final schema = z.string().brand<String>().readonly().optional();
 
         expect(schema.isOptionalSchema, isTrue);
         expect(schema.isReadonlySchema, isTrue);
@@ -106,7 +106,7 @@ void main() {
       });
 
       test('should extract descriptions from schema tree', () {
-        final schema = Z.string().describe('Base description');
+        final schema = z.string().describe('Base description');
         final descriptions = schema.allDescriptions;
 
         expect(descriptions, contains('Base description'));
@@ -114,20 +114,20 @@ void main() {
 
       test('should extract metadata from schema tree', () {
         final metadata = {'type': 'input', 'required': true};
-        final schema = Z.string().describe('Test', metadata: metadata);
+        final schema = z.string().describe('Test', metadata: metadata);
         final allMetadata = schema.allMetadata;
 
         expect(allMetadata, equals(metadata));
       });
 
       test('should calculate complexity score', () {
-        final simpleSchema = Z.string();
-        final complexSchema = Z.object({
-          'user': Z.object({
-            'name': Z.string().describe('Name').brand<String>(),
-            'age': Z.number().optional(),
+        final simpleSchema = z.string();
+        final complexSchema = z.object({
+          'user': z.object({
+            'name': z.string().describe('Name').brand<String>(),
+            'age': z.number().optional(),
           }),
-          'tags': Z.array(Z.string()),
+          'tags': z.array(z.string()),
         });
 
         final simpleScore = simpleSchema.complexityScore;
@@ -140,13 +140,13 @@ void main() {
       });
 
       test('should check schema equivalence', () {
-        final schema1 = Z.string().describe('Test');
-        final schema2 = Z.string().describe('Different');
-        final schema3 = Z.string();
+        final schema1 = z.string().describe('Test');
+        final schema2 = z.string().describe('Different');
+        final schema3 = z.string();
 
         expect(schema1.isEquivalentTo(schema2), isTrue); // Same base type
         expect(schema1.isEquivalentTo(schema3), isTrue); // Same base type
-        expect(schema1.isEquivalentTo(Z.number()), isFalse); // Different type
+        expect(schema1.isEquivalentTo(z.number()), isFalse); // Different type
       });
     });
 
@@ -224,16 +224,16 @@ void main() {
 
     group('Schema Composition', () {
       test('should create union schemas', () {
-        final schema1 = Z.string();
-        final schema2 = Z.string();
+        final schema1 = z.string();
+        final schema2 = z.string();
         final unionSchema = SchemaUtils.union([schema1, schema2]);
 
         expect(unionSchema, isA<UnionSchema>());
       });
 
       test('should create intersection schemas', () {
-        final schema1 = Z.string();
-        final schema2 = Z.string().min(5);
+        final schema1 = z.string();
+        final schema2 = z.string().min(5);
         final intersectionSchema = SchemaUtils.intersection([schema1, schema2]);
 
         expect(intersectionSchema, isA<IntersectionSchema>());
@@ -243,8 +243,8 @@ void main() {
         var useString = true;
         final conditionalSchema = SchemaUtils.conditional<dynamic>(
           () => useString,
-          Z.string(),
-          Z.number(),
+          z.string(),
+          z.number(),
         );
 
         expect(conditionalSchema, isA<LazySchema>());
@@ -263,7 +263,7 @@ void main() {
       });
 
       test('should return single schema for single-item lists', () {
-        final schema = Z.string();
+        final schema = z.string();
         final unionResult = SchemaUtils.union([schema]);
         final intersectionResult = SchemaUtils.intersection([schema]);
 
@@ -278,7 +278,7 @@ void main() {
       });
 
       test('should create noneOf validation', () {
-        final schema = SchemaUtils.noneOf(['admin', 'root'], Z.string());
+        final schema = SchemaUtils.noneOf(['admin', 'root'], z.string());
 
         expect(schema.parse('user'), equals('user'));
         expect(
@@ -295,16 +295,16 @@ void main() {
 
     group('Complex Analysis Scenarios', () {
       test('should analyze deeply nested schemas', () {
-        final complexSchema = Z.object({
-          'user': Z.object({
-            'profile': Z.object({
-              'name': Z.string().describe('Full name').brand<String>(),
-              'email': Z.string().email().readonly(),
-              'age': Z.number().positive().optional(),
+        final complexSchema = z.object({
+          'user': z.object({
+            'profile': z.object({
+              'name': z.string().describe('Full name').brand<String>(),
+              'email': z.string().email().readonly(),
+              'age': z.number().positive().optional(),
             }),
-            'preferences': Z.record(Z.boolean()),
+            'preferences': z.record(z.boolean()),
           }),
-          'metadata': Z.array(Z.tuple([Z.string(), Z.string()])),
+          'metadata': z.array(z.tuple([z.string(), z.string()])),
         });
 
         final info = complexSchema.analyze();
@@ -323,11 +323,11 @@ void main() {
       });
 
       test('should extract nested descriptions and metadata', () {
-        final schema = Z.object({
-          'name': Z.string().describe('User name'),
-          'profile': Z.object({
+        final schema = z.object({
+          'name': z.string().describe('User name'),
+          'profile': z.object({
             'bio':
-                Z.string().describe('Biography', metadata: {'ui': 'textarea'}),
+                z.string().describe('Biography', metadata: {'ui': 'textarea'}),
           }),
         }).describe('User object', metadata: {'version': '1.0'});
 
@@ -346,10 +346,10 @@ void main() {
       test('should handle circular references gracefully', () {
         // Test with lazy schemas to avoid infinite recursion
         late final Schema<Map<String, dynamic>> lazySchema;
-        lazySchema = Schema.lazy<Map<String, dynamic>>(() => Z.object({
+        lazySchema = Schema.lazy<Map<String, dynamic>>(() => z.object({
               'self': Schema.lazy<Map<String, dynamic>>(() => lazySchema)
                   .optional(),
-              'name': Z.string(),
+              'name': z.string(),
             }));
 
         final info = lazySchema.analyze();
@@ -357,14 +357,14 @@ void main() {
       });
 
       test('should handle very complex schemas', () {
-        final veryComplexSchema = Z.union([
-          Z.intersection([
-            Z.object({'type': Z.string()}),
-            Z.object({'name': Z.string()}),
+        final veryComplexSchema = z.union([
+          z.intersection([
+            z.object({'type': z.string()}),
+            z.object({'name': z.string()}),
           ]),
-          Z.intersection([
-            Z.object({'type': Z.string()}),
-            Z.object({'permissions': Z.array(Z.string())}),
+          z.intersection([
+            z.object({'type': z.string()}),
+            z.object({'permissions': z.array(z.string())}),
           ]),
         ]);
 

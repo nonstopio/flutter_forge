@@ -13,9 +13,9 @@ import '../primitive/boolean_schema.dart';
 ///
 /// Example:
 /// ```dart
-/// final schema = Z.discriminatedUnion('type', [
-///   Z.object({'type': Z.literal('user'), 'name': Z.string()}),
-///   Z.object({'type': Z.literal('admin'), 'role': Z.string()}),
+/// final schema = z.discriminatedUnion('type', [
+///   z.object({'type': z.literal('user'), 'name': z.string()}),
+///   z.object({'type': z.literal('admin'), 'role': z.string()}),
 /// ]);
 /// ```
 class DiscriminatedUnionSchema<T> extends Schema<T> {

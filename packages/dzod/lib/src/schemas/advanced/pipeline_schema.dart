@@ -9,11 +9,11 @@ import '../../core/validation_result.dart';
 ///
 /// Example:
 /// ```dart
-/// final pipeline = Z.pipeline([
-///   Z.string(),
-///   Z.transform((s) => s.trim()),
-///   Z.transform((s) => s.toLowerCase()),
-///   Z.refine((s) => s.isNotEmpty, message: 'Cannot be empty'),
+/// final pipeline = z.pipeline([
+///   z.string(),
+///   z.transform((s) => s.trim()),
+///   z.transform((s) => s.toLowerCase()),
+///   z.refine((s) => s.isNotEmpty, message: 'Cannot be empty'),
 /// ]);
 /// ```
 class PipelineSchema<TInput, TOutput> extends Schema<TOutput> {

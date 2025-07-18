@@ -5,13 +5,13 @@ void main() {
   group('Async Validation Tests', () {
     group('Base Async Methods', () {
       test('parseAsync should work with valid input', () async {
-        final schema = Z.string();
+        final schema = z.string();
         final result = await schema.parseAsync('hello');
         expect(result, equals('hello'));
       });
 
       test('parseAsync should throw exception with invalid input', () async {
-        final schema = Z.string();
+        final schema = z.string();
         await expectLater(
           () => schema.parseAsync(123),
           throwsA(isA<ValidationException>()),
@@ -19,20 +19,20 @@ void main() {
       });
 
       test('safeParseAsync should return value with valid input', () async {
-        final schema = Z.string();
+        final schema = z.string();
         final result = await schema.safeParseAsync('hello');
         expect(result, equals('hello'));
       });
 
       test('safeParseAsync should return null with invalid input', () async {
-        final schema = Z.string();
+        final schema = z.string();
         final result = await schema.safeParseAsync(123);
         expect(result, isNull);
       });
 
       test('validateAsync should return success result with valid input',
           () async {
-        final schema = Z.string();
+        final schema = z.string();
         final result = await schema.validateAsync('hello');
         expect(result.isSuccess, isTrue);
         expect(result.data, equals('hello'));
@@ -40,7 +40,7 @@ void main() {
 
       test('validateAsync should return failure result with invalid input',
           () async {
-        final schema = Z.string();
+        final schema = z.string();
         final result = await schema.validateAsync(123);
         expect(result.isFailure, isTrue);
         expect(result.errors, isNotNull);
@@ -49,7 +49,7 @@ void main() {
 
     group('Async Refinement', () {
       test('async refinement should work with valid value', () async {
-        final schema = Z.string().refineAsync(
+        final schema = z.string().refineAsync(
           (value) async {
             // Simulate async validation (e.g., API call)
             await Future.delayed(const Duration(milliseconds: 10));
@@ -64,7 +64,7 @@ void main() {
       });
 
       test('async refinement should fail with invalid value', () async {
-        final schema = Z.string().refineAsync(
+        final schema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 10));
             return value.length > 3;
@@ -79,7 +79,7 @@ void main() {
       });
 
       test('async refinement should fail in sync context', () async {
-        final schema = Z.string().refineAsync(
+        final schema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 10));
             return value.length > 3;
@@ -96,7 +96,7 @@ void main() {
 
     group('Async Transform', () {
       test('async transform should work with valid input', () async {
-        final schema = Z.string().transformAsync<int>(
+        final schema = z.string().transformAsync<int>(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 10));
             return int.parse(value);
@@ -109,7 +109,7 @@ void main() {
       });
 
       test('async transform should handle errors', () async {
-        final schema = Z.string().transformAsync<int>(
+        final schema = z.string().transformAsync<int>(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 10));
             return int.parse(value); // Will throw for non-numeric strings
@@ -123,7 +123,7 @@ void main() {
       });
 
       test('async transform should fail in sync context', () async {
-        final schema = Z.string().transformAsync<int>(
+        final schema = z.string().transformAsync<int>(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 10));
             return int.parse(value);
@@ -139,7 +139,7 @@ void main() {
 
     group('Array Async Validation', () {
       test('async array validation should work with valid elements', () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.isNotEmpty;
@@ -147,7 +147,7 @@ void main() {
           message: 'String cannot be empty',
         );
 
-        final arraySchema = Z.array(asyncStringSchema);
+        final arraySchema = z.array(asyncStringSchema);
         final result = await arraySchema.validateAsync(['hello', 'world']);
 
         expect(result.isSuccess, isTrue);
@@ -156,7 +156,7 @@ void main() {
 
       test('async array validation should fail with invalid elements',
           () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.length > 3;
@@ -164,7 +164,7 @@ void main() {
           message: 'String must be longer than 3 characters',
         );
 
-        final arraySchema = Z.array(asyncStringSchema);
+        final arraySchema = z.array(asyncStringSchema);
         final result = await arraySchema.validateAsync(['hello', 'hi']);
 
         expect(result.isFailure, isTrue);
@@ -176,7 +176,7 @@ void main() {
     group('Object Async Validation', () {
       test('async object validation should work with valid properties',
           () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.isNotEmpty;
@@ -184,7 +184,7 @@ void main() {
           message: 'String cannot be empty',
         );
 
-        final objectSchema = Z.object({
+        final objectSchema = z.object({
           'name': asyncStringSchema,
           'email': asyncStringSchema,
         });
@@ -201,7 +201,7 @@ void main() {
 
       test('async object validation should fail with invalid properties',
           () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.isNotEmpty;
@@ -209,7 +209,7 @@ void main() {
           message: 'String cannot be empty',
         );
 
-        final objectSchema = Z.object({
+        final objectSchema = z.object({
           'name': asyncStringSchema,
           'email': asyncStringSchema,
         });
@@ -227,7 +227,7 @@ void main() {
 
     group('Complex Async Scenarios', () {
       test('nested async validation should work', () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.length > 2;
@@ -235,8 +235,8 @@ void main() {
           message: 'String must be longer than 2 characters',
         );
 
-        final nestedSchema = Z.object({
-          'users': Z.array(Z.object({
+        final nestedSchema = z.object({
+          'users': z.array(z.object({
             'name': asyncStringSchema,
             'email': asyncStringSchema,
           })),
@@ -254,7 +254,7 @@ void main() {
       });
 
       test('union with async schemas should work', () async {
-        final asyncStringSchema = Z.string().refineAsync(
+        final asyncStringSchema = z.string().refineAsync(
           (value) async {
             await Future.delayed(const Duration(milliseconds: 5));
             return value.startsWith('str_');
@@ -263,7 +263,7 @@ void main() {
         );
 
         final unionSchema = Schema.union<dynamic>([
-          Z.number(),
+          z.number(),
           asyncStringSchema,
         ]);
 

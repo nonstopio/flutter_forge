@@ -5,14 +5,14 @@ void main() {
   group('DiscriminatedUnionSchema', () {
     group('Basic Validation', () {
       test('should validate correct discriminated union values', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
-          Z.object({
-            'type': Z.literal('admin'),
-            'role': Z.string(),
+          z.object({
+            'type': z.literal('admin'),
+            'role': z.string(),
           }),
         ]);
 
@@ -34,10 +34,10 @@ void main() {
       });
 
       test('should fail validation with missing discriminator', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]);
 
@@ -48,10 +48,10 @@ void main() {
       });
 
       test('should fail validation with invalid discriminator value', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]);
 
@@ -65,10 +65,10 @@ void main() {
       });
 
       test('should fail validation with non-object input', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]);
 
@@ -81,14 +81,14 @@ void main() {
 
     group('Advanced Features', () {
       test('should work with numeric discriminators', () {
-        final schema = Z.discriminatedUnion('status', [
-          Z.object({
-            'status': Z.literal(1),
-            'active': Z.boolean(),
+        final schema = z.discriminatedUnion('status', [
+          z.object({
+            'status': z.literal(1),
+            'active': z.boolean(),
           }),
-          Z.object({
-            'status': Z.literal(2),
-            'pending': Z.boolean(),
+          z.object({
+            'status': z.literal(2),
+            'pending': z.boolean(),
           }),
         ]);
 
@@ -101,21 +101,21 @@ void main() {
       });
 
       test('should work with multiple schemas per discriminator', () {
-        final schema = Z.discriminatedUnion('category', [
-          Z.object({
-            'category': Z.literal('product'),
-            'name': Z.string(),
-            'price': Z.number(),
+        final schema = z.discriminatedUnion('category', [
+          z.object({
+            'category': z.literal('product'),
+            'name': z.string(),
+            'price': z.number(),
           }),
-          Z.object({
-            'category': Z.literal('service'),
-            'name': Z.string(),
-            'duration': Z.number(),
+          z.object({
+            'category': z.literal('service'),
+            'name': z.string(),
+            'duration': z.number(),
           }),
-          Z.object({
-            'category': Z.literal('digital'),
-            'name': Z.string(),
-            'downloadUrl': Z.string(),
+          z.object({
+            'category': z.literal('digital'),
+            'name': z.string(),
+            'downloadUrl': z.string(),
           }),
         ]);
 
@@ -153,18 +153,18 @@ void main() {
       late DiscriminatedUnionSchema<Map<String, dynamic>> baseSchema;
 
       setUp(() {
-        baseSchema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        baseSchema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
-          Z.object({
-            'type': Z.literal('admin'),
-            'role': Z.string(),
+          z.object({
+            'type': z.literal('admin'),
+            'role': z.string(),
           }),
-          Z.object({
-            'type': Z.literal('guest'),
-            'permissions': Z.array(Z.string()),
+          z.object({
+            'type': z.literal('guest'),
+            'permissions': z.array(z.string()),
           }),
         ]);
       });
@@ -194,9 +194,9 @@ void main() {
 
       test('should extend with additional schemas', () {
         final extendedSchema = baseSchema.extend([
-          Z.object({
-            'type': Z.literal('moderator'),
-            'level': Z.number(),
+          z.object({
+            'type': z.literal('moderator'),
+            'level': z.number(),
           }),
         ]);
 
@@ -239,10 +239,10 @@ void main() {
 
     group('Async Validation', () {
       test('should support async validation', () async {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'email': Z.string().email(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'email': z.string().email(),
           }),
         ]);
 
@@ -256,10 +256,10 @@ void main() {
       });
 
       test('should handle async validation errors', () async {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'email': Z.string().email(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'email': z.string().email(),
           }),
         ]);
 
@@ -276,10 +276,10 @@ void main() {
     group('Error Handling', () {
       test('should provide detailed error messages for missing discriminator',
           () {
-        final schema = Z.discriminatedUnion('category', [
-          Z.object({
-            'category': Z.literal('A'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('category', [
+          z.object({
+            'category': z.literal('A'),
+            'value': z.string(),
           }),
         ]);
 
@@ -296,10 +296,10 @@ void main() {
 
       test('should provide detailed error messages for invalid discriminator',
           () {
-        final schema = Z.discriminatedUnion('category', [
-          Z.object({
-            'category': Z.literal('A'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('category', [
+          z.object({
+            'category': z.literal('A'),
+            'value': z.string(),
           }),
         ]);
 
@@ -320,9 +320,9 @@ void main() {
 
     group('Metadata and Statistics', () {
       test('should provide schema statistics', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
-          Z.object({'type': Z.literal('B'), 'value': Z.number()}),
+        final schema = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
+          z.object({'type': z.literal('B'), 'value': z.number()}),
         ]);
 
         final stats = schema.statistics;
@@ -333,8 +333,8 @@ void main() {
       });
 
       test('should provide schema mapping', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
         final mapping = schema.schemaMapping;
@@ -343,17 +343,17 @@ void main() {
       });
 
       test('should have correct schema type', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
         expect(schema.schemaType, equals('DiscriminatedUnionSchema'));
       });
 
       test('should have proper string representation', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
-          Z.object({'type': Z.literal('B'), 'value': Z.number()}),
+        final schema = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
+          z.object({'type': z.literal('B'), 'value': z.number()}),
         ]);
 
         final str = schema.toString();
@@ -365,16 +365,16 @@ void main() {
 
     group('Equality and Hash Code', () {
       test('should implement equality correctly', () {
-        final schema1 = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema1 = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
-        final schema2 = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema2 = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
-        final schema3 = Z.discriminatedUnion('category', [
-          Z.object({'category': Z.literal('A'), 'value': Z.string()}),
+        final schema3 = z.discriminatedUnion('category', [
+          z.object({'category': z.literal('A'), 'value': z.string()}),
         ]);
 
         expect(schema1, equals(schema1)); // Same instance
@@ -383,12 +383,12 @@ void main() {
       });
 
       test('should implement hash code correctly', () {
-        final schema1 = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema1 = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
-        final schema2 = Z.discriminatedUnion('type', [
-          Z.object({'type': Z.literal('A'), 'value': Z.string()}),
+        final schema2 = z.discriminatedUnion('type', [
+          z.object({'type': z.literal('A'), 'value': z.string()}),
         ]);
 
         expect(schema1.hashCode, equals(schema2.hashCode));
@@ -397,25 +397,25 @@ void main() {
 
     group('Complex Scenarios', () {
       test('should handle nested discriminated unions', () {
-        final innerUnion = Z.discriminatedUnion('subtype', [
-          Z.object({
-            'subtype': Z.literal('text'),
-            'content': Z.string(),
+        final innerUnion = z.discriminatedUnion('subtype', [
+          z.object({
+            'subtype': z.literal('text'),
+            'content': z.string(),
           }),
-          Z.object({
-            'subtype': Z.literal('image'),
-            'url': Z.string(),
+          z.object({
+            'subtype': z.literal('image'),
+            'url': z.string(),
           }),
         ]);
 
-        final outerUnion = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('content'),
+        final outerUnion = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('content'),
             'data': innerUnion,
           }),
-          Z.object({
-            'type': Z.literal('metadata'),
-            'info': Z.string(),
+          z.object({
+            'type': z.literal('metadata'),
+            'info': z.string(),
           }),
         ]);
 
@@ -433,20 +433,20 @@ void main() {
       });
 
       test('should work with array of discriminated union items', () {
-        final itemSchema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('product'),
-            'name': Z.string(),
-            'price': Z.number(),
+        final itemSchema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('product'),
+            'name': z.string(),
+            'price': z.number(),
           }),
-          Z.object({
-            'type': Z.literal('service'),
-            'name': Z.string(),
-            'duration': Z.number(),
+          z.object({
+            'type': z.literal('service'),
+            'name': z.string(),
+            'duration': z.number(),
           }),
         ]);
 
-        final listSchema = Z.array(itemSchema);
+        final listSchema = z.array(itemSchema);
 
         final result = listSchema.parse([
           {
@@ -467,10 +467,10 @@ void main() {
       });
 
       test('should work with transformation chains', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]).transform((data) => {
               ...data,
@@ -490,14 +490,14 @@ void main() {
 
     group('Boolean Discriminator Edge Cases', () {
       test('should handle boolean discriminators', () {
-        final schema = Z.discriminatedUnion('isActive', [
-          Z.object({
-            'isActive': Z.literal(true),
-            'activeData': Z.string(),
+        final schema = z.discriminatedUnion('isActive', [
+          z.object({
+            'isActive': z.literal(true),
+            'activeData': z.string(),
           }),
-          Z.object({
-            'isActive': Z.literal(false),
-            'inactiveData': Z.string(),
+          z.object({
+            'isActive': z.literal(false),
+            'inactiveData': z.string(),
           }),
         ]);
 
@@ -517,18 +517,18 @@ void main() {
       });
 
       test('should handle boolean schemas with mixed literal values', () {
-        final schema = Z.discriminatedUnion('flag', [
-          Z.object({
-            'flag': Z
+        final schema = z.discriminatedUnion('flag', [
+          z.object({
+            'flag': z
                 .boolean()
                 .refine((val) => val == true, message: 'Must be true'),
-            'trueData': Z.string(),
+            'trueData': z.string(),
           }),
-          Z.object({
-            'flag': Z
+          z.object({
+            'flag': z
                 .boolean()
                 .refine((val) => val == false, message: 'Must be false'),
-            'falseData': Z.string(),
+            'falseData': z.string(),
           }),
         ]);
 
@@ -551,10 +551,10 @@ void main() {
     group('Literal Value Extraction Edge Cases', () {
       test('should handle schemas without literal values', () {
         // This tests the fallback when no literal value can be extracted
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.string(), // Non-literal schema
-            'data': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.string(), // Non-literal schema
+            'data': z.string(),
           }),
         ]);
 
@@ -569,8 +569,8 @@ void main() {
 
       test('should handle non-object schemas', () {
         // This tests when schema is not an ObjectSchema
-        final schema = Z.discriminatedUnion('type', [
-          Z.string(), // Non-object schema
+        final schema = z.discriminatedUnion('type', [
+          z.string(), // Non-object schema
         ]);
 
         // This should handle gracefully
@@ -578,14 +578,14 @@ void main() {
       });
 
       test('should handle literal extraction from string schemas', () {
-        final schema = Z.discriminatedUnion('mode', [
-          Z.object({
-            'mode': Z.literal('read'),
-            'file': Z.string(),
+        final schema = z.discriminatedUnion('mode', [
+          z.object({
+            'mode': z.literal('read'),
+            'file': z.string(),
           }),
-          Z.object({
-            'mode': Z.literal('write'),
-            'content': Z.string(),
+          z.object({
+            'mode': z.literal('write'),
+            'content': z.string(),
           }),
         ]);
 
@@ -599,18 +599,18 @@ void main() {
 
       test('should handle candidate value testing', () {
         // This tests the candidate value testing logic
-        final schema = Z.discriminatedUnion('status', [
-          Z.object({
-            'status': Z.literal('pending'),
-            'message': Z.string(),
+        final schema = z.discriminatedUnion('status', [
+          z.object({
+            'status': z.literal('pending'),
+            'message': z.string(),
           }),
-          Z.object({
-            'status': Z.literal('approved'),
-            'approvedBy': Z.string(),
+          z.object({
+            'status': z.literal('approved'),
+            'approvedBy': z.string(),
           }),
-          Z.object({
-            'status': Z.literal('rejected'),
-            'reason': Z.string(),
+          z.object({
+            'status': z.literal('rejected'),
+            'reason': z.string(),
           }),
         ]);
 
@@ -623,17 +623,17 @@ void main() {
 
     group('Schema Manipulation Edge Cases', () {
       test('should handle extending with duplicate discriminator values', () {
-        final baseSchema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final baseSchema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]);
 
         final extendedSchema = baseSchema.extend([
-          Z.object({
-            'type': Z.literal('user'), // Duplicate discriminator value
-            'email': Z.string(),
+          z.object({
+            'type': z.literal('user'), // Duplicate discriminator value
+            'email': z.string(),
           }),
         ]);
 
@@ -647,10 +647,10 @@ void main() {
       });
 
       test('should handle strict mode', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'name': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'name': z.string(),
           }),
         ]).strict();
 
@@ -664,7 +664,7 @@ void main() {
 
       test('should handle empty schema list', () {
         final schema =
-            Z.discriminatedUnion('type', <Schema<Map<String, dynamic>>>[]);
+            z.discriminatedUnion('type', <Schema<Map<String, dynamic>>>[]);
 
         expect(schema.validDiscriminatorValues, isEmpty);
         expect(schema.schemas, isEmpty);
@@ -672,10 +672,10 @@ void main() {
       });
 
       test('should handle single schema list', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('single'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('single'),
+            'value': z.string(),
           }),
         ]);
 
@@ -687,10 +687,10 @@ void main() {
 
     group('Error Path Testing', () {
       test('should provide correct error paths for missing discriminator', () {
-        final schema = Z.discriminatedUnion('category', [
-          Z.object({
-            'category': Z.literal('A'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('category', [
+          z.object({
+            'category': z.literal('A'),
+            'value': z.string(),
           }),
         ]);
 
@@ -700,10 +700,10 @@ void main() {
       });
 
       test('should provide correct error paths for invalid discriminator', () {
-        final schema = Z.discriminatedUnion('category', [
-          Z.object({
-            'category': Z.literal('A'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('category', [
+          z.object({
+            'category': z.literal('A'),
+            'value': z.string(),
           }),
         ]);
 
@@ -716,12 +716,12 @@ void main() {
       });
 
       test('should provide correct error paths for nested validation', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('user'),
-            'profile': Z.object({
-              'name': Z.string(),
-              'age': Z.number(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'profile': z.object({
+              'name': z.string(),
+              'age': z.number(),
             }),
           }),
         ]);
@@ -740,24 +740,24 @@ void main() {
 
     group('Comprehensive Type Testing', () {
       test('should handle all supported discriminator types', () {
-        final stringSchema = Z.discriminatedUnion('stringType', [
-          Z.object({
-            'stringType': Z.literal('string'),
-            'value': Z.string(),
+        final stringSchema = z.discriminatedUnion('stringType', [
+          z.object({
+            'stringType': z.literal('string'),
+            'value': z.string(),
           }),
         ]);
 
-        final numberSchema = Z.discriminatedUnion('numberType', [
-          Z.object({
-            'numberType': Z.literal(42),
-            'value': Z.number(),
+        final numberSchema = z.discriminatedUnion('numberType', [
+          z.object({
+            'numberType': z.literal(42),
+            'value': z.number(),
           }),
         ]);
 
-        final booleanSchema = Z.discriminatedUnion('booleanType', [
-          Z.object({
-            'booleanType': Z.literal(true),
-            'value': Z.boolean(),
+        final booleanSchema = z.discriminatedUnion('booleanType', [
+          z.object({
+            'booleanType': z.literal(true),
+            'value': z.boolean(),
           }),
         ]);
 
@@ -767,14 +767,14 @@ void main() {
       });
 
       test('should handle negative number discriminators', () {
-        final schema = Z.discriminatedUnion('id', [
-          Z.object({
-            'id': Z.literal(-1),
-            'errorType': Z.string(),
+        final schema = z.discriminatedUnion('id', [
+          z.object({
+            'id': z.literal(-1),
+            'errorType': z.string(),
           }),
-          Z.object({
-            'id': Z.literal(-2),
-            'warningType': Z.string(),
+          z.object({
+            'id': z.literal(-2),
+            'warningType': z.string(),
           }),
         ]);
 
@@ -787,10 +787,10 @@ void main() {
       });
 
       test('should handle zero as discriminator', () {
-        final schema = Z.discriminatedUnion('level', [
-          Z.object({
-            'level': Z.literal(0),
-            'message': Z.string(),
+        final schema = z.discriminatedUnion('level', [
+          z.object({
+            'level': z.literal(0),
+            'message': z.string(),
           }),
         ]);
 
@@ -805,14 +805,14 @@ void main() {
 
     group('Schema Properties Access', () {
       test('should provide access to all schema properties', () {
-        final schema = Z.discriminatedUnion('type', [
-          Z.object({
-            'type': Z.literal('A'),
-            'value': Z.string(),
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('A'),
+            'value': z.string(),
           }),
-          Z.object({
-            'type': Z.literal('B'),
-            'value': Z.number(),
+          z.object({
+            'type': z.literal('B'),
+            'value': z.number(),
           }),
         ]);
 
@@ -825,12 +825,12 @@ void main() {
       });
 
       test('should handle schema with description and metadata', () {
-        final schema = Z.discriminatedUnion(
+        final schema = z.discriminatedUnion(
           'type',
           [
-            Z.object({
-              'type': Z.literal('test'),
-              'value': Z.string(),
+            z.object({
+              'type': z.literal('test'),
+              'value': z.string(),
             }),
           ],
           description: 'Test discriminated union',

@@ -28,14 +28,14 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
   String _selectedManipulation = 'base';
 
   // Base user schema from README Example 5
-  final _baseUserSchema = Z.object({
-    'name': Z.string(),
-    'email': Z.string().email(),
-    'age': Z.number().min(18),
-    'address': Z.object({
-      'street': Z.string(),
-      'city': Z.string(),
-      'country': Z.string(),
+  final _baseUserSchema = z.object({
+    'name': z.string(),
+    'email': z.string().email(),
+    'age': z.number().min(18),
+    'address': z.object({
+      'street': z.string(),
+      'city': z.string(),
+      'country': z.string(),
     }),
   });
 
@@ -89,7 +89,7 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
       case 'omitted':
         return _baseUserSchema.omit(['age']);
       case 'extended':
-        return _baseUserSchema.extend({'phone': Z.string()});
+        return _baseUserSchema.extend({'phone': z.string()});
       case 'partial':
         return _baseUserSchema.partial();
       case 'deepPartial':
@@ -103,7 +103,7 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
       case 'strip':
         return _baseUserSchema.strip();
       case 'catchall':
-        return _baseUserSchema.catchall(Z.string());
+        return _baseUserSchema.catchall(z.string());
       default:
         return _baseUserSchema;
     }
@@ -456,14 +456,14 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
   }
 
   String _getSchemaCode(String manipulation) {
-    const baseSchema = '''final baseUserSchema = Z.object({
-  'name': Z.string(),
-  'email': Z.string().email(),
-  'age': Z.number().min(18),
-  'address': Z.object({
-    'street': Z.string(),
-    'city': Z.string(),
-    'country': Z.string(),
+    const baseSchema = '''final baseUserSchema = z.object({
+  'name': z.string(),
+  'email': z.string().email(),
+  'age': z.number().min(18),
+  'address': z.object({
+    'street': z.string(),
+    'city': z.string(),
+    'country': z.string(),
   }),
 });''';
 
@@ -481,7 +481,7 @@ final omittedSchema = baseUserSchema.omit(['age']);''';
       case 'extended':
         return '''$baseSchema
 
-final extendedSchema = baseUserSchema.extend({'phone': Z.string()});''';
+final extendedSchema = baseUserSchema.extend({'phone': z.string()});''';
       case 'partial':
         return '''$baseSchema
 
@@ -509,7 +509,7 @@ final stripSchema = baseUserSchema.strip();''';
       case 'catchall':
         return '''$baseSchema
 
-final catchallSchema = baseUserSchema.catchall(Z.string());''';
+final catchallSchema = baseUserSchema.catchall(z.string());''';
       default:
         return baseSchema;
     }

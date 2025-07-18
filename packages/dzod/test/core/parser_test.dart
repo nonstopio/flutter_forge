@@ -3,10 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('Parser', () {
-    final stringSchema = Z.string();
-    final objectSchema = Z.object({
-      'name': Z.string(),
-      'age': Z.number(),
+    final stringSchema = z.string();
+    final objectSchema = z.object({
+      'name': z.string(),
+      'age': z.number(),
     });
 
     group('parse', () {
@@ -506,10 +506,10 @@ void main() {
   });
 
   group('ParserExtensions', () {
-    final stringSchema = Z.string();
-    final objectSchema = Z.object({
-      'name': Z.string(),
-      'age': Z.number(),
+    final stringSchema = z.string();
+    final objectSchema = z.object({
+      'name': z.string(),
+      'age': z.number(),
     });
 
     group('parseInput', () {

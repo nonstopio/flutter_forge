@@ -2,6 +2,8 @@
 // ignore_for_file: unused_import
 library;
 
+import 'src/convenience_schemas.dart';
+
 // Convenience exports for common schemas
 export 'src/convenience_schemas.dart';
 // Core exports
@@ -33,3 +35,8 @@ export 'src/schemas/primitive/number_schema.dart';
 export 'src/schemas/primitive/string_schema.dart';
 // Specialized schemas
 export 'src/schemas/specialized/enum_schema.dart';
+
+// Utility exports
+DZod get dzod => DZod.instance;
+
+DZod get z => DZod.instance;

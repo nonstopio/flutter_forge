@@ -25,10 +25,10 @@ class _TupleExampleState extends State<TupleExample> {
   String _selectedTupleType = 'basic';
 
   // Basic tuple schema from README Example 7
-  final _basicTupleSchema = Z.tuple([
-    Z.string(),
-    Z.number(),
-    Z.boolean(),
+  final _basicTupleSchema = z.tuple([
+    z.string(),
+    z.number(),
+    z.boolean(),
   ]);
 
   final Map<String, String> _descriptions = {
@@ -79,7 +79,7 @@ class _TupleExampleState extends State<TupleExample> {
       case 'basic':
         return _basicTupleSchema;
       case 'withRest':
-        return _basicTupleSchema.rest(Z.string());
+        return _basicTupleSchema.rest(z.string());
       case 'exactLength':
         return _basicTupleSchema.exactLength(3);
       case 'minLength':
@@ -408,10 +408,10 @@ class _TupleExampleState extends State<TupleExample> {
   }
 
   String _getSchemaCode(String tupleType) {
-    const baseSchema = '''final tupleSchema = Z.tuple([
-  Z.string(),
-  Z.number(),
-  Z.boolean(),
+    const baseSchema = '''final tupleSchema = z.tuple([
+  z.string(),
+  z.number(),
+  z.boolean(),
 ]);''';
 
     switch (tupleType) {
@@ -419,7 +419,7 @@ class _TupleExampleState extends State<TupleExample> {
         return baseSchema;
       case 'withRest':
         return '''$baseSchema
-final tupleWithRest = tupleSchema.rest(Z.string());''';
+final tupleWithRest = tupleSchema.rest(z.string());''';
       case 'exactLength':
         return '''$baseSchema
 final exactLengthTuple = tupleSchema.exactLength(3);''';

@@ -21,19 +21,19 @@ class _StringValidationExampleState extends State<StringValidationExample> {
 
   // All string validation schemas from README Example 2
   Map<String, Schema> get _validators => {
-        'email': Z.string().email(),
-        'url': Z.string().url(),
-        'uuid': Z.string().uuid(),
-        'cuid': Z.string().cuid(),
-        'cuid2': Z.string().cuid2(),
-        'ulid': Z.string().ulid(),
-        'jwt': Z.string().jwt(),
-        'base64': Z.string().base64(),
-        'hex': Z.string().hex(),
-        'hexColor': Z.string().hexColor(),
-        'emoji': Z.string().emoji(),
-        'json': Z.string().json(),
-        'nanoid': Z.string().nanoid(),
+        'email': z.string().email(),
+        'url': z.string().url(),
+        'uuid': z.string().uuid(),
+        'cuid': z.string().cuid(),
+        'cuid2': z.string().cuid2(),
+        'ulid': z.string().ulid(),
+        'jwt': z.string().jwt(),
+        'base64': z.string().base64(),
+        'hex': z.string().hex(),
+        'hexColor': z.string().hexColor(),
+        'emoji': z.string().emoji(),
+        'json': z.string().json(),
+        'nanoid': z.string().nanoid(),
       };
 
   final Map<String, String> _examples = {
@@ -212,33 +212,33 @@ class _StringValidationExampleState extends State<StringValidationExample> {
   String _getSchemaCode(String validator) {
     switch (validator) {
       case 'email':
-        return 'final emailSchema = Z.string().email();';
+        return 'final emailSchema = z.string().email();';
       case 'url':
-        return 'final urlSchema = Z.string().url();';
+        return 'final urlSchema = z.string().url();';
       case 'uuid':
-        return 'final uuidSchema = Z.string().uuid();';
+        return 'final uuidSchema = z.string().uuid();';
       case 'cuid':
-        return 'final cuidSchema = Z.string().cuid();';
+        return 'final cuidSchema = z.string().cuid();';
       case 'cuid2':
-        return 'final cuid2Schema = Z.string().cuid2();';
+        return 'final cuid2Schema = z.string().cuid2();';
       case 'ulid':
-        return 'final ulidSchema = Z.string().ulid();';
+        return 'final ulidSchema = z.string().ulid();';
       case 'jwt':
-        return 'final jwtSchema = Z.string().jwt();';
+        return 'final jwtSchema = z.string().jwt();';
       case 'base64':
-        return 'final base64Schema = Z.string().base64();';
+        return 'final base64Schema = z.string().base64();';
       case 'hex':
-        return 'final hexSchema = Z.string().hex();';
+        return 'final hexSchema = z.string().hex();';
       case 'hexColor':
-        return 'final hexColorSchema = Z.string().hexColor();';
+        return 'final hexColorSchema = z.string().hexColor();';
       case 'emoji':
-        return 'final emojiSchema = Z.string().emoji();';
+        return 'final emojiSchema = z.string().emoji();';
       case 'json':
-        return 'final jsonSchema = Z.string().json();';
+        return 'final jsonSchema = z.string().json();';
       case 'nanoid':
-        return 'final nanoidSchema = Z.string().nanoid();';
+        return 'final nanoidSchema = z.string().nanoid();';
       default:
-        return 'final stringSchema = Z.string();';
+        return 'final stringSchema = z.string();';
     }
   }
 

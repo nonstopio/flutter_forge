@@ -5,7 +5,7 @@ void main() {
   group('StringSchema Advanced Validations', () {
     group('CUID validation', () {
       test('should validate valid CUIDs', () {
-        final schema = Z.string().cuid();
+        final schema = z.string().cuid();
 
         // Valid CUID format: c + 24 lowercase alphanumeric characters
         final validCuids = [
@@ -23,7 +23,7 @@ void main() {
       });
 
       test('should reject invalid CUIDs', () {
-        final schema = Z.string().cuid();
+        final schema = z.string().cuid();
 
         final invalidCuids = [
           'abc123', // Too short
@@ -45,7 +45,7 @@ void main() {
 
     group('CUID2 validation', () {
       test('should validate valid CUID2s', () {
-        final schema = Z.string().cuid2();
+        final schema = z.string().cuid2();
 
         final validCuid2s = [
           'abcdefghijklmnopqrstu', // Minimum length (21)
@@ -62,7 +62,7 @@ void main() {
       });
 
       test('should reject invalid CUID2s', () {
-        final schema = Z.string().cuid2();
+        final schema = z.string().cuid2();
 
         final invalidCuid2s = [
           'a' * 20, // Too short
@@ -84,7 +84,7 @@ void main() {
 
     group('ULID validation', () {
       test('should validate valid ULIDs', () {
-        final schema = Z.string().ulid();
+        final schema = z.string().ulid();
 
         final validUlids = [
           '01ARZ3NDEKTSV4RRFFQ69G5FAV', // Example ULID
@@ -102,7 +102,7 @@ void main() {
       });
 
       test('should reject invalid ULIDs', () {
-        final schema = Z.string().ulid();
+        final schema = z.string().ulid();
 
         final invalidUlids = [
           '01ARZ3NDEKTSV4RRFFQ69G5FA', // Too short
@@ -124,7 +124,7 @@ void main() {
 
     group('Base64 validation', () {
       test('should validate valid Base64 strings', () {
-        final schema = Z.string().base64();
+        final schema = z.string().base64();
 
         final validBase64s = [
           'SGVsbG8gV29ybGQ=', // "Hello World"
@@ -144,7 +144,7 @@ void main() {
       });
 
       test('should reject invalid Base64 strings', () {
-        final schema = Z.string().base64();
+        final schema = z.string().base64();
 
         final invalidBase64s = [
           'SGVsbG8gV29ybGQ', // Missing padding
@@ -166,7 +166,7 @@ void main() {
 
     group('Emoji validation', () {
       test('should validate strings containing only emojis', () {
-        final schema = Z.string().emoji();
+        final schema = z.string().emoji();
 
         final validEmojis = [
           '😀', // Single emoji
@@ -186,7 +186,7 @@ void main() {
       });
 
       test('should reject strings with non-emoji content', () {
-        final schema = Z.string().emoji();
+        final schema = z.string().emoji();
 
         final invalidEmojis = [
           'Hello 😀', // Text with emoji
@@ -208,7 +208,7 @@ void main() {
 
     group('NanoID validation', () {
       test('should validate valid NanoIDs with default length', () {
-        final schema = Z.string().nanoid();
+        final schema = z.string().nanoid();
 
         final validNanoids = [
           'V1StGXR8_Z5jdHi6B-myT', // 21 chars, valid alphabet
@@ -227,8 +227,8 @@ void main() {
       });
 
       test('should validate NanoIDs with custom length', () {
-        final schema10 = Z.string().nanoid(length: 10);
-        final schema30 = Z.string().nanoid(length: 30);
+        final schema10 = z.string().nanoid(length: 10);
+        final schema30 = z.string().nanoid(length: 30);
 
         final result10 = schema10.validate('abcdefghij');
         expect(result10.isSuccess, isTrue);
@@ -238,7 +238,7 @@ void main() {
       });
 
       test('should reject invalid NanoIDs', () {
-        final schema = Z.string().nanoid();
+        final schema = z.string().nanoid();
 
         final invalidNanoids = [
           'V1StGXR8_Z5jdHi6B-myT!', // Invalid character
@@ -259,7 +259,7 @@ void main() {
 
     group('JWT validation', () {
       test('should validate valid JWTs', () {
-        final schema = Z.string().jwt();
+        final schema = z.string().jwt();
 
         final validJwts = [
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
@@ -276,7 +276,7 @@ void main() {
       });
 
       test('should reject invalid JWTs', () {
-        final schema = Z.string().jwt();
+        final schema = z.string().jwt();
 
         final invalidJwts = [
           'header.payload', // Missing signature
@@ -299,7 +299,7 @@ void main() {
 
     group('Hex validation', () {
       test('should validate valid hex strings', () {
-        final schema = Z.string().hex();
+        final schema = z.string().hex();
 
         final validHexs = [
           '1234567890abcdef', // Lowercase
@@ -319,7 +319,7 @@ void main() {
       });
 
       test('should reject invalid hex strings', () {
-        final schema = Z.string().hex();
+        final schema = z.string().hex();
 
         final invalidHexs = [
           'xyz', // Invalid characters
@@ -340,7 +340,7 @@ void main() {
 
     group('Hex color validation', () {
       test('should validate valid hex color codes', () {
-        final schema = Z.string().hexColor();
+        final schema = z.string().hexColor();
 
         final validColors = [
           '#ff0000', // Red with #
@@ -360,7 +360,7 @@ void main() {
       });
 
       test('should reject invalid hex color codes', () {
-        final schema = Z.string().hexColor();
+        final schema = z.string().hexColor();
 
         final invalidColors = [
           '#ff', // Too short
@@ -382,7 +382,7 @@ void main() {
 
     group('JSON validation', () {
       test('should validate valid JSON strings', () {
-        final schema = Z.string().json();
+        final schema = z.string().json();
 
         final validJsons = [
           '{"name": "John", "age": 30}', // Object
@@ -401,7 +401,7 @@ void main() {
       });
 
       test('should reject invalid JSON strings', () {
-        final schema = Z.string().json();
+        final schema = z.string().json();
 
         final invalidJsons = [
           '{name: "John"}', // Unquoted key
@@ -426,7 +426,7 @@ void main() {
 
     group('Chaining validations', () {
       test('should chain multiple validations', () {
-        final schema = Z.string().min(5).cuid();
+        final schema = z.string().min(5).cuid();
 
         const validCuid = 'c1234567890abcdefghijklmn';
         final result = schema.validate(validCuid);

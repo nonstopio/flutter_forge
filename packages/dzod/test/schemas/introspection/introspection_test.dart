@@ -5,7 +5,7 @@ void main() {
   group('Schema Introspection Methods', () {
     group('describe() method', () {
       test('should add description to schema', () {
-        final schema = Z.string().describe('User name');
+        final schema = z.string().describe('User name');
 
         expect(schema.description, equals('User name'));
         expect(schema.metadata, isNull);
@@ -13,21 +13,21 @@ void main() {
 
       test('should add description and metadata to schema', () {
         final metadata = {'required': true, 'maxLength': 50};
-        final schema = Z.string().describe('User name', metadata: metadata);
+        final schema = z.string().describe('User name', metadata: metadata);
 
         expect(schema.description, equals('User name'));
         expect(schema.metadata, equals(metadata));
       });
 
       test('should preserve validation behavior', () {
-        final schema = Z.string().min(3).describe('User name');
+        final schema = z.string().min(3).describe('User name');
 
         expect(schema.parse('John'), equals('John'));
         expect(() => schema.parse('Jo'), throwsA(isA<ValidationException>()));
       });
 
       test('should work with async validation', () async {
-        final schema = Z
+        final schema = z
             .string()
             .refineAsync(
               (value) => Future.value(value.length > 2),
@@ -40,14 +40,14 @@ void main() {
       });
 
       test('should chain with other methods', () {
-        final schema = Z.string().min(3).describe('User name').optional();
+        final schema = z.string().min(3).describe('User name').optional();
 
         expect(schema.safeParse(null), isNull);
         expect(schema.safeParse('John'), equals('John'));
       });
 
       test('should override previous description', () {
-        final schema = Z
+        final schema = z
             .string()
             .describe('First description')
             .describe('Second description');
@@ -68,7 +68,7 @@ void main() {
         };
 
         final schema =
-            Z.string().describe('Complex metadata schema', metadata: metadata);
+            z.string().describe('Complex metadata schema', metadata: metadata);
 
         expect(schema.metadata, equals(metadata));
         expect(schema.metadata!['validation']['rules'], contains('min_length'));
@@ -77,7 +77,7 @@ void main() {
 
     group('brand() method', () {
       test('should create branded type', () {
-        final userIdSchema = Z.string().brand<String>();
+        final userIdSchema = z.string().brand<String>();
         final result = userIdSchema.parse('user123');
 
         expect(result, isA<Branded<String, String>>());
@@ -85,8 +85,8 @@ void main() {
       });
 
       test('should maintain type safety between different brands', () {
-        final userIdSchema = Z.string().brand<String>();
-        final productIdSchema = Z.string().brand<int>();
+        final userIdSchema = z.string().brand<String>();
+        final productIdSchema = z.string().brand<int>();
 
         final userId = userIdSchema.parse('user123');
         final productId = productIdSchema.parse('product456');
@@ -97,14 +97,14 @@ void main() {
       });
 
       test('should work with validation failures', () {
-        final userIdSchema = Z.string().min(5).brand<String>();
+        final userIdSchema = z.string().min(5).brand<String>();
 
         expect(() => userIdSchema.parse('123'),
             throwsA(isA<ValidationException>()));
       });
 
       test('should work with async validation', () async {
-        final schema = Z
+        final schema = z
             .string()
             .refineAsync(
               (value) => Future.value(value.isNotEmpty),
@@ -117,7 +117,7 @@ void main() {
       });
 
       test('should support chaining with other methods', () {
-        final schema = Z.string().min(3).brand<String>().optional();
+        final schema = z.string().min(3).brand<String>().optional();
 
         expect(schema.safeParse(null), isNull);
         final result = schema.safeParse('test');
@@ -126,7 +126,7 @@ void main() {
       });
 
       test('should work with different base types', () {
-        final numberBrandSchema = Z.number().positive().brand<String>();
+        final numberBrandSchema = z.number().positive().brand<String>();
         final result = numberBrandSchema.parse(42);
 
         expect(result, isA<Branded<num, String>>());
@@ -134,7 +134,7 @@ void main() {
       });
 
       test('should preserve equality for same values and brands', () {
-        final schema = Z.string().brand<String>();
+        final schema = z.string().brand<String>();
         final value1 = schema.parse('test');
         final value2 = schema.parse('test');
 
@@ -143,8 +143,8 @@ void main() {
       });
 
       test('should differentiate between different brand types', () {
-        final userIdSchema = Z.string().brand<String>();
-        final emailSchema = Z.string().brand<int>();
+        final userIdSchema = z.string().brand<String>();
+        final emailSchema = z.string().brand<int>();
 
         final userId = userIdSchema.parse('test');
         final email = emailSchema.parse('test');
@@ -155,7 +155,7 @@ void main() {
 
     group('readonly() method', () {
       test('should create readonly wrapper', () {
-        final schema = Z.string().readonly();
+        final schema = z.string().readonly();
         final result = schema.parse('test');
 
         expect(result, isA<Readonly<String>>());
@@ -163,13 +163,13 @@ void main() {
       });
 
       test('should work with validation failures', () {
-        final schema = Z.string().min(5).readonly();
+        final schema = z.string().min(5).readonly();
 
         expect(() => schema.parse('123'), throwsA(isA<ValidationException>()));
       });
 
       test('should work with async validation', () async {
-        final schema = Z
+        final schema = z
             .string()
             .refineAsync(
               (value) => Future.value(value.isNotEmpty),
@@ -182,7 +182,7 @@ void main() {
       });
 
       test('should support chaining with other methods', () {
-        final schema = Z.string().min(3).readonly().optional();
+        final schema = z.string().min(3).readonly().optional();
 
         expect(schema.safeParse(null), isNull);
         final result = schema.safeParse('test');
@@ -191,9 +191,9 @@ void main() {
       });
 
       test('should work with complex objects', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }).readonly();
 
         final input = {'name': 'John', 'age': 30};
@@ -204,7 +204,7 @@ void main() {
       });
 
       test('should work with arrays', () {
-        final schema = Z.array(Z.string()).readonly();
+        final schema = z.array(z.string()).readonly();
         final input = ['a', 'b', 'c'];
         final result = schema.parse(input);
 
@@ -213,7 +213,7 @@ void main() {
       });
 
       test('should preserve equality for same values', () {
-        final schema = Z.string().readonly();
+        final schema = z.string().readonly();
         final value1 = schema.parse('test');
         final value2 = schema.parse('test');
 
@@ -222,8 +222,8 @@ void main() {
       });
 
       test('should work with different types', () {
-        final stringSchema = Z.string().readonly();
-        final numberSchema = Z.number().readonly();
+        final stringSchema = z.string().readonly();
+        final numberSchema = z.number().readonly();
 
         final stringResult = stringSchema.parse('test');
         final numberResult = numberSchema.parse(42);
@@ -237,7 +237,7 @@ void main() {
 
     group('Method combinations', () {
       test('should combine describe, brand, and readonly', () {
-        final schema = Z
+        final schema = z
             .string()
             .min(3)
             .describe('User ID')
@@ -253,7 +253,7 @@ void main() {
       });
 
       test('should work with complex validation chains', () {
-        final schema = Z
+        final schema = z
             .string()
             .email()
             .describe('User email address')
@@ -271,7 +271,7 @@ void main() {
       });
 
       test('should support async validation in combinations', () async {
-        final schema = Z
+        final schema = z
             .string()
             .describe('Async validated user ID')
             .refineAsync((value) => Future.value(value.length > 5))
@@ -286,7 +286,7 @@ void main() {
 
     group('Error handling', () {
       test('should preserve error messages in describe chains', () {
-        final schema = Z
+        final schema = z
             .string()
             .min(5)
             .refine((value) => value.length >= 5, message: 'Too short')
@@ -302,7 +302,7 @@ void main() {
       });
 
       test('should preserve error context in brand chains', () {
-        final schema = Z.string().email().brand<String>();
+        final schema = z.string().email().brand<String>();
 
         try {
           schema.parse('invalid-email');
@@ -314,7 +314,7 @@ void main() {
       });
 
       test('should preserve error context in readonly chains', () {
-        final schema = Z.number().positive().readonly();
+        final schema = z.number().positive().readonly();
 
         try {
           schema.parse(-5);

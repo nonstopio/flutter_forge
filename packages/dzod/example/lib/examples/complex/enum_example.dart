@@ -19,7 +19,7 @@ class _EnumExampleState extends State<EnumExample> {
   String _selectedEnumType = 'basic';
 
   // Basic enum schema from README Example 8
-  final _basicRoleSchema = Z.enum_(['admin', 'user', 'guest']);
+  final _basicRoleSchema = z.enum_(['admin', 'user', 'guest']);
 
   final Map<String, String> _descriptions = {
     'basic': 'Basic enum: admin, user, guest',
@@ -355,7 +355,7 @@ class _EnumExampleState extends State<EnumExample> {
 
   String _getSchemaCode(String enumType) {
     const baseSchema =
-        "final roleSchema = Z.enum_(['admin', 'user', 'guest']);";
+        "final roleSchema = z.enum_(['admin', 'user', 'guest']);";
 
     switch (enumType) {
       case 'basic':

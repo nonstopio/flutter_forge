@@ -12,9 +12,9 @@ import '../../core/validation_result.dart';
 /// ```dart
 /// // Define a tree structure
 /// late final Schema<Map<String, dynamic>> treeSchema;
-/// treeSchema = Z.recursive(() => Z.object({
-///   'value': Z.string(),
-///   'children': Z.array(treeSchema).optional(),
+/// treeSchema = z.recursive(() => z.object({
+///   'value': z.string(),
+///   'children': z.array(treeSchema).optional(),
 /// }));
 /// ```
 class RecursiveSchema<T> extends Schema<T> {

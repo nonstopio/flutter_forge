@@ -5,7 +5,7 @@ void main() {
   group('JSON Schema Generation', () {
     group('Basic Types', () {
       test('should generate string schema', () {
-        final schema = Z.string();
+        final schema = z.string();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -13,21 +13,21 @@ void main() {
       });
 
       test('should generate number schema', () {
-        final schema = Z.number();
+        final schema = z.number();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('number'));
       });
 
       test('should generate boolean schema', () {
-        final schema = Z.boolean();
+        final schema = z.boolean();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('boolean'));
       });
 
       test('should generate null schema', () {
-        final schema = Z.null_();
+        final schema = z.null_();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('null'));
@@ -36,7 +36,7 @@ void main() {
 
     group('Array and Collection Types', () {
       test('should generate array schema', () {
-        final schema = Z.array(Z.string());
+        final schema = z.array(z.string());
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('array'));
@@ -44,9 +44,9 @@ void main() {
       });
 
       test('should generate object schema', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
         final jsonSchema = schema.toJsonSchema();
 
@@ -57,7 +57,7 @@ void main() {
 
     group('Schema Configuration', () {
       test('should include descriptions when configured', () {
-        final schema = Z.string().describe('User name');
+        final schema = z.string().describe('User name');
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeDescriptions: true),
         );
@@ -67,7 +67,7 @@ void main() {
       });
 
       test('should exclude descriptions when configured', () {
-        final schema = Z.string().describe('User name');
+        final schema = z.string().describe('User name');
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeDescriptions: false),
         );
@@ -78,7 +78,7 @@ void main() {
 
       test('should include metadata when configured', () {
         final metadata = {'validation': 'required', 'ui': 'text-input'};
-        final schema = Z.string().describe('User name', metadata: metadata);
+        final schema = z.string().describe('User name', metadata: metadata);
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(
             includeMetadata: true,
@@ -91,7 +91,7 @@ void main() {
       });
 
       test('should set schema version', () {
-        final schema = Z.string();
+        final schema = z.string();
         final jsonSchema = schema.toJsonSchema(
           config:
               const JsonSchemaConfig(version: JsonSchemaVersion.draft202012),
@@ -102,7 +102,7 @@ void main() {
       });
 
       test('should set schema ID when provided', () {
-        final schema = Z.string();
+        final schema = z.string();
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(
               schemaId: 'https://example.com/user-schema'),
@@ -114,7 +114,7 @@ void main() {
 
     group('Branded and Readonly Schemas', () {
       test('should generate schema for branded types', () {
-        final schema = Z.string().brand<String>();
+        final schema = z.string().brand<String>();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -122,7 +122,7 @@ void main() {
       });
 
       test('should generate schema for readonly types', () {
-        final schema = Z.string().readonly();
+        final schema = z.string().readonly();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -131,7 +131,7 @@ void main() {
 
       test('should handle complex wrapper combinations', () {
         final schema =
-            Z.string().describe('User ID').brand<String>().readonly();
+            z.string().describe('User ID').brand<String>().readonly();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -142,7 +142,7 @@ void main() {
 
     group('Preset Configurations', () {
       test('should use OpenAPI 3.0 preset', () {
-        final schema = Z.string().describe('API Key');
+        final schema = z.string().describe('API Key');
         final jsonSchema = schema.toOpenApiSchema();
 
         expect(jsonSchema['\$schema'],
@@ -151,7 +151,7 @@ void main() {
       });
 
       test('should use minimal preset', () {
-        final schema = Z.string().describe('Test');
+        final schema = z.string().describe('Test');
         final jsonSchema = schema.toMinimalJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -162,7 +162,7 @@ void main() {
 
     group('Complex Schema Types', () {
       test('should handle enum schemas', () {
-        final schema = Z.enum_(['red', 'green', 'blue']);
+        final schema = z.enum_(['red', 'green', 'blue']);
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
@@ -170,14 +170,14 @@ void main() {
       });
 
       test('should handle tuple schemas', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('array'));
       });
 
       test('should handle record schemas', () {
-        final schema = Z.record(Z.number());
+        final schema = z.record(z.number());
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('object'));
@@ -197,7 +197,7 @@ void main() {
 
     group('Schema Context and Definitions', () {
       test('should generate definitions when configured', () {
-        final schema = Z.string().describe('Test Schema');
+        final schema = z.string().describe('Test Schema');
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(generateDefinitions: true),
         );
@@ -207,7 +207,7 @@ void main() {
       });
 
       test('should handle schema titles', () {
-        final schema = Z.string();
+        final schema = z.string();
         final jsonSchema = schema.toJsonSchema(title: 'Custom Title');
 
         expect(jsonSchema['title'], equals('Custom Title'));

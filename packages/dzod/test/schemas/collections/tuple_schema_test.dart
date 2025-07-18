@@ -5,7 +5,7 @@ void main() {
   group('TupleSchema', () {
     group('Basic Tuple Validation', () {
       test('validates empty tuple', () {
-        final schema = Z.tuple([]);
+        final schema = z.tuple([]);
         final result = schema.validate([]);
 
         expect(result.isSuccess, true);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('validates single element tuple', () {
-        final schema = Z.tuple([Z.string()]);
+        final schema = z.tuple([z.string()]);
         final result = schema.validate(['hello']);
 
         expect(result.isSuccess, true);
@@ -21,7 +21,7 @@ void main() {
       });
 
       test('validates multi-element tuple', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]);
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]);
         final result = schema.validate(['hello', 42, true]);
 
         expect(result.isSuccess, true);
@@ -29,7 +29,7 @@ void main() {
       });
 
       test('fails on non-array input', () {
-        final schema = Z.tuple([Z.string()]);
+        final schema = z.tuple([z.string()]);
         final result = schema.validate('not an array');
 
         expect(result.isSuccess, false);
@@ -38,7 +38,7 @@ void main() {
       });
 
       test('fails when array is too short', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
         final result = schema.validate(['hello']);
 
         expect(result.isSuccess, false);
@@ -48,7 +48,7 @@ void main() {
       });
 
       test('fails when array is too long (without rest)', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
         final result = schema.validate(['hello', 42, true]);
 
         expect(result.isSuccess, false);
@@ -60,10 +60,10 @@ void main() {
 
     group('Element Validation', () {
       test('validates each element with correct schema', () {
-        final schema = Z.tuple([
-          Z.string().min(2),
-          Z.number().positive(),
-          Z.boolean(),
+        final schema = z.tuple([
+          z.string().min(2),
+          z.number().positive(),
+          z.boolean(),
         ]);
         final result1 = schema.validate(['hello', 5, true]);
         final result2 =
@@ -77,10 +77,10 @@ void main() {
       });
 
       test('collects all element validation errors', () {
-        final schema = Z.tuple([
-          Z.string().min(3),
-          Z.number().positive(),
-          Z.boolean(),
+        final schema = z.tuple([
+          z.string().min(3),
+          z.number().positive(),
+          z.boolean(),
         ]);
         final result = schema.validate(['hi', -1, 'not boolean']);
 
@@ -98,7 +98,7 @@ void main() {
       });
 
       test('preserves validated data for successful elements', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
         final result = schema.validate(['hello', 42]);
 
         expect(result.isSuccess, true);
@@ -109,7 +109,7 @@ void main() {
 
     group('Rest Schema', () {
       test('allows additional elements with rest schema', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).rest(Z.boolean());
+        final schema = z.tuple([z.string(), z.number()]).rest(z.boolean());
         final result = schema.validate(['hello', 42, true, false, true]);
 
         expect(result.isSuccess, true);
@@ -117,7 +117,7 @@ void main() {
       });
 
       test('validates rest elements with rest schema', () {
-        final schema = Z.tuple([Z.string()]).rest(Z.number().positive());
+        final schema = z.tuple([z.string()]).rest(z.number().positive());
         final result1 = schema.validate(['hello', 1, 2, 3]);
         final result2 =
             schema.validate(['hello', 1, -2, 3]); // negative number in rest
@@ -127,7 +127,7 @@ void main() {
       });
 
       test('works with no additional elements', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).rest(Z.boolean());
+        final schema = z.tuple([z.string(), z.number()]).rest(z.boolean());
         final result = schema.validate(['hello', 42]);
 
         expect(result.isSuccess, true);
@@ -135,8 +135,8 @@ void main() {
       });
 
       test('validates complex rest schema', () {
-        final schema = Z.tuple([Z.string()]).rest(
-            Z.object({'type': Z.string(), 'value': Z.number()}));
+        final schema = z.tuple([z.string()]).rest(
+            z.object({'type': z.string(), 'value': z.number()}));
         final result = schema.validate([
           'header',
           {'type': 'item1', 'value': 1},
@@ -151,8 +151,8 @@ void main() {
 
     group('Schema Manipulation', () {
       test('appends element schema', () {
-        final baseSchema = Z.tuple([Z.string(), Z.number()]);
-        final extendedSchema = baseSchema.append(Z.boolean());
+        final baseSchema = z.tuple([z.string(), z.number()]);
+        final extendedSchema = baseSchema.append(z.boolean());
 
         final result1 = extendedSchema.validate(['hello', 42, true]);
         final result2 = extendedSchema.validate(['hello', 42]); // too short now
@@ -162,8 +162,8 @@ void main() {
       });
 
       test('prepends element schema', () {
-        final baseSchema = Z.tuple([Z.string(), Z.number()]);
-        final extendedSchema = baseSchema.prepend(Z.boolean());
+        final baseSchema = z.tuple([z.string(), z.number()]);
+        final extendedSchema = baseSchema.prepend(z.boolean());
 
         final result = extendedSchema.validate([true, 'hello', 42]);
 
@@ -173,7 +173,7 @@ void main() {
 
       test('chaining append operations', () {
         final schema =
-            Z.tuple([Z.string()]).append(Z.number()).append(Z.boolean());
+            z.tuple([z.string()]).append(z.number()).append(z.boolean());
 
         final result = schema.validate(['hello', 42, true]);
 
@@ -183,7 +183,7 @@ void main() {
 
       test('chaining prepend operations', () {
         final schema =
-            Z.tuple([Z.string()]).prepend(Z.number()).prepend(Z.boolean());
+            z.tuple([z.string()]).prepend(z.number()).prepend(z.boolean());
 
         final result = schema.validate([true, 42, 'hello']);
 
@@ -193,7 +193,7 @@ void main() {
 
       test('preserves rest schema when appending', () {
         final schema =
-            Z.tuple([Z.string()]).rest(Z.number()).append(Z.boolean());
+            z.tuple([z.string()]).rest(z.number()).append(z.boolean());
 
         final result = schema.validate(['hello', true, 1, 2, 3]);
 
@@ -204,28 +204,28 @@ void main() {
 
     group('Schema Properties and Access', () {
       test('gets first element schema', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]);
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]);
 
         expect(schema.first, isA<Schema>());
         expect(schema.first.runtimeType.toString(), contains('String'));
       });
 
       test('gets last element schema', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]);
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]);
 
         expect(schema.last, isA<Schema>());
         expect(schema.last.runtimeType.toString(), contains('Boolean'));
       });
 
       test('throws on first/last for empty tuple', () {
-        final schema = Z.tuple([]);
+        final schema = z.tuple([]);
 
         expect(() => schema.first, throwsA(isA<StateError>()));
         expect(() => schema.last, throwsA(isA<StateError>()));
       });
 
       test('gets element at index', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]);
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]);
 
         expect(schema.elementAt(0), isA<Schema>());
         expect(schema.elementAt(1), isA<Schema>());
@@ -233,31 +233,31 @@ void main() {
       });
 
       test('throws on invalid index', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
 
         expect(() => schema.elementAt(-1), throwsA(isA<RangeError>()));
         expect(() => schema.elementAt(2), throwsA(isA<RangeError>()));
       });
 
       test('gets tuple length', () {
-        final schema1 = Z.tuple([]);
-        final schema2 = Z.tuple([Z.string(), Z.number()]);
+        final schema1 = z.tuple([]);
+        final schema2 = z.tuple([z.string(), z.number()]);
 
         expect(schema1.length, 0);
         expect(schema2.length, 2);
       });
 
       test('checks if has rest schema', () {
-        final schema1 = Z.tuple([Z.string()]);
-        final schema2 = Z.tuple([Z.string()]).rest(Z.number());
+        final schema1 = z.tuple([z.string()]);
+        final schema2 = z.tuple([z.string()]).rest(z.number());
 
         expect(schema1.hasRest, false);
         expect(schema2.hasRest, true);
       });
 
       test('gets rest schema', () {
-        final schema1 = Z.tuple([Z.string()]);
-        final schema2 = Z.tuple([Z.string()]).rest(Z.number());
+        final schema1 = z.tuple([z.string()]);
+        final schema2 = z.tuple([z.string()]).rest(z.number());
 
         expect(schema1.restSchema, null);
         expect(schema2.restSchema, isA<Schema>());
@@ -265,25 +265,25 @@ void main() {
 
       test('gets element schemas list', () {
         final elementSchemas = <Schema<dynamic>>[
-          Z.string(),
-          Z.number(),
-          Z.boolean()
+          z.string(),
+          z.number(),
+          z.boolean()
         ];
-        final schema = Z.tuple(elementSchemas);
+        final schema = z.tuple(elementSchemas);
 
         final retrievedSchemas = schema.elementSchemas;
         expect(retrievedSchemas.length, 3);
         expect(retrievedSchemas, isA<List<Schema>>());
 
         // Should be unmodifiable
-        expect(() => retrievedSchemas.add(Z.string()),
+        expect(() => retrievedSchemas.add(z.string()),
             throwsA(isA<UnsupportedError>()));
       });
     });
 
     group('Length Validation Methods', () {
       test('validates exact length', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).exactLength(2);
+        final schema = z.tuple([z.string(), z.number()]).exactLength(2);
 
         final result1 = schema.validate(['hello', 42]);
         final result2 = schema.validate(['hello', 42, true]);
@@ -293,7 +293,7 @@ void main() {
       });
 
       test('validates minimum length', () {
-        final schema = Z.tuple([Z.string()]).rest(Z.number()).minLength(3);
+        final schema = z.tuple([z.string()]).rest(z.number()).minLength(3);
 
         final result1 = schema.validate(['hello', 1, 2]);
         final result2 = schema.validate(['hello', 1]);
@@ -303,7 +303,7 @@ void main() {
       });
 
       test('validates maximum length', () {
-        final schema = Z.tuple([Z.string()]).rest(Z.number()).maxLength(3);
+        final schema = z.tuple([z.string()]).rest(z.number()).maxLength(3);
 
         final result1 = schema.validate(['hello', 1, 2]);
         final result2 = schema.validate(['hello', 1, 2, 3]);
@@ -313,7 +313,7 @@ void main() {
       });
 
       test('validates non-empty tuple', () {
-        final schema = Z.tuple([]).rest(Z.string()).nonempty();
+        final schema = z.tuple([]).rest(z.string()).nonempty();
 
         final result1 = schema.validate(['hello']);
         final result2 = schema.validate([]);
@@ -325,7 +325,7 @@ void main() {
 
     group('Transformation Methods', () {
       test('maps elements after validation', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).map<String>(
+        final schema = z.tuple([z.string(), z.number()]).map<String>(
             (element) => element.toString());
 
         final result = schema.validate(['hello', 42]);
@@ -335,8 +335,8 @@ void main() {
       });
 
       test('filters elements after validation', () {
-        final schema = Z
-            .tuple([Z.string(), Z.number(), Z.string(), Z.number()]).filter(
+        final schema = z
+            .tuple([z.string(), z.number(), z.string(), z.number()]).filter(
                 (element) => element is String);
 
         final result = schema.validate(['hello', 42, 'world', 24]);
@@ -346,8 +346,8 @@ void main() {
       });
 
       test('slices tuple after validation', () {
-        final schema = Z.tuple(
-            [Z.string(), Z.number(), Z.boolean(), Z.string()]).slice(1, 3);
+        final schema = z.tuple(
+            [z.string(), z.number(), z.boolean(), z.string()]).slice(1, 3);
 
         final result = schema.validate(['hello', 42, true, 'world']);
 
@@ -356,7 +356,7 @@ void main() {
       });
 
       test('slices tuple with start only', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]).slice(1);
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]).slice(1);
 
         final result = schema.validate(['hello', 42, true]);
 
@@ -365,7 +365,7 @@ void main() {
       });
 
       test('reverses tuple after validation', () {
-        final schema = Z.tuple([Z.string(), Z.number(), Z.boolean()]).reverse();
+        final schema = z.tuple([z.string(), z.number(), z.boolean()]).reverse();
 
         final result = schema.validate(['hello', 42, true]);
 
@@ -374,8 +374,8 @@ void main() {
       });
 
       test('transformation preserves type safety', () {
-        final schema = Z
-            .tuple([Z.string().min(2), Z.number().positive()]).map<String>(
+        final schema = z
+            .tuple([z.string().min(2), z.number().positive()]).map<String>(
                 (element) => '$element!');
 
         final result1 = schema.validate(['hello', 42]);
@@ -390,7 +390,7 @@ void main() {
 
     group('Factory Methods', () {
       test('creates pair tuple', () {
-        final schema = TupleFactories.pair(Z.string(), Z.number());
+        final schema = TupleFactories.pair(z.string(), z.number());
 
         final result1 = schema.validate(['hello', 42]);
         final result2 = schema.validate(['hello', 42, true]); // too long
@@ -401,7 +401,7 @@ void main() {
 
       test('creates triple tuple', () {
         final schema =
-            TupleFactories.triple(Z.string(), Z.number(), Z.boolean());
+            TupleFactories.triple(z.string(), z.number(), z.boolean());
 
         final result = schema.validate(['hello', 42, true]);
 
@@ -411,7 +411,7 @@ void main() {
 
       test('creates quad tuple', () {
         final schema = TupleFactories.quad(
-            Z.string(), Z.number(), Z.boolean(), Z.string());
+            z.string(), z.number(), z.boolean(), z.string());
 
         final result = schema.validate(['hello', 42, true, 'world']);
 
@@ -421,7 +421,7 @@ void main() {
 
       test('creates quintuple tuple', () {
         final schema = TupleFactories.quintuple(
-            Z.string(), Z.number(), Z.boolean(), Z.string(), Z.number());
+            z.string(), z.number(), z.boolean(), z.string(), z.number());
 
         final result = schema.validate(['hello', 42, true, 'world', 24]);
 
@@ -430,7 +430,7 @@ void main() {
       });
 
       test('factory methods create proper schemas', () {
-        final pairSchema = TupleFactories.pair(Z.string(), Z.number());
+        final pairSchema = TupleFactories.pair(z.string(), z.number());
 
         expect(pairSchema.length, 2);
         expect(pairSchema.hasRest, false);
@@ -441,7 +441,7 @@ void main() {
 
     group('String Representation and Equality', () {
       test('has proper string representation', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).rest(Z.boolean());
+        final schema = z.tuple([z.string(), z.number()]).rest(z.boolean());
         final str = schema.toString();
 
         expect(str, contains('TupleSchema'));
@@ -451,10 +451,10 @@ void main() {
       });
 
       test('implements equality correctly', () {
-        final schema1 = Z.tuple([Z.string(), Z.number()]);
-        final schema2 = Z.tuple([Z.string(), Z.number()]);
-        final schema3 = Z.tuple([Z.string(), Z.boolean()]);
-        final schema4 = Z.tuple([Z.string(), Z.number()]).rest(Z.boolean());
+        final schema1 = z.tuple([z.string(), z.number()]);
+        final schema2 = z.tuple([z.string(), z.number()]);
+        final schema3 = z.tuple([z.string(), z.boolean()]);
+        final schema4 = z.tuple([z.string(), z.number()]).rest(z.boolean());
 
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false); // different element schemas
@@ -463,9 +463,9 @@ void main() {
       });
 
       test('handles equality with empty tuples', () {
-        final schema1 = Z.tuple([]);
-        final schema2 = Z.tuple([]);
-        final schema3 = Z.tuple([]).rest(Z.string());
+        final schema1 = z.tuple([]);
+        final schema2 = z.tuple([]);
+        final schema3 = z.tuple([]).rest(z.string());
 
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false);
@@ -473,9 +473,9 @@ void main() {
 
       test('list equality helper works correctly', () {
         // This tests the internal _listEquals method indirectly
-        final schema1 = Z.tuple([Z.string(), Z.number()]);
-        final schema2 = Z.tuple([Z.string(), Z.number()]);
-        final schema3 = Z.tuple([Z.number(), Z.string()]);
+        final schema1 = z.tuple([z.string(), z.number()]);
+        final schema2 = z.tuple([z.string(), z.number()]);
+        final schema3 = z.tuple([z.number(), z.string()]);
 
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false);
@@ -484,8 +484,8 @@ void main() {
 
     group('Complex Scenarios', () {
       test('validates nested tuples', () {
-        final innerTuple = Z.tuple([Z.string(), Z.number()]);
-        final outerTuple = Z.tuple([innerTuple, Z.boolean()]);
+        final innerTuple = z.tuple([z.string(), z.number()]);
+        final outerTuple = z.tuple([innerTuple, z.boolean()]);
 
         final result = outerTuple.validate([
           ['hello', 42],
@@ -498,10 +498,10 @@ void main() {
       });
 
       test('handles tuple with object elements', () {
-        final schema = Z.tuple([
-          Z.object({'name': Z.string(), 'age': Z.number()}),
-          Z.array(Z.string()),
-          Z.boolean()
+        final schema = z.tuple([
+          z.object({'name': z.string(), 'age': z.number()}),
+          z.array(z.string()),
+          z.boolean()
         ]);
 
         final result = schema.validate([
@@ -516,9 +516,9 @@ void main() {
       });
 
       test('works with union types in elements', () {
-        final schema = Z.tuple([
-          Z.union([Z.string(), Z.number()]),
-          Z.union([Z.boolean(), Z.string()])
+        final schema = z.tuple([
+          z.union([z.string(), z.number()]),
+          z.union([z.boolean(), z.string()])
         ]);
 
         final result1 = schema.validate(['hello', true]);
@@ -532,8 +532,8 @@ void main() {
 
       test('handles very large tuples', () {
         final elementSchemas =
-            List<Schema<dynamic>>.generate(100, (i) => Z.number());
-        final schema = Z.tuple(elementSchemas);
+            List<Schema<dynamic>>.generate(100, (i) => z.number());
+        final schema = z.tuple(elementSchemas);
         final input = List.generate(100, (i) => i);
 
         final result = schema.validate(input);
@@ -545,7 +545,7 @@ void main() {
 
       test('preserves error paths in complex structures', () {
         final schema =
-            Z.array(Z.tuple([Z.string().min(3), Z.number().positive()]));
+            z.array(z.tuple([z.string().min(3), z.number().positive()]));
         final result = schema.validate([
           ['valid', 42],
           ['xy', -1] // both elements invalid
@@ -564,7 +564,7 @@ void main() {
       });
 
       test('works with refinements and custom validation', () {
-        final schema = Z.tuple([Z.string(), Z.number()]).refine(
+        final schema = z.tuple([z.string(), z.number()]).refine(
             (tuple) => tuple[0].length > tuple[1],
             message: 'String length must be greater than number value');
 
@@ -576,8 +576,8 @@ void main() {
       });
 
       test('handles empty input edge cases', () {
-        final schema1 = Z.tuple([]);
-        final schema2 = Z.tuple([Z.string().optional()]);
+        final schema1 = z.tuple([]);
+        final schema2 = z.tuple([z.string().optional()]);
 
         final result1 = schema1.validate([]);
         final result2 = schema2.validate([]);
@@ -587,9 +587,9 @@ void main() {
       });
 
       test('handles transformation with rest elements', () {
-        final schema = Z
-            .tuple([Z.string()])
-            .rest(Z.number())
+        final schema = z
+            .tuple([z.string()])
+            .rest(z.number())
             .map<String>((element) => element.toString().toUpperCase());
 
         final result = schema.validate(['hello', 1, 2, 3]);
@@ -601,7 +601,7 @@ void main() {
 
     group('Error Handling Edge Cases', () {
       test('provides detailed error messages', () {
-        final schema = Z.tuple([Z.string().email(), Z.number().min(10)]);
+        final schema = z.tuple([z.string().email(), z.number().min(10)]);
         final result = schema.validate(['invalid-email', 5]);
 
         expect(result.isSuccess, false);
@@ -615,7 +615,7 @@ void main() {
       });
 
       test('handles null and undefined values properly', () {
-        final schema = Z.tuple([Z.string(), Z.number().nullable()]);
+        final schema = z.tuple([z.string(), z.number().nullable()]);
 
         final result1 = schema.validate(['hello', null]);
         final result2 = schema.validate([null, 42]);
@@ -625,7 +625,7 @@ void main() {
       });
 
       test('preserves original input in error context', () {
-        final schema = Z.tuple([Z.string(), Z.number()]);
+        final schema = z.tuple([z.string(), z.number()]);
         final invalidInput = ['hello', 'not-a-number'];
         final result = schema.validate(invalidInput);
 

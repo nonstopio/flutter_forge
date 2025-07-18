@@ -256,23 +256,23 @@ void main() {
     });
 
     group('Integration with Z factory', () {
-      test('should work with Z.boolean()', () {
-        final schema = Z.boolean();
+      test('should work with z.boolean()', () {
+        final schema = z.boolean();
         expect(schema, isA<BooleanSchema>());
         expect(schema.validate(true).isSuccess, true);
         expect(schema.validate(false).isSuccess, true);
         expect(schema.validate('invalid').isFailure, true);
       });
 
-      test('should work with Z.trueValue', () {
-        final schema = Z.trueValue;
+      test('should work with z.trueValue', () {
+        final schema = z.trueValue;
         expect(schema, isA<BooleanSchema>());
         expect(schema.validate(true).isSuccess, true);
         expect(schema.validate(false).isFailure, true);
       });
 
-      test('should work with Z.falseValue', () {
-        final schema = Z.falseValue;
+      test('should work with z.falseValue', () {
+        final schema = z.falseValue;
         expect(schema, isA<BooleanSchema>());
         expect(schema.validate(false).isSuccess, true);
         expect(schema.validate(true).isFailure, true);
@@ -314,7 +314,7 @@ void main() {
 
     group('Complex scenarios', () {
       test('should handle nested object validation', () {
-        final schema = Z.object({
+        final schema = z.object({
           'enabled': const BooleanSchema(),
           'active': const BooleanSchema(expectedValue: true),
         });
@@ -334,7 +334,7 @@ void main() {
       });
 
       test('should handle array of booleans', () {
-        final schema = Z.array(const BooleanSchema());
+        final schema = z.array(const BooleanSchema());
         final validResult = schema.validate([true, false, true]);
         expect(validResult.isSuccess, true);
 
@@ -343,7 +343,7 @@ void main() {
       });
 
       test('should work in union schemas', () {
-        final schema = Z.union<dynamic>([Z.string(), const BooleanSchema()]);
+        final schema = z.union<dynamic>([z.string(), const BooleanSchema()]);
         expect(schema.validate('hello').isSuccess, true);
         expect(schema.validate(true).isSuccess, true);
         expect(schema.validate(false).isSuccess, true);

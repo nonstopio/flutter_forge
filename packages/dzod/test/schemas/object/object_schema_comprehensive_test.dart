@@ -5,8 +5,8 @@ void main() {
   group('ObjectSchema Comprehensive Tests', () {
     group('Object Modes', () {
       test('passthrough mode allows unknown properties by default', () {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         });
 
         final result = schema.validate({
@@ -22,8 +22,8 @@ void main() {
       });
 
       test('strict mode rejects unknown properties', () {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).strict();
 
         final result = schema.validate({
@@ -37,8 +37,8 @@ void main() {
       });
 
       test('strip mode removes unknown properties', () {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).strip();
 
         final result = schema.validate({
@@ -55,9 +55,9 @@ void main() {
 
       test('passthrough mode with catchall schema validates unknown properties',
           () {
-        final schema = Z.object({
-          'name': Z.string(),
-        }).passthrough(Z.number());
+        final schema = z.object({
+          'name': z.string(),
+        }).passthrough(z.number());
 
         final result1 = schema.validate({
           'name': 'John',
@@ -76,9 +76,9 @@ void main() {
       });
 
       test('catchall method sets passthrough mode with catchall schema', () {
-        final schema = Z.object({
-          'name': Z.string(),
-        }).catchall(Z.string());
+        final schema = z.object({
+          'name': z.string(),
+        }).catchall(z.string());
 
         final result = schema.validate({
           'name': 'John',
@@ -94,10 +94,10 @@ void main() {
 
     group('Partial and Deep Partial', () {
       test('partial makes all properties optional', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }).partial();
 
         final result1 = schema.validate({});
@@ -110,12 +110,12 @@ void main() {
       });
 
       test('deepPartial makes nested objects partial too', () {
-        final schema = Z.object({
-          'user': Z.object({
-            'name': Z.string(),
-            'profile': Z.object({
-              'bio': Z.string(),
-              'website': Z.string(),
+        final schema = z.object({
+          'user': z.object({
+            'name': z.string(),
+            'profile': z.object({
+              'bio': z.string(),
+              'website': z.string(),
             }),
           }),
         }).deepPartial();
@@ -133,7 +133,7 @@ void main() {
       });
 
       test('isPartial and isDeepPartial getters work correctly', () {
-        final baseSchema = Z.object({'name': Z.string()});
+        final baseSchema = z.object({'name': z.string()});
         final partialSchema = baseSchema.partial();
         final deepPartialSchema = baseSchema.deepPartial();
 
@@ -148,9 +148,9 @@ void main() {
 
     group('Required Method', () {
       test('required makes all properties required', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         }).required();
@@ -162,10 +162,10 @@ void main() {
       });
 
       test('required with specific keys makes only those required', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, optionalKeys: {
           'age',
           'email'
@@ -181,10 +181,10 @@ void main() {
 
     group('Pick and Omit', () {
       test('pick creates schema with only specified properties', () {
-        final baseSchema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final baseSchema = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, optionalKeys: {
           'email'
         });
@@ -202,10 +202,10 @@ void main() {
       });
 
       test('omit creates schema excluding specified properties', () {
-        final baseSchema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final baseSchema = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, optionalKeys: {
           'email'
         });
@@ -225,13 +225,13 @@ void main() {
 
     group('Extend and Merge', () {
       test('extend adds new properties to schema', () {
-        final baseSchema = Z.object({
-          'name': Z.string(),
+        final baseSchema = z.object({
+          'name': z.string(),
         });
 
         final extendedSchema = baseSchema.extend({
-          'age': Z.number(),
-          'email': Z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, additionalOptionalKeys: {
           'email'
         });
@@ -247,16 +247,16 @@ void main() {
       });
 
       test('merge combines two object schemas', () {
-        final schema1 = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema1 = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         });
 
-        final schema2 = Z.object({
-          'email': Z.string(),
-          'phone': Z.string(),
+        final schema2 = z.object({
+          'email': z.string(),
+          'phone': z.string(),
         }, optionalKeys: {
           'phone'
         });
@@ -274,8 +274,8 @@ void main() {
       });
 
       test('merge preserves partial mode from either schema', () {
-        final schema1 = Z.object({'name': Z.string()});
-        final schema2 = Z.object({'age': Z.number()}).partial();
+        final schema1 = z.object({'name': z.string()});
+        final schema2 = z.object({'age': z.number()}).partial();
 
         final mergedSchema = schema1.merge(schema2);
 
@@ -285,11 +285,15 @@ void main() {
 
     group('Property Validation Methods', () {
       test('containsKeys validates required keys presence', () {
-        final schema = Z.object({
-          'name': Z.string(),
-        }, optionalKeys: {}).passthrough().containsKeys(['name', 'description']);
+        final schema = z
+            .object({
+              'name': z.string(),
+            }, optionalKeys: {})
+            .passthrough()
+            .containsKeys(['name', 'description']);
 
-        final result1 = schema.validate({'name': 'John', 'description': 'A person'});
+        final result1 =
+            schema.validate({'name': 'John', 'description': 'A person'});
         final result2 = schema.validate({'name': 'John'});
 
         expect(result1.isSuccess, true);
@@ -298,9 +302,9 @@ void main() {
       });
 
       test('minProperties validates minimum property count', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         }).minProperties(2);
@@ -314,7 +318,7 @@ void main() {
       });
 
       test('maxProperties validates maximum property count', () {
-        final schema = Z.object({}).passthrough().maxProperties(2);
+        final schema = z.object({}).passthrough().maxProperties(2);
 
         final result1 = schema.validate({'a': 1, 'b': 2});
         final result2 = schema.validate({'a': 1, 'b': 2, 'c': 3});
@@ -325,7 +329,7 @@ void main() {
       });
 
       test('nonempty validates non-empty objects', () {
-        final schema = Z.object({}, optionalKeys: {}).nonempty();
+        final schema = z.object({}, optionalKeys: {}).nonempty();
 
         final result1 = schema.validate({'key': 'value'});
         final result2 = schema.validate({});
@@ -337,9 +341,9 @@ void main() {
 
     group('Transformation Methods', () {
       test('mapValues transforms all values', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }).mapValues<String>((value) => value.toString());
 
         final result = schema.validate({'name': 'John', 'age': 25});
@@ -350,7 +354,7 @@ void main() {
       });
 
       test('filterKeys filters properties based on predicate', () {
-        final schema = Z.object({}).passthrough().filterKeys(
+        final schema = z.object({}).passthrough().filterKeys(
               (key, value) => key.startsWith('keep'),
             );
 
@@ -368,20 +372,20 @@ void main() {
 
     group('Getters and Properties', () {
       test('shape getter returns unmodifiable shape', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final shape = schema.shape;
         expect(shape.keys, {'name', 'age'});
-        expect(() => shape['newKey'] = Z.string(), throwsUnsupportedError);
+        expect(() => shape['newKey'] = z.string(), throwsUnsupportedError);
       });
 
       test('optionalKeys getter returns unmodifiable set', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         });
@@ -392,10 +396,10 @@ void main() {
       });
 
       test('requiredKeys getter returns correct keys', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, optionalKeys: {
           'email'
         });
@@ -404,7 +408,7 @@ void main() {
       });
 
       test('mode getter returns current mode', () {
-        final schema = Z.object({'name': Z.string()});
+        final schema = z.object({'name': z.string()});
         final strictSchema = schema.strict();
         final stripSchema = schema.strip();
 
@@ -414,8 +418,8 @@ void main() {
       });
 
       test('catchallSchema getter returns catchall schema', () {
-        final catchallSchema = Z.string();
-        final schema = Z.object({'name': Z.string()}).catchall(catchallSchema);
+        final catchallSchema = z.string();
+        final schema = z.object({'name': z.string()}).catchall(catchallSchema);
 
         expect(schema.catchallSchema, catchallSchema);
       });
@@ -423,9 +427,9 @@ void main() {
 
     group('Async Validation', () {
       test('validateAsync works with async schemas', () async {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final result = await schema.validateAsync({
@@ -438,9 +442,9 @@ void main() {
       });
 
       test('validateAsync handles missing required properties', () async {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final result = await schema.validateAsync({'name': 'John'});
@@ -450,8 +454,8 @@ void main() {
       });
 
       test('validateAsync handles strict mode', () async {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).strict();
 
         final result = await schema.validateAsync({
@@ -464,8 +468,8 @@ void main() {
       });
 
       test('validateAsync handles strip mode', () async {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).strip();
 
         final result = await schema.validateAsync({
@@ -478,9 +482,9 @@ void main() {
       });
 
       test('validateAsync handles catchall schema', () async {
-        final schema = Z.object({
-          'name': Z.string(),
-        }).catchall(Z.number());
+        final schema = z.object({
+          'name': z.string(),
+        }).catchall(z.number());
 
         final result = await schema.validateAsync({
           'name': 'John',
@@ -492,11 +496,11 @@ void main() {
       });
 
       test('validateAsync handles deep partial mode', () async {
-        final schema = Z.object({
-          'user': Z.object({
-            'name': Z.string(),
-            'profile': Z.object({
-              'bio': Z.string(),
+        final schema = z.object({
+          'user': z.object({
+            'name': z.string(),
+            'profile': z.object({
+              'bio': z.string(),
             }),
           }),
         }).deepPartial();
@@ -513,21 +517,21 @@ void main() {
 
     group('toString Method', () {
       test('displays correct information', () {
-        final schema1 = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema1 = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
 
-        final schema2 = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
-          'email': Z.string(),
+        final schema2 = z.object({
+          'name': z.string(),
+          'age': z.number(),
+          'email': z.string(),
         }, optionalKeys: {
           'email'
         }).strict();
 
-        final schema3 = Z.object({
-          'name': Z.string(),
+        final schema3 = z.object({
+          'name': z.string(),
         }).partial();
 
         expect(schema1.toString(), 'ObjectSchema{required: 2, optional: 0}');
@@ -538,8 +542,8 @@ void main() {
       });
 
       test('displays deep partial mode', () {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).deepPartial();
 
         expect(schema.toString(), contains('deep-partial'));
@@ -548,16 +552,16 @@ void main() {
 
     group('Equality and HashCode', () {
       test('equal schemas have same equality and hash', () {
-        final schema1 = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema1 = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         });
 
-        final schema2 = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema2 = z.object({
+          'name': z.string(),
+          'age': z.number(),
         }, optionalKeys: {
           'age'
         });
@@ -567,16 +571,16 @@ void main() {
       });
 
       test('different schemas are not equal', () {
-        final schema1 = Z.object({'name': Z.string()});
-        final schema2 = Z.object({'age': Z.number()});
-        final schema3 = Z.object({'name': Z.string()}).strict();
+        final schema1 = z.object({'name': z.string()});
+        final schema2 = z.object({'age': z.number()});
+        final schema3 = z.object({'name': z.string()}).strict();
 
         expect(schema1 == schema2, false);
         expect(schema1 == schema3, false);
       });
 
       test('identical schemas are equal', () {
-        final schema = Z.object({'name': Z.string()});
+        final schema = z.object({'name': z.string()});
 
         expect(schema == schema, true);
       });
@@ -584,10 +588,10 @@ void main() {
 
     group('Error Handling and Context', () {
       test('provides detailed error paths for nested validation', () {
-        final schema = Z.object({
-          'user': Z.object({
-            'profile': Z.object({
-              'age': Z.number(),
+        final schema = z.object({
+          'user': z.object({
+            'profile': z.object({
+              'age': z.number(),
             }),
           }),
         });
@@ -605,9 +609,9 @@ void main() {
       });
 
       test('provides context for missing required properties', () {
-        final schema = Z.object({
-          'name': Z.string(),
-          'age': Z.number(),
+        final schema = z.object({
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final result = schema.validate({'name': 'John'});
@@ -617,8 +621,8 @@ void main() {
       });
 
       test('provides context for unknown properties in strict mode', () {
-        final schema = Z.object({
-          'name': Z.string(),
+        final schema = z.object({
+          'name': z.string(),
         }).strict();
 
         final result = schema.validate({
@@ -634,8 +638,8 @@ void main() {
     group('Factory Methods', () {
       test('ObjectFactories.simple creates basic object schema', () {
         final schema = ObjectFactories.simple({
-          'name': Z.string(),
-          'age': Z.number(),
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final result = schema.validate({'name': 'John', 'age': 25});
@@ -647,8 +651,8 @@ void main() {
       test('ObjectFactories.withOptional creates schema with optional keys',
           () {
         final schema = ObjectFactories.withOptional({
-          'name': Z.string(),
-          'age': Z.number(),
+          'name': z.string(),
+          'age': z.number(),
         }, {
           'age'
         });
@@ -661,7 +665,7 @@ void main() {
 
       test('ObjectFactories.strictObject creates strict schema', () {
         final schema = ObjectFactories.strictObject({
-          'name': Z.string(),
+          'name': z.string(),
         });
 
         final result = schema.validate({
@@ -675,8 +679,8 @@ void main() {
 
       test('ObjectFactories.partialObject creates partial schema', () {
         final schema = ObjectFactories.partialObject({
-          'name': Z.string(),
-          'age': Z.number(),
+          'name': z.string(),
+          'age': z.number(),
         });
 
         final result = schema.validate({});
@@ -697,7 +701,7 @@ void main() {
 
     group('Edge Cases', () {
       test('handles null input correctly', () {
-        final schema = Z.object({'name': Z.string()});
+        final schema = z.object({'name': z.string()});
 
         final result = schema.validate(null);
 
@@ -706,7 +710,7 @@ void main() {
       });
 
       test('handles empty object validation', () {
-        final schema = Z.object({});
+        final schema = z.object({});
 
         final result = schema.validate({});
 
@@ -715,7 +719,7 @@ void main() {
       });
 
       test('preserves original Map type information where possible', () {
-        final schema = Z.object({'name': Z.string()});
+        final schema = z.object({'name': z.string()});
 
         final result = schema.validate({'name': 'John', 'age': 25});
 

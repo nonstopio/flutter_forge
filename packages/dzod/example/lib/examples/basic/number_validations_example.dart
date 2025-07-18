@@ -22,17 +22,17 @@ class _NumberValidationsExampleState extends State<NumberValidationsExample> {
 
   // All number validation schemas from README Example 3
   Map<String, Schema> get _validators => {
-        'basicNumber': Z.number().min(0).max(100),
-        'step': Z.number().step(0.1),
-        'precision': Z.number().precision(2),
-        'safeInt': Z.number().safeInt(),
-        'percentage': Z.number().percentage(),
-        'probability': Z.number().probability(),
-        'latitude': Z.number().latitude(),
-        'longitude': Z.number().longitude(),
-        'powerOfTwo': Z.number().powerOfTwo(),
-        'prime': Z.number().prime(),
-        'perfectSquare': Z.number().perfectSquare(),
+        'basicNumber': z.number().min(0).max(100),
+        'step': z.number().step(0.1),
+        'precision': z.number().precision(2),
+        'safeInt': z.number().safeInt(),
+        'percentage': z.number().percentage(),
+        'probability': z.number().probability(),
+        'latitude': z.number().latitude(),
+        'longitude': z.number().longitude(),
+        'powerOfTwo': z.number().powerOfTwo(),
+        'prime': z.number().prime(),
+        'perfectSquare': z.number().perfectSquare(),
       };
 
   final Map<String, String> _examples = {
@@ -326,29 +326,29 @@ class _NumberValidationsExampleState extends State<NumberValidationsExample> {
   String _getSchemaCode(String validator) {
     switch (validator) {
       case 'basicNumber':
-        return 'final basicNumberSchema = Z.number().min(0).max(100);';
+        return 'final basicNumberSchema = z.number().min(0).max(100);';
       case 'step':
-        return 'final stepSchema = Z.number().step(0.1);';
+        return 'final stepSchema = z.number().step(0.1);';
       case 'precision':
-        return 'final precisionSchema = Z.number().precision(2);';
+        return 'final precisionSchema = z.number().precision(2);';
       case 'safeInt':
-        return 'final safeIntSchema = Z.number().safeInt();';
+        return 'final safeIntSchema = z.number().safeInt();';
       case 'percentage':
-        return 'final percentageSchema = Z.number().percentage();';
+        return 'final percentageSchema = z.number().percentage();';
       case 'probability':
-        return 'final probabilitySchema = Z.number().probability();';
+        return 'final probabilitySchema = z.number().probability();';
       case 'latitude':
-        return 'final latitudeSchema = Z.number().latitude();';
+        return 'final latitudeSchema = z.number().latitude();';
       case 'longitude':
-        return 'final longitudeSchema = Z.number().longitude();';
+        return 'final longitudeSchema = z.number().longitude();';
       case 'powerOfTwo':
-        return 'final powerOfTwoSchema = Z.number().powerOfTwo();';
+        return 'final powerOfTwoSchema = z.number().powerOfTwo();';
       case 'prime':
-        return 'final primeSchema = Z.number().prime();';
+        return 'final primeSchema = z.number().prime();';
       case 'perfectSquare':
-        return 'final perfectSquareSchema = Z.number().perfectSquare();';
+        return 'final perfectSquareSchema = z.number().perfectSquare();';
       default:
-        return 'final numberSchema = Z.number();';
+        return 'final numberSchema = z.number();';
     }
   }
 

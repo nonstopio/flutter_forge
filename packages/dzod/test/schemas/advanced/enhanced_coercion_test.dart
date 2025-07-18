@@ -5,7 +5,7 @@ void main() {
   group('Enhanced Coercion Tests', () {
     group('Basic Coercion Tests', () {
       test('should handle string coercion', () {
-        final schema = Z.coerce.string();
+        final schema = z.coerce.string();
 
         expect(schema.parse(123.456), equals('123.456'));
         expect(schema.parse(true), equals('true'));
@@ -14,7 +14,7 @@ void main() {
       });
 
       test('should handle number coercion', () {
-        final schema = Z.coerce.number();
+        final schema = z.coerce.number();
 
         expect(schema.parse('123'), equals(123));
         expect(schema.parse('123.456'), equals(123.456));
@@ -23,7 +23,7 @@ void main() {
       });
 
       test('should handle boolean coercion', () {
-        final schema = Z.coerce.boolean();
+        final schema = z.coerce.boolean();
 
         expect(schema.parse('true'), equals(true));
         expect(schema.parse('false'), equals(false));
@@ -34,7 +34,7 @@ void main() {
       });
 
       test('should handle integer coercion', () {
-        final schema = Z.coerce.integer();
+        final schema = z.coerce.integer();
 
         expect(schema.parse('123'), equals(123));
         expect(schema.parse(123.7), equals(124));
@@ -43,7 +43,7 @@ void main() {
       });
 
       test('should handle decimal coercion', () {
-        final schema = Z.coerce.decimal();
+        final schema = z.coerce.decimal();
 
         expect(schema.parse('123.456'), equals(123.456));
         expect(schema.parse(123), equals(123.0));
@@ -54,7 +54,7 @@ void main() {
 
     group('DateTime and BigInt Coercion', () {
       test('should handle DateTime coercion', () {
-        final schema = Z.coerce.date();
+        final schema = z.coerce.date();
 
         final dateTime = DateTime(2023, 1, 1);
         expect(schema.parse(dateTime), equals(dateTime));
@@ -65,7 +65,7 @@ void main() {
       });
 
       test('should handle BigInt coercion', () {
-        final schema = Z.coerce.bigInt();
+        final schema = z.coerce.bigInt();
 
         expect(schema.parse(BigInt.from(123)), equals(BigInt.from(123)));
         expect(schema.parse(123), equals(BigInt.from(123)));
@@ -76,7 +76,7 @@ void main() {
 
     group('Collection Coercion', () {
       test('should handle List coercion', () {
-        final schema = Z.coerce.list();
+        final schema = z.coerce.list();
 
         expect(schema.parse(['a', 'b', 'c']), equals(['a', 'b', 'c']));
         expect(schema.parse('a,b,c'), equals(['a', 'b', 'c']));
@@ -85,7 +85,7 @@ void main() {
       });
 
       test('should handle Set coercion', () {
-        final schema = Z.coerce.set();
+        final schema = z.coerce.set();
 
         expect(schema.parse({'a', 'b', 'c'}), equals({'a', 'b', 'c'}));
         expect(schema.parse(['a', 'b', 'c']), equals({'a', 'b', 'c'}));
@@ -93,7 +93,7 @@ void main() {
       });
 
       test('should handle Map coercion', () {
-        final schema = Z.coerce.map();
+        final schema = z.coerce.map();
 
         expect(schema.parse({'a': 1, 'b': 2}), equals({'a': 1, 'b': 2}));
         expect(schema.parse(['a', 'b', 'c']),
@@ -103,16 +103,16 @@ void main() {
 
     group('Error Handling', () {
       test('should handle async coercion', () async {
-        final schema = Z.coerce.string();
+        final schema = z.coerce.string();
 
         final result = await schema.parseAsync(123);
         expect(result, equals('123'));
       });
 
       test('should handle empty strings for numbers', () {
-        final numberSchema = Z.coerce.number();
-        final intSchema = Z.coerce.integer();
-        final doubleSchema = Z.coerce.decimal();
+        final numberSchema = z.coerce.number();
+        final intSchema = z.coerce.integer();
+        final doubleSchema = z.coerce.decimal();
 
         expect(numberSchema.parse(''), equals(0));
         expect(intSchema.parse(''), equals(0));
@@ -120,8 +120,8 @@ void main() {
       });
 
       test('should handle null values for specific types', () {
-        final stringSchema = Z.coerce.string();
-        final booleanSchema = Z.coerce.boolean();
+        final stringSchema = z.coerce.string();
+        final booleanSchema = z.coerce.boolean();
 
         expect(stringSchema.parse(null), equals(''));
         expect(booleanSchema.parse(null), equals(false));
