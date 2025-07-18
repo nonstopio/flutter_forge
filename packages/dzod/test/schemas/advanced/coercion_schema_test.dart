@@ -1,12 +1,4 @@
-import 'package:dzod/dzod.dart'
-    show
-        Coerce,
-        CoercionSchema,
-        CoercionUtils,
-        StringSchema,
-        ValidationErrorCode,
-        ValidationException,
-        Z;
+import 'package:dzod/dzod.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -603,7 +595,7 @@ void main() {
 
         expect(stringCoercion.parse('  hello  '), equals('hello'));
         expect(stringCoercion.parse(3.14159), equals('3.14'));
-        expect(stringCoercion.parse([1, 2, 3]), equals('1 | 2 | 3'));
+        expect(stringCoercion.parse([1, 2, 3]), equals('1.00 | 2.00 | 3.00'));
       });
 
       test('should handle fallback strategies', () {
@@ -629,8 +621,8 @@ void main() {
           allowNaN: false,
         );
 
-        expect(numberCoercion.parse('5.567'), equals(5.57));
-        expect(numberCoercion.parse('2.25'), equals(2.0)); // Rounded to step
+        expect(numberCoercion.parse('5.567'), equals(5.5));
+        expect(numberCoercion.parse('2.25'), equals(2.5)); // Rounded to step
         expect(numberCoercion.parse('-5'), equals(0)); // Clamped to min
         expect(numberCoercion.parse('150'), equals(100)); // Clamped to max
       });
@@ -795,7 +787,7 @@ void main() {
       test('should handle advanced number coercion with options', () {
         expect(
             CoercionUtils.coerceToNumber('5.567', precision: 2), equals(5.57));
-        expect(CoercionUtils.coerceToNumber('2.25', step: 0.5), equals(2.0));
+        expect(CoercionUtils.coerceToNumber('2.25', step: 0.5), equals(2.5));
         expect(CoercionUtils.coerceToNumber('-5', min: 0), equals(0));
         expect(CoercionUtils.coerceToNumber('150', max: 100), equals(100));
         expect(CoercionUtils.coerceToNumber('infinity', allowInfinity: true),

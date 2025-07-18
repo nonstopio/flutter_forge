@@ -485,6 +485,41 @@ void main() {
         expect(result.data!['user'], {'name': 'john', 'age': 30});
       });
 
+      test('validates without schemas using type checking', () {
+        // Test direct type checking for keys when no keySchema is provided
+        const schema = RecordSchema<String, int>();
+
+        // This should pass type checking
+        final validResult = schema.validate({'count': 42, 'total': 100});
+        expect(validResult.isSuccess, true);
+
+        // This should fail key type checking
+        final invalidKeyResult = schema.validate({123: 42});
+        expect(invalidKeyResult.isSuccess, false);
+        expect(
+            invalidKeyResult.errors!.errors.any((e) => e.path.contains('key')),
+            true);
+
+        // This should fail value type checking
+        final invalidValueResult = schema.validate({'count': 'not a number'});
+        expect(invalidValueResult.isSuccess, false);
+        expect(
+            invalidValueResult.errors!.errors
+                .any((e) => e.path.contains('count')),
+            true);
+      });
+
+      test('type checking edge cases with mixed types', () {
+        // Test with Object keys and dynamic values to force type checking paths
+        const schema = RecordSchema<Object, String>();
+
+        final validResult = schema.validate({'key': 'value', 123: 'another'});
+        expect(validResult.isSuccess, true);
+
+        final invalidValueResult = schema.validate({'key': 42});
+        expect(invalidValueResult.isSuccess, false);
+      });
+
       test('works with refinement chains', () {
         final schema = Z
             .record()

@@ -165,6 +165,17 @@ class DiscriminatedUnionSchema<T> extends Schema<T> {
 
     final schema = _schemaMap[discriminatorValue];
     if (schema == null) {
+      // Fallback: if no schema found and we have schemas without literals,
+      // try to validate against each schema until one succeeds
+      if (_schemaMap.isEmpty && _schemas.isNotEmpty) {
+        for (final candidateSchema in _schemas) {
+          final result = candidateSchema.validate(input, path);
+          if (result.isSuccess) {
+            return result;
+          }
+        }
+      }
+
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -213,6 +224,17 @@ class DiscriminatedUnionSchema<T> extends Schema<T> {
 
     final schema = _schemaMap[discriminatorValue];
     if (schema == null) {
+      // Fallback: if no schema found and we have schemas without literals,
+      // try to validate against each schema until one succeeds
+      if (_schemaMap.isEmpty && _schemas.isNotEmpty) {
+        for (final candidateSchema in _schemas) {
+          final result = await candidateSchema.validateAsync(input, path);
+          if (result.isSuccess) {
+            return result;
+          }
+        }
+      }
+
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(

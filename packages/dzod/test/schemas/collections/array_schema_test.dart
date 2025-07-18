@@ -1,4 +1,4 @@
-import 'package:dzod/dzod.dart' show StringSchema, Z;
+import 'package:dzod/dzod.dart' show StringSchema, ValidationException, Z;
 import 'package:test/test.dart';
 
 void main() {
@@ -333,6 +333,24 @@ void main() {
         expect(string, contains('nonempty'));
       });
 
+      test('toString with exact length constraint', () {
+        final schema = Z.array(Z.string()).length(3);
+        final string = schema.toString();
+
+        expect(string, contains('ArraySchema'));
+        expect(string, contains('length: 3'));
+      });
+
+      test('toString without constraints', () {
+        final schema = Z.array(Z.string());
+        final string = schema.toString();
+
+        expect(string, contains('ArraySchema'));
+        expect(string, contains('StringSchema'));
+        expect(string, isNot(contains('min:')));
+        expect(string, isNot(contains('max:')));
+      });
+
       test('supports equality comparison', () {
         final schema1 = Z.array(Z.string()).min(1);
         final schema2 = Z.array(Z.string()).min(1);
@@ -340,6 +358,144 @@ void main() {
 
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false);
+      });
+
+      test('equality with different element schemas', () {
+        final schema1 = Z.array(Z.string());
+        final schema2 = Z.array(Z.number());
+
+        expect(schema1, isNot(equals(schema2)));
+      });
+
+      test('equality with different constraints', () {
+        final schema1 = Z.array(Z.string()).min(1);
+        final schema2 = Z.array(Z.string()).max(5);
+        final schema3 = Z.array(Z.string()).length(3);
+        final schema4 = Z.array(Z.string()).nonempty();
+
+        expect(schema1, isNot(equals(schema2)));
+        expect(schema1 == schema3, false);
+        expect(schema1 == schema4, false);
+      });
+
+      test('hashCode consistency', () {
+        final schema1 = Z.array(Z.string()).min(1);
+        final schema2 = Z.array(Z.string()).min(1);
+
+        expect(schema1.hashCode, equals(schema2.hashCode));
+      });
+    });
+
+    group('Advanced Element Schema Operations', () {
+      test('element schema modification', () {
+        final schema = Z.array(Z.string());
+        final newSchema = schema.element(Z.string().min(3));
+
+        final validResult = newSchema.validate(['hello', 'world']);
+        final invalidResult = newSchema.validate(['hi', 'bye']);
+
+        expect(validResult.isSuccess, true);
+        expect(invalidResult.isFailure, true);
+      });
+
+      test('element schema preserves constraints', () {
+        final schema = Z.array(Z.string()).min(2).max(4);
+        final newSchema = schema.element(Z.string().min(3));
+
+        expect(
+            newSchema.validate(['hello']).isFailure, true); // Too short array
+        expect(
+            newSchema
+                .validate(['hello', 'world', 'test', 'abc', 'def']).isFailure,
+            true); // Too long array
+        expect(newSchema.validate(['hello', 'world']).isSuccess, true); // Valid
+      });
+    });
+
+    group('Async Validation', () {
+      test('validates array asynchronously', () async {
+        final schema = Z.array(Z.string().refineAsync(
+          (s) async {
+            await Future.delayed(const Duration(milliseconds: 1));
+            return s.length > 2;
+          },
+          message: 'String must be longer than 2 characters',
+        ));
+
+        final validResult = await schema.parseAsync(['hello', 'world']);
+        expect(validResult, equals(['hello', 'world']));
+
+        await expectLater(
+          schema.parseAsync(['hello', 'hi']),
+          throwsA(isA<ValidationException>()),
+        );
+      });
+
+      test('async validation handles length constraints', () async {
+        final schema = Z
+            .array(Z.string().refineAsync(
+                  (s) async => s.isNotEmpty,
+                  message: 'String cannot be empty',
+                ))
+            .min(2);
+
+        await expectLater(
+          schema.parseAsync(['hello']),
+          throwsA(isA<ValidationException>()),
+        );
+
+        final validResult = await schema.parseAsync(['hello', 'world']);
+        expect(validResult, equals(['hello', 'world']));
+      });
+
+      test('async validation with non-array input', () async {
+        final schema = Z.array(Z.string());
+
+        await expectLater(
+          schema.parseAsync('not an array'),
+          throwsA(isA<ValidationException>()),
+        );
+      });
+
+      test('async validation with exact length constraint', () async {
+        final schema = Z.array(Z.string()).length(2);
+
+        await expectLater(
+          schema.parseAsync(['hello']),
+          throwsA(isA<ValidationException>()),
+        );
+
+        await expectLater(
+          schema.parseAsync(['hello', 'world', 'test']),
+          throwsA(isA<ValidationException>()),
+        );
+
+        final validResult = await schema.parseAsync(['hello', 'world']);
+        expect(validResult, equals(['hello', 'world']));
+      });
+
+      test('async validation with nonempty constraint', () async {
+        final schema = Z.array(Z.string()).nonempty();
+
+        await expectLater(
+          schema.parseAsync([]),
+          throwsA(isA<ValidationException>()),
+        );
+
+        final validResult = await schema.parseAsync(['hello']);
+        expect(validResult, equals(['hello']));
+      });
+
+      test('async validation with multiple element errors', () async {
+        final schema = Z.array(Z.string().refineAsync(
+              (s) async => s.length > 3,
+              message: 'String must be longer than 3 characters',
+            ));
+
+        await expectLater(
+          schema.parseAsync(['hello', 'hi', 'world', 'by']),
+          throwsA(isA<ValidationException>()),
+        );
       });
     });
   });
