@@ -427,30 +427,30 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string is a valid IP address
-  StringSchema ip() {
+  Schema<String> ip() {
     return refine(
       (value) => _isValidIp(value),
       message: 'must be a valid IP address',
       code: 'invalid_ip',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid IPv4 address
-  StringSchema ipv4() {
+  Schema<String> ipv4() {
     return refine(
       (value) => _isValidIpv4(value),
       message: 'must be a valid IPv4 address',
       code: 'invalid_ipv4',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid IPv6 address
-  StringSchema ipv6() {
+  Schema<String> ipv6() {
     return refine(
       (value) => _isValidIpv6(value),
       message: 'must be a valid IPv6 address',
       code: 'invalid_ipv6',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid CUID (Collision-resistant Unique Identifier)

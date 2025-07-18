@@ -17,3 +17,4 @@ mason-lock.json
 package-lock.json
 devtools_options.yaml
 .claude/sessions
+full_coverage_test.dart

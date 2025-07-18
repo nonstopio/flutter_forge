@@ -13,7 +13,7 @@
 <h1 align="center">🔐 Dzod</h1>
 
 <p align="center">
-  <strong>⚡ Enterprise-grade Dart schema validation library with 105%+ feature parity with Zod</strong>
+  <strong>⚡ Enterprise-grade Dart schema validation library</strong>
 </p>
 
 <p align="center">
@@ -23,24 +23,20 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TypeScript_Zod-105%25_Parity-green.svg?style=for-the-badge" alt="Zod Parity">
-  <img src="https://img.shields.io/badge/Test_Coverage-84.7%25-green.svg?style=for-the-badge" alt="Test Coverage">
-  <img src="https://img.shields.io/badge/Tests-566+-blue.svg?style=for-the-badge" alt="Tests">
+  <img src="https://img.shields.io/badge/Test_Coverage-92%25-darkgreen.svg?style=for-the-badge" alt="Test Coverage">
+  <img src="https://img.shields.io/badge/Tests-1350+-blue.svg?style=for-the-badge" alt="Tests">
 </p>
 
 ---
 
 ## 🎯 What is Dzod?
 
-Dzod is an **enterprise-grade** Dart schema validation library that provides **105%+ feature parity** with TypeScript's
-Zod, and advanced enterprise features. Built for production applications requiring robust data validation, type safety,
-and exceptional developer experience.
+Dzod is an **enterprise-grade** Dart schema validation library with advanced enterprise features. Built for production applications requiring robust data validation, type safety, and exceptional developer experience.
 
 ### 🏆 **Key Achievements**
 
-- **🚀 105%+ Zod Feature Parity**: Complete compatibility with original Zod API plus additional features
-- **⚡ 566+ Comprehensive Tests**: 84.7% test coverage with enterprise-grade quality assurance
-- **🔧 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
+- **🚀 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
+- **⚡ 1350+ Comprehensive Tests**: 92% test coverage with enterprise-grade quality assurance
 - **💡 Developer Experience**: Intuitive API design with comprehensive documentation and examples
 
 ---
@@ -82,10 +78,9 @@ final result = userSchema.validate({
   'createdAt': '2023-01-01T00:00:00Z',
 });
 
-if (
-result.isSuccess) {
-final user = result.data;
-print('✅ Valid user: ${user['name']}');
+if (result.isSuccess) {
+  final user = result.data;
+  print('✅ Valid user: ${user['name']}');
 } else {
 // Enterprise-grade error handling
 final errors = result.errors!;
@@ -435,17 +430,10 @@ final apiSchema = z.string().url()
 
 ```dart
 // Validate with async methods
-final result = await
-userSchema.validateAsync
-(
-{'email': 'user@example.com',
-'username':
-'
-johndoe
-'
-,
-}
-);
+final result = await userSchema.validateAsync({
+  'email': 'user@example.com',
+  'username': 'johndoe',
+});
 
 // Safe async parsing
 final data = await userSchema.safeParseAsync(userData);
@@ -467,9 +455,8 @@ print('Valid user: $data');
 final schema = z.string().email();
 final result = schema.validate('invalid-email');
 
-if (
-result.isFailure) {
-final errors = result.errors!;
+if (result.isFailure) {
+  final errors = result.errors!;
 
 // Access error details
 for (final error in errors.errors) {
@@ -517,9 +504,8 @@ print(readable);
 // "ValidationError at email: Invalid email format (received: invalid-email, expected: valid email)"
 
 // Individual error formatting
-for (
-final error in errors.errors) {
-print('${error.fullPath}: ${error.message}');
+for (final error in errors.errors) {
+  print('${error.fullPath}: ${error.message}');
 }
 // "email: Invalid email format"
 
@@ -529,14 +515,7 @@ for (final error in errors.errors) {
 final path = error.fullPath;
 errorsByPath.putIfAbsent(path, () => []).add(error);
 }
-print
-(
-'
-Errors by field: 
-$
-errorsByPath
-'
-);
+print('Errors by field: $errorsByPath');
 ```
 
 ### 🌐 **Global Error Configuration**
@@ -545,16 +524,10 @@ errorsByPath
 
 ```dart
 // Configure global error messages
-ErrorMessages.setGlobalMessages
-(
-{
-ValidationErrorCode
-.
-invalidEmail: '
-Please enter a valid email address
-'
-,ValidationErrorCode.minLength: 'Must be at least {min} characters',
-ValidationErrorCode.maxLength: 'Must not exceed {max} characters',
+ErrorMessages.setGlobalMessages({
+  ValidationErrorCode.invalidEmail: 'Please enter a valid email address',
+  ValidationErrorCode.minLength: 'Must be at least {min} characters',
+  ValidationErrorCode.maxLength: 'Must not exceed {max} characters',
 });
 
 // Custom error formatter
@@ -593,9 +566,7 @@ final userSchema = z.object({
 }).describe('User profile schema');
 
 // Get schema information (using available methods)
-print
-('Schema shape: 
-${userSchema.shape.keys}'); // Keys: [name, email, age]
+print('Schema shape: ${userSchema.shape.keys}'); // Keys: [name, email, age]
 print('Required fields: ${userSchema.requiredKeys}'); // {name, email, age}
 print('Optional fields: ${userSchema.optionalKeys}'); // {}
 print('Total fields: ${userSchema.shape.length}'); // 3
@@ -615,14 +586,7 @@ final otherSchema = z.object({
 'age': z.number().min(18),
 });
 final sameKeys = userSchema.shape.keys.toSet().difference(otherSchema.shape.keys.toSet()).isEmpty;
-print
-(
-'
-Schemas have same structure: 
-$
-sameKeys
-'
-);
+print('Schemas have same structure: $sameKeys');
 ```
 
 ### 🔧 **Schema Transformation**
@@ -774,14 +738,10 @@ final schema = z.object({
 final result = schema.validate(data);
 final metrics = schema.performanceMetrics;
 
-print
-('Validation time: 
-${metrics.validationTime}ms');
+print('Validation time: ${metrics.validationTime}ms');
 print('Memory usage: ${metrics.memoryUsage}MB');
 print('Cache hits: ${metrics.cacheHits}');
-print('Cache misses: ${metrics.cacheMisses}
-'
-);
+print('Cache misses: ${metrics.cacheMisses}');
 ```
 
 ---
@@ -815,10 +775,10 @@ final userSchema = z.object({
 });
 
 // Type-safe parsing with validation
-final result = userSchema.validate(jsonData);if (
-result.isSuccess) {
-final user = result.data!;
-print('User: ${user['name']} (${user['email']})');
+final result = userSchema.validate(jsonData);
+if (result.isSuccess) {
+  final user = result.data!;
+  print('User: ${user['name']} (${user['email']})');
 }
 ```
 
@@ -1123,7 +1083,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Inspired by [Zod](https://github.com/colinhacks/zod) for TypeScript
 - Built with ❤️ for the Dart/Flutter community
 - Special thanks to all contributors and early adopters
 
