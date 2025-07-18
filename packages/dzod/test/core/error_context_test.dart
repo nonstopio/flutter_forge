@@ -491,9 +491,9 @@ void main() {
           .key('data')
           .build();
 
-      expect(context.path, ['data']);
+      expect(context.path, ['user', 'profile', '0', 'data']);
       expect(context.key, 'data');
-      expect(context.depth, 3);
+      expect(context.depth, 4);
     });
 
     test('should support nested context', () {
