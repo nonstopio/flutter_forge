@@ -80,21 +80,21 @@ class BooleanSchema extends Schema<bool> {
   }
 
   /// Checks if boolean is truthy (true)
-  BooleanSchema truthy() {
+  Schema<bool> truthy() {
     return refine(
       (value) => value == true,
       message: 'must be truthy',
       code: 'not_truthy',
-    ) as BooleanSchema;
+    );
   }
 
   /// Checks if boolean is falsy (false)
-  BooleanSchema falsy() {
+  Schema<bool> falsy() {
     return refine(
       (value) => value == false,
       message: 'must be falsy',
       code: 'not_falsy',
-    ) as BooleanSchema;
+    );
   }
 
   @override

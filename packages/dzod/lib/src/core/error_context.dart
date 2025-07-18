@@ -392,9 +392,15 @@ class ErrorContext {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is ErrorContext &&
-        other.path.length == path.length &&
-        other.schemaType == schemaType &&
+    if (other is! ErrorContext) return false;
+    
+    // Compare path contents
+    if (other.path.length != path.length) return false;
+    for (int i = 0; i < path.length; i++) {
+      if (other.path[i] != path[i]) return false;
+    }
+    
+    return other.schemaType == schemaType &&
         other.fieldName == fieldName &&
         other.index == index &&
         other.key == key &&
@@ -406,7 +412,7 @@ class ErrorContext {
 
   @override
   int get hashCode => Object.hash(
-        path.length,
+        Object.hashAll(path),
         schemaType,
         fieldName,
         index,

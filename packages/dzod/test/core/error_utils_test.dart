@@ -436,7 +436,7 @@ void main() {
       });
 
       test('should filter by message pattern', () {
-        final pattern = RegExp(r'type');
+        final pattern = RegExp(r'Expected');
         final result = ErrorUtils.filterByMessagePattern(testErrors, pattern);
         expect(result, isNotEmpty);
       });

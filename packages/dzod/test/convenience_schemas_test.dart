@@ -616,7 +616,7 @@ void main() {
         final result = schema.validate('world');
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code,
-            ValidationErrorCode.constraintViolation);
+            ValidationErrorCode.literalMismatch.code);
       });
     });
 

@@ -222,7 +222,7 @@ class Z {
   static StringSchema emptyString() => const StringSchema(exactLength: 0);
 
   /// Creates a non-empty string schema
-  static StringSchema nonEmptyString() => const StringSchema().nonempty();
+  static Schema<String> nonEmptyString() => const StringSchema().nonempty();
 
   /// Creates an email string schema
   static StringSchema email() => const StringSchema(isEmail: true);

@@ -287,10 +287,9 @@ void main() {
       test('containsKeys validates required keys presence', () {
         final schema = Z.object({
           'name': Z.string(),
-          'age': Z.number(),
-        }).containsKeys(['name', 'age']);
+        }, optionalKeys: {}).passthrough().containsKeys(['name', 'description']);
 
-        final result1 = schema.validate({'name': 'John', 'age': 25});
+        final result1 = schema.validate({'name': 'John', 'description': 'A person'});
         final result2 = schema.validate({'name': 'John'});
 
         expect(result1.isSuccess, true);

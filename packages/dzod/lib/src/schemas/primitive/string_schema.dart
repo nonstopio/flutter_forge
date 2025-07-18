@@ -400,12 +400,12 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string is non-empty
-  StringSchema nonempty() {
+  Schema<String> nonempty() {
     return refine(
       (value) => value.isNotEmpty,
       message: 'must not be empty',
       code: 'nonempty',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid date

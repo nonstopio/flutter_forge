@@ -220,6 +220,15 @@ enum ValidationErrorCode {
     required String expected,
     String? message,
   }) {
+    if (message != null) {
+      return ValidationError(
+        message: message,
+        path: path,
+        received: received,
+        expected: expected,
+        code: code,
+      );
+    }
     return ValidationError.typeMismatch(
       path: path,
       received: received,
@@ -236,6 +245,16 @@ enum ValidationErrorCode {
     String? message,
     Map<String, dynamic>? context,
   }) {
+    if (message != null) {
+      return ValidationError(
+        message: message,
+        path: path,
+        received: received,
+        expected: constraint,
+        code: code,
+        context: context,
+      );
+    }
     return ValidationError.constraintViolation(
       path: path,
       received: received,
@@ -303,6 +322,9 @@ class ValidationErrorCodeUtils {
         code.contains('_invalid_') ||
         code.contains('_missing_') ||
         code.contains('_empty') ||
+        code.contains('_length') ||
+        code.contains('_value') ||
+        code.contains('_size') ||
         code == 'constraint_violation';
   }
 
