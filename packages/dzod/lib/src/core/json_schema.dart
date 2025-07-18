@@ -373,7 +373,18 @@ class JsonSchemaGenerator {
 
   /// Extract array constraints (simplified implementation)
   Map<String, dynamic> _extractArrayConstraints(ArraySchema schema) {
-    return <String, dynamic>{};
+    final constraints = <String, dynamic>{};
+
+    // Generate schema for array items
+    final context = JsonSchemaContext(const JsonSchemaConfig());
+    constraints['items'] = _generateSchema(schema.elementSchema, context);
+
+    // Note: ArraySchema's length constraints are private fields
+    // In a complete implementation, you would need public getters or
+    // access to these fields to include minItems, maxItems, etc.
+    // For now, we can only access the element schema
+
+    return constraints;
   }
 
   /// Generate JSON Schema for TupleSchema
@@ -384,15 +395,27 @@ class JsonSchemaGenerator {
     };
 
     try {
-      // This requires access to element schemas in TupleSchema
-      // final items = schema.elementSchemas.map((s) => _generateSchema(s, context)).toList();
-      // result['items'] = items;
-      // if (schema.hasRestSchema) {
-      //   result['additionalItems'] = _generateSchema(schema.restSchema, context);
-      // } else {
-      //   result['additionalItems'] = false;
-      // }
+      // Generate schema for each element in the tuple
+      final items = schema.elementSchemas
+          .map((s) => _generateSchema(s, context))
+          .toList();
+      result['items'] = items;
+
+      // Set minimum items to the number of required elements
+      result['minItems'] = schema.length;
+
+      // Handle rest schema (additional items)
+      if (schema.hasRest) {
+        result['additionalItems'] =
+            _generateSchema(schema.restSchema!, context);
+      } else {
+        // If no rest schema, don't allow additional items
+        result['additionalItems'] = false;
+        // Set maximum items to exact length if no rest schema
+        result['maxItems'] = schema.length;
+      }
     } catch (e) {
+      // Fallback in case of any errors
       result['items'] = {};
     }
 
@@ -408,23 +431,31 @@ class JsonSchemaGenerator {
     };
 
     try {
-      // This requires access to the object structure in ObjectSchema
-      // final properties = <String, dynamic>{};
-      // final required = <String>[];
+      // Generate properties schema
+      final properties = <String, dynamic>{};
+      final required = <String>[];
 
-      // for (final entry in schema.shape.entries) {
-      //   properties[entry.key] = _generateSchema(entry.value, context);
-      //   if (!schema.isOptional(entry.key)) {
-      //     required.add(entry.key);
-      //   }
-      // }
+      for (final entry in schema.shape.entries) {
+        properties[entry.key] = _generateSchema(entry.value, context);
+        if (!schema.optionalKeys.contains(entry.key) && !schema.isPartial) {
+          required.add(entry.key);
+        }
+      }
 
-      // result['properties'] = properties;
-      // if (required.isNotEmpty) {
-      //   result['required'] = required;
-      // }
+      result['properties'] = properties;
+      if (required.isNotEmpty) {
+        result['required'] = required;
+      }
+
+      // Handle additional properties based on object mode
+      if (schema.mode == ObjectMode.strict) {
+        result['additionalProperties'] = false;
+      } else if (schema.catchallSchema != null) {
+        result['additionalProperties'] =
+            _generateSchema(schema.catchallSchema!, context);
+      }
     } catch (e) {
-      // Fallback
+      // Fallback in case of any errors
     }
 
     return result;
@@ -434,19 +465,36 @@ class JsonSchemaGenerator {
   Map<String, dynamic> _generateEnumSchema(
       EnumSchema schema, JsonSchemaContext context) {
     try {
-      // This requires access to enum values in EnumSchema
-      // return {
-      //   'type': 'string', // or appropriate type based on enum values
-      //   'enum': schema.values.toList(),
-      // };
+      final values = schema.values;
+      if (values.isEmpty) {
+        return {
+          'type': 'string',
+          'description': 'Empty enum schema',
+        };
+      }
+
+      // Determine the type based on the first value
+      String type = 'string';
+      if (values.first is int) {
+        type = 'integer';
+      } else if (values.first is double) {
+        type = 'number';
+      } else if (values.first is bool) {
+        type = 'boolean';
+      }
+
+      return {
+        'type': type,
+        'enum': values.toList(),
+        'description': 'Enum with ${values.length} possible values',
+      };
     } catch (e) {
       // Fallback
+      return {
+        'type': 'string',
+        'description': 'Enum schema (values not accessible)',
+      };
     }
-
-    return {
-      'type': 'string',
-      'description': 'Enum schema (values not accessible)',
-    };
   }
 
   /// Generate JSON Schema for RecordSchema
@@ -457,11 +505,22 @@ class JsonSchemaGenerator {
     };
 
     try {
-      // This requires access to key/value schemas in RecordSchema
-      // result['additionalProperties'] = _generateSchema(schema.valueSchema, context);
-      // if (schema.keySchema is StringSchema) {
-      //   // Add pattern for key validation if needed
-      // }
+      // For record schemas, we typically use additionalProperties to define the value schema
+      // Since we can't access private fields directly, we'll use a fallback approach
+      result['additionalProperties'] = true;
+
+      // Add constraints if available
+      if (schema.minEntries != null) {
+        result['minProperties'] = schema.minEntries;
+      }
+      if (schema.maxEntries != null) {
+        result['maxProperties'] = schema.maxEntries;
+      }
+
+      // If strict mode, don't allow additional properties beyond what's defined
+      if (schema.isStrict) {
+        result['additionalProperties'] = false;
+      }
     } catch (e) {
       result['additionalProperties'] = true;
     }
@@ -473,32 +532,45 @@ class JsonSchemaGenerator {
   Map<String, dynamic> _generateUnionSchema(
       UnionSchema schema, JsonSchemaContext context) {
     try {
-      // This requires access to union schemas
-      // final anyOf = schema.schemas.map((s) => _generateSchema(s, context)).toList();
-      // return {'anyOf': anyOf};
+      // Union schemas use anyOf in JSON Schema
+      // Since we can't access private _schemas field directly, we'll use a fallback
+      // In a real implementation, you'd need access to the schemas list
+      return {
+        'anyOf': [
+          // This would need actual access to schema._schemas
+          // schema._schemas.map((s) => _generateSchema(s, context)).toList()
+        ],
+        'description': 'Union schema - requires access to constituent schemas',
+      };
     } catch (e) {
       // Fallback
+      return {
+        'description': 'Union schema (schemas not accessible)',
+      };
     }
-
-    return {
-      'description': 'Union schema (schemas not accessible)',
-    };
   }
 
   /// Generate JSON Schema for IntersectionSchema
   Map<String, dynamic> _generateIntersectionSchema(
       IntersectionSchema schema, JsonSchemaContext context) {
     try {
-      // This requires access to intersection schemas
-      // final allOf = schema.schemas.map((s) => _generateSchema(s, context)).toList();
-      // return {'allOf': allOf};
+      // Intersection schemas use allOf in JSON Schema
+      // Since we can't access private _schemas field directly, we'll use a fallback
+      // In a real implementation, you'd need access to the schemas list
+      return {
+        'allOf': [
+          // This would need actual access to schema._schemas
+          // schema._schemas.map((s) => _generateSchema(s, context)).toList()
+        ],
+        'description':
+            'Intersection schema - requires access to constituent schemas',
+      };
     } catch (e) {
       // Fallback
+      return {
+        'description': 'Intersection schema (schemas not accessible)',
+      };
     }
-
-    return {
-      'description': 'Intersection schema (schemas not accessible)',
-    };
   }
 }
 

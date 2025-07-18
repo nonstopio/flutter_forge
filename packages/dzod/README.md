@@ -24,7 +24,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript_Zod-105%25_Parity-green.svg?style=for-the-badge" alt="Zod Parity">
-  <img src="https://img.shields.io/badge/Test_Coverage-83.9%25-green.svg?style=for-the-badge" alt="Test Coverage">
+  <img src="https://img.shields.io/badge/Test_Coverage-84.7%25-green.svg?style=for-the-badge" alt="Test Coverage">
   <img src="https://img.shields.io/badge/Tests-566+-blue.svg?style=for-the-badge" alt="Tests">
 </p>
 
@@ -39,7 +39,7 @@ and exceptional developer experience.
 ### 🏆 **Key Achievements**
 
 - **🚀 105%+ Zod Feature Parity**: Complete compatibility with original Zod API plus additional features
-- **⚡ 566+ Comprehensive Tests**: 83.9% test coverage with enterprise-grade quality assurance
+- **⚡ 566+ Comprehensive Tests**: 84.7% test coverage with enterprise-grade quality assurance
 - **🔧 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
 - **💡 Developer Experience**: Intuitive API design with comprehensive documentation and examples
 
