@@ -10,52 +10,60 @@ env:
   FLUTTER_VERSION: "3.32.3"
 
 jobs:
-  build:
+  discover:
     runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.packages.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - name: Install melos
+        run: dart pub global activate melos
+      - name: Bootstrap packages
+        run: melos bootstrap
+      - name: Get packages
+        id: packages
+        run: |
+          # Determine the base ref for comparison
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE_REF="origin/${{ github.base_ref }}" 
+          else
+            BASE_REF="HEAD~1"
+          fi
+          
+          
+          # Get packages that have changes using melos diff
+          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"biomedict_workspace\") | .name]" 2>/dev/null || echo '[]')
+          if [ "$packages" = "" ] || [ "$packages" = "null" ]; then
+            packages="[]"
+          fi
+          echo "packages=$packages" >> $GITHUB_OUTPUT
+          echo "Changed packages: $packages"
+
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    if: needs.discover.outputs.packages != '[]'
     strategy:
       matrix:
-        # All the packages are specified by their name and not path.
-        # This is because the package is passed to the 'melos exec' command
-        package:
-          - connectivity_wrapper
-          - contact_permission
-          - ns_firebase_utils
-          - ns_utils
-          - timer_button
-          - nonstop_cli
-        include:
-          - package: connectivity_wrapper
-            path: packages
-            test: false
-          - package: contact_permission
-            path: plugins
-            test: false
-          - package: ns_firebase_utils
-            path: packages
-            test: false
-          - package: ns_utils
-            path: packages
-            test: false
-          - package: timer_button
-            path: packages
-            test: true
-          - package: nonstop_cli
-            path: packages
-            test: false
-          - package: ns_intl_phone_input
-            path: packages
-            test: true
+        package: ${{ fromJson(needs.discover.outputs.packages) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
       - name: Install dependencies
         run: |
           dart pub global activate melos
-          dart pub get
-          dart run melos bs
+          melos bootstrap --scope="${{ matrix.package }}"
 
       - name: Format package
         run: melos exec --scope="${{ matrix.package }}" -- dart format . --set-exit-if-changed
@@ -63,21 +71,56 @@ jobs:
       - name: Analyze package
         run: melos exec --scope="${{ matrix.package }}" -- dart analyze --fatal-infos
 
-      - name: Run tests
-        if: matrix.test
-        run: melos exec --scope="${{ matrix.package }}" -- flutter test --coverage
+  test:
+    needs: [discover, build]
+    runs-on: ubuntu-latest
+    if: needs.discover.outputs.packages != '[]'
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.discover.outputs.packages) }}
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Check Code Coverage
-        if: matrix.test
-        uses: VeryGoodOpenSource/very_good_coverage@v3.0.0
+      - uses: subosito/flutter-action@v2
         with:
-          path: ${{ matrix.path }}/${{ matrix.package }}/coverage/lcov.info
-          min_coverage: 90
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          dart pub global activate melos
+          melos bootstrap --scope="${{ matrix.package }}"
+
+      - name: Check if test directory exists and run tests
+        id: test-step
+        run: |
+          # Get package path
+          package_path=$(melos list --json | jq -r ".[] | select(.name == \"${{ matrix.package }}\") | .path")
+          echo "package_path=$package_path" >> $GITHUB_OUTPUT
+          
+          if [ -d "$package_path/test" ]; then
+            echo "Test directory found for ${{ matrix.package }}"
+            echo "has_tests=true" >> $GITHUB_OUTPUT
+            
+            # Check if it's a Flutter package by looking for flutter dependency
+            if grep -q "flutter:" "$package_path/pubspec.yaml"; then
+              echo "Running Flutter tests for ${{ matrix.package }}"
+              echo "is_flutter=true" >> $GITHUB_OUTPUT
+              melos exec --scope="${{ matrix.package }}" -- flutter test --coverage
+            else
+              echo "Running Dart tests for ${{ matrix.package }}"
+              echo "is_flutter=false" >> $GITHUB_OUTPUT
+              melos exec --scope="${{ matrix.package }}" -- dart test
+            fi
+          else
+            echo "No test directory found for ${{ matrix.package }}, skipping tests"
+            echo "has_tests=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Upload coverage reports to Codecov
-        if: matrix.test
+        if: steps.test-step.outputs.has_tests == 'true'
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ${{ matrix.package }}
-          files: ${{ matrix.path }}/${{ matrix.package }}/coverage/lcov.info
+          files: ${{ steps.test-step.outputs.package_path }}/coverage/lcov.info

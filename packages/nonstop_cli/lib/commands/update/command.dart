@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:args/command_runner.dart';
-import 'package:mason/mason.dart';
+import 'package:mason/mason.dart' hide packageVersion;
 import 'package:nonstop_cli/command_runner.dart';
 import 'package:nonstop_cli/utils/utils.dart';
 import 'package:pub_updater/pub_updater.dart';
+
+import '../../version.dart';
 
 class UpdateCommand extends Command<int> {
   UpdateCommand({
