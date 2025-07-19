@@ -79,20 +79,41 @@ class RecursiveSchema<T> extends Schema<T> {
   }
 
   static ValidationContext? _globalContext;
+  static ValidationContext? _globalAsyncContext;
 
   ValidationContext _getOrCreateValidationContext() {
     // Use global context for the validation tree
     return _globalContext ??= ValidationContext();
   }
 
+  ValidationContext _getOrCreateAsyncValidationContext() {
+    // Use global context for the async validation tree
+    return _globalAsyncContext ??= ValidationContext();
+  }
+
   static void _clearGlobalContext() {
     _globalContext = null;
+  }
+
+  static void _clearGlobalAsyncContext() {
+    _globalAsyncContext = null;
   }
 
   @override
   Future<ValidationResult<T>> validateAsync(dynamic input,
       [List<String> path = const []]) async {
-    return await _validateAsyncWithContext(input, path, ValidationContext());
+    // Check if this is the root of the validation tree
+    final isRoot = _globalAsyncContext == null;
+
+    try {
+      final context = _getOrCreateAsyncValidationContext();
+      return await _validateAsyncWithContext(input, path, context);
+    } finally {
+      // Clear global context only if this was the root validator
+      if (isRoot) {
+        _clearGlobalAsyncContext();
+      }
+    }
   }
 
   ValidationResult<T> _validateWithContext(
@@ -193,24 +214,25 @@ class RecursiveSchema<T> extends Schema<T> {
       );
     }
 
-    // Check for circular references
+    // Check for circular references before processing
+    String? objectId;
     if (_enableCircularDetection) {
-      final objectId = _getObjectId(input);
-      if (objectId != null && context.visitedObjects.contains(objectId)) {
-        context.circularReferencesDetected++;
-        return ValidationResult.failure(
-          ValidationErrorCollection.single(
-            ValidationError.constraintViolation(
-              constraint: 'Circular reference detected',
-              received: input,
-              path: path,
-              code: ValidationErrorCode.schemaCircular.code,
-            ),
-          ),
-        );
-      }
-
+      objectId = _getObjectId(input);
       if (objectId != null) {
+        if (context.visitedObjects.contains(objectId)) {
+          context.circularReferencesDetected++;
+          return ValidationResult.failure(
+            ValidationErrorCollection.single(
+              ValidationError.constraintViolation(
+                constraint: 'Circular reference detected',
+                received: input,
+                path: path,
+                code: ValidationErrorCode.schemaCircular.code,
+              ),
+            ),
+          );
+        }
+        // Add to visited set before processing
         context.visitedObjects.add(objectId);
       }
     }
@@ -223,18 +245,25 @@ class RecursiveSchema<T> extends Schema<T> {
 
     ValidationResult<T> result;
 
-    // If the schema is also a RecursiveSchema, pass the context
-    if (_schema is RecursiveSchema<T>) {
-      final recursiveSchema = _schema as RecursiveSchema<T>;
-      result =
-          await recursiveSchema._validateAsyncWithContext(input, path, context);
-    } else {
-      // For non-recursive schemas, use regular validation
-      result = await _schema.validateAsync(input, path);
-    }
+    try {
+      // If the schema is also a RecursiveSchema, pass the context
+      if (_schema is RecursiveSchema<T>) {
+        final recursiveSchema = _schema as RecursiveSchema<T>;
+        result =
+            await recursiveSchema._validateAsyncWithContext(input, path, context);
+      } else {
+        // For non-recursive schemas, use regular validation
+        result = await _schema.validateAsync(input, path);
+      }
+    } finally {
+      // Always decrement depth and clean up
+      context.depth--;
 
-    // Decrement depth when returning
-    context.depth--;
+      // Remove from visited set when done processing this object
+      if (_enableCircularDetection && objectId != null) {
+        context.visitedObjects.remove(objectId);
+      }
+    }
 
     return result;
   }
