@@ -167,10 +167,17 @@ class RecursiveSchema<T> extends Schema<T> {
     ValidationResult<T> result;
 
     try {
-      // If the schema is also a RecursiveSchema, pass the context
+      // If the schema is also a RecursiveSchema, delegate without interfering with circular detection
       if (_schema is RecursiveSchema<T>) {
         final recursiveSchema = _schema as RecursiveSchema<T>;
-        result = recursiveSchema._validateWithContext(input, path, context);
+        // Temporarily clear global context to prevent interference
+        final savedContext = _globalContext;
+        _globalContext = null;
+        try {
+          result = recursiveSchema.validate(input, path);
+        } finally {
+          _globalContext = savedContext;
+        }
       } else {
         // For non-recursive schemas, we need to handle nested RecursiveSchema instances
         result = _validateNestedWithContext(input, path, context);
@@ -246,11 +253,17 @@ class RecursiveSchema<T> extends Schema<T> {
     ValidationResult<T> result;
 
     try {
-      // If the schema is also a RecursiveSchema, pass the context
+      // If the schema is also a RecursiveSchema, delegate without interfering with circular detection
       if (_schema is RecursiveSchema<T>) {
         final recursiveSchema = _schema as RecursiveSchema<T>;
-        result =
-            await recursiveSchema._validateAsyncWithContext(input, path, context);
+        // Temporarily clear global async context to prevent interference
+        final savedContext = _globalAsyncContext;
+        _globalAsyncContext = null;
+        try {
+          result = await recursiveSchema.validateAsync(input, path);
+        } finally {
+          _globalAsyncContext = savedContext;
+        }
       } else {
         // For non-recursive schemas, use regular validation
         result = await _schema.validateAsync(input, path);
