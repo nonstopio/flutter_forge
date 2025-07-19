@@ -9,4 +9,5 @@ dependencies:
   cli_core: ^0.0.2-dev.5
 
 dev_dependencies:
+  flutter_lints: ^5.0.0
   test: ^1.21.0
