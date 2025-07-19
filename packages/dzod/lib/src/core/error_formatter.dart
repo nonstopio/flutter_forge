@@ -427,8 +427,6 @@ class ErrorFormatter {
 
 /// Predefined error format configurations
 class ErrorFormatPresets {
-  const ErrorFormatPresets._();
-
   /// Minimal configuration - only shows error messages
   static const ErrorFormatConfig minimal = ErrorFormatConfig(
     includeErrorCodes: false,

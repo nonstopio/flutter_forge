@@ -307,8 +307,6 @@ enum ValidationErrorCode {
 
 /// Utility class for working with validation error codes
 class ValidationErrorCodeUtils {
-  const ValidationErrorCodeUtils._();
-
   /// Checks if an error code is related to type validation
   static bool isTypeError(String code) {
     return code.startsWith('type_') ||
