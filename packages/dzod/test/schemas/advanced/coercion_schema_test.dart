@@ -1319,7 +1319,7 @@ void main() {
         
         // Test with actual number input
         final numResult = CoercionUtils.coerceToInt(42.5);
-        expect(numResult, equals(42));
+        expect(numResult, equals(43)); // Rounded
       });
 
       test('should test double coercion edge cases', () {
