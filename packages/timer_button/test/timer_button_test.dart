@@ -17,10 +17,16 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      expect(tester.widget<ElevatedButton>(find.byType(ElevatedButton)).enabled,
-          isTrue);
+      expect(
+        tester
+            .widget<ElevatedButton>(find.byType(
+              ElevatedButton,
+            ))
+            .enabled,
+        isTrue,
+      );
     });
   });
 }
