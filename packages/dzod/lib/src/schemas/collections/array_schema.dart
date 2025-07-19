@@ -416,5 +416,6 @@ class ArraySchema<T> extends Schema<List<T>> {
   int? get minItems => _minLength;
   int? get maxItems => _maxLength;
   int? get exactItems => _exactLength;
-  bool? get uniqueItems => null; // ArraySchema doesn't have unique constraint yet
+  bool? get uniqueItems =>
+      null; // ArraySchema doesn't have unique constraint yet
 }

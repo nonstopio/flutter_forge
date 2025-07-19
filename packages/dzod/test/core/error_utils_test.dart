@@ -513,7 +513,7 @@ void main() {
             path: [],
             code: 'string_min_length',
           ),
-          ValidationError(
+          const ValidationError(
             message: 'test',
             path: [],
             received: 'test',
@@ -621,7 +621,7 @@ void main() {
             path: [],
             code: 'string_min_length',
           ),
-          ValidationError(
+          const ValidationError(
             message: 'test',
             path: [],
             received: 'test',
@@ -645,12 +645,14 @@ void main() {
 
       test('should create from collection', () {
         final collection = ValidationErrorCollection(testErrors);
-        final processorFromCollection = ErrorProcessor.fromCollection(collection);
+        final processorFromCollection =
+            ErrorProcessor.fromCollection(collection);
         expect(processorFromCollection.errors, hasLength(testErrors.length));
       });
 
       test('should filter by codes', () {
-        final filtered = processor.filterByCodes(['type_mismatch', 'min_length']);
+        final filtered =
+            processor.filterByCodes(['type_mismatch', 'min_length']);
         expect(filtered.errors, hasLength(3));
       });
 
@@ -672,7 +674,7 @@ void main() {
       test('should check isEmpty and isNotEmpty', () {
         expect(processor.isEmpty, isFalse);
         expect(processor.isNotEmpty, isTrue);
-        
+
         final emptyProcessor = ErrorProcessor([]);
         expect(emptyProcessor.isEmpty, isTrue);
         expect(emptyProcessor.isNotEmpty, isFalse);
@@ -693,10 +695,8 @@ void main() {
       });
 
       test('should chain operations', () {
-        final result = processor
-            .filterByMinDepth(1)
-            .sortByPath()
-            .filterByMaxDepth(2);
+        final result =
+            processor.filterByMinDepth(1).sortByPath().filterByMaxDepth(2);
         expect(result.errors, isNotEmpty);
       });
 
@@ -766,7 +766,8 @@ void main() {
       });
 
       test('should filter with custom filter', () {
-        final filtered = processor.filterCustom((error) => error.path.length > 1);
+        final filtered =
+            processor.filterCustom((error) => error.path.length > 1);
         expect(filtered.errors, hasLength(2));
       });
 
@@ -776,7 +777,8 @@ void main() {
       });
 
       test('should sort with custom comparator', () {
-        final sorted = processor.sortCustom((a, b) => a.path.length.compareTo(b.path.length));
+        final sorted = processor
+            .sortCustom((a, b) => a.path.length.compareTo(b.path.length));
         expect(sorted.errors.first.path, hasLength(0));
       });
 
@@ -786,7 +788,8 @@ void main() {
       });
 
       test('should group by custom function', () {
-        final grouped = processor.groupByCustom<int>((error) => error.path.length);
+        final grouped =
+            processor.groupByCustom<int>((error) => error.path.length);
         expect(grouped.keys, contains(0));
         expect(grouped.keys, contains(1));
       });

@@ -981,14 +981,14 @@ void main() {
 
     group('Missing Coverage Cases', () {
       test('should handle _ListSchema direct validation failure', () {
-        // Create a custom CoercionSchema that uses the internal _ListSchema  
+        // Create a custom CoercionSchema that uses the internal _ListSchema
         // but with a coercer that always throws to force fallback validation
         final listCoercion = CoercionSchema<List<dynamic>>(
           z.coerce.list().targetSchema, // This is the internal _ListSchema
-          (input) => throw FormatException('Cannot convert to list'),
+          (input) => throw const FormatException('Cannot convert to list'),
           strict: false,
         );
-        
+
         // Pass a non-list value to trigger the _ListSchema failure path (lines 43-45)
         final result = listCoercion.validate('not-a-list');
         expect(result.isFailure, isTrue);
@@ -1000,10 +1000,10 @@ void main() {
         // but with a coercer that always throws to force fallback validation
         final setCoercion = CoercionSchema<Set<dynamic>>(
           z.coerce.set().targetSchema, // This is the internal _SetSchema
-          (input) => throw FormatException('Cannot convert to set'),
+          (input) => throw const FormatException('Cannot convert to set'),
           strict: false,
         );
-        
+
         // Pass a non-set value to trigger the _SetSchema failure path (lines 65-67)
         final result = setCoercion.validate('not-a-set');
         expect(result.isFailure, isTrue);
@@ -1014,7 +1014,7 @@ void main() {
         // Create a Map that causes JSON encoding to throw (circular reference)
         final problematicMap = <String, dynamic>{};
         problematicMap['self'] = problematicMap; // Circular reference
-        
+
         final result = CoercionUtils.coerceToString(
           problematicMap,
           prettifyJson: true,
@@ -1041,7 +1041,9 @@ void main() {
         expect(fallbackUsed, isFalse);
       });
 
-      test('should use ultimate fallback in string coercion when all else fails', () {
+      test(
+          'should use ultimate fallback in string coercion when all else fails',
+          () {
         // This should test the ultimate fallback line (line 305)
         final result = CoercionUtils.coerceToStringAdvanced(
           'simple-value',
@@ -1069,11 +1071,11 @@ void main() {
       test('should handle edge case scenarios properly', () {
         // Test scenarios that might reach the defensive error cases
         // These errors may be unreachable in normal code but we'll test the paths
-        
+
         // Test normal conversions to ensure the functions work
         expect(CoercionUtils.coerceToInt(3.14), equals(3));
         expect(CoercionUtils.coerceToDouble(42), equals(42.0));
-        
+
         // The FormatException lines may be unreachable defensive code
         // Let's just ensure the normal paths work correctly
         expect(CoercionUtils.coerceToInt('123'), equals(123));
@@ -1097,14 +1099,15 @@ void main() {
         expect(fallbackUsed, isFalse);
       });
 
-      test('should trigger async validation fallback to original value', () async {
+      test('should trigger async validation fallback to original value',
+          () async {
         // Create a coercion schema that will fall back to original validation
         final schema = CoercionSchema<String>(
           z.string(),
-          (input) => throw FormatException('Coercion failed'),
+          (input) => throw const FormatException('Coercion failed'),
           strict: false,
         );
-        
+
         // This should trigger the async fallback to original value validation
         final result = await schema.validateAsync('test');
         expect(result.isSuccess, isTrue);
@@ -1120,7 +1123,7 @@ void main() {
         // Test coerceToStringAdvanced with various fallback scenarios
         bool firstStrategyTried = false;
         bool secondStrategyTried = false;
-        
+
         // Test 1: Fallback strategies with all strategies failing
         final result1 = CoercionUtils.coerceToStringAdvanced(
           'normal-input',
@@ -1135,19 +1138,19 @@ void main() {
             },
           ],
         );
-        
+
         // Should succeed with normal coerceToString, strategies not called
         expect(result1, equals('normal-input'));
         expect(firstStrategyTried, isFalse);
         expect(secondStrategyTried, isFalse);
-        
+
         // Test 2: Verify fallback strategies with empty list (line 305)
         final result2 = CoercionUtils.coerceToStringAdvanced(
           42,
           fallbackStrategies: [], // Empty fallback strategies
         );
         expect(result2, equals('42')); // Should use normal coercion
-        
+
         // Test 3: Test the catch block scenarios with complex objects
         final complexObj = ComplexTestObject();
         final result3 = CoercionUtils.coerceToStringAdvanced(complexObj);
@@ -1223,7 +1226,7 @@ void main() {
         // Test to cover lines 296, 298 in coerceToStringAdvanced
         // Create a scenario where fallback strategies are actually used
         bool fallbackCalled = false;
-        
+
         final result = CoercionUtils.coerceToStringAdvanced(
           'test input',
           fallbackStrategies: [
@@ -1233,11 +1236,11 @@ void main() {
             }
           ],
         );
-        
+
         // Normal coercion should work, so fallback shouldn't be called
         expect(result, equals('test input'));
         expect(fallbackCalled, isFalse);
-        
+
         // Test with a scenario that might force fallback usage
         // by using a complex object that could trigger coercion edge cases
         final complexObject = ComplexTestObject();
@@ -1251,9 +1254,9 @@ void main() {
       });
 
       test('should cover fallback strategy execution in number coercion', () {
-        // Test to cover lines 431, 433 in coerceToNumberAdvanced  
+        // Test to cover lines 431, 433 in coerceToNumberAdvanced
         bool fallbackCalled = false;
-        
+
         final result = CoercionUtils.coerceToNumberAdvanced(
           42,
           fallbackStrategies: [
@@ -1263,25 +1266,24 @@ void main() {
             }
           ],
         );
-        
+
         // Normal coercion should work
         expect(result, equals(42));
         expect(fallbackCalled, isFalse);
-        
+
         // Test with valid string number that should work normally
         final stringResult = CoercionUtils.coerceToNumberAdvanced(
           '123.45',
-          fallbackStrategies: [
-            (input) => 999.0
-          ],
+          fallbackStrategies: [(input) => 999.0],
         );
         expect(stringResult, equals(123.45));
       });
 
-      test('should cover fallback strategy execution in generic type coercion', () {
+      test('should cover fallback strategy execution in generic type coercion',
+          () {
         // Test to cover lines 618, 620 in coerceToType
         bool fallbackCalled = false;
-        
+
         final result = CoercionUtils.coerceToType<String>(
           'test',
           primaryCoercer: (input) => input.toString(),
@@ -1292,18 +1294,16 @@ void main() {
             }
           ],
         );
-        
+
         // Normal coercion should work
         expect(result, equals('test'));
         expect(fallbackCalled, isFalse);
-        
+
         // Test with a scenario that uses the primary coercer normally
         final numberResult = CoercionUtils.coerceToType<int>(
           '42',
           primaryCoercer: (input) => int.parse(input.toString()),
-          fallbackStrategies: [
-            (input) => -1
-          ],
+          fallbackStrategies: [(input) => -1],
         );
         expect(numberResult, equals(42));
       });
@@ -1312,11 +1312,11 @@ void main() {
         // Test normal int coercion that should work
         final intResult = CoercionUtils.coerceToInt('42');
         expect(intResult, equals(42));
-        
+
         // Test double to int conversion
         final doubleToIntResult = CoercionUtils.coerceToInt('42.0');
         expect(doubleToIntResult, equals(42));
-        
+
         // Test with actual number input
         final numResult = CoercionUtils.coerceToInt(42.5);
         expect(numResult, equals(43)); // Rounded
@@ -1326,11 +1326,11 @@ void main() {
         // Test normal double coercion that should work
         final doubleResult = CoercionUtils.coerceToDouble('42.5');
         expect(doubleResult, equals(42.5));
-        
+
         // Test int to double conversion
         final intToDoubleResult = CoercionUtils.coerceToDouble('42');
         expect(intToDoubleResult, equals(42.0));
-        
+
         // Test with actual number input
         final numResult = CoercionUtils.coerceToDouble(42);
         expect(numResult, equals(42.0));
@@ -1348,12 +1348,12 @@ void main() {
       });
 
       test('should exercise private constructor indirectly', () {
-        // Line 230 - The private constructor is accessed indirectly 
+        // Line 230 - The private constructor is accessed indirectly
         // when any static method is called
         expect(CoercionUtils.coerceToString('test'), equals('test'));
         expect(CoercionUtils.coerceToNumber('42'), equals(42));
         expect(CoercionUtils.coerceToBoolean('true'), equals(true));
-        
+
         // This ensures the class can be used statically (accessing the private constructor)
         expect(() => CoercionUtils.coerceToString(null), returnsNormally);
       });

@@ -596,9 +596,9 @@ void main() {
     group('Async Object Validation', () {
       test('validateAsync() rejects non-object values', () async {
         final schema = z.object({'name': z.string()});
-        
+
         final result = await schema.validateAsync('not an object');
-        
+
         expect(result.isSuccess, false);
         expect(result.errors!.errors.first.code, equals('type_mismatch'));
       });
@@ -607,27 +607,30 @@ void main() {
         final schema = z.object({
           'name': z.string(),
         }).catchall(z.string()); // Catchall expects strings
-        
+
         final result = await schema.validateAsync({
           'name': 'John',
           'extraNumber': 123, // This should fail catchall validation
         });
-        
+
         expect(result.isSuccess, false);
-        expect(result.errors!.errors.any((e) => e.path.contains('extraNumber')), true);
+        expect(result.errors!.errors.any((e) => e.path.contains('extraNumber')),
+            true);
       });
 
-      test('validateAsync() allows unknown properties in passthrough mode without catchall', () async {
+      test(
+          'validateAsync() allows unknown properties in passthrough mode without catchall',
+          () async {
         final schema = z.object({
           'name': z.string(),
         }).passthrough(); // No catchall specified
-        
+
         final result = await schema.validateAsync({
           'name': 'John',
           'extraProperty': 'extra value',
           'anotherExtra': 42,
         });
-        
+
         expect(result.isSuccess, true);
         expect(result.data!['extraProperty'], equals('extra value'));
         expect(result.data!['anotherExtra'], equals(42));

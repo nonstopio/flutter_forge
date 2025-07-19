@@ -292,7 +292,7 @@ class JsonSchemaGenerator {
   /// Extract string constraints (simplified implementation)
   Map<String, dynamic> _extractStringConstraints(StringSchema schema) {
     final constraints = <String, dynamic>{};
-    
+
     if (schema.minLength != null) {
       constraints['minLength'] = schema.minLength;
     }
@@ -305,7 +305,7 @@ class JsonSchemaGenerator {
     if (schema.format != null) {
       constraints['format'] = schema.format;
     }
-    
+
     return constraints;
   }
 
@@ -344,7 +344,7 @@ class JsonSchemaGenerator {
   /// Extract number constraints (simplified implementation)
   Map<String, dynamic> _extractNumberConstraints(NumberSchema schema) {
     final constraints = <String, dynamic>{};
-    
+
     if (schema.minimum != null) {
       constraints['minimum'] = schema.minimum;
     }
@@ -358,7 +358,7 @@ class JsonSchemaGenerator {
       constraints['exclusiveMaximum'] = schema.exclusiveMaximum;
     }
     // multipleOf is not available as a getter due to naming conflict with method
-    
+
     return constraints;
   }
 

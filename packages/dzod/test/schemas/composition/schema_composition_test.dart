@@ -231,7 +231,8 @@ void main() {
         );
         const info2 = SchemaInfo(
           typeName: 'string',
-          isOptional: false, // Different
+          isOptional: false,
+          // Different
           isReadonly: true,
           isBranded: true,
           description: 'Test',
@@ -239,7 +240,8 @@ void main() {
         const info3 = SchemaInfo(
           typeName: 'string',
           isOptional: true,
-          isReadonly: false, // Different
+          isReadonly: false,
+          // Different
           isBranded: true,
           description: 'Test',
         );
@@ -247,7 +249,8 @@ void main() {
           typeName: 'string',
           isOptional: true,
           isReadonly: true,
-          isBranded: false, // Different
+          isBranded: false,
+          // Different
           description: 'Test',
         );
         const info5 = SchemaInfo(
@@ -275,31 +278,44 @@ void main() {
           description: 'Test',
         );
         const info2 = SchemaInfo(
-          typeName: 'string', // Same typeName, so we pass first condition
-          isOptional: false, // Different - should hit line 97
+          typeName: 'string',
+          // Same typeName, so we pass first condition
+          isOptional: false,
+          // Different - should hit line 97
           isReadonly: true,
           isBranded: true,
           description: 'Test',
         );
         const info3 = SchemaInfo(
-          typeName: 'string', // Same typeName
-          isOptional: true, // Same isOptional
-          isReadonly: false, // Different - should hit line 98
+          typeName: 'string',
+          // Same typeName
+          isOptional: true,
+          // Same isOptional
+          isReadonly: false,
+          // Different - should hit line 98
           isBranded: true,
           description: 'Test',
         );
         const info4 = SchemaInfo(
-          typeName: 'string', // Same typeName
-          isOptional: true, // Same isOptional
-          isReadonly: true, // Same isReadonly
-          isBranded: false, // Different - should hit line 99
+          typeName: 'string',
+          // Same typeName
+          isOptional: true,
+          // Same isOptional
+          isReadonly: true,
+          // Same isReadonly
+          isBranded: false,
+          // Different - should hit line 99
           description: 'Test',
         );
         const info5 = SchemaInfo(
-          typeName: 'string', // Same typeName
-          isOptional: true, // Same isOptional
-          isReadonly: true, // Same isReadonly
-          isBranded: true, // Same isBranded
+          typeName: 'string',
+          // Same typeName
+          isOptional: true,
+          // Same isOptional
+          isReadonly: true,
+          // Same isReadonly
+          isBranded: true,
+          // Same isBranded
           description: 'Different', // Different - should hit line 100
         );
 
@@ -466,11 +482,10 @@ void main() {
     group('Union and Intersection Schema Analysis', () {
       test('should analyze union schemas directly', () {
         final unionSchema = z.union<dynamic>([z.string(), z.number()]);
-        final composer = const SchemaComposer();
-        
+        const composer = SchemaComposer();
+
         // Debug the schema type
-        print('Union schema type: ${unionSchema.runtimeType}');
-        
+
         // This should trigger the union schema analysis in _analyzeBaseSchema
         final info = composer.analyze(unionSchema);
 
@@ -479,12 +494,12 @@ void main() {
       });
 
       test('should analyze intersection schemas directly', () {
-        final intersectionSchema = z.intersection<String>([z.string(), z.string().min(5)]);
-        final composer = const SchemaComposer();
-        
+        final intersectionSchema =
+            z.intersection<String>([z.string(), z.string().min(5)]);
+        const composer = SchemaComposer();
+
         // Debug the schema type
-        print('Intersection schema type: ${intersectionSchema.runtimeType}');
-        
+
         // This should trigger the intersection schema analysis in _analyzeBaseSchema
         final info = composer.analyze(intersectionSchema);
 
@@ -495,16 +510,14 @@ void main() {
       test('should create raw union and intersection schemas', () {
         // Try creating schemas that are definitely UnionSchema and IntersectionSchema
         final rawUnion = UnionSchema<dynamic>([z.string(), z.number()]);
-        final rawIntersection = IntersectionSchema<String>([z.string(), z.string().min(5)]);
-        
-        final composer = const SchemaComposer();
-        
-        print('Raw union type: ${rawUnion.runtimeType}');
-        print('Raw intersection type: ${rawIntersection.runtimeType}');
-        
+        final rawIntersection =
+            IntersectionSchema<String>([z.string(), z.string().min(5)]);
+
+        const composer = SchemaComposer();
+
         final unionInfo = composer.analyze(rawUnion);
         final intersectionInfo = composer.analyze(rawIntersection);
-        
+
         expect(unionInfo.typeName, equals('union'));
         expect(intersectionInfo.typeName, equals('intersection'));
       });
@@ -512,90 +525,104 @@ void main() {
 
     group('Deep Wrapper Schema Tests', () {
       test('should handle deep optional schema checks', () {
-        final composer = const SchemaComposer();
-        
+        const composer = SchemaComposer();
+
         // Test deep optional checks that hit lines 381-383
         // Create nested wrappers where optional is buried under other wrappers
         final deepDescribeOptional = z.string().optional().describe('test');
         expect(composer.isOptional(deepDescribeOptional), isTrue); // Line 381
-        
+
         final deepBrandedOptional = z.string().optional().brand<String>();
         expect(composer.isOptional(deepBrandedOptional), isTrue); // Line 382
-        
+
         final deepReadonlyOptional = z.string().optional().readonly();
         expect(composer.isOptional(deepReadonlyOptional), isTrue); // Line 383
       });
 
-      test('should handle deep description collection for all wrapper types', () {
-        final composer = const SchemaComposer();
-        
+      test('should handle deep description collection for all wrapper types',
+          () {
+        const composer = SchemaComposer();
+
         // Test description collection that hits lines 412, 414, 416
         // Create schemas where the description is on the inner schema under different wrappers
-        final brandedWithInnerDesc = z.string().describe('inner').brand<String>();
-        final descriptions1 = composer.extractDescriptions(brandedWithInnerDesc);
+        final brandedWithInnerDesc =
+            z.string().describe('inner').brand<String>();
+        final descriptions1 =
+            composer.extractDescriptions(brandedWithInnerDesc);
         expect(descriptions1, contains('inner')); // Line 412
-        
+
         final readonlyWithInnerDesc = z.string().describe('inner').readonly();
-        final descriptions2 = composer.extractDescriptions(readonlyWithInnerDesc);
+        final descriptions2 =
+            composer.extractDescriptions(readonlyWithInnerDesc);
         expect(descriptions2, contains('inner')); // Line 414
-        
+
         final optionalWithInnerDesc = z.string().describe('inner').optional();
-        final descriptions3 = composer.extractDescriptions(optionalWithInnerDesc);
+        final descriptions3 =
+            composer.extractDescriptions(optionalWithInnerDesc);
         expect(descriptions3, contains('inner')); // Line 416
       });
 
       test('should handle deep metadata collection for all wrapper types', () {
-        final composer = const SchemaComposer();
+        const composer = SchemaComposer();
         final metadata = {'test': 'value'};
-        
+
         // Test metadata collection that hits lines 429, 431, 433
         // Create schemas where the metadata is on the inner schema under different wrappers
-        final brandedWithInnerMeta = z.string().describe('test', metadata: metadata).brand<String>();
+        final brandedWithInnerMeta =
+            z.string().describe('test', metadata: metadata).brand<String>();
         final collectedMeta1 = composer.extractMetadata(brandedWithInnerMeta);
         expect(collectedMeta1, equals(metadata)); // Line 429
-        
-        final readonlyWithInnerMeta = z.string().describe('test', metadata: metadata).readonly();
+
+        final readonlyWithInnerMeta =
+            z.string().describe('test', metadata: metadata).readonly();
         final collectedMeta2 = composer.extractMetadata(readonlyWithInnerMeta);
         expect(collectedMeta2, equals(metadata)); // Line 431
-        
-        final optionalWithInnerMeta = z.string().describe('test', metadata: metadata).optional();
+
+        final optionalWithInnerMeta =
+            z.string().describe('test', metadata: metadata).optional();
         final collectedMeta3 = composer.extractMetadata(optionalWithInnerMeta);
         expect(collectedMeta3, equals(metadata)); // Line 433
       });
 
       test('should handle wrapper complexity calculations recursively', () {
-        final composer = const SchemaComposer();
-        
+        const composer = SchemaComposer();
+
         // Test wrapper complexity scoring that hits lines 451-452, 454-455, 457-458, 460-461
         // Create schemas where complexity needs to be calculated recursively
-        final deepDescribedSchema = z.string().describe('inner').describe('outer');
-        final describedComplexity = composer.getComplexityScore(deepDescribedSchema);
+        final deepDescribedSchema =
+            z.string().describe('inner').describe('outer');
+        final describedComplexity =
+            composer.getComplexityScore(deepDescribedSchema);
         expect(describedComplexity, greaterThan(10)); // Lines 451-452
-        
+
         final deepBrandedSchema = z.string().brand<String>().brand<String>();
-        final brandedComplexity = composer.getComplexityScore(deepBrandedSchema);
+        final brandedComplexity =
+            composer.getComplexityScore(deepBrandedSchema);
         expect(brandedComplexity, greaterThan(10)); // Lines 454-455
-        
+
         final deepReadonlySchema = z.string().readonly().readonly();
-        final readonlyComplexity = composer.getComplexityScore(deepReadonlySchema);
+        final readonlyComplexity =
+            composer.getComplexityScore(deepReadonlySchema);
         expect(readonlyComplexity, greaterThan(10)); // Lines 457-458
-        
+
         final deepOptionalSchema = z.string().optional().optional();
-        final optionalComplexity = composer.getComplexityScore(deepOptionalSchema);
+        final optionalComplexity =
+            composer.getComplexityScore(deepOptionalSchema);
         expect(optionalComplexity, greaterThan(10)); // Lines 460-461
       });
     });
 
     group('Schema Utils Edge Cases', () {
-      test('should handle oneOf with values and trigger RefineSchema creation', () {
+      test('should handle oneOf with values and trigger RefineSchema creation',
+          () {
         // This test will trigger the oneOf method and cause RefineSchema creation (lines 566-571)
         final schema = SchemaUtils.oneOf<String>(['red', 'green', 'blue']);
         expect(schema, isA<LazySchema>());
-        
+
         // Force the lazy evaluation to trigger RefineSchema creation and _AnySchema validation
         try {
           // This will force evaluation of the lazy schema, triggering lines 566-571
-          final result = schema.validate('red');
+          schema.validate('red');
           // The validation may fail due to casting issues, but we've covered the code
         } catch (e) {
           // Expected - the RefineSchema creation and _AnySchema validation code was executed
@@ -605,8 +632,9 @@ void main() {
 
       test('should create noneOf with proper validation', () {
         final schema = SchemaUtils.noneOf(['admin', 'root'], z.string());
-        
-        expect(() => schema.parse('admin'), throwsA(isA<ValidationException>()));
+
+        expect(
+            () => schema.parse('admin'), throwsA(isA<ValidationException>()));
         expect(() => schema.parse('root'), throwsA(isA<ValidationException>()));
         expect(schema.parse('user'), equals('user'));
       });
@@ -618,7 +646,7 @@ void main() {
         final schema2 = SchemaUtils.intersection([z.string()]);
         final schema3 = SchemaUtils.oneOf(['a', 'b']);
         final schema4 = SchemaUtils.noneOf(['x'], z.string());
-        
+
         expect(schema1, isNotNull);
         expect(schema2, isNotNull);
         expect(schema3, isNotNull);
@@ -631,7 +659,7 @@ void main() {
         // Create a test that will force _AnySchema.validate to be called
         // This happens when oneOf lazy schema is evaluated
         final schema = SchemaUtils.oneOf<dynamic>(['test', 123, true]);
-        
+
         try {
           // Force lazy evaluation - this will create RefineSchema with _AnySchema
           // and call _AnySchema.validate method (lines 527-530)
@@ -639,7 +667,7 @@ void main() {
         } catch (e) {
           // Expected error due to type casting, but _AnySchema.validate was called
         }
-        
+
         // Also test the creation path
         expect(schema, isA<LazySchema>());
       });

@@ -1079,7 +1079,7 @@ void main() {
       // Create a custom object that will trigger the fallback toString() case
       // in _formatValue (line 413) and _serializeValue (line 424)
       final customObject = DateTime.now();
-      
+
       final error = ValidationError(
         message: 'Test error with custom object',
         path: ['field'],
@@ -1087,11 +1087,11 @@ void main() {
         expected: 'string',
         code: 'test_error',
       );
-      
+
       // This should trigger _formatValue's fallback toString() case
       final formatted = ef.ErrorFormatter.formatError(error);
       expect(formatted, contains(customObject.toString()));
-      
+
       // This should trigger _serializeValue's fallback toString() case
       final json = error.toJson();
       expect(json['received'], equals(customObject.toString()));
@@ -1100,7 +1100,7 @@ void main() {
     test('should handle custom class objects in error formatting', () {
       // Create a custom class to trigger fallback cases
       final customObject = Uri.parse('https://example.com');
-      
+
       final error = ValidationError(
         message: 'Test error with URI object',
         path: ['url'],
@@ -1108,29 +1108,29 @@ void main() {
         expected: 'string',
         code: 'invalid_url',
       );
-      
+
       final formatted = ef.ErrorFormatter.formatError(error);
       expect(formatted, contains('https://example.com'));
-      
+
       final json = error.toJson();
       expect(json['received'], equals('https://example.com'));
     });
 
     test('should handle Duration objects in error formatting', () {
       // Test with Duration object to trigger toString() fallback
-      final duration = Duration(hours: 2, minutes: 30);
-      
-      final error = ValidationError(
+      const duration = Duration(hours: 2, minutes: 30);
+
+      const error = ValidationError(
         message: 'Invalid duration',
         path: ['timeout'],
         received: duration,
         expected: 'number',
         code: 'invalid_duration',
       );
-      
+
       final formatted = ef.ErrorFormatter.formatError(error);
       expect(formatted, contains(duration.toString()));
-      
+
       final json = error.toJson();
       expect(json['received'], equals(duration.toString()));
     });
@@ -1138,7 +1138,7 @@ void main() {
     test('should handle RegExp objects in error formatting', () {
       // Test with RegExp object to trigger toString() fallback
       final regex = RegExp(r'^\d+$');
-      
+
       final error = ValidationError(
         message: 'Pattern mismatch',
         path: ['pattern'],
@@ -1146,10 +1146,10 @@ void main() {
         expected: 'string',
         code: 'pattern_error',
       );
-      
+
       final formatted = ef.ErrorFormatter.formatError(error);
       expect(formatted, contains(regex.toString()));
-      
+
       final json = error.toJson();
       expect(json['received'], equals(regex.toString()));
     });

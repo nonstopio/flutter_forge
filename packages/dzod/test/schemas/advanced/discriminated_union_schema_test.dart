@@ -758,7 +758,7 @@ void main() {
           'should trigger BooleanSchema path with direct BooleanSchema for true',
           () {
         // This creates a BooleanSchema that only accepts true using the internal constructor
-        final booleanSchema = BooleanSchema(expectedValue: true);
+        const booleanSchema = BooleanSchema(expectedValue: true);
         final schema = z.discriminatedUnion('onlyTrue', [
           z.object({
             'onlyTrue': booleanSchema,
@@ -782,7 +782,7 @@ void main() {
           'should trigger BooleanSchema path with direct BooleanSchema for false',
           () {
         // This creates a BooleanSchema that only accepts false using the internal constructor
-        final booleanSchema = BooleanSchema(expectedValue: false);
+        const booleanSchema = BooleanSchema(expectedValue: false);
         final schema = z.discriminatedUnion('onlyFalse', [
           z.object({
             'onlyFalse': booleanSchema,

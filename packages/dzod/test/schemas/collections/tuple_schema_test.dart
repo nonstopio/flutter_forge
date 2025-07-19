@@ -328,7 +328,7 @@ void main() {
         final schema1 = z.tuple([z.string(), z.number()]);
         final schema2 = z.tuple([z.string(), z.number()]);
         final schema3 = z.tuple([z.string(), z.boolean()]);
-        
+
         expect(schema1 == schema2, true);
         expect(schema1 == schema3, false);
         expect(schema1 == schema1, true); // Test identical

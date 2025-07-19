@@ -88,7 +88,9 @@ void main() {
         expect(error.code, 'type_mismatch');
       });
 
-      test('createTypeMismatchError should use ValidationError.typeMismatch when no message provided', () {
+      test(
+          'createTypeMismatchError should use ValidationError.typeMismatch when no message provided',
+          () {
         const errorCode = ValidationErrorCode.typeMismatch;
         final error = errorCode.createTypeMismatchError(
           path: ['test'],
@@ -121,7 +123,9 @@ void main() {
         expect(error.context, {'min': 0});
       });
 
-      test('createConstraintViolationError should use ValidationError.constraintViolation when no message provided', () {
+      test(
+          'createConstraintViolationError should use ValidationError.constraintViolation when no message provided',
+          () {
         const errorCode = ValidationErrorCode.constraintViolation;
         final error = errorCode.createConstraintViolationError(
           path: ['test'],

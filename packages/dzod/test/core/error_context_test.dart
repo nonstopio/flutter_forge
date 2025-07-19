@@ -340,7 +340,8 @@ void main() {
         expect(error.context?['schema_type'], 'StringSchema');
       });
 
-      test('should create constraint violation error with additional context', () {
+      test('should create constraint violation error with additional context',
+          () {
         final error = context.createConstraintViolationError(
           received: 'abc',
           constraint: 'minimum length of 5',
@@ -370,7 +371,9 @@ void main() {
         expect(error.path, ['user', 'email']);
       });
 
-      test('should create error from ValidationErrorCode with additional context', () {
+      test(
+          'should create error from ValidationErrorCode with additional context',
+          () {
         final error = context.createErrorFromCode(
           errorCode: ValidationErrorCode.stringEmail,
           received: 'not-email',

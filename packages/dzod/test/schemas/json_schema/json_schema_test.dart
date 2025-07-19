@@ -1,11 +1,4 @@
 import 'package:dzod/dzod.dart';
-import 'package:dzod/src/core/json_schema.dart';
-import 'package:dzod/src/core/schema.dart';
-import 'package:dzod/src/schemas/collections/array_schema.dart';
-import 'package:dzod/src/schemas/collections/record_schema.dart';
-import 'package:dzod/src/schemas/collections/tuple_schema.dart';
-import 'package:dzod/src/schemas/primitive/string_schema.dart';
-import 'package:dzod/src/schemas/specialized/enum_schema.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -225,18 +218,18 @@ void main() {
           const JsonSchemaConfig(generateDefinitions: true),
         );
         final testSchema = z.string();
-        
+
         // Test getDefinitionRef
         final ref1 = context.getDefinitionRef(testSchema, 'TestSchema');
         expect(ref1, equals('TestSchema'));
-        
+
         // Test caching behavior
         final ref2 = context.getDefinitionRef(testSchema, 'AnotherName');
         expect(ref2, equals('TestSchema')); // Should return cached value
-        
+
         // Test addDefinition
         context.addDefinition('TestDef', {'type': 'string'});
-        
+
         // Test definitions getter
         final definitions = context.definitions;
         expect(definitions['TestDef'], equals({'type': 'string'}));
@@ -248,7 +241,7 @@ void main() {
           const JsonSchemaConfig(generateDefinitions: false),
         );
         final testSchema = z.string();
-        
+
         // When generateDefinitions is false, should return empty string
         final ref = context.getDefinitionRef(testSchema, 'TestSchema');
         expect(ref, equals(''));
@@ -260,14 +253,14 @@ void main() {
           const JsonSchemaConfig(generateDefinitions: true),
         );
         context.addDefinition('TestDef', {'type': 'string'});
-        
+
         // Create a schema that would potentially use definitions
         final schema = z.string();
-        final generator = const JsonSchemaGenerator();
-        
+        const generator = JsonSchemaGenerator();
+
         // Generate with context that has definitions
         final result = generator.generate(schema);
-        
+
         // Since we're not actually using refs in the simple case,
         // definitions won't be added. But we can verify the structure
         expect(result.containsKey('definitions'), isFalse);
@@ -412,7 +405,7 @@ void main() {
 
       test('should handle array schema with error in element schema', () {
         // Test the catch block in _generateArraySchema
-        final schema = _ArraySchemaWithError();
+        const schema = _ArraySchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('array'));
@@ -495,11 +488,12 @@ void main() {
       });
 
       test('should handle enum schema with error', () {
-        final schema = _EnumSchemaWithError();
+        const schema = _EnumSchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('string'));
-        expect(jsonSchema['description'], equals('Enum schema (values not accessible)'));
+        expect(jsonSchema['description'],
+            equals('Enum schema (values not accessible)'));
       });
     });
 
@@ -521,7 +515,7 @@ void main() {
       });
 
       test('should handle record schema with error', () {
-        final schema = _RecordSchemaWithError();
+        const schema = _RecordSchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('object'));
@@ -550,7 +544,7 @@ void main() {
       });
 
       test('should handle tuple schema with error', () {
-        final schema = _TupleSchemaWithError();
+        const schema = _TupleSchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
         expect(jsonSchema['type'], equals('array'));
@@ -576,17 +570,21 @@ void main() {
       });
 
       test('should handle union schema with error', () {
-        final schema = _UnionSchemaWithError();
+        const schema = _UnionSchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
-        expect(jsonSchema['description'], equals('Union schema - requires access to constituent schemas'));
+        expect(jsonSchema['description'],
+            equals('Union schema - requires access to constituent schemas'));
       });
 
       test('should handle intersection schema with error', () {
-        final schema = _IntersectionSchemaWithError();
+        const schema = _IntersectionSchemaWithError();
         final jsonSchema = schema.toJsonSchema();
 
-        expect(jsonSchema['description'], equals('Intersection schema - requires access to constituent schemas'));
+        expect(
+            jsonSchema['description'],
+            equals(
+                'Intersection schema - requires access to constituent schemas'));
       });
     });
 
@@ -606,49 +604,53 @@ void main() {
     });
 
     group('Additional Coverage Tests', () {
-      test('should handle definitions collection when context has definitions', () {
+      test('should handle definitions collection when context has definitions',
+          () {
         // Create a context and manually add definitions to test the collection path
-        final config = const JsonSchemaConfig(generateDefinitions: true);
+        const config = JsonSchemaConfig(generateDefinitions: true);
         final context = JsonSchemaContext(config);
         context.addDefinition('TestDefinition', {'type': 'string'});
-        
+
         // Generate a schema and manually add definitions to the result
         // This tests the code path where result['definitions'] = context.definitions
         final result = <String, dynamic>{
           '\$schema': config.version.uri,
           'type': 'string',
         };
-        
+
         // This line is what we're testing for coverage
         if (context.definitions.isNotEmpty) {
           result['definitions'] = context.definitions;
         }
-        
+
         // Verify definitions were added
         expect(result.containsKey('definitions'), isTrue);
-        expect(result['definitions']['TestDefinition'], equals({'type': 'string'}));
+        expect(result['definitions']['TestDefinition'],
+            equals({'type': 'string'}));
       });
 
-      test('should handle getDefinitionRef with generateDefinitions disabled', () {
+      test('should handle getDefinitionRef with generateDefinitions disabled',
+          () {
         final context = JsonSchemaContext(
           const JsonSchemaConfig(generateDefinitions: false),
         );
-        
+
         final schema = z.string();
         final ref = context.getDefinitionRef(schema, 'TestName');
-        
+
         expect(ref, equals(''));
       });
 
-      test('should handle getDefinitionRef with generateDefinitions enabled', () {
+      test('should handle getDefinitionRef with generateDefinitions enabled',
+          () {
         final context = JsonSchemaContext(
           const JsonSchemaConfig(generateDefinitions: true),
         );
-        
+
         final schema = z.string();
         final ref1 = context.getDefinitionRef(schema, 'TestName');
         final ref2 = context.getDefinitionRef(schema, 'AnotherName');
-        
+
         expect(ref1, equals('TestName'));
         expect(ref2, equals('TestName')); // Should return cached value
       });
@@ -657,17 +659,17 @@ void main() {
         final context = JsonSchemaContext(
           const JsonSchemaConfig(generateDefinitions: true),
         );
-        
+
         final schema = z.string();
         final ref = context.getDefinitionRef(schema, null);
-        
+
         expect(ref, startsWith('Schema'));
       });
 
       test('should handle optional schema wrapping', () {
         final schema = z.string().optional();
         final jsonSchema = schema.toJsonSchema();
-        
+
         expect(jsonSchema['type'], equals('string'));
         // Optional wrapping should delegate to inner schema
       });
@@ -677,7 +679,7 @@ void main() {
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeDescriptions: false),
         );
-        
+
         expect(jsonSchema['type'], equals('string'));
         expect(jsonSchema.containsKey('description'), isFalse);
       });
@@ -687,13 +689,13 @@ void main() {
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeMetadata: false),
         );
-        
+
         expect(jsonSchema['type'], equals('string'));
         expect(jsonSchema.containsKey('x-'), isFalse);
       });
 
       test('should handle base schema with description and metadata', () {
-        final schema = _BaseSchemaWithDescriptionAndMetadata();
+        const schema = _BaseSchemaWithDescriptionAndMetadata();
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(
             includeDescriptions: true,
@@ -701,18 +703,20 @@ void main() {
             metadataPrefix: 'x-',
           ),
         );
-        
+
         expect(jsonSchema['title'], equals('Test description'));
         expect(jsonSchema['description'], equals('Test description'));
         expect(jsonSchema['x-custom'], equals('value'));
       });
 
-      test('should handle string constraint extraction with non-empty constraints', () {
-        final schema = _StringSchemaWithConstraints();
+      test(
+          'should handle string constraint extraction with non-empty constraints',
+          () {
+        const schema = _StringSchemaWithConstraints();
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeConstraints: true),
         );
-        
+
         expect(jsonSchema['type'], equals('string'));
         expect(jsonSchema['minLength'], equals(5));
         expect(jsonSchema['maxLength'], equals(10));
@@ -720,12 +724,14 @@ void main() {
         expect(jsonSchema['format'], equals('email'));
       });
 
-      test('should handle number constraint extraction with non-empty constraints', () {
-        final schema = _NumberSchemaWithConstraints();
+      test(
+          'should handle number constraint extraction with non-empty constraints',
+          () {
+        const schema = _NumberSchemaWithConstraints();
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeConstraints: true),
         );
-        
+
         expect(jsonSchema['type'], equals('number'));
         expect(jsonSchema['minimum'], equals(0));
         expect(jsonSchema['maximum'], equals(100));
@@ -735,12 +741,14 @@ void main() {
         expect(jsonSchema.containsKey('multipleOf'), isFalse);
       });
 
-      test('should handle array constraint extraction with non-empty constraints', () {
-        final schema = _ArraySchemaWithConstraints();
+      test(
+          'should handle array constraint extraction with non-empty constraints',
+          () {
+        const schema = _ArraySchemaWithConstraints();
         final jsonSchema = schema.toJsonSchema(
           config: const JsonSchemaConfig(includeConstraints: true),
         );
-        
+
         expect(jsonSchema['type'], equals('array'));
         expect(jsonSchema['items'], isNotNull);
         expect(jsonSchema['minItems'], equals(1));
@@ -749,28 +757,32 @@ void main() {
       });
 
       test('should handle record schema with min/max entries constraints', () {
-        final schema = _RecordSchemaWithConstraints();
+        const schema = _RecordSchemaWithConstraints();
         final jsonSchema = schema.toJsonSchema();
-        
+
         expect(jsonSchema['type'], equals('object'));
         expect(jsonSchema['minProperties'], equals(1));
         expect(jsonSchema['maxProperties'], equals(5));
       });
 
       test('should handle union schema error fallback', () {
-        final schema = _UnionSchemaWithErrorFallback();
+        const schema = _UnionSchemaWithErrorFallback();
         final jsonSchema = schema.toJsonSchema();
-        
+
         // Now the error fallback should be triggered due to the exception
-        expect(jsonSchema['description'], equals('Union schema - requires access to constituent schemas'));
+        expect(jsonSchema['description'],
+            equals('Union schema - requires access to constituent schemas'));
       });
 
       test('should handle intersection schema error fallback', () {
-        final schema = _IntersectionSchemaWithErrorFallback();
+        const schema = _IntersectionSchemaWithErrorFallback();
         final jsonSchema = schema.toJsonSchema();
-        
+
         // Now the error fallback should be triggered due to the exception
-        expect(jsonSchema['description'], equals('Intersection schema - requires access to constituent schemas'));
+        expect(
+            jsonSchema['description'],
+            equals(
+                'Intersection schema - requires access to constituent schemas'));
       });
     });
   });
@@ -809,10 +821,10 @@ class _RecordSchemaWithError extends RecordSchema<String, dynamic> {
 
   @override
   int? get minEntries => throw Exception('Test error');
-  
+
   @override
   int? get maxEntries => throw Exception('Test error');
-  
+
   @override
   bool get isStrict => throw Exception('Test error');
 }
@@ -823,13 +835,13 @@ class _TupleSchemaWithError extends TupleSchema<List<dynamic>> {
 
   @override
   List<Schema> get elementSchemas => throw Exception('Test error');
-  
+
   @override
   int get length => throw Exception('Test error');
-  
+
   @override
   bool get hasRest => throw Exception('Test error');
-  
+
   @override
   Schema? get restSchema => throw Exception('Test error');
 }
@@ -844,41 +856,15 @@ class _IntersectionSchemaWithError extends IntersectionSchema<dynamic> {
   const _IntersectionSchemaWithError() : super(const [StringSchema()]);
 }
 
-/// Custom JSON Schema generator to test definitions collection
-class _TestJsonSchemaGenerator extends JsonSchemaGenerator {
-  const _TestJsonSchemaGenerator();
-
-  Map<String, dynamic> generateWithDefinitions(Schema schema) {
-    final config = const JsonSchemaConfig(generateDefinitions: true);
-    final context = JsonSchemaContext(config);
-    
-    // Add a definition to trigger the definitions collection path
-    context.addDefinition('TestDef', {'type': 'string'});
-    
-    // Create a basic result
-    final result = <String, dynamic>{
-      '\$schema': config.version.uri,
-      'type': 'string',
-    };
-    
-    // This will trigger line 148: result['definitions'] = context.definitions;
-    if (context.definitions.isNotEmpty) {
-      result['definitions'] = context.definitions;
-    }
-    
-    return result;
-  }
-}
-
-
 /// String schema with constraints to test lines 274, 277, 280, 283
 class _StringSchemaWithConstraints extends StringSchema {
-  const _StringSchemaWithConstraints() : super(
-    minLength: 5,
-    maxLength: 10,
-    isEmail: true,
-  );
-  
+  const _StringSchemaWithConstraints()
+      : super(
+          minLength: 5,
+          maxLength: 10,
+          isEmail: true,
+        );
+
   @override
   String? get pattern => r'^[a-z]+$';
 }
@@ -890,8 +876,9 @@ class _NumberSchemaWithConstraints extends NumberSchema {
 
 /// Array schema with constraints to test lines 359, 362, 365
 class _ArraySchemaWithConstraints extends ArraySchema<String> {
-  const _ArraySchemaWithConstraints() : super(const StringSchema(), minLength: 1, maxLength: 10);
-  
+  const _ArraySchemaWithConstraints()
+      : super(const StringSchema(), minLength: 1, maxLength: 10);
+
   @override
   bool? get uniqueItems => true;
 }
@@ -902,24 +889,24 @@ class _BaseSchemaWithDescriptionAndMetadata extends Schema<String> {
 
   @override
   String? get description => 'Test description';
-  
+
   @override
   Map<String, dynamic>? get metadata => {'custom': 'value'};
 
   @override
-  ValidationResult<String> validate(dynamic input, [List<String> path = const []]) {
+  ValidationResult<String> validate(dynamic input,
+      [List<String> path = const []]) {
     return const ValidationResult.success('test');
   }
 }
 
-
 /// Record schema with constraints to test lines 514, 517
 class _RecordSchemaWithConstraints extends RecordSchema<String, String> {
   const _RecordSchemaWithConstraints() : super();
-  
+
   @override
   int? get minEntries => 1;
-  
+
   @override
   int? get maxEntries => 5;
 }
@@ -933,4 +920,3 @@ class _UnionSchemaWithErrorFallback extends UnionSchema<dynamic> {
 class _IntersectionSchemaWithErrorFallback extends IntersectionSchema<dynamic> {
   const _IntersectionSchemaWithErrorFallback() : super(const [StringSchema()]);
 }
-

@@ -1,5 +1,4 @@
 import 'package:dzod/dzod.dart';
-import 'package:dzod/src/schemas/advanced/recursive_schema.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -461,14 +460,18 @@ void main() {
         );
       });
 
-      test('should support async validation with proper error handling', () async {
+      test('should support async validation with proper error handling',
+          () async {
         late Schema<Map<String, dynamic>> asyncSchemaWithValidation;
         asyncSchemaWithValidation = z.recursive<Map<String, dynamic>>(
             () => z.object({
                   'value': z.string().refineAsync((s) async {
                     // Simulate async validation that might fail
                     await Future.delayed(const Duration(milliseconds: 1));
-                    if (s == 'fail') throw ValidationException('Async validation failed');
+                    if (s == 'fail') {
+                      throw const ValidationException(
+                          'Async validation failed');
+                    }
                     return true;
                   }),
                   'next': asyncSchemaWithValidation.optional(),
@@ -483,7 +486,8 @@ void main() {
           },
         };
 
-        final result = await asyncSchemaWithValidation.parseAsync(validStructure);
+        final result =
+            await asyncSchemaWithValidation.parseAsync(validStructure);
         expect(result['value'], equals('success'));
 
         // Test failure case
@@ -585,19 +589,22 @@ void main() {
             maxDepth: 10,
             enableCircularDetection: false,
             enableMemoization: true);
-        
+
         final str1 = schema1.toString();
         expect(str1, contains('RecursiveSchema<Map<String, dynamic>>'));
         expect(str1, contains('depth:10'));
         expect(str1, contains('circular:false'));
         expect(str1, contains('memo:true'));
-        expect(str1, isNot(contains(' ('))); // No description part (note the space before parenthesis)
-        
+        expect(
+            str1,
+            isNot(contains(
+                ' ('))); // No description part (note the space before parenthesis)
+
         // Test with description
         final schema2 = z.recursive<Map<String, dynamic>>(
             () => z.object({'value': z.string()}),
             description: 'My Schema');
-        
+
         final str2 = schema2.toString();
         expect(str2, contains('(My Schema)'));
       });
@@ -654,17 +661,19 @@ void main() {
       test('should handle nested RecursiveSchema instances', () {
         // Create a recursive schema that contains another recursive schema
         late Schema<Map<String, dynamic>> innerRecursiveSchema;
-        innerRecursiveSchema = z.recursive<Map<String, dynamic>>(() => z.object({
-              'innerValue': z.string(),
-              'innerNext': innerRecursiveSchema.optional(),
-            }));
+        innerRecursiveSchema =
+            z.recursive<Map<String, dynamic>>(() => z.object({
+                  'innerValue': z.string(),
+                  'innerNext': innerRecursiveSchema.optional(),
+                }));
 
         late Schema<Map<String, dynamic>> outerRecursiveSchema;
-        outerRecursiveSchema = z.recursive<Map<String, dynamic>>(() => z.object({
-              'outerValue': z.string(),
-              'inner': innerRecursiveSchema,
-              'outerNext': outerRecursiveSchema.optional(),
-            }));
+        outerRecursiveSchema =
+            z.recursive<Map<String, dynamic>>(() => z.object({
+                  'outerValue': z.string(),
+                  'inner': innerRecursiveSchema,
+                  'outerNext': outerRecursiveSchema.optional(),
+                }));
 
         final nestedStructure = {
           'outerValue': 'outer1',
@@ -857,7 +866,7 @@ void main() {
         context.totalValidations = 5;
         context.circularReferencesDetected = 2;
         context.maxDepthReached = 3;
-        
+
         final anotherContext = context.incrementDepth();
         expect(anotherContext.depth, equals(1));
         expect(anotherContext.totalValidations, equals(5));
@@ -898,7 +907,9 @@ void main() {
     });
 
     group('Edge Case Coverage', () {
-      test('should cover nested RecursiveSchema context passing (lines 150-152)', () {
+      test(
+          'should cover nested RecursiveSchema context passing (lines 150-152)',
+          () {
         // Create nested recursive schemas to trigger lines 150-152
         late RecursiveSchema<Map<String, dynamic>> innerRecursive;
         innerRecursive = z.recursive<Map<String, dynamic>>(() => z.object({
@@ -909,7 +920,8 @@ void main() {
         late RecursiveSchema<Map<String, dynamic>> outerRecursive;
         outerRecursive = z.recursive<Map<String, dynamic>>(() => z.object({
               'outerValue': z.string(),
-              'inner': innerRecursive, // This should trigger the nested RecursiveSchema path
+              'inner':
+                  innerRecursive, // This should trigger the nested RecursiveSchema path
               'outerChild': outerRecursive.optional(),
             }));
 
@@ -926,12 +938,12 @@ void main() {
         final result = outerRecursive.validate(testData);
         expect(result.isSuccess, isTrue);
         expect(result.data!['inner']['innerValue'], equals('inner'));
-        expect(result.data!['inner']['innerChild']['innerValue'], equals('deep inner'));
+        expect(result.data!['inner']['innerChild']['innerValue'],
+            equals('deep inner'));
       });
 
-
-
-      test('should cover async nested RecursiveSchema (lines 227-230)', () async {
+      test('should cover async nested RecursiveSchema (lines 227-230)',
+          () async {
         // Create nested recursive schemas for async validation
         late RecursiveSchema<Map<String, dynamic>> innerAsync;
         innerAsync = z.recursive<Map<String, dynamic>>(() => z.object({
@@ -942,7 +954,8 @@ void main() {
         late RecursiveSchema<Map<String, dynamic>> outerAsync;
         outerAsync = z.recursive<Map<String, dynamic>>(() => z.object({
               'outerValue': z.string(),
-              'innerSchema': innerAsync, // This should trigger async nested RecursiveSchema path
+              'innerSchema':
+                  innerAsync, // This should trigger async nested RecursiveSchema path
               'outerNext': outerAsync.optional(),
             }));
 
@@ -959,11 +972,15 @@ void main() {
         // This should trigger lines 227-230 for async nested RecursiveSchema
         final result = await outerAsync.validateAsync(asyncData);
         expect(result.isSuccess, isTrue);
-        expect(result.data!['innerSchema']['innerValue'], equals('async inner'));
-        expect(result.data!['innerSchema']['innerNext']['innerValue'], equals('deep async inner'));
+        expect(
+            result.data!['innerSchema']['innerValue'], equals('async inner'));
+        expect(result.data!['innerSchema']['innerNext']['innerValue'],
+            equals('deep async inner'));
       });
 
-      test('should cover async validation with List objects for complete object ID coverage', () async {
+      test(
+          'should cover async validation with List objects for complete object ID coverage',
+          () async {
         late RecursiveSchema<Map<String, dynamic>> listSchema;
         listSchema = z.recursive<Map<String, dynamic>>(
             () => z.object({
@@ -987,53 +1004,58 @@ void main() {
     });
 
     group('Nested RecursiveSchema Coverage', () {
-      test('should handle recursive schema as inner schema in sync validation', () {
-        // Create a deeply nested recursive schema to test the path where 
+      test('should handle recursive schema as inner schema in sync validation',
+          () {
+        // Create a deeply nested recursive schema to test the path where
         // _schema is itself a RecursiveSchema instance (lines 151-152)
         late Schema<Map<String, dynamic>> innerRecursive;
         late Schema<Map<String, dynamic>> outerRecursive;
-        
+
         innerRecursive = z.recursive<Map<String, dynamic>>(() => z.object({
-          'value': z.string(),
-          'nested': innerRecursive.optional(),
-        }));
-        
-        outerRecursive = z.recursive<Map<String, dynamic>>(() => innerRecursive);
-        
+              'value': z.string(),
+              'nested': innerRecursive.optional(),
+            }));
+
+        outerRecursive =
+            z.recursive<Map<String, dynamic>>(() => innerRecursive);
+
         final testData = {
           'value': 'test',
           'nested': {
             'value': 'nested_test',
           },
         };
-        
+
         final result = outerRecursive.validate(testData);
         expect(result.isSuccess, isTrue);
         expect(result.data!['value'], equals('test'));
         expect(result.data!['nested']['value'], equals('nested_test'));
       });
 
-      test('should handle recursive schema as inner schema in async validation', () async {
+      test('should handle recursive schema as inner schema in async validation',
+          () async {
         // Test the async path where _schema is itself a RecursiveSchema (lines 228, 230)
         late Schema<Map<String, dynamic>> innerRecursive;
         late Schema<Map<String, dynamic>> outerRecursive;
-        
+
         innerRecursive = z.recursive<Map<String, dynamic>>(() => z.object({
-          'value': z.string().refineAsync(
-            (value) async => Future.delayed(Duration(milliseconds: 1), () => true),
-          ),
-          'nested': innerRecursive.optional(),
-        }));
-        
-        outerRecursive = z.recursive<Map<String, dynamic>>(() => innerRecursive);
-        
+              'value': z.string().refineAsync(
+                    (value) async => Future.delayed(
+                        const Duration(milliseconds: 1), () => true),
+                  ),
+              'nested': innerRecursive.optional(),
+            }));
+
+        outerRecursive =
+            z.recursive<Map<String, dynamic>>(() => innerRecursive);
+
         final testData = {
           'value': 'test',
           'nested': {
             'value': 'nested_test',
           },
         };
-        
+
         final result = await outerRecursive.validateAsync(testData);
         expect(result.isSuccess, isTrue);
         expect(result.data!['value'], equals('test'));
@@ -1046,13 +1068,14 @@ void main() {
         deepSchema = z.recursive<Map<String, dynamic>>(
           () => z.object({
             'value': z.string().refineAsync(
-              (value) async => Future.delayed(Duration(milliseconds: 1), () => true),
-            ),
+                  (value) async => Future.delayed(
+                      const Duration(milliseconds: 1), () => true),
+                ),
             'child': deepSchema.optional(),
           }),
           maxDepth: 2, // Set a low max depth to trigger the limit
         );
-        
+
         final deepData = {
           'value': 'level1',
           'child': {
@@ -1065,24 +1088,26 @@ void main() {
             },
           },
         };
-        
+
         final result = await deepSchema.validateAsync(deepData);
         expect(result.isFailure, isTrue);
         expect(result.errors!.errors, hasLength(1));
         expect(result.errors!.errors.first.code, equals('schema_circular'));
-        expect(result.errors!.errors.first.message, contains('Maximum recursion depth exceeded: 2'));
+        expect(result.errors!.errors.first.message,
+            contains('Maximum recursion depth exceeded: 2'));
       });
 
       test('should handle async circular reference detection', () async {
         // Test async circular reference detection (lines 200-203, 207)
         late Schema<Map<String, dynamic>> circularSchema;
         circularSchema = z.recursive<Map<String, dynamic>>(() => z.object({
-          'id': z.string().refineAsync(
-            (value) async => Future.delayed(Duration(milliseconds: 1), () => true),
-          ),
-          'ref': circularSchema.optional(),
-        }));
-        
+              'id': z.string().refineAsync(
+                    (value) async => Future.delayed(
+                        const Duration(milliseconds: 1), () => true),
+                  ),
+              'ref': circularSchema.optional(),
+            }));
+
         // Create circular reference
         final Map<String, dynamic> circularData = {
           'id': 'node1',
@@ -1092,12 +1117,13 @@ void main() {
           'ref': circularData,
         };
         circularData['ref'] = childData;
-        
+
         final result = await circularSchema.validateAsync(circularData);
         expect(result.isFailure, isTrue);
         expect(result.errors!.errors, hasLength(1));
         expect(result.errors!.errors.first.code, equals('schema_circular'));
-        expect(result.errors!.errors.first.message, equals('Circular reference detected'));
+        expect(result.errors!.errors.first.message,
+            equals('Circular reference detected'));
       });
     });
   });

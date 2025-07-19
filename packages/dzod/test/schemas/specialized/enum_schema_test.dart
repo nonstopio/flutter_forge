@@ -1,5 +1,4 @@
 import 'package:dzod/dzod.dart';
-import 'package:dzod/src/schemas/specialized/enum_schema.dart';
 import 'package:test/test.dart';
 
 // Test enum for testing
@@ -171,7 +170,7 @@ void main() {
       test('throws error for first/last on empty enum', () {
         // Test with direct construction of empty enum to check error handling
         const emptyEnum = EnumSchema<String>([]);
-        
+
         expect(() => emptyEnum.first, throwsA(isA<StateError>()));
         expect(() => emptyEnum.last, throwsA(isA<StateError>()));
       });

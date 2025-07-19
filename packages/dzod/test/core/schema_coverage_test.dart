@@ -7,10 +7,10 @@ void main() {
       test('should return the correct type', () {
         final schema = z.string();
         expect(schema.type, equals(String));
-        
+
         final numSchema = z.number();
         expect(numSchema.type, equals(num));
-        
+
         final boolSchema = z.boolean();
         expect(boolSchema.type, equals(bool));
       });
@@ -109,7 +109,8 @@ void main() {
 
         final result = schema.validate('test');
         expect(result.isSuccess, false);
-        expect(result.errors!.errors.first.message, contains('Preprocessing failed'));
+        expect(result.errors!.errors.first.message,
+            contains('Preprocessing failed'));
       });
     });
 
@@ -129,7 +130,8 @@ void main() {
 
         final result = schema.validate('test');
         expect(result.isSuccess, false);
-        expect(result.errors!.errors.first.message, contains('Postprocessing failed'));
+        expect(result.errors!.errors.first.message,
+            contains('Postprocessing failed'));
       });
     });
 
@@ -189,7 +191,8 @@ void main() {
 
         final result = schema.validate('test');
         expect(result.isSuccess, false);
-        expect(result.errors!.errors.first.message, contains('Transformation failed'));
+        expect(result.errors!.errors.first.message,
+            contains('Transformation failed'));
       });
 
       test('should handle transformation errors in async validate', () async {
@@ -199,11 +202,13 @@ void main() {
 
         final result = await schema.validateAsync('test');
         expect(result.isSuccess, false);
-        expect(result.errors!.errors.first.message, contains('Transformation failed'));
+        expect(result.errors!.errors.first.message,
+            contains('Transformation failed'));
       });
 
       test('should propagate validation failures in async', () async {
-        final schema = z.string().transform<String>((value) => value.toUpperCase());
+        final schema =
+            z.string().transform<String>((value) => value.toUpperCase());
 
         final result = await schema.validateAsync(123);
         expect(result.isSuccess, false);
@@ -213,7 +218,7 @@ void main() {
     group('AsyncTransformSchema', () {
       test('should propagate validation failures', () async {
         final schema = z.string().transformAsync<String>((value) async {
-          await Future.delayed(Duration(milliseconds: 10));
+          await Future.delayed(const Duration(milliseconds: 10));
           return value.toUpperCase();
         });
 
@@ -233,10 +238,10 @@ void main() {
 
       test('should fail validation with async refine', () async {
         final schema = z.string().refine(
-          (value) => value.length > 10,
-          message: 'Too short',
-          code: 'min_length',
-        );
+              (value) => value.length > 10,
+              message: 'Too short',
+              code: 'min_length',
+            );
 
         final result = await schema.validateAsync('hello');
         expect(result.isSuccess, false);
@@ -255,7 +260,7 @@ void main() {
     group('DefaultSchema edge cases', () {
       test('should use default for invalid input', () {
         final schema = z.string().defaultTo('default');
-        
+
         final result = schema.validate(123);
         expect(result.isSuccess, true);
         expect(result.data, 'default');

@@ -512,7 +512,7 @@ void main() {
 
       test('validateAsync with exact length constraint failure', () async {
         final schema = z.array(z.string()).length(2);
-        
+
         final result = await schema.validateAsync(['hello']);
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code, 'exact_length');
@@ -520,7 +520,7 @@ void main() {
 
       test('validateAsync with min length constraint failure', () async {
         final schema = z.array(z.string()).min(3);
-        
+
         final result = await schema.validateAsync(['hello', 'world']);
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code, 'min_length');
@@ -528,7 +528,7 @@ void main() {
 
       test('validateAsync with max length constraint failure', () async {
         final schema = z.array(z.string()).max(2);
-        
+
         final result = await schema.validateAsync(['hello', 'world', 'test']);
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code, 'max_length');
@@ -536,16 +536,18 @@ void main() {
 
       test('validateAsync with nonempty constraint failure', () async {
         final schema = z.array(z.string()).nonempty();
-        
+
         final result = await schema.validateAsync([]);
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code, 'empty_array');
       });
 
-      test('validateAsync min method creates new schema with correct parameters', () async {
+      test(
+          'validateAsync min method creates new schema with correct parameters',
+          () async {
         final schema = z.array(z.string());
         final minSchema = schema.min(3);
-        
+
         final result = await minSchema.validateAsync(['hello', 'world']);
         expect(result.isFailure, true);
         expect(result.errors!.errors.first.code, 'min_length');
