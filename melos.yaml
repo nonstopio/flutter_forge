@@ -28,8 +28,20 @@ scripts:
     exec:
       concurrency: 5
       failFast: true
+  test:
+    description: "Run tests in all packages"
+    run: |
+      if [ -f "pubspec.yaml" ] && grep -q "flutter:" pubspec.yaml; then
+        flutter test
+      else
+        dart test
+      fi
+    exec:
+      concurrency: 1
+      failFast: false
+    packageFilters:
+      dirExists: ["test"]
   update_nonstop_cli_version:
     run: dart run tools/update_nonstop_cli_version.dart
   update_nonstop_cli_bundles:
     run: dart run tools/update_nonstop_cli_bundles.dart
-
