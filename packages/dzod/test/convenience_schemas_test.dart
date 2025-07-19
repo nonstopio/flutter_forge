@@ -794,5 +794,37 @@ void main() {
         expect(schema.validate('hello').isFailure, true);
       });
     });
+
+    group('Internal TypedSchema tests', () {
+      test('transform should fail with wrong input type', () {
+        final schema = z.transform<String, int>((value) => value.length);
+        final result = schema.validate(123); // pass number instead of string
+        expect(result.isFailure, true);
+        expect(result.errors!.errors.first.code, ValidationErrorCode.typeMismatch.code);
+      });
+
+      test('refine should fail with wrong input type', () {
+        final schema = z.refine<String>((value) => value.isNotEmpty);
+        final result = schema.validate(123); // pass number instead of string
+        expect(result.isFailure, true);
+        expect(result.errors!.errors.first.code, ValidationErrorCode.typeMismatch.code);
+      });
+
+      test('refineAsync should fail with wrong input type', () async {
+        final schema = z.refineAsync<String>((value) async => value.isNotEmpty);
+        final result = await schema.validateAsync(123); // pass number instead of string
+        expect(result.isFailure, true);
+        expect(result.errors!.errors.first.code, ValidationErrorCode.typeMismatch.code);
+      });
+
+      test('transform should handle wrong type with proper error details', () {
+        final schema = z.transform<String, int>((value) => value.length);
+        final result = schema.validate(123);
+        expect(result.isFailure, true);
+        final error = result.errors!.errors.first;
+        expect(error.message, contains('String'));
+        expect(error.received, 123);
+      });
+    });
   });
 }

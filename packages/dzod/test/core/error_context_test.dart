@@ -311,6 +311,22 @@ void main() {
         expect(error.context?['schema_type'], 'StringSchema');
       });
 
+      test('should create type mismatch error with additional context', () {
+        final error = context.createTypeMismatchError(
+          received: 123,
+          expected: 'string',
+          code: 'wrong_type',
+          additionalContext: {'extra': 'info'},
+        );
+
+        expect(error.code, 'wrong_type');
+        expect(error.received, 123);
+        expect(error.expected, 'string');
+        expect(error.path, ['user', 'email']);
+        expect(error.context?['schema_type'], 'StringSchema');
+        expect(error.context?['extra'], 'info');
+      });
+
       test('should create constraint violation error', () {
         final error = context.createConstraintViolationError(
           received: 'abc',
@@ -322,6 +338,21 @@ void main() {
         expect(error.received, 'abc');
         expect(error.path, ['user', 'email']);
         expect(error.context?['schema_type'], 'StringSchema');
+      });
+
+      test('should create constraint violation error with additional context', () {
+        final error = context.createConstraintViolationError(
+          received: 'abc',
+          constraint: 'minimum length of 5',
+          code: 'too_short',
+          additionalContext: {'constraint_value': 5},
+        );
+
+        expect(error.code, 'too_short');
+        expect(error.received, 'abc');
+        expect(error.path, ['user', 'email']);
+        expect(error.context?['schema_type'], 'StringSchema');
+        expect(error.context?['constraint_value'], 5);
       });
 
       test('should create error from ValidationErrorCode', () {
@@ -337,6 +368,23 @@ void main() {
         expect(error.expected, 'valid email');
         expect(error.message, 'Custom message');
         expect(error.path, ['user', 'email']);
+      });
+
+      test('should create error from ValidationErrorCode with additional context', () {
+        final error = context.createErrorFromCode(
+          errorCode: ValidationErrorCode.stringEmail,
+          received: 'not-email',
+          expected: 'valid email',
+          message: 'Custom message',
+          additionalContext: {'pattern': '@'},
+        );
+
+        expect(error.code, ValidationErrorCode.stringEmail.code);
+        expect(error.received, 'not-email');
+        expect(error.expected, 'valid email');
+        expect(error.message, 'Custom message');
+        expect(error.path, ['user', 'email']);
+        expect(error.context?['pattern'], '@');
       });
 
       test('should include additional context in errors', () {

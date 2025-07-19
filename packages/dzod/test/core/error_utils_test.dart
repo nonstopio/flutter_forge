@@ -3,6 +3,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('ErrorUtils', () {
+    // Test the class type exists
+    test('should have ErrorUtils class', () {
+      expect(ErrorUtils, isA<Type>());
+    });
     // Create test errors for filtering tests
     final testErrors = [
       ValidationError.typeMismatch(
@@ -501,6 +505,49 @@ void main() {
         expect(grouped, isA<Map<String, List<ValidationError>>>());
       });
 
+      test('should group by category and handle null codes', () {
+        final errorsWithNullCode = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            code: 'string_min_length',
+          ),
+          ValidationError(
+            message: 'test',
+            path: [],
+            received: 'test',
+            expected: 'test',
+            code: null, // Explicitly null code
+          ),
+        ];
+
+        final grouped = ErrorUtils.groupByCategory(errorsWithNullCode);
+        expect(grouped, containsPair('string', hasLength(1)));
+        expect(grouped, containsPair('unknown', hasLength(1)));
+      });
+
+      test('should group by validation type', () {
+        final mixedErrors = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': true},
+          ),
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': false},
+          ),
+        ];
+
+        final grouped = ErrorUtils.groupByValidationType(mixedErrors);
+        expect(grouped['async'], hasLength(1));
+        expect(grouped['sync'], hasLength(1));
+      });
+
       test('should group by source', () {
         final errorsWithSource = testErrors.map((e) {
           return ValidationError.constraintViolation(
@@ -539,6 +586,209 @@ void main() {
       test('should group by parent path', () {
         final grouped = ErrorUtils.groupByParentPath(testErrors);
         expect(grouped, isA<Map<String, List<ValidationError>>>());
+      });
+    });
+
+    group('Additional Sorting Tests', () {
+      test('should sort by validation depth', () {
+        final errorsWithDepth = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'depth': 2},
+          ),
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'depth': 1},
+          ),
+        ];
+
+        final sorted = ErrorUtils.sortByValidationDepth(errorsWithDepth);
+        expect(sorted.first.validationDepth, equals(1));
+        expect(sorted.last.validationDepth, equals(2));
+      });
+    });
+
+    group('Additional Count Tests', () {
+      test('should count by category and handle null codes', () {
+        final errorsWithNullCode = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            code: 'string_min_length',
+          ),
+          ValidationError(
+            message: 'test',
+            path: [],
+            received: 'test',
+            expected: 'test',
+            code: null, // Explicitly null code
+          ),
+        ];
+
+        final counts = ErrorUtils.countByCategory(errorsWithNullCode);
+        expect(counts, containsPair('string', 1));
+        expect(counts, containsPair('unknown', 1));
+      });
+    });
+
+    group('ErrorProcessor Tests', () {
+      late ErrorProcessor processor;
+
+      setUp(() {
+        processor = ErrorProcessor(testErrors);
+      });
+
+      test('should create from collection', () {
+        final collection = ValidationErrorCollection(testErrors);
+        final processorFromCollection = ErrorProcessor.fromCollection(collection);
+        expect(processorFromCollection.errors, hasLength(testErrors.length));
+      });
+
+      test('should filter by codes', () {
+        final filtered = processor.filterByCodes(['type_mismatch', 'min_length']);
+        expect(filtered.errors, hasLength(3));
+      });
+
+      test('should filter by exact path', () {
+        final filtered = processor.filterByExactPath(['field2']);
+        expect(filtered.errors, hasLength(1));
+      });
+
+      test('should sort by code', () {
+        final sorted = processor.sortByCode();
+        expect(sorted.errors, hasLength(testErrors.length));
+      });
+
+      test('should group by code', () {
+        final grouped = processor.groupByCode();
+        expect(grouped.keys, hasLength(4));
+      });
+
+      test('should check isEmpty and isNotEmpty', () {
+        expect(processor.isEmpty, isFalse);
+        expect(processor.isNotEmpty, isTrue);
+        
+        final emptyProcessor = ErrorProcessor([]);
+        expect(emptyProcessor.isEmpty, isTrue);
+        expect(emptyProcessor.isNotEmpty, isFalse);
+      });
+
+      test('should get count', () {
+        expect(processor.count, equals(testErrors.length));
+      });
+
+      test('should get collection', () {
+        final collection = processor.collection;
+        expect(collection.errors, hasLength(testErrors.length));
+      });
+
+      test('should get statistics', () {
+        final stats = processor.getStatistics();
+        expect(stats['total_errors'], equals(testErrors.length));
+      });
+
+      test('should chain operations', () {
+        final result = processor
+            .filterByMinDepth(1)
+            .sortByPath()
+            .filterByMaxDepth(2);
+        expect(result.errors, isNotEmpty);
+      });
+
+      test('should filter by depth', () {
+        final filtered = processor.filterByDepth(1);
+        expect(filtered.errors, hasLength(2));
+      });
+
+      test('should filter by min depth', () {
+        final filtered = processor.filterByMinDepth(2);
+        expect(filtered.errors, hasLength(2));
+      });
+
+      test('should filter by max depth', () {
+        final filtered = processor.filterByMaxDepth(1);
+        expect(filtered.errors, hasLength(3));
+      });
+
+      test('should filter async errors', () {
+        final mixedErrors = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': true},
+          ),
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': false},
+          ),
+        ];
+        final mixedProcessor = ErrorProcessor(mixedErrors);
+        final asyncFiltered = mixedProcessor.filterAsync();
+        expect(asyncFiltered.errors, hasLength(1));
+      });
+
+      test('should filter sync errors', () {
+        final mixedErrors = [
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': true},
+          ),
+          ValidationError.constraintViolation(
+            constraint: 'test',
+            received: 'test',
+            path: [],
+            context: {'is_async': false},
+          ),
+        ];
+        final mixedProcessor = ErrorProcessor(mixedErrors);
+        final syncFiltered = mixedProcessor.filterSync();
+        expect(syncFiltered.errors, hasLength(1));
+      });
+
+      test('should filter type errors', () {
+        final filtered = processor.filterTypeErrors();
+        expect(filtered.errors, hasLength(2));
+      });
+
+      test('should filter constraint errors', () {
+        final filtered = processor.filterConstraintErrors();
+        expect(filtered.errors, hasLength(2));
+      });
+
+      test('should filter with custom filter', () {
+        final filtered = processor.filterCustom((error) => error.path.length > 1);
+        expect(filtered.errors, hasLength(2));
+      });
+
+      test('should sort by depth', () {
+        final sorted = processor.sortByDepth();
+        expect(sorted.errors.first.path, hasLength(0));
+      });
+
+      test('should sort with custom comparator', () {
+        final sorted = processor.sortCustom((a, b) => a.path.length.compareTo(b.path.length));
+        expect(sorted.errors.first.path, hasLength(0));
+      });
+
+      test('should group by path', () {
+        final grouped = processor.groupByPath();
+        expect(grouped.keys, isNotEmpty);
+      });
+
+      test('should group by custom function', () {
+        final grouped = processor.groupByCustom<int>((error) => error.path.length);
+        expect(grouped.keys, contains(0));
+        expect(grouped.keys, contains(1));
       });
     });
   });

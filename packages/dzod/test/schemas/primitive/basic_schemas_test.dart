@@ -164,6 +164,11 @@ void main() {
         expect(result.isFailure, true);
         expect(result.errors?.errors.first.message, contains('Expected null'));
       });
+
+      test('toString returns NullSchema', () {
+        final schema = z.null_();
+        expect(schema.toString(), 'NullSchema');
+      });
     });
 
     group('Literal Schema', () {

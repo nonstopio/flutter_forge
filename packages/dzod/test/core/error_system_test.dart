@@ -71,6 +71,60 @@ void main() {
       expect(withContext.context, isNotNull);
       expect(withContext.context!['source'], equals('api'));
     });
+
+    test('should test operator == method', () {
+      final error1 = ValidationError.simple(
+        message: 'Test error',
+        path: ['field'],
+        received: 'value',
+        code: 'test_code',
+      );
+      final error2 = ValidationError.simple(
+        message: 'Test error',
+        path: ['field'],
+        received: 'value',
+        code: 'test_code',
+      );
+      final error3 = ValidationError.simple(
+        message: 'Different error',
+        path: ['field'],
+        received: 'value',
+        code: 'test_code',
+      );
+
+      expect(error1 == error2, isTrue);
+      expect(error1 == error3, isFalse);
+      expect(error1 == error1, isTrue); // identical check
+    });
+
+    test('should test hashCode getter', () {
+      final error1 = ValidationError.simple(
+        message: 'Test error',
+        path: ['field'],
+        received: 'value',
+        code: 'test_code',
+      );
+      final error2 = ValidationError.simple(
+        message: 'Test error',
+        path: ['field'],
+        received: 'value',
+        code: 'test_code',
+      );
+
+      expect(error1.hashCode, equals(error2.hashCode));
+    });
+
+    test('should test _getTypeName fallback case', () {
+      // Create a custom class to test fallback
+      final customObject = DateTime.now();
+      final error = ValidationError.typeMismatch(
+        path: ['field'],
+        received: customObject,
+        expected: 'string',
+      );
+
+      expect(error.message, contains('DateTime'));
+    });
   });
 
   group('ValidationErrorCollection', () {
@@ -164,6 +218,63 @@ void main() {
       expect(json[0]['message'], equals('Test error'));
       expect(json[0]['path'], equals(['user', 'name']));
       expect(json[0]['code'], equals('required'));
+    });
+
+    test('should test isNotEmpty getter', () {
+      final emptyCollection = ValidationErrorCollection.empty();
+      expect(emptyCollection.isNotEmpty, isFalse);
+
+      final error = ValidationError.simple(
+        message: 'Test error',
+        path: [],
+        received: null,
+      );
+      final nonEmptyCollection = ValidationErrorCollection.single(error);
+      expect(nonEmptyCollection.isNotEmpty, isTrue);
+    });
+
+    test('should test last getter', () {
+      final emptyCollection = ValidationErrorCollection.empty();
+      expect(emptyCollection.last, isNull);
+
+      final error1 = ValidationError.simple(
+        message: 'First error',
+        path: [],
+        received: null,
+      );
+      final error2 = ValidationError.simple(
+        message: 'Last error',
+        path: [],
+        received: null,
+      );
+      final collection = ValidationErrorCollection([error1, error2]);
+      expect(collection.last, equals(error2));
+    });
+
+    test('should test addAll method', () {
+      final error1 = ValidationError.simple(
+        message: 'Error 1',
+        path: [],
+        received: null,
+      );
+      final error2 = ValidationError.simple(
+        message: 'Error 2',
+        path: [],
+        received: null,
+      );
+      final error3 = ValidationError.simple(
+        message: 'Error 3',
+        path: [],
+        received: null,
+      );
+
+      final collection = ValidationErrorCollection.single(error1);
+      final newCollection = collection.addAll([error2, error3]);
+
+      expect(newCollection.length, equals(3));
+      expect(newCollection.errors, contains(error1));
+      expect(newCollection.errors, contains(error2));
+      expect(newCollection.errors, contains(error3));
     });
   });
 

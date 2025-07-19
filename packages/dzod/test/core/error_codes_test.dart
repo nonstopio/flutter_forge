@@ -88,6 +88,20 @@ void main() {
         expect(error.code, 'type_mismatch');
       });
 
+      test('createTypeMismatchError should use ValidationError.typeMismatch when no message provided', () {
+        const errorCode = ValidationErrorCode.typeMismatch;
+        final error = errorCode.createTypeMismatchError(
+          path: ['test'],
+          received: 'invalid',
+          expected: 'string',
+        );
+
+        expect(error.path, ['test']);
+        expect(error.received, 'invalid');
+        expect(error.expected, 'string');
+        expect(error.code, 'type_mismatch');
+      });
+
       test(
           'createConstraintViolationError should create constraint violation error',
           () {
@@ -101,6 +115,21 @@ void main() {
         );
 
         expect(error.message, 'Constraint error');
+        expect(error.path, ['test']);
+        expect(error.received, 'invalid');
+        expect(error.code, 'constraint_violation');
+        expect(error.context, {'min': 0});
+      });
+
+      test('createConstraintViolationError should use ValidationError.constraintViolation when no message provided', () {
+        const errorCode = ValidationErrorCode.constraintViolation;
+        final error = errorCode.createConstraintViolationError(
+          path: ['test'],
+          received: 'invalid',
+          constraint: 'must be positive',
+          context: {'min': 0},
+        );
+
         expect(error.path, ['test']);
         expect(error.received, 'invalid');
         expect(error.code, 'constraint_violation');

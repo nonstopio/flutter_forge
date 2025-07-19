@@ -688,6 +688,29 @@ void main() {
         expect(z.number().min(10).max(100).integer().positive().toString(),
             equals('NumberSchema (min: 10, max: 100, int, positive)'));
       });
+
+      test('should create new schemas with constructor methods', () {
+        final baseSchema = z.number();
+        
+        // Test finite() creates new schema with correct properties
+        final finiteSchema = baseSchema.finite();
+        expect(finiteSchema, isNot(same(baseSchema)));
+        expect(finiteSchema.validate(1.5).isSuccess, true);
+        expect(finiteSchema.validate(double.infinity).isFailure, true);
+        
+        // Test safeInt() creates new schema with correct properties
+        final safeIntSchema = baseSchema.safeInt();
+        expect(safeIntSchema, isNot(same(baseSchema)));
+        expect(safeIntSchema.validate(42).isSuccess, true);
+        expect(safeIntSchema.validate(9007199254740992).isFailure, true);
+        
+        // Test range() creates new schema with correct properties
+        final rangeSchema = baseSchema.range(10, 100);
+        expect(rangeSchema, isNot(same(baseSchema)));
+        expect(rangeSchema.validate(50).isSuccess, true);
+        expect(rangeSchema.validate(5).isFailure, true);
+        expect(rangeSchema.validate(150).isFailure, true);
+      });
     });
 
     group('Path Handling', () {

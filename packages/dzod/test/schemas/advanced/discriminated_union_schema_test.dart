@@ -271,6 +271,75 @@ void main() {
           throwsA(isA<ValidationException>()),
         );
       });
+
+      test('should handle async validation with non-object input', () async {
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'email': z.string().email(),
+          }),
+        ]);
+
+        final result = await schema.validateAsync('invalid_input');
+        expect(result.isFailure, isTrue);
+        expect(result.errors!.errors.first.code,
+            equals(ValidationErrorCode.invalidType.code));
+      });
+
+      test('should handle async validation with missing discriminator',
+          () async {
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.literal('user'),
+            'email': z.string().email(),
+          }),
+        ]);
+
+        final result =
+            await schema.validateAsync({'email': 'test@example.com'});
+        expect(result.isFailure, isTrue);
+        expect(
+            result.errors!.errors.first.code,
+            equals(ValidationErrorCode
+                .discriminatedUnionMissingDiscriminator.code));
+      });
+
+      test('should handle async validation fallback when schema map is empty',
+          () async {
+        // Create a schema with non-literal discriminators to force empty schema map
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.string(), // Non-literal schema
+            'data': z.string(),
+          }),
+        ]);
+
+        final result = await schema.validateAsync({
+          'type': 'any-value',
+          'data': 'test data',
+        });
+        expect(result.isSuccess, isTrue);
+        expect(result.data!['type'], equals('any-value'));
+        expect(result.data!['data'], equals('test data'));
+      });
+
+      test(
+          'should handle async validation fallback when schema map is empty with failing schemas',
+          () async {
+        // Create a schema with non-literal discriminators that will fail validation
+        final schema = z.discriminatedUnion('type', [
+          z.object({
+            'type': z.string(), // Non-literal schema
+            'data': z.number(), // This will fail with string input
+          }),
+        ]);
+
+        final result = await schema.validateAsync({
+          'type': 'any-value',
+          'data': 'invalid-number', // Should fail number validation
+        });
+        expect(result.isFailure, isTrue);
+      });
     });
 
     group('Error Handling', () {
@@ -545,6 +614,192 @@ void main() {
         });
         expect(falseResult['flag'], equals(false));
         expect(falseResult['falseData'], equals('false content'));
+      });
+
+      test(
+          'should handle boolean schema literal value extraction for true-only',
+          () {
+        // This tests the boolean schema literal extraction path (lines 87-93)
+        final schema = z.discriminatedUnion('enabled', [
+          z.object({
+            'enabled': z
+                .boolean()
+                .refine((val) => val == true, message: 'Must be enabled'),
+            'config': z.string(),
+          }),
+        ]);
+
+        final result = schema.parse({
+          'enabled': true,
+          'config': 'active',
+        });
+        expect(result['enabled'], equals(true));
+        expect(result['config'], equals('active'));
+      });
+
+      test(
+          'should handle boolean schema literal value extraction for false-only',
+          () {
+        // This tests the boolean schema literal extraction path (lines 87-93)
+        final schema = z.discriminatedUnion('disabled', [
+          z.object({
+            'disabled': z
+                .boolean()
+                .refine((val) => val == false, message: 'Must be disabled'),
+            'reason': z.string(),
+          }),
+        ]);
+
+        final result = schema.parse({
+          'disabled': false,
+          'reason': 'maintenance',
+        });
+        expect(result['disabled'], equals(false));
+        expect(result['reason'], equals('maintenance'));
+      });
+
+      test(
+          'should extract literal value from BooleanSchema that only accepts true',
+          () {
+        // This specifically targets the boolean schema literal extraction (lines 87-89)
+        final schema = z.discriminatedUnion('onlyTrue', [
+          z.object({
+            'onlyTrue': z
+                .boolean()
+                .refine((val) => val == true, message: 'Must be true'),
+            'data': z.string(),
+          }),
+        ]);
+
+        expect(schema.hasDiscriminatorValue(true), isTrue);
+        expect(schema.hasDiscriminatorValue(false), isFalse);
+
+        final result = schema.parse({
+          'onlyTrue': true,
+          'data': 'test',
+        });
+        expect(result['onlyTrue'], equals(true));
+        expect(result['data'], equals('test'));
+      });
+
+      test(
+          'should extract literal value from BooleanSchema that only accepts false',
+          () {
+        // This specifically targets the boolean schema literal extraction (lines 90-92)
+        final schema = z.discriminatedUnion('onlyFalse', [
+          z.object({
+            'onlyFalse': z
+                .boolean()
+                .refine((val) => val == false, message: 'Must be false'),
+            'data': z.string(),
+          }),
+        ]);
+
+        expect(schema.hasDiscriminatorValue(false), isTrue);
+        expect(schema.hasDiscriminatorValue(true), isFalse);
+
+        final result = schema.parse({
+          'onlyFalse': false,
+          'data': 'test',
+        });
+        expect(result['onlyFalse'], equals(false));
+        expect(result['data'], equals('test'));
+      });
+
+      test('should use BooleanSchema path for literal value extraction', () {
+        // This specifically targets lines 87-91 by creating a BooleanSchema that only accepts true
+        final trueBooleanSchema =
+            z.boolean().refine((val) => val == true, message: 'Must be true');
+        final schema = z.discriminatedUnion('boolFlag', [
+          z.object({
+            'boolFlag': trueBooleanSchema,
+            'data': z.string(),
+          }),
+        ]);
+
+        // The schema should have extracted true as the discriminator value
+        expect(schema.hasDiscriminatorValue(true), isTrue);
+        expect(schema.hasDiscriminatorValue(false), isFalse);
+
+        final result = schema.parse({
+          'boolFlag': true,
+          'data': 'test',
+        });
+        expect(result['boolFlag'], equals(true));
+        expect(result['data'], equals('test'));
+      });
+
+      test(
+          'should use BooleanSchema path for false-only literal value extraction',
+          () {
+        // This specifically targets lines 90-91 by creating a BooleanSchema that only accepts false
+        final falseBooleanSchema =
+            z.boolean().refine((val) => val == false, message: 'Must be false');
+        final schema = z.discriminatedUnion('boolFlag', [
+          z.object({
+            'boolFlag': falseBooleanSchema,
+            'data': z.string(),
+          }),
+        ]);
+
+        // The schema should have extracted false as the discriminator value
+        expect(schema.hasDiscriminatorValue(false), isTrue);
+        expect(schema.hasDiscriminatorValue(true), isFalse);
+
+        final result = schema.parse({
+          'boolFlag': false,
+          'data': 'test',
+        });
+        expect(result['boolFlag'], equals(false));
+        expect(result['data'], equals('test'));
+      });
+
+      test(
+          'should trigger BooleanSchema path with direct BooleanSchema for true',
+          () {
+        // This creates a BooleanSchema that only accepts true using the internal constructor
+        final booleanSchema = BooleanSchema(expectedValue: true);
+        final schema = z.discriminatedUnion('onlyTrue', [
+          z.object({
+            'onlyTrue': booleanSchema,
+            'data': z.string(),
+          }),
+        ]);
+
+        // This should trigger the BooleanSchema path in _findLiteralValueByTesting
+        expect(schema.hasDiscriminatorValue(true), isTrue);
+        expect(schema.hasDiscriminatorValue(false), isFalse);
+
+        final result = schema.parse({
+          'onlyTrue': true,
+          'data': 'test',
+        });
+        expect(result['onlyTrue'], equals(true));
+        expect(result['data'], equals('test'));
+      });
+
+      test(
+          'should trigger BooleanSchema path with direct BooleanSchema for false',
+          () {
+        // This creates a BooleanSchema that only accepts false using the internal constructor
+        final booleanSchema = BooleanSchema(expectedValue: false);
+        final schema = z.discriminatedUnion('onlyFalse', [
+          z.object({
+            'onlyFalse': booleanSchema,
+            'data': z.string(),
+          }),
+        ]);
+
+        // This should trigger the BooleanSchema path in _findLiteralValueByTesting
+        expect(schema.hasDiscriminatorValue(false), isTrue);
+        expect(schema.hasDiscriminatorValue(true), isFalse);
+
+        final result = schema.parse({
+          'onlyFalse': false,
+          'data': 'test',
+        });
+        expect(result['onlyFalse'], equals(false));
+        expect(result['data'], equals('test'));
       });
     });
 
@@ -840,6 +1095,68 @@ void main() {
         expect(schema.description, equals('Test discriminated union'));
         expect(schema.metadata, equals({'version': '1.0'}));
         expect(schema.toString(), contains('Test discriminated union'));
+      });
+    });
+
+    group('Extension Factory Method', () {
+      test('should create discriminated union using extension factory method',
+          () {
+        // This tests the extension factory method (lines 370-381)
+        final schema = DiscriminatedUnionExtension.discriminatedUnion<
+            Map<String, dynamic>>(
+          'type',
+          [
+            z.object({
+              'type': z.literal('user'),
+              'name': z.string(),
+            }),
+            z.object({
+              'type': z.literal('admin'),
+              'role': z.string(),
+            }),
+          ],
+          description: 'Factory method test',
+          metadata: {'source': 'extension'},
+        );
+
+        expect(schema.discriminator, equals('type'));
+        expect(schema.validDiscriminatorValues, containsAll(['user', 'admin']));
+        expect(schema.description, equals('Factory method test'));
+        expect(schema.metadata, equals({'source': 'extension'}));
+
+        final result = schema.parse({
+          'type': 'user',
+          'name': 'John Doe',
+        });
+        expect(result['type'], equals('user'));
+        expect(result['name'], equals('John Doe'));
+      });
+
+      test(
+          'should create discriminated union using extension factory method with minimal parameters',
+          () {
+        final schema = DiscriminatedUnionExtension.discriminatedUnion<
+            Map<String, dynamic>>(
+          'category',
+          [
+            z.object({
+              'category': z.literal('basic'),
+              'value': z.string(),
+            }),
+          ],
+        );
+
+        expect(schema.discriminator, equals('category'));
+        expect(schema.validDiscriminatorValues, contains('basic'));
+        expect(schema.description, isNull);
+        expect(schema.metadata, isNull);
+
+        final result = schema.parse({
+          'category': 'basic',
+          'value': 'test',
+        });
+        expect(result['category'], equals('basic'));
+        expect(result['value'], equals('test'));
       });
     });
   });
