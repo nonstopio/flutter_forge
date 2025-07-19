@@ -31,12 +31,12 @@
 
 ## 🎯 What is Dzod?
 
-Dzod is an **enterprise-grade** Dart schema validation library with advanced enterprise features. Built for production applications requiring robust data validation, type safety, and exceptional developer experience.
+Dzod is an **enterprise-grade** Dart schema validation library heavily inspired by [Zod](https://zod.dev/) with advanced enterprise features. Built for production applications requiring robust data validation, type safety, and exceptional developer experience.
 
 ### 🏆 **Key Achievements**
 
 - **🚀 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
-- **⚡ 1350+ Comprehensive Tests**: 92% test coverage with enterprise-grade quality assurance
+- **⚡  1350+ Comprehensive Tests**: 92% test coverage with enterprise-grade quality assurance
 - **💡 Developer Experience**: Intuitive API design with comprehensive documentation and examples
 
 ---
@@ -1063,17 +1063,7 @@ print(docs);
 
 <div align="center">
 
-```
-╔══════════════════════════════════════════════════════════════╗
-║                                                              ║
-║  🚀 Built with ❤️ by Ajay Kumar                              ║
-║                                                              ║
-║  ⭐ Star us on GitHub if this helped you!                    ║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝
-```
-
-**🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+>  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
 
@@ -1083,6 +1073,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
+- Heavily inspired by [Zod](https://zod.dev/) - TypeScript-first schema validation with static type inference
 - Built with ❤️ for the Dart/Flutter community
 - Special thanks to all contributors and early adopters
 
@@ -1090,4 +1081,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 <strong>💡 Ready to validate with confidence? Get started with Dzod today!</strong>
+</div>
+
+<div align="center">
+
+> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+
 </div>

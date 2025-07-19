@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with the Dzod schema val
 
 ## Overview
 
-Dzod is an enterprise-grade Dart schema validation library with 105%+ feature parity with TypeScript's Zod. It provides type-safe validation, parsing, and inference with excellent developer experience for Flutter and Dart applications.
+Dzod is an enterprise-grade Dart schema validation library that provides type-safe validation, parsing, and inference with excellent developer experience for Flutter and Dart applications.
 
 ## Package Structure
 
