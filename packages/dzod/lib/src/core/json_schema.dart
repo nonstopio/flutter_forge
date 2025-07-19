@@ -291,12 +291,22 @@ class JsonSchemaGenerator {
 
   /// Extract string constraints (simplified implementation)
   Map<String, dynamic> _extractStringConstraints(StringSchema schema) {
-    // This is a simplified approach. In practice, you might want to:
-    // 1. Add public getters to StringSchema for constraints
-    // 2. Use reflection if available
-    // 3. Parse the schema during validation to extract constraints
-
-    return <String, dynamic>{};
+    final constraints = <String, dynamic>{};
+    
+    if (schema.minLength != null) {
+      constraints['minLength'] = schema.minLength;
+    }
+    if (schema.maxLength != null) {
+      constraints['maxLength'] = schema.maxLength;
+    }
+    if (schema.pattern != null) {
+      constraints['pattern'] = schema.pattern;
+    }
+    if (schema.format != null) {
+      constraints['format'] = schema.format;
+    }
+    
+    return constraints;
   }
 
   /// Generate JSON Schema for NumberSchema
@@ -333,7 +343,23 @@ class JsonSchemaGenerator {
 
   /// Extract number constraints (simplified implementation)
   Map<String, dynamic> _extractNumberConstraints(NumberSchema schema) {
-    return <String, dynamic>{};
+    final constraints = <String, dynamic>{};
+    
+    if (schema.minimum != null) {
+      constraints['minimum'] = schema.minimum;
+    }
+    if (schema.maximum != null) {
+      constraints['maximum'] = schema.maximum;
+    }
+    if (schema.exclusiveMinimum != null) {
+      constraints['exclusiveMinimum'] = schema.exclusiveMinimum;
+    }
+    if (schema.exclusiveMaximum != null) {
+      constraints['exclusiveMaximum'] = schema.exclusiveMaximum;
+    }
+    // multipleOf is not available as a getter due to naming conflict with method
+    
+    return constraints;
   }
 
   /// Generate JSON Schema for ArraySchema
@@ -379,10 +405,16 @@ class JsonSchemaGenerator {
     final context = JsonSchemaContext(const JsonSchemaConfig());
     constraints['items'] = _generateSchema(schema.elementSchema, context);
 
-    // Note: ArraySchema's length constraints are private fields
-    // In a complete implementation, you would need public getters or
-    // access to these fields to include minItems, maxItems, etc.
-    // For now, we can only access the element schema
+    // Add length constraints
+    if (schema.minItems != null) {
+      constraints['minItems'] = schema.minItems;
+    }
+    if (schema.maxItems != null) {
+      constraints['maxItems'] = schema.maxItems;
+    }
+    if (schema.uniqueItems != null) {
+      constraints['uniqueItems'] = schema.uniqueItems;
+    }
 
     return constraints;
   }

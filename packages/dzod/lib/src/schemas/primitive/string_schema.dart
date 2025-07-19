@@ -818,6 +818,18 @@ class StringSchema extends Schema<String> {
     }
   }
 
+  /// Public getters for JSON schema generation
+  int? get minLength => _minLength;
+  int? get maxLength => _maxLength;
+  int? get exactLength => _exactLength;
+  String? get pattern => _pattern?.pattern;
+  String? get format {
+    if (_isEmail) return 'email';
+    if (_isUrl) return 'uri';
+    if (_isUuid) return 'uuid';
+    return null;
+  }
+
   @override
   String toString() {
     final constraints = <String>[];

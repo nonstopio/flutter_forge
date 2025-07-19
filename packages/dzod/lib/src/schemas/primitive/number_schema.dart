@@ -764,6 +764,16 @@ class NumberSchema extends Schema<num> {
     return sqrtValue * sqrtValue == intValue;
   }
 
+  /// Public getters for JSON schema generation
+  num? get minimum => _min;
+  num? get maximum => _max;
+  num? get exactValue => _exact;
+  // For JSON Schema spec, we need to support exclusive min/max and multipleOf
+  // These aren't directly supported by current NumberSchema but we can provide null values
+  num? get exclusiveMinimum => null;
+  num? get exclusiveMaximum => null;
+  // Note: multipleOf is a method name, so we can't use it as a getter
+
   @override
   String toString() {
     final constraints = <String>[];

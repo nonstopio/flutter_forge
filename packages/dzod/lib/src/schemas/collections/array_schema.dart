@@ -411,4 +411,10 @@ class ArraySchema<T> extends Schema<List<T>> {
         _exactLength,
         _nonempty,
       );
+
+  /// Public getters for JSON schema generation
+  int? get minItems => _minLength;
+  int? get maxItems => _maxLength;
+  int? get exactItems => _exactLength;
+  bool? get uniqueItems => null; // ArraySchema doesn't have unique constraint yet
 }
