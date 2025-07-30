@@ -24,7 +24,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Test_Coverage-99.3%25-darkgreen.svg?style=for-the-badge" alt="Test Coverage">
-  <img src="https://img.shields.io/badge/Tests-1350+-blue.svg?style=for-the-badge" alt="Tests">
+  <img src="https://img.shields.io/badge/Tests-1588+-blue.svg?style=for-the-badge" alt="Tests">
 </p>
 
 ---
@@ -36,7 +36,7 @@ Dzod is an **enterprise-grade** Dart schema validation library heavily inspired 
 ### 🏆 **Key Achievements**
 
 - **🚀 Enterprise Features**: Advanced error handling, async validation, schema composition, and JSON Schema generation
-- **⚡  1350+ Comprehensive Tests**: 99.3% test coverage with enterprise-grade quality assurance
+- **⚡  1588+ Comprehensive Tests**: 99.3% test coverage with enterprise-grade quality assurance
 - **💡 Developer Experience**: Intuitive API design with comprehensive documentation and examples
 
 ---
@@ -82,12 +82,12 @@ if (result.isSuccess) {
   final user = result.data;
   print('✅ Valid user: ${user['name']}');
 } else {
-// Enterprise-grade error handling
-final errors = result.errors!;
-print('❌ Validation failed:');
-for (final error in errors.errors) {
-print('  • ${error.fullPath}: ${error.message}');
-}
+  // Enterprise-grade error handling
+  final errors = result.errors!;
+  print('❌ Validation failed:');
+  for (final error in errors.errors) {
+    print('  • ${error.fullPath}: ${error.message}');
+  }
 }
 ```
 
@@ -208,7 +208,7 @@ final uniqueSchema = baseArraySchema.unique();
 final includesSchema = baseArraySchema.includes('required');
 final excludesSchema = baseArraySchema.excludes('forbidden');
 
-// Conditional validation (correct predicate functions)
+// Conditional validation
 final someEmailSchema = baseArraySchema.some((element) => element.contains('@'));
 final everyMinLengthSchema = baseArraySchema.every((element) => element.length >= 2);
 
@@ -374,13 +374,11 @@ final listCoercion = z.coerce.list(); // String -> List
 // Strict coercion mode
 final strictNumberCoercion = z.coerce.number(strict: true);
 
-// Advanced coercion with options
-final advancedNumber = z.coerce.number(
-  precision: 2,
-  min: 0,
-  max: 100,
-  strict: false,
-);
+// Advanced number coercion with additional validation
+final advancedNumber = z.coerce.number(strict: false)
+    .transform((num) => double.parse(num.toStringAsFixed(2)))
+    .refine((num) => num >= 0 && num <= 100, 
+        message: 'Must be between 0 and 100');
 ```
 
 ---
@@ -392,17 +390,15 @@ final advancedNumber = z.coerce.number(
 ```dart
 // Database validation example
 final userSchema = z.object({
-  'email': z.string().email()
-      .refineAsync(
-        (email) async {
+  'email': z.string().email().refineAsync(
+    (email) async {
       final exists = await checkEmailExists(email);
       return !exists;
     },
     message: 'Email already exists',
   ),
-  'username': z.string().min(3)
-      .refineAsync(
-        (username) async {
+  'username': z.string().min(3).refineAsync(
+    (username) async {
       final available = await checkUsernameAvailable(username);
       return available;
     },
@@ -417,13 +413,13 @@ final userSchema = z.object({
 // API validation with external service
 final apiSchema = z.string().url()
     .transformAsync((url) async {
-  final response = await http.get(Uri.parse(url));
-  return response.statusCode == 200 ? url : null;
-})
+      final response = await http.get(Uri.parse(url));
+      return response.statusCode == 200 ? url : null;
+    })
     .refineAsync(
       (result) async => result != null,
-  message: 'URL is not accessible',
-);
+      message: 'URL is not accessible',
+    );
 ```
 
 ### Example 16: Async Validation Methods
@@ -438,7 +434,7 @@ final result = await userSchema.validateAsync({
 // Safe async parsing
 final data = await userSchema.safeParseAsync(userData);
 if (data != null) {
-print('Valid user: $data');
+  print('Valid user: $data');
 }
 ```
 
@@ -458,28 +454,28 @@ final result = schema.validate('invalid-email');
 if (result.isFailure) {
   final errors = result.errors!;
 
-// Access error details
-for (final error in errors.errors) {
-print('Code: ${error.code}'); // ValidationErrorCode enum
-print('Message: ${error.message}'); // Human-readable message
-print('Path: ${error.fullPath}'); // Field path
-print('Expected: ${error.expected}'); // Expected value/type
-print('Received: ${error.received}'); // Actual value
-print('Context: ${error.context}'); // Additional context
-}
+  // Access error details
+  for (final error in errors.errors) {
+    print('Code: ${error.code}'); // ValidationErrorCode enum
+    print('Message: ${error.message}'); // Human-readable message
+    print('Path: ${error.fullPath}'); // Field path
+    print('Expected: ${error.expected}'); // Expected value/type
+    print('Received: ${error.received}'); // Actual value
+    print('Context: ${error.context}'); // Additional context
+  }
 
-// Error filtering (available methods)
-final emailErrors = errors.filterByPath(['email']);
-final typeErrors = errors.filterByCode('invalid_email');
+  // Error filtering (available methods)
+  final emailErrors = errors.filterByPath(['email']);
+  final typeErrors = errors.filterByCode(ValidationErrorCode.invalidEmail);
 
-// Basic error analysis
-print('Total errors: ${errors.length}');
-print('Has errors: ${errors.hasErrors}');
-print('First error: ${errors.first?.message}');
+  // Basic error analysis
+  print('Total errors: ${errors.errors.length}');
+  print('Has errors: ${errors.hasErrors}');
+  print('First error: ${errors.errors.first.message}');
 
-// Error codes analysis
-final errorCodes = errors.errors.map((e) => e.code).toSet();
-print('Unique error codes: $errorCodes');
+  // Error codes analysis
+  final errorCodes = errors.errors.map((e) => e.code).toSet();
+  print('Unique error codes: $errorCodes');
 }
 ```
 
@@ -507,13 +503,13 @@ print(readable);
 for (final error in errors.errors) {
   print('${error.fullPath}: ${error.message}');
 }
-// "email: Invalid email format"
+// Output: "email: Invalid email format"
 
 // Custom error collection analysis
 final errorsByPath = <String, List<ValidationError>>{};
 for (final error in errors.errors) {
-final path = error.fullPath;
-errorsByPath.putIfAbsent(path, () => []).add(error);
+  final path = error.fullPath;
+  errorsByPath.putIfAbsent(path, () => []).add(error);
 }
 print('Errors by field: $errorsByPath');
 ```
@@ -524,29 +520,29 @@ print('Errors by field: $errorsByPath');
 
 ```dart
 // Configure global error messages
-ErrorMessages.setGlobalMessages({
-  ValidationErrorCode.invalidEmail: 'Please enter a valid email address',
-  ValidationErrorCode.minLength: 'Must be at least {min} characters',
-  ValidationErrorCode.maxLength: 'Must not exceed {max} characters',
+ErrorMessages.setMessages({
+  'invalid_email': 'Please enter a valid email address',
+  'min_length': 'Must be at least {min} characters',
+  'max_length': 'Must not exceed {max} characters',
 });
 
 // Custom error formatter
-ErrorFormatter.setGlobalFormatter(ErrorFormatConfig.humanFriendly(
-showPath: true,
-showCode: false,
-groupByField: true,
-maxErrorsPerField: 3,
-));
+// Note: ErrorFormatter.setGlobalFormatter is not directly available in the current API
+// Instead, use the error formatting methods on ValidationErrorCollection:
+// errors.formattedErrors - for human-readable format
+// errors.toJson() - for JSON format
 
 // Error context tracking
 final context = ErrorContext.builder()
-    .field('email')
     .operation('user_registration')
     .source('api')
     .metadata({'userId': '123', 'timestamp': DateTime.now()})
     .build();
 
-final result = schema.validate('invalid', context: context);
+// Use the context with ErrorContext.withContext
+final result = ErrorContext.withContext(context, () {
+  return schema.validate('invalid');
+});
 ```
 
 ---
@@ -573,19 +569,20 @@ print('Total fields: ${userSchema.shape.length}'); // 3
 
 // Schema structure analysis
 for (final entry in userSchema.shape.entries) {
-final field = entry.key;
-final schema = entry.value;
-final isRequired = userSchema.requiredKeys.contains(field);
-print('Field $field: ${schema.runtimeType} (required: $isRequired)');
+  final field = entry.key;
+  final schema = entry.value;
+  final isRequired = userSchema.requiredKeys.contains(field);
+  print('Field $field: ${schema.runtimeType} (required: $isRequired)');
 }
 
 // Schema comparison (manual equivalence check)
 final otherSchema = z.object({
-'name': z.string().min(2).max(50),
-'email': z.string().email(),
-'age': z.number().min(18),
+  'name': z.string().min(2).max(50),
+  'email': z.string().email(),
+  'age': z.number().min(18),
 });
-final sameKeys = userSchema.shape.keys.toSet().difference(otherSchema.shape.keys.toSet()).isEmpty;
+final sameKeys = userSchema.shape.keys.toSet()
+    .difference(otherSchema.shape.keys.toSet()).isEmpty;
 print('Schemas have same structure: $sameKeys');
 ```
 
@@ -594,24 +591,19 @@ print('Schemas have same structure: $sameKeys');
 ### Example 24: Schema Transformation and Composition
 
 ```dart
-// Branded types for type safety
-final UserIdSchema = Z
-    .string()
-    .cuid2()
-    .brand < 'UserId' > ();
-final ProductIdSchema = Z
-    .string()
-    .cuid2()
-    .brand < 'ProductId' > ();
+// Note: Branded types and readonly schemas are not directly available in the current API
+// Instead, use type-safe wrappers or custom validation logic:
 
-// This prevents mixing up IDs
-final userId = UserIdSchema.parse('user_123'); // UserId
-final productId = ProductIdSchema.parse('product_456'); // ProductId
-// userId = productId;  // Type error!
+// Type-safe ID validation
+final userIdSchema = z.string().cuid2().refine(
+  (id) => id.startsWith('user_'),
+  message: 'User ID must start with "user_"',
+);
 
-// Readonly schemas for immutability
-final readonlyUserSchema = userSchema.readonly();
-// This creates an immutable version that can't be modified
+final productIdSchema = z.string().cuid2().refine(
+  (id) => id.startsWith('product_'),
+  message: 'Product ID must start with "product_"',
+);
 
 // Schema composition
 final basicUserSchema = z.object({
@@ -624,18 +616,19 @@ final extendedUserSchema = basicUserSchema.extend({
   'role': z.enum_(['admin', 'user']),
 });
 
-// Conditional schemas
-final conditionalSchema = z.conditional(
-    z.string().equals('admin'),
-    z.object({
-      'name': z.string(),
-      'permissions': z.array(z.string()),
-    }),
-    z.object({
-      'name': z.string(),
-      'department': z.string(),
-    })
-);
+// Conditional schemas using discriminated union
+final conditionalSchema = z.discriminatedUnion('role', [
+  z.object({
+    'role': z.literal('admin'),
+    'name': z.string(),
+    'permissions': z.array(z.string()),
+  }),
+  z.object({
+    'role': z.literal('user'),
+    'name': z.string(),
+    'department': z.string(),
+  }),
+]);
 ```
 
 ### 📄 **JSON Schema Generation**
@@ -652,15 +645,16 @@ final userSchema = z.object({
   'roles': z.array(z.enum_(['admin', 'user', 'guest'])),
 }).describe('User account information');
 
-// OpenAPI-compatible JSON Schema
-final openApiSchema = userSchema.toOpenApiSchema();
+// JSON Schema generation
+final jsonSchema = userSchema.toJsonSchema();
 
-print(openApiSchema);
+print(jsonEncode(jsonSchema));
+// Output:
 // {
 //   "type": "object",
 //   "description": "User account information",
 //   "properties": {
-//     "id": {"type": "string", "format": "cuid2"},
+//     "id": {"type": "string", "pattern": "[a-z0-9]{25}"},
 //     "name": {"type": "string", "minLength": 2, "maxLength": 50},
 //     "email": {"type": "string", "format": "email"},
 //     "age": {"type": "number", "minimum": 18},
@@ -668,17 +662,6 @@ print(openApiSchema);
 //   },
 //   "required": ["id", "name", "email", "roles"]
 // }
-
-// Minimal JSON Schema
-final minimalSchema = userSchema.toMinimalJsonSchema();
-
-// Comprehensive JSON Schema with metadata
-final comprehensiveSchema = userSchema.toJsonSchema(JsonSchemaConfig(
-  version: JsonSchemaVersion.draft202012,
-  includeMetadata: true,
-  includeExamples: true,
-  includeDescriptions: true,
-));
 ```
 
 ---
@@ -726,22 +709,29 @@ final treeSchema = z.recursive<Map<String, dynamic>>(
 ### Example 27: Performance Monitoring
 
 ```dart
-// Enable performance monitoring
+// Performance optimization example
 final schema = z.object({
   'users': z.array(z.object({
     'name': z.string(),
     'email': z.string().email(),
   })).min(1).max(1000),
-}).withPerformanceMonitoring();
+});
 
-// Validate with metrics
+// Measure validation performance manually
+final stopwatch = Stopwatch()..start();
 final result = schema.validate(data);
-final metrics = schema.performanceMetrics;
+stopwatch.stop();
 
-print('Validation time: ${metrics.validationTime}ms');
-print('Memory usage: ${metrics.memoryUsage}MB');
-print('Cache hits: ${metrics.cacheHits}');
-print('Cache misses: ${metrics.cacheMisses}');
+print('Validation time: ${stopwatch.elapsedMilliseconds}ms');
+
+// Use recursive schemas with memoization for performance
+final optimizedSchema = z.recursive<Map<String, dynamic>>(
+  () => z.object({
+    'value': z.string(),
+    'children': z.array(z.lazy(() => optimizedSchema)).optional(),
+  }),
+  enableMemoization: true,
+);
 ```
 
 ---
@@ -834,7 +824,7 @@ final rateLimitedSchema = z.object({
   'email': z.string().email(),
   'message': z.string().max(5000),
 }).refine(
-      (data) => checkRateLimit(data['email']),
+      (data) => checkRateLimit(data['email'] as String),
   message: 'Rate limit exceeded',
 );
 
@@ -864,10 +854,10 @@ Future<void> handleUserInput(Map<String, dynamic> input) async {
       final errors = result.errors!;
 
       // Log errors for debugging
-      logger.warning('Validation failed', errors.toDeveloperFormat());
+      logger.warning('Validation failed', errors.formattedErrors);
 
       // Return user-friendly errors
-      final userErrors = errors.toHumanReadable();
+      final userErrors = errors.formattedErrors;
       throw ValidationException(userErrors);
     }
   } catch (e) {
@@ -1001,9 +991,7 @@ void testUserSchema() {
     'email': 'john@example.com',
     'age': 25,
   };
-  assert(schema
-      .validate(validData)
-      .isSuccess);
+  assert(schema.validate(validData).isSuccess);
 
   // Test invalid data
   final invalidData = {
@@ -1032,15 +1020,19 @@ final userSchema = z.object({
       .describe('User roles and permissions'),
 }).describe('User account schema');
 
-// Generate OpenAPI documentation
-final openApiDocs = userSchema.toOpenApiSchema();
+// Generate JSON Schema documentation
+final jsonSchema = userSchema.toJsonSchema();
 
-print(jsonEncode(openApiDocs));
+print(jsonEncode(jsonSchema));
 
-// Generate human-readable documentation
-final docs = userSchema.generateDocumentation();
-
-print(docs);
+// Generate human-readable documentation by introspecting the schema
+print('User Schema Documentation:');
+print('Description: ${userSchema.description}');
+print('Required fields: ${userSchema.requiredKeys}');
+print('Optional fields: ${userSchema.optionalKeys}');
+for (final entry in userSchema.shape.entries) {
+  print('  - ${entry.key}: ${entry.value.runtimeType}');
+}
 ```
 
 ---
