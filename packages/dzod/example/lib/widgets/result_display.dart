@@ -5,18 +5,20 @@ class ResultDisplay extends StatelessWidget {
   final Schema schema;
   final String title;
   final dynamic value;
+  final ValidationResult? preValidatedResult;
 
   const ResultDisplay({
     super.key,
     required this.schema,
     required this.title,
     required this.value,
+    this.preValidatedResult,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final result = schema.validate(value);
+    final result = preValidatedResult ?? schema.validate(value);
     final isSuccess = result.isSuccess;
 
     return AnimatedContainer(
