@@ -29,7 +29,8 @@ A place where Flutter packages are crafted and built.
 | [![connectivity_wrapper](https://img.shields.io/pub/v/connectivity_wrapper.svg?label=connectivity_wrapper&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/connectivity_wrapper) |
 | [![ns_firebase_utils](https://img.shields.io/pub/v/ns_firebase_utils.svg?label=ns_firebase_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_firebase_utils)             |
 | [![ns_utils](https://img.shields.io/pub/v/ns_utils.svg?label=ns_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_utils)                                                 |
-[![ns_intl_phone_input](https://img.shields.io/pub/v/ns_intl_phone_input.svg?label=ns_intl_phone_input&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_intl_phone_input)  
+| [![ns_intl_phone_input](https://img.shields.io/pub/v/ns_intl_phone_input.svg?label=ns_intl_phone_input&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_intl_phone_input)     |
+| [![html_rich_text](https://img.shields.io/pub/v/html_rich_text.svg?label=html_rich_text&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/html_rich_text)                         |  
 
 | Plugins                                                                                                                                                                                     |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
