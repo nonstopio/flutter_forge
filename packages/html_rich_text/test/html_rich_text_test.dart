@@ -17,7 +17,10 @@ void main() {
         ),
       );
 
-      expect(find.text('Hello World'), findsOneWidget);
+      final RichText richText = tester.widget(find.byType(RichText));
+      final TextSpan textSpan = richText.text as TextSpan;
+      
+      expect(textSpan.text, 'Hello World');
     });
 
     testWidgets('renders bold text correctly', (WidgetTester tester) async {
