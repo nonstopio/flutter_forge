@@ -19,7 +19,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect(textSpan.text, 'Hello World');
     });
 
@@ -39,7 +39,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect(textSpan.children!.length, 3);
       expect((textSpan.children![0] as TextSpan).text, 'Hello ');
       expect((textSpan.children![1] as TextSpan).text, 'World');
@@ -66,7 +66,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect(textSpan.children!.length, 3);
       expect((textSpan.children![1] as TextSpan).style?.fontStyle,
           FontStyle.italic);
@@ -89,7 +89,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect(textSpan.children!.length, 5);
       expect((textSpan.children![0] as TextSpan).text, 'Hello ');
       expect((textSpan.children![1] as TextSpan).text, 'bold');
@@ -101,7 +101,7 @@ void main() {
     testWidgets('applies base style to non-tagged text',
         (WidgetTester tester) async {
       const baseStyle = TextStyle(fontSize: 20, color: Colors.blue);
-      
+
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -118,7 +118,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect((textSpan.children![0] as TextSpan).style?.fontSize, 20);
       expect((textSpan.children![0] as TextSpan).style?.color, Colors.blue);
     });
@@ -190,7 +190,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       // The unknown tag should be treated as plain text
       expect(textSpan.children!.length, 3);
       expect((textSpan.children![0] as TextSpan).text, 'Hello ');
@@ -215,7 +215,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       expect(textSpan.children!.length, 3);
       expect((textSpan.children![1] as TextSpan).text, 'World');
       expect(
@@ -227,7 +227,7 @@ void main() {
     testWidgets('merges tag styles with base style',
         (WidgetTester tester) async {
       const baseStyle = TextStyle(fontSize: 20, color: Colors.blue);
-      
+
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -244,7 +244,7 @@ void main() {
 
       final RichText richText = tester.widget(find.byType(RichText));
       final TextSpan textSpan = richText.text as TextSpan;
-      
+
       // Tagged text should have merged styles
       final taggedStyle = (textSpan.children![1] as TextSpan).style;
       expect(taggedStyle?.fontSize, 20); // Inherited from base
