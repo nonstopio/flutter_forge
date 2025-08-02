@@ -1,6 +1,6 @@
 name: html_rich_text
 description: "A lightweight Flutter package for rendering HTML-styled text without heavy dependencies. Perfect for simple HTML text rendering with minimal overhead."
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/html_rich_text
 repository: https://github.com/nonstopio/flutter_forge
 

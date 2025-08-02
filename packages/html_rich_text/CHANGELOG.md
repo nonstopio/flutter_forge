@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **DOCS**(html_rich_text): add demo screenshot to pubspec and README.
+
 ## 1.0.0
 
  - **FIX**(tests): remove unnecessary blank lines in html_rich_text tests.
