@@ -46,7 +46,7 @@ class HtmlRichTextDemo extends StatelessWidget {
             _buildExample(
               'Colored Tags',
               const HtmlRichText(
-                'Welcome to <b>Flutter</b>! Check out this <i>amazing</i> and <u>lightweight</u> package.',
+                'Welcome to <b>Flutter</b>! Check out this <i>amazing</i>, <strong>powerful</strong> and <u>lightweight</u> package.',
                 style: TextStyle(fontSize: 16, color: Colors.black87),
                 tagStyles: {
                   'b': TextStyle(
@@ -57,6 +57,10 @@ class HtmlRichTextDemo extends StatelessWidget {
                     fontStyle: FontStyle.italic,
                     color: Colors.green,
                   ),
+                  'strong': TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.red,
+                  ),
                   'u': TextStyle(decoration: TextDecoration.underline),
                 },
               ),
@@ -64,10 +68,14 @@ class HtmlRichTextDemo extends StatelessWidget {
             _buildExample(
               'Product Description',
               const HtmlRichText(
-                'This product is <b>amazing</b>! Features include <i>lightweight design</i> and <u>superior quality</u>.',
+                'This product is <b>amazing</b>! Features include <i>lightweight design</i>, <strong>superior quality</strong> and <u>great value</u>.',
                 tagStyles: {
                   'b': TextStyle(fontWeight: FontWeight.bold),
                   'i': TextStyle(fontStyle: FontStyle.italic),
+                  'strong': TextStyle(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.orange,
+                  ),
                   'u': TextStyle(decoration: TextDecoration.underline),
                 },
               ),
