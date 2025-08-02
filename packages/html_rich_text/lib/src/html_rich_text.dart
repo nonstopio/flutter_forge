@@ -22,11 +22,13 @@ class HtmlRichText extends StatelessWidget {
   /// This string can contain HTML-like tags that match the keys in [tagStyles].
   /// Text without matching tags will be rendered using the default [style].
   final String htmlText;
+
   /// The default text style applied to all text.
   ///
   /// This style is used as the base style for all text. Tag-specific styles
   /// from [tagStyles] will be merged with this style.
   final TextStyle? style;
+
   /// A map of HTML tag names to their corresponding text styles.
   ///
   /// Keys should be tag names (without angle brackets), and values should be
@@ -40,15 +42,18 @@ class HtmlRichText extends StatelessWidget {
   /// }
   /// ```
   final Map<String, TextStyle> tagStyles;
+
   /// How the text should be aligned horizontally.
   ///
   /// Defaults to [TextAlign.start].
   final TextAlign textAlign;
+
   /// An optional maximum number of lines for the text to span.
   ///
   /// If the text exceeds the given number of lines, it will be truncated
   /// according to [overflow].
   final int? maxLines;
+
   /// How visual overflow should be handled.
   ///
   /// This determines what happens when the text would exceed the available space.
