@@ -20,3 +20,5 @@
 | connectivity_wrapper | [![connectivity_wrapper pub.dev badge](https://img.shields.io/pub/v/connectivity_wrapper.svg)](https://pub.dev/packages/connectivity_wrapper) | [`🔗`](connectivity_wrapper/README.md) |
 | ns_firebase_utils    | [![ns_firebase_utils pub.dev badge](https://img.shields.io/pub/v/ns_firebase_utils.svg)](https://pub.dev/packages/ns_firebase_utils)          | [`🔗`](ns_firebase_utils/README.md)    |
 | ns_utils             | [![ns_utils pub.dev badge](https://img.shields.io/pub/v/ns_utils.svg)](https://pub.dev/packages/ns_utils)                                     | [`🔗`](ns_utils/README.md)             |
+| ns_intl_phone_input  | [![ns_intl_phone_input pub.dev badge](https://img.shields.io/pub/v/ns_intl_phone_input.svg)](https://pub.dev/packages/ns_intl_phone_input)    | [`🔗`](ns_intl_phone_input/README.md)  |
+| html_rich_text       | [![html_rich_text pub.dev badge](https://img.shields.io/pub/v/html_rich_text.svg)](https://pub.dev/packages/html_rich_text)                   | [`🔗`](html_rich_text/README.md)       |
