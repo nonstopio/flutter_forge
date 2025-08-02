@@ -1,3 +1,8 @@
+## 1.0.2
+
+ - **DOCS**(html_rich_text): add comprehensive API documentation.
+ - **DOCS**(html_rich_text): update html_rich_text.png.
+
 ## 1.0.1
 
  - **DOCS**(html_rich_text): add demo screenshot to pubspec and README.
