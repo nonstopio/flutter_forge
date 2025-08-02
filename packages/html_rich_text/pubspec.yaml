@@ -4,6 +4,9 @@ version: 1.0.0
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/html_rich_text
 repository: https://github.com/nonstopio/flutter_forge
 
+screenshots:
+  - description: HTML Rich Text package demonstration showing various styled text examples
+    path: html_rich_text.png
 
 environment:
   sdk: ">=3.2.2 <4.0.0"

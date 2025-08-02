@@ -17,6 +17,8 @@
 
 A lightweight Flutter package for rendering HTML-styled text without heavy dependencies. Perfect for simple HTML text rendering with minimal overhead.
 
+![HTML Rich Text Demo](html_rich_text.png)
+
 ## Overview
 
 HTML Rich Text is an ultra-lightweight solution for parsing and displaying HTML-styled text in Flutter applications. Unlike traditional HTML rendering packages that include full DOM parsing and heavy dependencies, this package uses a simple regex-based approach to parse only the tags you need.
