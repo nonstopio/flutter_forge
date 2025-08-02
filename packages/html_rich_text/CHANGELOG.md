@@ -1,3 +1,8 @@
+## 1.0.0
+
+ - **FIX**(tests): remove unnecessary blank lines in html_rich_text tests.
+ - **FEAT**(packages): add html_rich_text package for lightweight HTML text rendering.
+
 # Changelog
 
 ## [1.0.0] - 2024-08-02
