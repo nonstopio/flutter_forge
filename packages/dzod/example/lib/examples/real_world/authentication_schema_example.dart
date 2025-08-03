@@ -17,7 +17,7 @@ class _AuthenticationSchemaExampleState
     extends State<AuthenticationSchemaExample> {
   final _formKey = GlobalKey<FormState>();
   String _selectedMethod = 'email';
-  
+
   // Controllers for different auth methods
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -32,9 +32,10 @@ class _AuthenticationSchemaExampleState
     z.object({
       'method': z.literal('email'),
       'email': z.string().email(),
-      'password': z.string().min(8).max(128)
-          .refine(
-            (password) => RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@\$!%*?&])[A-Za-z\d@\$!%*?&]').hasMatch(password),
+      'password': z.string().min(8).max(128).refine(
+            (password) => RegExp(
+                    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@\$!%*?&])[A-Za-z\d@\$!%*?&]')
+                .hasMatch(password),
           ),
     }),
 
@@ -87,11 +88,13 @@ class _AuthenticationSchemaExampleState
           break;
         case 'oauth':
           _providerController.text = 'google';
-          _tokenController.text = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+          _tokenController.text =
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
           break;
         case 'apikey':
           _apiKeyController.text = '12345678901234567890123456789012';
-          _apiSecretController.text = '1234567890123456789012345678901234567890123456789012345678901234';
+          _apiSecretController.text =
+              '1234567890123456789012345678901234567890123456789012345678901234';
           break;
       }
     });
@@ -164,18 +167,22 @@ class _AuthenticationSchemaExampleState
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const SizedBox(height: 4),
-                    const Text('• At least 8 characters', style: TextStyle(fontSize: 12)),
-                    const Text('• One uppercase letter', style: TextStyle(fontSize: 12)),
-                    const Text('• One lowercase letter', style: TextStyle(fontSize: 12)),
+                    const Text('• At least 8 characters',
+                        style: TextStyle(fontSize: 12)),
+                    const Text('• One uppercase letter',
+                        style: TextStyle(fontSize: 12)),
+                    const Text('• One lowercase letter',
+                        style: TextStyle(fontSize: 12)),
                     const Text('• One number', style: TextStyle(fontSize: 12)),
-                    const Text('• One special character (@\$!%*?&)', style: TextStyle(fontSize: 12)),
+                    const Text('• One special character (@\$!%*?&)',
+                        style: TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
             ),
           ],
         );
-      
+
       case 'oauth':
         return Column(
           children: [
@@ -212,7 +219,7 @@ class _AuthenticationSchemaExampleState
             ),
           ],
         );
-      
+
       case 'apikey':
         return Column(
           children: [
@@ -258,7 +265,7 @@ class _AuthenticationSchemaExampleState
             ),
           ],
         );
-      
+
       default:
         return const SizedBox.shrink();
     }
@@ -267,7 +274,7 @@ class _AuthenticationSchemaExampleState
   Widget _buildMethodIcon(String method) {
     IconData icon;
     Color? color;
-    
+
     switch (method) {
       case 'email':
         icon = Icons.email;
@@ -285,7 +292,7 @@ class _AuthenticationSchemaExampleState
         icon = Icons.lock;
         color = null;
     }
-    
+
     return Icon(icon, color: color);
   }
 
@@ -293,7 +300,8 @@ class _AuthenticationSchemaExampleState
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 32: Authentication Schema',
-      description: 'Advanced authentication patterns for different auth methods.',
+      description:
+          'Advanced authentication patterns for different auth methods.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -320,22 +328,22 @@ class _AuthenticationSchemaExampleState
                     children: [
                       _buildMethodIcon(method),
                       const SizedBox(width: 8),
-                      Text(method == 'email' 
-                          ? 'Email/Password' 
-                          : method == 'oauth' 
-                          ? 'OAuth Provider'
-                          : 'API Key'),
+                      Text(method == 'email'
+                          ? 'Email/Password'
+                          : method == 'oauth'
+                              ? 'OAuth Provider'
+                              : 'API Key'),
                     ],
                   ),
                 );
               }).toList(),
             ),
             const SizedBox(height: 16),
-            
+
             // Dynamic form based on auth method
             _buildAuthMethodForm(),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Row(
               children: [
@@ -397,7 +405,8 @@ final emailAuth = authSchema.parse({
   'email': 'user@example.com',
   'password': 'securepassword123',
 });''',
-        description: 'Discriminated unions enable type-safe authentication with multiple methods.',
+        description:
+            'Discriminated unions enable type-safe authentication with multiple methods.',
       ),
       onValidate: () {
         _formKey.currentState?.validate();

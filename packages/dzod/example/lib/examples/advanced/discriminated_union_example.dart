@@ -16,7 +16,7 @@ class DiscriminatedUnionExample extends StatefulWidget {
 class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
   final _formKey = GlobalKey<FormState>();
   String _selectedType = 'text';
-  
+
   // Controllers for different message types
   final _textController = TextEditingController();
   final _imageUrlController = TextEditingController();
@@ -133,7 +133,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
             prefixIcon: Icon(Icons.text_fields),
           ),
         );
-      
+
       case 'image':
         return Column(
           children: [
@@ -158,7 +158,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
             ),
           ],
         );
-      
+
       case 'video':
         return Column(
           children: [
@@ -184,7 +184,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
             ),
           ],
         );
-      
+
       case 'audio':
         return Column(
           children: [
@@ -210,7 +210,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
             ),
           ],
         );
-      
+
       default:
         return const SizedBox.shrink();
     }
@@ -219,13 +219,13 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
   @override
   Widget build(BuildContext context) {
     // Use extended schema if audio is selected
-    final currentSchema = _selectedType == 'audio' 
-        ? extendedMessageSchema 
-        : messageSchema;
+    final currentSchema =
+        _selectedType == 'audio' ? extendedMessageSchema : messageSchema;
 
     return ValidationCard(
       title: 'Example 10: Discriminated Unions',
-      description: 'Efficient parsing with type-based discrimination for message types.',
+      description:
+          'Efficient parsing with type-based discrimination for message types.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -289,11 +289,11 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Dynamic form based on message type
             _buildMessageTypeForm(),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Row(
               children: [
@@ -345,7 +345,8 @@ final extended = messageSchema.extend([
     'duration': z.number(),
   })
 ]);''',
-        description: 'Discriminated unions provide efficient parsing by checking the discriminator field first.',
+        description:
+            'Discriminated unions provide efficient parsing by checking the discriminator field first.',
       ),
       onValidate: () {
         _formKey.currentState?.validate();

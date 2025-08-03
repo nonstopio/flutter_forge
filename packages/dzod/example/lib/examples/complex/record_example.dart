@@ -20,15 +20,14 @@ class _RecordExampleState extends State<RecordExample> {
 
   // Example 9: Key-value Records
   final recordSchema = z.record(z.number());
-  
+
   // Size constrained record
   final sizedRecord = z.record(z.number()).min(1).max(10);
-  
+
   // Key requirements
-  final keyConstrainedRecord = z.record(z.number())
-      .requiredKeys({'id'})
-      .optionalKeys({'meta'});
-  
+  final keyConstrainedRecord =
+      z.record(z.number()).requiredKeys({'id'}).optionalKeys({'meta'});
+
   // Strict validation (no additional keys)
   final strictRecord = z.record(z.number()).strict();
 
@@ -73,7 +72,8 @@ class _RecordExampleState extends State<RecordExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 9: Key-value Records',
-      description: 'Flexible record schemas with key-value pairs and constraints.',
+      description:
+          'Flexible record schemas with key-value pairs and constraints.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -117,7 +117,7 @@ class _RecordExampleState extends State<RecordExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Current record data
             if (_recordData.isNotEmpty) ...[
               const Text(
@@ -159,7 +159,7 @@ class _RecordExampleState extends State<RecordExample> {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Action buttons
             Row(
               children: [
@@ -199,7 +199,8 @@ final keyConstrainedRecord = recordSchema
 
 // Strict validation (no additional keys)
 final strictRecord = recordSchema.strict();''',
-        description: 'Record schemas validate key-value pairs with flexible constraints.',
+        description:
+            'Record schemas validate key-value pairs with flexible constraints.',
       ),
       onValidate: () {
         _formKey.currentState?.validate();

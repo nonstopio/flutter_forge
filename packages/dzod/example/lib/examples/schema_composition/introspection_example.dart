@@ -1,4 +1,3 @@
-
 import 'package:dzod/dzod.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +13,7 @@ class IntrospectionExample extends StatefulWidget {
 
 class _IntrospectionExampleState extends State<IntrospectionExample> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Example 23: Schema Introspection
   final userSchema = z.object({
     'name': z.string().min(2).max(50).describe('User full name'),
@@ -22,10 +21,13 @@ class _IntrospectionExampleState extends State<IntrospectionExample> {
     'age': z.number().min(18).describe('User age in years'),
     'isActive': z.boolean().optional().describe('Account status'),
     'role': z.enum_(['admin', 'user', 'guest']).describe('User role'),
-    'metadata': z.object({
-      'lastLogin': z.string().datetime().optional(),
-      'loginCount': z.number().optional(),
-    }).optional().describe('Additional user metadata'),
+    'metadata': z
+        .object({
+          'lastLogin': z.string().datetime().optional(),
+          'loginCount': z.number().optional(),
+        })
+        .optional()
+        .describe('Additional user metadata'),
   }).describe('User profile schema');
 
   final productSchema = z.object({
@@ -69,19 +71,19 @@ class _IntrospectionExampleState extends State<IntrospectionExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             Text(
               'Selected Schema: ${_selectedSchema == 'user' ? 'User Schema' : 'Product Schema'}',
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            
+
             Text(
               'Schema Type: ${schema.runtimeType}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
-            
+
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(12),
@@ -108,12 +110,12 @@ class _IntrospectionExampleState extends State<IntrospectionExample> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 23: Schema Introspection',
-      description: 'Analyze schema structure, fields, and metadata programmatically.',
+      description:
+          'Analyze schema structure, fields, and metadata programmatically.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -144,13 +146,14 @@ class _IntrospectionExampleState extends State<IntrospectionExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Schema information display
             _buildSchemaInfo(),
           ],
         ),
       ),
-      result: const SizedBox.shrink(), // No validation result needed for introspection
+      result: const SizedBox
+          .shrink(), // No validation result needed for introspection
       schemaDisplay: const SchemaDisplay(
         title: 'Introspection API',
         code: '''// Get schema information
@@ -170,7 +173,8 @@ for (final entry in schema.shape.entries) {
 // Schema comparison
 final sameKeys = schema1.shape.keys.toSet()
     .difference(schema2.shape.keys.toSet()).isEmpty;''',
-        description: 'Introspection allows runtime analysis of schema structure and metadata.',
+        description:
+            'Introspection allows runtime analysis of schema structure and metadata.',
       ),
       onValidate: () {},
       onClear: () {},

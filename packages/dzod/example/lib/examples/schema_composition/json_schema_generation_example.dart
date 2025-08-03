@@ -26,7 +26,9 @@ class _JsonSchemaGenerationExampleState
     'name': z.string().min(2).max(50).describe('User full name'),
     'email': z.string().email().describe('User email address'),
     'age': z.number().min(18).optional().describe('User age in years'),
-    'roles': z.array(z.enum_(['admin', 'user', 'guest'])).describe('User roles and permissions'),
+    'roles': z
+        .array(z.enum_(['admin', 'user', 'guest']))
+        .describe('User roles and permissions'),
     'preferences': z.object({
       'theme': z.enum_(['light', 'dark']).defaultTo('light'),
       'notifications': z.boolean().defaultTo(true),
@@ -42,26 +44,34 @@ class _JsonSchemaGenerationExampleState
   final productSchema = z.object({
     'id': z.string().uuid().describe('Product unique identifier'),
     'name': z.string().min(1).max(200).describe('Product name'),
-    'description': z.string().max(1000).optional().describe('Product description'),
+    'description':
+        z.string().max(1000).optional().describe('Product description'),
     'price': z.number().min(0).describe('Product price in USD'),
     'stock': z.number().integer().min(0).describe('Available stock quantity'),
     'categories': z.array(z.string()).min(1).describe('Product categories'),
-    'specifications': z.record(z.string()).optional().describe('Technical specifications'),
-    'images': z.array(z.object({
-      'url': z.string().url(),
-      'alt': z.string().optional(),
-      'primary': z.boolean().defaultTo(false),
-    })).optional().describe('Product images'),
+    'specifications':
+        z.record(z.string()).optional().describe('Technical specifications'),
+    'images': z
+        .array(z.object({
+          'url': z.string().url(),
+          'alt': z.string().optional(),
+          'primary': z.boolean().defaultTo(false),
+        }))
+        .optional()
+        .describe('Product images'),
   }).describe('Product catalog information');
 
   late final apiResponseSchema = z.object({
     'success': z.boolean().describe('Operation success status'),
     'data': z.string().describe('Response data payload'), // Simplified for demo
-    'error': z.object({
-      'code': z.string(),
-      'message': z.string(),
-      'details': z.record(z.string()).optional(),
-    }).optional().describe('Error information if operation failed'),
+    'error': z
+        .object({
+          'code': z.string(),
+          'message': z.string(),
+          'details': z.record(z.string()).optional(),
+        })
+        .optional()
+        .describe('Error information if operation failed'),
     'meta': z.object({
       'timestamp': z.string().datetime(),
       'requestId': z.string().uuid(),
@@ -234,7 +244,8 @@ class _JsonSchemaGenerationExampleState
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 25: JSON Schema Generation',
-      description: 'Generate JSON Schema for OpenAPI documentation and tooling.',
+      description:
+          'Generate JSON Schema for OpenAPI documentation and tooling.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -269,11 +280,11 @@ class _JsonSchemaGenerationExampleState
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Use cases
             _buildUseCases(),
             const SizedBox(height: 16),
-            
+
             // Generated JSON Schema
             _buildSchemaPreview(),
           ],
@@ -307,7 +318,8 @@ final jsonSchema = userSchema.toJsonSchema();
 //   },
 //   "required": ["id", "name", "email", "roles"]
 // }''',
-        description: 'Generate standard JSON Schema from Dzod schemas for documentation and tooling.',
+        description:
+            'Generate standard JSON Schema from Dzod schemas for documentation and tooling.',
       ),
       onValidate: () {},
       onClear: () {},

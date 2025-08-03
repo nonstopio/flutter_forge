@@ -16,9 +16,9 @@ class _PipelineExampleState extends State<PipelineExample> {
   final _formKey = GlobalKey<FormState>();
   final _userInputController = TextEditingController();
   final _emailInputController = TextEditingController();
-  
+
   String _selectedExample = 'user';
-  
+
   // Example 11: Multi-stage Validation Pipelines
   final userPipeline = z.pipeline([
     z.string().transform((s) => s.trim()),
@@ -46,7 +46,7 @@ class _PipelineExampleState extends State<PipelineExample> {
   ]);
 
   Widget _buildPipelineStages() {
-    final stages = _selectedExample == 'user' 
+    final stages = _selectedExample == 'user'
         ? [
             'Stage 1: Trim whitespace',
             'Stage 2: Validate length (2-50)',
@@ -54,19 +54,19 @@ class _PipelineExampleState extends State<PipelineExample> {
             'Stage 4: Convert to lowercase',
           ]
         : _selectedExample == 'email'
-        ? [
-            'Stage 1: Trim whitespace',
-            'Stage 2: Validate length (2-50)',
-            'Stage 3: Check no "admin" in username',
-            'Stage 4: Convert to lowercase',
-            'Stage 5: Validate email format',
-          ]
-        : [
-            'Stage 1: Validate not empty',
-            'Stage 2: Convert to uppercase',
-            'Stage 3: Validate format (A-Z, 0-9, _)',
-            'Stage 4: Add USER_ prefix',
-          ];
+            ? [
+                'Stage 1: Trim whitespace',
+                'Stage 2: Validate length (2-50)',
+                'Stage 3: Check no "admin" in username',
+                'Stage 4: Convert to lowercase',
+                'Stage 5: Validate email format',
+              ]
+            : [
+                'Stage 1: Validate not empty',
+                'Stage 2: Convert to uppercase',
+                'Stage 3: Validate format (A-Z, 0-9, _)',
+                'Stage 4: Add USER_ prefix',
+              ];
 
     return Card(
       child: Padding(
@@ -117,14 +117,14 @@ class _PipelineExampleState extends State<PipelineExample> {
   }
 
   Widget _buildTransformationPreview() {
-    final input = _selectedExample == 'email' 
-        ? _emailInputController.text 
+    final input = _selectedExample == 'email'
+        ? _emailInputController.text
         : _userInputController.text;
-    
+
     if (input.isEmpty) return const SizedBox.shrink();
 
     List<String> transformations = [];
-    
+
     if (_selectedExample == 'user' || _selectedExample == 'email') {
       transformations = [
         'Input: "$input"',
@@ -151,12 +151,13 @@ class _PipelineExampleState extends State<PipelineExample> {
             ),
             const SizedBox(height: 8),
             ...transformations.map((t) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Text(
-                t,
-                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
-              ),
-            )),
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Text(
+                    t,
+                    style:
+                        const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  ),
+                )),
           ],
         ),
       ),
@@ -175,8 +176,8 @@ class _PipelineExampleState extends State<PipelineExample> {
   }
 
   String get _currentInput {
-    return _selectedExample == 'email' 
-        ? _emailInputController.text 
+    return _selectedExample == 'email'
+        ? _emailInputController.text
         : _userInputController.text;
   }
 
@@ -223,7 +224,8 @@ class _PipelineExampleState extends State<PipelineExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 11: Validation Pipelines',
-      description: 'Multi-stage validation with transformations and refinements.',
+      description:
+          'Multi-stage validation with transformations and refinements.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -259,11 +261,11 @@ class _PipelineExampleState extends State<PipelineExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Pipeline stages display
             _buildPipelineStages(),
             const SizedBox(height: 16),
-            
+
             // Input field
             if (_selectedExample == 'email')
               TextFormField(
@@ -281,18 +283,24 @@ class _PipelineExampleState extends State<PipelineExample> {
                 controller: _userInputController,
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
-                  labelText: _selectedExample == 'custom' ? 'Custom Input' : 'Username Input',
-                  hintText: _selectedExample == 'custom' ? 'Enter text' : 'Enter username',
+                  labelText: _selectedExample == 'custom'
+                      ? 'Custom Input'
+                      : 'Username Input',
+                  hintText: _selectedExample == 'custom'
+                      ? 'Enter text'
+                      : 'Enter username',
                   border: const OutlineInputBorder(),
-                  prefixIcon: Icon(_selectedExample == 'custom' ? Icons.text_fields : Icons.person),
+                  prefixIcon: Icon(_selectedExample == 'custom'
+                      ? Icons.text_fields
+                      : Icons.person),
                 ),
               ),
             const SizedBox(height: 16),
-            
+
             // Transformation preview
             _buildTransformationPreview(),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Wrap(
               spacing: 8,
@@ -344,7 +352,8 @@ final modified = userPipeline.insertAt(1, [z.string().min(1)]);
 // Replace stage at index
 final replaced = userPipeline.replaceStageAt(0,
     z.string().transform((s) => s.trim().toLowerCase()));''',
-        description: 'Pipelines allow complex multi-stage validation with transformations.',
+        description:
+            'Pipelines allow complex multi-stage validation with transformations.',
       ),
       onValidate: () {
         _formKey.currentState?.validate();

@@ -15,7 +15,7 @@ class ApiValidationExample extends StatefulWidget {
 class _ApiValidationExampleState extends State<ApiValidationExample> {
   final _formKey = GlobalKey<FormState>();
   final _urlController = TextEditingController();
-  
+
   bool _isValidating = false;
   ValidationResult<String?>? _result;
 
@@ -24,7 +24,7 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
   Future<int> simulateHttpGet(String url) async {
     // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     // Simulate different responses based on URL
     if (url.contains('example.com')) {
       return 200; // OK
@@ -36,15 +36,13 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
     return 200; // Default to OK
   }
 
-  late final apiSchema = z.string().url()
-      .transformAsync((url) async {
-        final statusCode = await simulateHttpGet(url);
-        return statusCode == 200 ? url : null;
-      })
-      .refineAsync(
-        (result) async => result != null,
-        message: 'URL is not accessible',
-      );
+  late final apiSchema = z.string().url().transformAsync((url) async {
+    final statusCode = await simulateHttpGet(url);
+    return statusCode == 200 ? url : null;
+  }).refineAsync(
+    (result) async => result != null,
+    message: 'URL is not accessible',
+  );
 
   Future<void> _validateUrl() async {
     setState(() {
@@ -94,7 +92,8 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 15: API Validation',
-      description: 'Validate URLs by checking their accessibility with simulated HTTP requests.',
+      description:
+          'Validate URLs by checking their accessibility with simulated HTTP requests.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -129,7 +128,7 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // URL input
             TextFormField(
               controller: _urlController,
@@ -142,7 +141,7 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
               keyboardType: TextInputType.url,
             ),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Wrap(
               spacing: 8,
@@ -176,7 +175,7 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
                 ),
               ],
             ),
-            
+
             // Display result if available
             if (_result != null) ...[
               const SizedBox(height: 24),
@@ -207,7 +206,8 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
 
 // Usage
 final result = await apiSchema.validateAsync(url);''',
-        description: 'Transform and validate data asynchronously by making API calls.',
+        description:
+            'Transform and validate data asynchronously by making API calls.',
       ),
       onValidate: () {}, // Validation is handled by the async button
       onClear: _clearInput,

@@ -15,7 +15,7 @@ class CoercionExample extends StatefulWidget {
 class _CoercionExampleState extends State<CoercionExample> {
   final _formKey = GlobalKey<FormState>();
   final _inputController = TextEditingController();
-  
+
   String _selectedType = 'number';
   bool _strictMode = false;
 
@@ -23,26 +23,21 @@ class _CoercionExampleState extends State<CoercionExample> {
   Schema get _currentSchema {
     switch (_selectedType) {
       case 'number':
-        return _strictMode 
-            ? z.coerce.number(strict: true)
-            : z.coerce.number();
+        return _strictMode ? z.coerce.number(strict: true) : z.coerce.number();
       case 'boolean':
         return _strictMode
             ? z.coerce.boolean(strict: true)
             : z.coerce.boolean();
       case 'date':
-        return _strictMode
-            ? z.coerce.date(strict: true)
-            : z.coerce.date();
+        return _strictMode ? z.coerce.date(strict: true) : z.coerce.date();
       case 'list':
-        return _strictMode
-            ? z.coerce.list(strict: true)
-            : z.coerce.list();
+        return _strictMode ? z.coerce.list(strict: true) : z.coerce.list();
       case 'advanced':
         // Advanced number coercion with additional validation
-        return z.coerce.number(strict: false)
+        return z.coerce
+            .number(strict: false)
             .transform((value) => double.parse(value.toStringAsFixed(2)))
-            .refine((value) => value >= 0 && value <= 100, 
+            .refine((value) => value >= 0 && value <= 100,
                 message: 'Must be between 0 and 100');
       default:
         return z.string();
@@ -52,17 +47,26 @@ class _CoercionExampleState extends State<CoercionExample> {
   final Map<String, List<String>> _examples = {
     'number': ['123', '45.67', 'true', 'false', 'invalid'],
     'boolean': ['true', 'false', '1', '0', 'yes', 'no', 'on', 'off', ''],
-    'date': ['2024-01-01', '2024-01-01T12:00:00Z', 'January 1, 2024', 'invalid'],
+    'date': [
+      '2024-01-01',
+      '2024-01-01T12:00:00Z',
+      'January 1, 2024',
+      'invalid'
+    ],
     'list': ['item1,item2,item3', '["a","b","c"]', 'single', ''],
     'advanced': ['25.5555', '150', '-10', '50', 'invalid'],
   };
 
   final Map<String, String> _descriptions = {
-    'number': 'Coerces strings to numbers. In non-strict mode: "123" → 123, "45.67" → 45.67',
-    'boolean': 'Coerces various inputs to boolean. "true", "1", "yes", "on" → true; "false", "0", "no", "off", "" → false',
-    'date': 'Coerces date strings to DateTime objects. Supports ISO 8601 and common formats',
+    'number':
+        'Coerces strings to numbers. In non-strict mode: "123" → 123, "45.67" → 45.67',
+    'boolean':
+        'Coerces various inputs to boolean. "true", "1", "yes", "on" → true; "false", "0", "no", "off", "" → false',
+    'date':
+        'Coerces date strings to DateTime objects. Supports ISO 8601 and common formats',
     'list': 'Coerces comma-separated strings or JSON arrays to lists',
-    'advanced': 'Advanced coercion with transformation and validation (0-100 range, 2 decimal places)',
+    'advanced':
+        'Advanced coercion with transformation and validation (0-100 range, 2 decimal places)',
   };
 
   void _fillExample(String example) {
@@ -73,7 +77,7 @@ class _CoercionExampleState extends State<CoercionExample> {
 
   Widget _buildExampleButtons() {
     final examples = _examples[_selectedType] ?? [];
-    
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -98,7 +102,8 @@ class _CoercionExampleState extends State<CoercionExample> {
     } else if (_selectedType == 'boolean') {
       if (['true', '1', 'yes', 'on'].contains(example.toLowerCase())) {
         return Icons.toggle_on;
-      } else if (['false', '0', 'no', 'off', ''].contains(example.toLowerCase())) {
+      } else if (['false', '0', 'no', 'off', '']
+          .contains(example.toLowerCase())) {
         return Icons.toggle_off;
       }
     }
@@ -107,7 +112,7 @@ class _CoercionExampleState extends State<CoercionExample> {
 
   dynamic _getInputValue() {
     final text = _inputController.text;
-    
+
     // For demonstration, we'll parse the input based on type
     switch (_selectedType) {
       case 'number':
@@ -116,12 +121,16 @@ class _CoercionExampleState extends State<CoercionExample> {
         return num ?? text;
       case 'boolean':
         // Various boolean representations
-        if (text.toLowerCase() == 'true' || text == '1' || 
-            text.toLowerCase() == 'yes' || text.toLowerCase() == 'on') {
+        if (text.toLowerCase() == 'true' ||
+            text == '1' ||
+            text.toLowerCase() == 'yes' ||
+            text.toLowerCase() == 'on') {
           return true;
-        } else if (text.toLowerCase() == 'false' || text == '0' || 
-                   text.toLowerCase() == 'no' || text.toLowerCase() == 'off' || 
-                   text.isEmpty) {
+        } else if (text.toLowerCase() == 'false' ||
+            text == '0' ||
+            text.toLowerCase() == 'no' ||
+            text.toLowerCase() == 'off' ||
+            text.isEmpty) {
           return false;
         }
         return text;
@@ -204,18 +213,20 @@ class _CoercionExampleState extends State<CoercionExample> {
                     const Text('Strict Mode'),
                     Switch(
                       value: _strictMode,
-                      onChanged: _selectedType != 'advanced' ? (value) {
-                        setState(() {
-                          _strictMode = value;
-                        });
-                      } : null,
+                      onChanged: _selectedType != 'advanced'
+                          ? (value) {
+                              setState(() {
+                                _strictMode = value;
+                              });
+                            }
+                          : null,
                     ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Description
             Card(
               child: Padding(
@@ -258,7 +269,7 @@ class _CoercionExampleState extends State<CoercionExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Input field
             TextFormField(
               controller: _inputController,
@@ -270,7 +281,7 @@ class _CoercionExampleState extends State<CoercionExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Example buttons
             Text(
               'Try these examples:',

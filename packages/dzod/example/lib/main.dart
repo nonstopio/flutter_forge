@@ -88,51 +88,72 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
 
   final Map<String, List<ExampleItem>> _categorizedExamples = {
     'Basic': [
-      const ExampleItem('Example 1: User Schema', UserSchemaExample(), Icons.person_outline),
-      const ExampleItem('Example 2: String Validations', StringValidationExample(), Icons.text_fields),
-      const ExampleItem('Example 3: Number Validations', NumberValidationsExample(), Icons.numbers),
-      const ExampleItem('Example 4: Boolean & Null', BooleanNullExample(), Icons.toggle_on),
+      const ExampleItem(
+          'Example 1: User Schema', UserSchemaExample(), Icons.person_outline),
+      const ExampleItem('Example 2: String Validations',
+          StringValidationExample(), Icons.text_fields),
+      const ExampleItem('Example 3: Number Validations',
+          NumberValidationsExample(), Icons.numbers),
+      const ExampleItem(
+          'Example 4: Boolean & Null', BooleanNullExample(), Icons.toggle_on),
     ],
     'Complex': [
-      const ExampleItem('Example 5: Object Manipulation', ObjectManipulationExample(), Icons.transform),
-      const ExampleItem('Example 6: Advanced Arrays', ArrayAdvancedExample(), Icons.list),
-      const ExampleItem('Example 7: Type-safe Tuples', TupleExample(), Icons.view_list),
-      const ExampleItem('Example 8: Flexible Enums', EnumExample(), Icons.list_alt),
-      const ExampleItem('Example 9: Key-value Records', RecordExample(), Icons.table_chart),
+      const ExampleItem('Example 5: Object Manipulation',
+          ObjectManipulationExample(), Icons.transform),
+      const ExampleItem(
+          'Example 6: Advanced Arrays', ArrayAdvancedExample(), Icons.list),
+      const ExampleItem(
+          'Example 7: Type-safe Tuples', TupleExample(), Icons.view_list),
+      const ExampleItem(
+          'Example 8: Flexible Enums', EnumExample(), Icons.list_alt),
+      const ExampleItem(
+          'Example 9: Key-value Records', RecordExample(), Icons.table_chart),
     ],
     'Advanced': [
-      const ExampleItem('Example 10: Discriminated Unions', DiscriminatedUnionExample(), Icons.account_tree),
-      const ExampleItem('Example 11: Validation Pipelines', PipelineExample(), Icons.plumbing),
-      const ExampleItem('Example 12: Recursive Schemas', RecursiveSchemaExample(), Icons.account_tree),
-      const ExampleItem('Example 13: Type Coercion', CoercionExample(), Icons.transform),
+      const ExampleItem('Example 10: Discriminated Unions',
+          DiscriminatedUnionExample(), Icons.account_tree),
+      const ExampleItem('Example 11: Validation Pipelines', PipelineExample(),
+          Icons.plumbing),
+      const ExampleItem('Example 12: Recursive Schemas',
+          RecursiveSchemaExample(), Icons.account_tree),
+      const ExampleItem(
+          'Example 13: Type Coercion', CoercionExample(), Icons.transform),
     ],
     'Async': [
-      const ExampleItem('Example 14: Database Validation', DatabaseValidationExample(), Icons.storage),
-      const ExampleItem('Example 15: API Validation', ApiValidationExample(), Icons.cloud_done),
+      const ExampleItem('Example 14: Database Validation',
+          DatabaseValidationExample(), Icons.storage),
+      const ExampleItem('Example 15: API Validation', ApiValidationExample(),
+          Icons.cloud_done),
     ],
     'Error Handling': [
-      const ExampleItem('Example 20: Error Code System', ErrorCodeSystemExample(), Icons.error_outline),
-      const ExampleItem('Example 21: Error Formatting', ErrorFormattingExample(), Icons.format_list_bulleted),
+      const ExampleItem('Example 20: Error Code System',
+          ErrorCodeSystemExample(), Icons.error_outline),
+      const ExampleItem('Example 21: Error Formatting',
+          ErrorFormattingExample(), Icons.format_list_bulleted),
     ],
     'Schema Composition': [
-      const ExampleItem('Example 23: Schema Introspection', IntrospectionExample(), Icons.schema),
-      const ExampleItem('Example 25: JSON Schema Generation', JsonSchemaGenerationExample(), Icons.code),
+      const ExampleItem('Example 23: Schema Introspection',
+          IntrospectionExample(), Icons.schema),
+      const ExampleItem('Example 25: JSON Schema Generation',
+          JsonSchemaGenerationExample(), Icons.code),
     ],
     'Security': [
-      const ExampleItem('Example 30: Security Best Practices', SecurityBestPracticesExample(), Icons.security),
+      const ExampleItem('Example 30: Security Best Practices',
+          SecurityBestPracticesExample(), Icons.security),
     ],
     'Real World': [
-      const ExampleItem('Example 32: Authentication Schema', AuthenticationSchemaExample(), Icons.lock),
+      const ExampleItem('Example 32: Authentication Schema',
+          AuthenticationSchemaExample(), Icons.lock),
     ],
   };
 
-  List<Widget> get _currentExamples => 
+  List<Widget> get _currentExamples =>
       _categorizedExamples[_selectedCategory]!.map((e) => e.widget).toList();
 
-  List<String> get _currentTitles => 
+  List<String> get _currentTitles =>
       _categorizedExamples[_selectedCategory]!.map((e) => e.title).toList();
 
-  List<IconData> get _currentIcons => 
+  List<IconData> get _currentIcons =>
       _categorizedExamples[_selectedCategory]!.map((e) => e.icon).toList();
 
   @override
@@ -166,7 +187,8 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                       decoration: const InputDecoration(
                         labelText: 'Category',
                         border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
                       items: _categorizedExamples.keys.map((category) {
                         return DropdownMenuItem(
@@ -176,7 +198,7 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                       }).toList(),
                     ),
                   ),
-                  
+
                   // Examples list
                   Expanded(
                     child: ListView.builder(
@@ -187,14 +209,18 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                           selected: isSelected,
                           leading: Icon(
                             _currentIcons[index],
-                            color: isSelected 
-                                ? Theme.of(context).colorScheme.primary 
-                                : Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
                           ),
                           title: Text(
                             _currentTitles[index],
                             style: TextStyle(
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                               fontSize: 13,
                             ),
                           ),
@@ -207,7 +233,7 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                       },
                     ),
                   ),
-                  
+
                   // Stats footer
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -221,10 +247,15 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                               children: [
                                 Text(
                                   '${_categorizedExamples.values.expand((e) => e).length}',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 Text(
                                   'Examples',
@@ -236,10 +267,15 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                               children: [
                                 Text(
                                   '${_categorizedExamples.length}',
-                                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Theme.of(context).colorScheme.secondary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 Text(
                                   'Categories',
@@ -279,15 +315,24 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                           children: [
                             Text(
                               '$_selectedCategory Examples',
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
                             Text(
                               _getCategoryDescription(_selectedCategory),
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                             ),
                           ],

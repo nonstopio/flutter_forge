@@ -15,7 +15,7 @@ class ErrorCodeSystemExample extends StatefulWidget {
 class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
   final _formKey = GlobalKey<FormState>();
   final _dataController = TextEditingController();
-  
+
   ValidationResult<Map<String, dynamic>>? _result;
   String _selectedExample = 'invalid_email';
 
@@ -25,8 +25,8 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
     'age': z.number().min(18).max(120),
     'username': z.string().min(3).max(20),
     'password': z.string().min(8).regex(
-      RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)'),
-    ),
+          RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)'),
+        ),
   });
 
   final Map<String, Map<String, dynamic>> _examples = {
@@ -65,9 +65,7 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
   }
 
   String _formatData(Map<String, dynamic> data) {
-    return data.entries
-        .map((e) => '${e.key}: ${e.value}')
-        .join('\n');
+    return data.entries.map((e) => '${e.key}: ${e.value}').join('\n');
   }
 
   Widget _buildErrorDetails() {
@@ -76,7 +74,7 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
     }
 
     final errors = _result!.errors!;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -87,45 +85,46 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
         ),
         const SizedBox(height: 12),
         ...errors.errors.map((error) => Card(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      color: Theme.of(context).colorScheme.error,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Field: ${error.fullPath}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.error_outline,
                           color: Theme.of(context).colorScheme.error,
+                          size: 20,
                         ),
-                      ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Field: ${error.fullPath}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 8),
+                    _buildErrorProperty('Code', error.code.toString()),
+                    _buildErrorProperty('Message', error.message),
+                    _buildErrorProperty('Expected', error.expected.toString()),
+                    if (error.received != null)
+                      _buildErrorProperty(
+                          'Received', error.received.toString()),
+                    if (error.context?.isNotEmpty ?? false)
+                      _buildErrorProperty('Context', error.context.toString()),
                   ],
                 ),
-                const SizedBox(height: 8),
-                _buildErrorProperty('Code', error.code.toString()),
-                _buildErrorProperty('Message', error.message),
-                _buildErrorProperty('Expected', error.expected.toString()),
-                if (error.received != null)
-                  _buildErrorProperty('Received', error.received.toString()),
-                if (error.context?.isNotEmpty ?? false)
-                  _buildErrorProperty('Context', error.context.toString()),
-              ],
-            ),
-          ),
-        )),
+              ),
+            )),
         const SizedBox(height: 16),
-        
+
         // Error filtering examples
         Text(
           'Error Analysis',
@@ -142,11 +141,13 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
                 Text('Has errors: ${errors.errors.isNotEmpty}'),
                 Text('First error: ${errors.errors.first.message}'),
                 const SizedBox(height: 8),
-                Text('Unique error codes: ${errors.errors.map((e) => e.code.toString()).toSet().join(', ')}'),
+                Text(
+                    'Unique error codes: ${errors.errors.map((e) => e.code.toString()).toSet().join(', ')}'),
                 const SizedBox(height: 8),
                 // Email errors count
-                Text('Email field errors: ${errors.errors.where((e) => e.fullPath.contains('email')).length}'),
-                // Type errors count  
+                Text(
+                    'Email field errors: ${errors.errors.where((e) => e.fullPath.contains('email')).length}'),
+                // Type errors count
                 Text('Total validation errors: ${errors.errors.length}'),
               ],
             ),
@@ -188,7 +189,8 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 20: Error Code System',
-      description: 'Comprehensive error handling with 100+ standardized error codes.',
+      description:
+          'Comprehensive error handling with 100+ standardized error codes.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -228,7 +230,7 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Data display
             TextFormField(
               controller: _dataController,
@@ -240,7 +242,7 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
                 filled: true,
               ),
             ),
-            
+
             // Error details
             _buildErrorDetails(),
           ],
@@ -273,7 +275,8 @@ if (result.isFailure) {
   final emailErrors = errors.filterByPath(['email']);
   final typeErrors = errors.filterByCode(ValidationErrorCode.invalidEmail);
 }''',
-        description: 'Dzod provides comprehensive error information with standardized codes.',
+        description:
+            'Dzod provides comprehensive error information with standardized codes.',
       ),
       onValidate: _validate,
       onClear: () {

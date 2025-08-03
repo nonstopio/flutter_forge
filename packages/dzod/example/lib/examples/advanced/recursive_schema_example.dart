@@ -17,30 +17,32 @@ class RecursiveSchemaExample extends StatefulWidget {
 class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
   final _formKey = GlobalKey<FormState>();
   final _jsonController = TextEditingController();
-  
+
   int _maxDepth = 10;
   bool _enableCircularDetection = true;
   bool _enableMemoization = true;
 
   // Example 12: Enhanced Recursive Schemas
-  Schema<Map<String, dynamic>> get categorySchema => z.recursive<Map<String, dynamic>>(
-    () => z.object({
-      'name': z.string().min(1).max(50),
-      'children': z.array(z.recursive<Map<String, dynamic>>(
+  Schema<Map<String, dynamic>> get categorySchema =>
+      z.recursive<Map<String, dynamic>>(
         () => z.object({
           'name': z.string().min(1).max(50),
-          'children': z.array(z.recursive<Map<String, dynamic>>(
-            () => z.object({
-              'name': z.string().min(1).max(50),
-            })
-          )).optional(),
-        })
-      )).optional(),
-    }),
-    maxDepth: _maxDepth,
-    enableCircularDetection: _enableCircularDetection,
-    enableMemoization: _enableMemoization,
-  );
+          'children': z
+              .array(z.recursive<Map<String, dynamic>>(() => z.object({
+                    'name': z.string().min(1).max(50),
+                    'children': z
+                        .array(
+                            z.recursive<Map<String, dynamic>>(() => z.object({
+                                  'name': z.string().min(1).max(50),
+                                })))
+                        .optional(),
+                  })))
+              .optional(),
+        }),
+        maxDepth: _maxDepth,
+        enableCircularDetection: _enableCircularDetection,
+        enableMemoization: _enableMemoization,
+      );
 
   // Modify settings with fluent API (Note: these methods may not be available in current API)
   // Schema<Map<String, dynamic>> get modifiedSchema => categorySchema
@@ -105,13 +107,15 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
 
   void _fillValidExample() {
     setState(() {
-      _jsonController.text = const JsonEncoder.withIndent('  ').convert(validCategoryTree);
+      _jsonController.text =
+          const JsonEncoder.withIndent('  ').convert(validCategoryTree);
     });
   }
 
   void _fillDeepExample() {
     setState(() {
-      _jsonController.text = const JsonEncoder.withIndent('  ').convert(deepTree);
+      _jsonController.text =
+          const JsonEncoder.withIndent('  ').convert(deepTree);
     });
   }
 
@@ -155,7 +159,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 12),
-            
+
             // Max depth slider
             Row(
               children: [
@@ -183,7 +187,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
                 ),
               ],
             ),
-            
+
             // Circular detection switch
             SwitchListTile(
               title: const Text('Circular Detection'),
@@ -196,7 +200,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
               },
               secondary: const Icon(Icons.refresh),
             ),
-            
+
             // Memoization switch
             SwitchListTile(
               title: const Text('Memoization'),
@@ -219,12 +223,12 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
     if (!node.containsKey('children') || node['children'] == null) {
       return currentDepth;
     }
-    
+
     final children = node['children'] as List<dynamic>?;
     if (children == null || children.isEmpty) {
       return currentDepth;
     }
-    
+
     int maxChildDepth = currentDepth;
     for (final child in children) {
       if (child is Map<String, dynamic>) {
@@ -232,7 +236,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
         maxChildDepth = childDepth > maxChildDepth ? childDepth : maxChildDepth;
       }
     }
-    
+
     return maxChildDepth;
   }
 
@@ -240,7 +244,8 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 12: Recursive Schemas',
-      description: 'Validate hierarchical data structures with circular detection and depth limits.',
+      description:
+          'Validate hierarchical data structures with circular detection and depth limits.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -249,7 +254,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
             // Settings card
             _buildSettingsCard(),
             const SizedBox(height: 16),
-            
+
             // JSON input
             TextFormField(
               controller: _jsonController,
@@ -263,7 +268,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
               style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
             ),
             const SizedBox(height: 8),
-            
+
             // Tree depth indicator
             if (_jsonController.text.isNotEmpty) ...[
               Card(
@@ -283,7 +288,7 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Action buttons
             Wrap(
               spacing: 8,
@@ -341,7 +346,8 @@ final modified = categorySchema
     .withMaxDepth(50)
     .withCircularDetection(false)
     .withMemoization(false);''',
-        description: 'Recursive schemas handle self-referential structures with performance optimizations.',
+        description:
+            'Recursive schemas handle self-referential structures with performance optimizations.',
       ),
       onValidate: () {
         _formKey.currentState?.validate();

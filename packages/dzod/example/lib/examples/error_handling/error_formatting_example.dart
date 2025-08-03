@@ -16,7 +16,7 @@ class ErrorFormattingExample extends StatefulWidget {
 
 class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
   final _formKey = GlobalKey<FormState>();
-  
+
   // Example 21: Multiple Error Output Formats
   final userSchema = z.object({
     'name': z.string().min(2).max(50),
@@ -67,17 +67,17 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
       case 'json':
         // JSON format for APIs
         return const JsonEncoder.withIndent('  ').convert(errors.toJson());
-      
+
       case 'formatted':
         // Human-readable format
         return errors.formattedErrors;
-      
+
       case 'individual':
         // Individual error formatting
         return errors.errors
             .map((error) => '${error.fullPath}: ${error.message}')
             .join('\n');
-      
+
       case 'by_path':
         // Errors grouped by path
         final errorsByPath = <String, List<ValidationError>>{};
@@ -85,7 +85,7 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
           final path = error.fullPath;
           errorsByPath.putIfAbsent(path, () => []).add(error);
         }
-        
+
         final buffer = StringBuffer();
         errorsByPath.forEach((path, pathErrors) {
           buffer.writeln('$path:');
@@ -94,24 +94,25 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
           }
         });
         return buffer.toString();
-      
+
       case 'custom':
         // Custom format with emojis
         final buffer = StringBuffer();
-        buffer.writeln('❌ Validation failed with ${errors.errors.length} errors:\n');
-        
+        buffer.writeln(
+            '❌ Validation failed with ${errors.errors.length} errors:\n');
+
         for (final error in errors.errors) {
           final icon = _getErrorIcon(error.code);
           buffer.writeln('$icon ${error.fullPath}');
           buffer.writeln('   └─ ${error.message}');
           buffer.writeln('      Expected: ${error.expected}');
-                  if (error.received != null) {
+          if (error.received != null) {
             buffer.writeln('      Received: ${error.received}');
           }
           buffer.writeln();
         }
         return buffer.toString();
-      
+
       default:
         return 'Unknown format';
     }
@@ -140,7 +141,8 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 21: Error Formatting',
-      description: 'Multiple ways to format validation errors for different use cases.',
+      description:
+          'Multiple ways to format validation errors for different use cases.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -170,7 +172,7 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Format selector
             DropdownButtonFormField<String>(
               value: _selectedFormat,
@@ -208,7 +210,7 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Formatted output
             Container(
               width: double.infinity,
@@ -280,7 +282,8 @@ final errorsByPath = <String, List<ValidationError>>{};
 for (final error in errors.errors) {
   errorsByPath.putIfAbsent(error.fullPath, () => []).add(error);
 }''',
-        description: 'Format errors for different contexts: APIs, user interfaces, or logging.',
+        description:
+            'Format errors for different contexts: APIs, user interfaces, or logging.',
       ),
       onValidate: _validate,
       onClear: () {},

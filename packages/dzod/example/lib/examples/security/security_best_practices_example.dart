@@ -20,15 +20,16 @@ class _SecurityBestPracticesExampleState
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
   final _apiKeyController = TextEditingController();
-  
+
   String _selectedExample = 'sanitization';
   bool _isValidating = false;
   ValidationResult? _result;
 
   // Example 30: Security Best Practices
-  
+
   // Input sanitization
-  final sanitizedSchema = z.string()
+  final sanitizedSchema = z
+      .string()
       .trim() // Remove whitespace
       .max(1000) // Prevent DoS
       .refine(
@@ -38,19 +39,19 @@ class _SecurityBestPracticesExampleState
 
   // Simulated rate limit tracking
   final Map<String, List<DateTime>> _rateLimitTracker = {};
-  
+
   bool checkRateLimit(String email) {
     final now = DateTime.now();
     final attempts = _rateLimitTracker[email] ?? [];
-    
+
     // Remove attempts older than 1 minute
     attempts.removeWhere((time) => now.difference(time).inMinutes > 1);
-    
+
     // Check if rate limit exceeded (max 3 attempts per minute)
     if (attempts.length >= 3) {
       return false;
     }
-    
+
     // Add current attempt
     attempts.add(now);
     _rateLimitTracker[email] = attempts;
@@ -70,18 +71,19 @@ class _SecurityBestPracticesExampleState
   Future<bool> validateApiKey(String key) async {
     // Simulate API call delay
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     // Simulate valid keys (in real app, check against secure storage)
     const validKeys = {
       'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd',
       'test1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab',
     };
-    
+
     return validKeys.contains(key);
   }
 
   // API key validation
-  late final apiKeySchema = z.string()
+  late final apiKeySchema = z
+      .string()
       .length(64) // Exact length
       .hex() // Hexadecimal format
       .refineAsync(
@@ -90,18 +92,20 @@ class _SecurityBestPracticesExampleState
       );
 
   // SQL injection prevention
-  final sqlSafeSchema = z.string()
-      .max(255)
-      .refine(
-        (value) => !RegExp(r"(';|--;|\/\*|\*\/|xp_|sp_|UNION|SELECT|INSERT|UPDATE|DELETE|DROP)", caseSensitive: false).hasMatch(value),
+  final sqlSafeSchema = z.string().max(255).refine(
+        (value) => !RegExp(
+                r"(';|--;|\/\*|\*\/|xp_|sp_|UNION|SELECT|INSERT|UPDATE|DELETE|DROP)",
+                caseSensitive: false)
+            .hasMatch(value),
         message: 'Potentially dangerous SQL pattern detected',
       );
 
   // Path traversal prevention
-  final pathSafeSchema = z.string()
-      .max(255)
-      .refine(
-        (value) => !value.contains('..') && !value.contains('~') && !RegExp(r'[<>:|?*]').hasMatch(value),
+  final pathSafeSchema = z.string().max(255).refine(
+        (value) =>
+            !value.contains('..') &&
+            !value.contains('~') &&
+            !RegExp(r'[<>:|?*]').hasMatch(value),
         message: 'Invalid path characters detected',
       );
 
@@ -152,7 +156,8 @@ class _SecurityBestPracticesExampleState
           _messageController.text = 'This is a test message';
           break;
         case 'apiKey':
-          _apiKeyController.text = 'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd';
+          _apiKeyController.text =
+              'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd';
           break;
         case 'sqlInjection':
           _inputController.text = "'; DROP TABLE users; --";
@@ -220,7 +225,7 @@ class _SecurityBestPracticesExampleState
             ),
           ],
         );
-      
+
       case 'apiKey':
         return Column(
           children: [
@@ -256,7 +261,7 @@ class _SecurityBestPracticesExampleState
             ),
           ],
         );
-      
+
       default:
         return TextFormField(
           controller: _inputController,
@@ -314,7 +319,8 @@ class _SecurityBestPracticesExampleState
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 30: Security Best Practices',
-      description: 'Implement secure validation patterns to protect against common attacks.',
+      description:
+          'Implement secure validation patterns to protect against common attacks.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -358,11 +364,11 @@ class _SecurityBestPracticesExampleState
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Dynamic input fields
             _buildInputFields(),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Row(
               children: [
@@ -375,7 +381,8 @@ class _SecurityBestPracticesExampleState
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.security),
-                  label: Text(_isValidating ? 'Validating...' : 'Validate Securely'),
+                  label: Text(
+                      _isValidating ? 'Validating...' : 'Validate Securely'),
                 ),
                 const SizedBox(width: 8),
                 OutlinedButton.icon(
@@ -385,18 +392,21 @@ class _SecurityBestPracticesExampleState
                 ),
               ],
             ),
-            
+
             // Display result if available
             if (_result != null) ...[
               const SizedBox(height: 24),
               ResultDisplay(
                 schema: sanitizedSchema, // Default schema for display
                 title: 'Security Validation Result',
-                value: _selectedExample == 'rateLimit' 
-                    ? {'email': _emailController.text, 'message': _messageController.text}
+                value: _selectedExample == 'rateLimit'
+                    ? {
+                        'email': _emailController.text,
+                        'message': _messageController.text
+                      }
                     : _selectedExample == 'apiKey'
-                    ? _apiKeyController.text
-                    : _inputController.text,
+                        ? _apiKeyController.text
+                        : _inputController.text,
                 preValidatedResult: _result,
               ),
             ],
@@ -432,7 +442,8 @@ final apiKey = z.string()
       (key) => validateApiKey(key),
       message: 'Invalid API key',
     );''',
-        description: 'Implement security best practices to protect against common vulnerabilities.',
+        description:
+            'Implement security best practices to protect against common vulnerabilities.',
       ),
       onValidate: () {},
       onClear: _clearInputs,

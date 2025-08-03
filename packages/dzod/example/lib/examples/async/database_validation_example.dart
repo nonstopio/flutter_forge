@@ -17,7 +17,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
-  
+
   bool _isValidating = false;
   ValidationResult<Map<String, dynamic>>? _result;
 
@@ -28,7 +28,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
     'jane@example.com',
     'admin@example.com',
   };
-  
+
   static final Set<String> _existingUsernames = {
     'johndoe',
     'janedoe',
@@ -115,7 +115,8 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
   Widget build(BuildContext context) {
     return ValidationCard(
       title: 'Example 14: Database Validation',
-      description: 'Async validation with simulated database checks for email and username availability.',
+      description:
+          'Async validation with simulated database checks for email and username availability.',
       form: Form(
         key: _formKey,
         child: Column(
@@ -146,7 +147,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Email input
             TextFormField(
               controller: _emailController,
@@ -159,7 +160,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 16),
-            
+
             // Username input
             TextFormField(
               controller: _usernameController,
@@ -171,7 +172,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Wrap(
               spacing: 8,
@@ -185,7 +186,8 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.check_circle),
-                  label: Text(_isValidating ? 'Validating...' : 'Validate Async'),
+                  label:
+                      Text(_isValidating ? 'Validating...' : 'Validate Async'),
                 ),
                 OutlinedButton.icon(
                   onPressed: _fillAvailableExample,
@@ -199,7 +201,7 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
                 ),
               ],
             ),
-            
+
             // Display result if available
             if (_result != null) ...[
               const SizedBox(height: 24),
@@ -240,7 +242,8 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
 
 // Usage
 final result = await userSchema.validateAsync(data);''',
-        description: 'Async validation allows checking against external resources like databases or APIs.',
+        description:
+            'Async validation allows checking against external resources like databases or APIs.',
       ),
       onValidate: () {}, // Validation is handled by the async button
       onClear: _clearInputs,
