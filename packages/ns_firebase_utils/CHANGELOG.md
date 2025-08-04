@@ -1,3 +1,9 @@
+## 1.2.3
+
+ - **DOCS**(README): enhance connection section with social media links and acknowledgments.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+
 ## 1.2.2
 
  - **DOCS**: update "About" link to point to /about-us in all README files.

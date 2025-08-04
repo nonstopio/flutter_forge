@@ -1,6 +1,6 @@
 name: ns_intl_phone_input
 description: Package for international phone number input with country code
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input/
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input/
 issue_tracker: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input/
