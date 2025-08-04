@@ -1,6 +1,6 @@
 name: dzod
 description: A powerful Dart schema validation library inspired by Zod, providing type-safe validation, parsing, and inference with excellent developer experience.
-version: 0.2.0
+version: 0.2.0+1
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod
 documentation: https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod
 repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod

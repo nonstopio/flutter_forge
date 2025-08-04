@@ -1,3 +1,7 @@
+## 1.0.4
+
+ - **DOCS**(README): enhance connection section with social media links and acknowledgments.
+
 ## 1.0.3
 
  - **DOCS**(html_rich_text): add strong tag examples to README and demo.

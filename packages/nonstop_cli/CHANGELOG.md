@@ -1,3 +1,13 @@
+## 0.0.7+3
+
+ - **DOCS**(README): enhance connection section with social media links and acknowledgments.
+ - **DOCS**: fix broken link in README.
+ - **DOCS**: update README to include flutter_plugin_for_mono_repo.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+ - **DOCS**: fix broken link in README.
+ - **DOCS**: update README to include flutter_plugin_for_mono_repo.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+
 ## 0.0.7+2
 
  - **DOCS**: fix broken link in README.

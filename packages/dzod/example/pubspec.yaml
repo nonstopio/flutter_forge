@@ -2,7 +2,7 @@ name: dzod_example
 description: Example Flutter app demonstrating dzod usage
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 2.0.0
 
 environment:
   sdk: '>=2.18.4 <4.0.0'
