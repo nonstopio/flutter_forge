@@ -270,22 +270,6 @@ If template generation fails:
 
 ---
 
-## 🌟 Connect with NonStop
-
-<div align="center">
-
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
-
----
-
 ## 🔗 Command Aliases
 
 <div align="center">
@@ -308,19 +292,34 @@ nsio create my_app       # Alternative alias
 
 ---
 
+## 🔗 Connect with NonStop
+
 <div align="center">
 
-```
-╔══════════════════════════════════════════════════════════════╗
-║                                                              ║
-║  🚀 Built with ❤️ by Ajay Kumar                              ║
-║                                                              ║
-║  ⭐ Star us on GitHub if this helped you!                    ║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝
-```
+**Stay connected and get the latest updates!**
 
-**🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
+[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
 
 </div>
 
+---
+
+<div align="center">
+
+>  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
+
+</div>
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<div align="center">
+
+> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+
+</div>

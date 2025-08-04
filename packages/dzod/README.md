@@ -1036,6 +1036,17 @@ for (final entry in userSchema.shape.entries) {
 ```
 
 ---
+<div align="center">
+<strong>💡 Ready to validate with confidence? Get started with Dzod today!</strong>
+</div>
+
+## 🙏 Acknowledgments
+
+- Heavily inspired by [Zod](https://zod.dev/) - TypeScript-first schema validation with static type inference
+- Built with ❤️ for the Dart/Flutter community
+- Special thanks to all contributors and early adopters
+
+---
 
 ## 🔗 Connect with NonStop
 
@@ -1062,18 +1073,6 @@ for (final entry in userSchema.shape.entries) {
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Heavily inspired by [Zod](https://zod.dev/) - TypeScript-first schema validation with static type inference
-- Built with ❤️ for the Dart/Flutter community
-- Special thanks to all contributors and early adopters
-
----
-
-<div align="center">
-<strong>💡 Ready to validate with confidence? Get started with Dzod today!</strong>
-</div>
 
 <div align="center">
 
