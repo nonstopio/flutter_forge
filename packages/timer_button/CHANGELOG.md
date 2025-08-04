@@ -1,3 +1,10 @@
+## 2.3.3
+
+ - **REFACTOR**(timer_button): add SafeStateMixin and improve timer state management.
+ - **DOCS**(README): enhance connection section with social media links and acknowledgments.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+ - **DOCS**: update "About" link to point to /about-us in all README files.
+
 ## 2.3.2
 
  - **DOCS**: update "About" link to point to /about-us in all README files.

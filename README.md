@@ -10,7 +10,9 @@
   </p>
 </p>
 
-# Flutter Forge
+<p align="center">
+  <img src="logo.svg" alt="Flutter Forge Logo" width="75%" />
+</p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
@@ -30,21 +32,36 @@ A place where Flutter packages are crafted and built.
 | [![ns_firebase_utils](https://img.shields.io/pub/v/ns_firebase_utils.svg?label=ns_firebase_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_firebase_utils)             |
 | [![ns_utils](https://img.shields.io/pub/v/ns_utils.svg?label=ns_utils&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_utils)                                                 |
 | [![ns_intl_phone_input](https://img.shields.io/pub/v/ns_intl_phone_input.svg?label=ns_intl_phone_input&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_intl_phone_input)     |
+| [![dzod](https://img.shields.io/pub/v/dzod.svg?label=dzod&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/dzod)                                                                 |
 | [![html_rich_text](https://img.shields.io/pub/v/html_rich_text.svg?label=html_rich_text&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/html_rich_text)                         |  
 
 | Plugins                                                                                                                                                                                     |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [![contact_permission](https://img.shields.io/pub/v/contact_permission.svg?label=contact_permission&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/contact_permission) |
 
-## Contact
+---
 
-Follow us, stay up to date or reach out on:
+## 🔗 Connect with NonStop
 
-- [LinkedIn](https://www.linkedin.com/company/nonstop-io)
-- [X.com](https://x.com/NonStopio)
-- [Instagram](https://www.instagram.com/nonstopio_technologies/)
-- [YouTube](https://www.youtube.com/@NonStopioTechnology)
-- [Email](mailto:contact@nonstopio.com)
+<div align="center">
+
+**Stay connected and get the latest updates!**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
+[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
+
+</div>
+
+---
+
+<div align="center">
+
+>  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
+
+</div>
 
 ## Analytics
 

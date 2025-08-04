@@ -1,0 +1,101 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for the flame/forge fire -->
+    <linearGradient id="flameGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF4081;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FF6EC7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#40E0D0;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for Flutter blue with futuristic touch -->
+    <linearGradient id="flutterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00BCD4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3F51B5;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Gradient for the anvil/forge -->
+    <linearGradient id="anvilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#455A64;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#263238;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#37474F;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Neon glow effect -->
+    <filter id="neonGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Drop shadow -->
+    <filter id="dropShadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-opacity="0.4"/>
+    </filter>
+    
+    <!-- Text gradient -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00E5FF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2196F3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9C27B0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Square background with subtle grid pattern -->
+  <rect x="0" y="0" width="200" height="200" fill="#0A0E27"/>
+  
+  <!-- Grid pattern for futuristic look -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1A237E" stroke-width="0.5" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="200" height="200" fill="url(#grid)"/>
+  
+  <!-- Central glow -->
+  <circle cx="100" cy="90" r="60" fill="url(#flutterGradient)" opacity="0.1" filter="url(#neonGlow)"/>
+  
+  <!-- Modern anvil base -->
+  <path d="M45 120 L155 120 L150 135 L50 135 Z" fill="url(#anvilGradient)" filter="url(#dropShadow)"/>
+  
+  <!-- Modern anvil body with angular design -->
+  <path d="M60 100 L140 100 L145 120 L55 120 Z" fill="url(#anvilGradient)"/>
+  
+  <!-- Futuristic anvil details -->
+  <rect x="65" y="105" width="70" height="2" fill="#00E5FF" opacity="0.8"/>
+  <rect x="70" y="110" width="60" height="1" fill="#40E0D0" opacity="0.6"/>
+  
+  <!-- Enhanced Flutter dart being forged -->
+  <path d="M85 55 L115 85 L100 100 L85 85 L70 100 L85 85 L85 55 Z" fill="url(#flutterGradient)" filter="url(#neonGlow)"/>
+  
+  <!-- Energy lines around the dart -->
+  <path d="M75 65 L80 70" stroke="#00E5FF" stroke-width="2" opacity="0.7"/>
+  <path d="M120 75 L125 80" stroke="#00E5FF" stroke-width="2" opacity="0.7"/>
+  <path d="M90 45 L95 50" stroke="#40E0D0" stroke-width="2" opacity="0.5"/>
+  
+  <!-- Futuristic hammer -->
+  <rect x="110" y="65" width="6" height="20" fill="#37474F" transform="rotate(45 113 75)"/>
+  <path d="M115 70 L125 70 L125 80 L115 80 Z" fill="url(#anvilGradient)" transform="rotate(45 120 75)" filter="url(#neonGlow)"/>
+  
+  <!-- Digital sparks/particles -->
+  <circle cx="125" cy="80" r="2" fill="#00E5FF" filter="url(#neonGlow)"/>
+  <circle cx="135" cy="85" r="1.5" fill="#40E0D0" filter="url(#neonGlow)"/>
+  <circle cx="140" cy="95" r="1" fill="#FF4081" filter="url(#neonGlow)"/>
+  <circle cx="65" cy="85" r="1.5" fill="#00E5FF" filter="url(#neonGlow)"/>
+  <circle cx="60" cy="95" r="1" fill="#40E0D0" filter="url(#neonGlow)"/>
+  
+  <!-- Forge energy burst -->
+  <path d="M100 85 Q108 78 118 85 Q125 75 135 82 Q130 95 125 88 Q118 98 110 90 Q100 98 100 85" fill="url(#flameGradient)" opacity="0.6" filter="url(#neonGlow)"/>
+  
+  <!-- Futuristic text with better typography -->
+  <text x="100" y="160" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="16" font-weight="900" fill="url(#textGradient)" filter="url(#neonGlow)">FLUTTER</text>
+  <text x="100" y="178" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="16" font-weight="900" fill="url(#textGradient)" filter="url(#neonGlow)">FORGE</text>
+  
+  <!-- Decorative lines around text -->
+  <line x1="30" y1="150" x2="80" y2="150" stroke="url(#textGradient)" stroke-width="2" opacity="0.6"/>
+  <line x1="120" y1="150" x2="170" y2="150" stroke="url(#textGradient)" stroke-width="2" opacity="0.6"/>
+  <line x1="30" y1="185" x2="80" y2="185" stroke="url(#textGradient)" stroke-width="2" opacity="0.6"/>
+  <line x1="120" y1="185" x2="170" y2="185" stroke="url(#textGradient)" stroke-width="2" opacity="0.6"/>
+</svg>

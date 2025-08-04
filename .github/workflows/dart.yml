@@ -2,9 +2,9 @@ name: Dart
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 env:
   FLUTTER_VERSION: "3.32.3"
@@ -72,7 +72,7 @@ jobs:
         run: melos exec --scope="${{ matrix.package }}" -- dart analyze --fatal-infos
 
   test:
-    needs: [discover, build]
+    needs: [ discover, build ]
     runs-on: ubuntu-latest
     if: needs.discover.outputs.packages != '[]'
     strategy:
@@ -91,31 +91,23 @@ jobs:
           dart pub global activate melos
           melos bootstrap --scope="${{ matrix.package }}"
 
-      - name: Check if test directory exists and run tests
+      - name: Run tests
         id: test-step
         run: |
-          # Get package path
-          package_path=$(melos list --json | jq -r ".[] | select(.name == \"${{ matrix.package }}\") | .path")
-          echo "package_path=$package_path" >> $GITHUB_OUTPUT
-          
-          if [ -d "$package_path/test" ]; then
-            echo "Test directory found for ${{ matrix.package }}"
+          # Try Flutter test first (will only run if package has test dir and is Flutter package)
+          if melos exec --scope="${{ matrix.package }}" --dir-exists=test --flutter -- flutter test --coverage 2>/dev/null; then
             echo "has_tests=true" >> $GITHUB_OUTPUT
-            
-            # Check if it's a Flutter package by looking for flutter dependency
-            if grep -q "flutter:" "$package_path/pubspec.yaml"; then
-              echo "Running Flutter tests for ${{ matrix.package }}"
-              echo "is_flutter=true" >> $GITHUB_OUTPUT
-              melos exec --scope="${{ matrix.package }}" -- flutter test --coverage
-            else
-              echo "Running Dart tests for ${{ matrix.package }}"
-              echo "is_flutter=false" >> $GITHUB_OUTPUT
-              melos exec --scope="${{ matrix.package }}" -- dart test
-            fi
+          # Try Dart test (will only run if package has test dir and is not Flutter package)  
+          elif melos exec --scope="${{ matrix.package }}" --dir-exists=test --no-flutter -- dart test --coverage 2>/dev/null; then
+            echo "has_tests=true" >> $GITHUB_OUTPUT
           else
-            echo "No test directory found for ${{ matrix.package }}, skipping tests"
+            echo "No tests to run for ${{ matrix.package }}"
             echo "has_tests=false" >> $GITHUB_OUTPUT
           fi
+          
+          # Get package path for coverage upload
+          package_path=$(melos list --scope="${{ matrix.package }}" --json | jq -r ".[0].path")
+          echo "package_path=$package_path" >> $GITHUB_OUTPUT
 
       - name: Upload coverage reports to Codecov
         if: steps.test-step.outputs.has_tests == 'true'

@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **DOCS**(README): enhance connection section with social media links and acknowledgments.
+
 ## 1.0.0
 
 * Update dependency

@@ -1,7 +1,7 @@
 name: connectivity_wrapper_example
 description: Demonstrates how to use the connectivity_wrapper plugin
 publish_to: none
-version: 0.0.2
+version: 0.0.2+1
 
 environment:
   sdk: '>=2.18.4 <3.0.0'
