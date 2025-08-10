@@ -1,3 +1,18 @@
+/// Function type for custom error message generation
+///
+/// Takes a [ValidationIssue] containing context about the validation failure
+/// and returns either a custom error message string or null to use the default message.
+///
+/// This matches the TypeScript Zod error customization API:
+/// ```dart
+/// z.string({
+///   error: (issue) => issue.input == null
+///     ? "Field is required"
+///     : "Invalid string: ${issue.input}"
+/// });
+/// ```
+typedef ErrorMessageFunction = String? Function(ValidationIssue issue);
+
 /// Represents a validation error with detailed information
 class ValidationError {
   /// The error message
@@ -49,9 +64,28 @@ class ValidationError {
     required dynamic received,
     required String expected,
     String? code,
+    ErrorMessageFunction? customErrorGenerator,
   }) {
+    final defaultMessage =
+        'Expected $expected, but received ${ValidationError._getTypeName(received)}';
+    String message = defaultMessage;
+
+    // Generate custom error message if provided
+    if (customErrorGenerator != null) {
+      final issue = ValidationIssue.typeMismatch(
+        input: received,
+        path: path,
+        expected: expected,
+        customMessage: defaultMessage,
+      );
+      final customMessage = customErrorGenerator(issue);
+      if (customMessage != null) {
+        message = customMessage;
+      }
+    }
+
     return ValidationError(
-      message: 'Expected $expected, but received ${_getTypeName(received)}',
+      message: message,
       path: path,
       received: received,
       expected: expected,
@@ -66,9 +100,29 @@ class ValidationError {
     required String constraint,
     String? code,
     Map<String, dynamic>? context,
+    ErrorMessageFunction? customErrorGenerator,
   }) {
+    final defaultMessage = constraint;
+    String message = defaultMessage;
+
+    // Generate custom error message if provided
+    if (customErrorGenerator != null) {
+      final issue = ValidationIssue.constraint(
+        input: received,
+        path: path,
+        code: code ?? 'constraint_violation',
+        constraint: constraint,
+        additionalContext: context,
+        customMessage: defaultMessage,
+      );
+      final customMessage = customErrorGenerator(issue);
+      if (customMessage != null) {
+        message = customMessage;
+      }
+    }
+
     return ValidationError(
-      message: constraint,
+      message: message,
       path: path,
       received: received,
       expected: constraint,
@@ -245,5 +299,126 @@ class ValidationErrorCollection {
   @override
   String toString() {
     return 'ValidationErrorCollection(${_errors.length} errors)';
+  }
+}
+
+/// Represents an issue context for custom error message generation
+/// This is used to provide detailed context to custom error message functions,
+/// similar to TypeScript Zod's issue object.
+class ValidationIssue {
+  /// The specific error code (e.g., "invalid_type", "too_small", "too_big")
+  final String code;
+
+  /// The input value that failed validation
+  final dynamic input;
+
+  /// The path to the field that caused the error
+  final List<String> path;
+
+  /// The default error message that would be used
+  final String message;
+
+  /// Additional context information specific to the validation type
+  final Map<String, dynamic> context;
+
+  /// The expected type or constraint description
+  final String expected;
+
+  /// The received type or value description
+  final String received;
+
+  const ValidationIssue({
+    required this.code,
+    required this.input,
+    required this.path,
+    required this.message,
+    required this.context,
+    required this.expected,
+    required this.received,
+  });
+
+  /// Creates a ValidationIssue from a ValidationError
+  factory ValidationIssue.fromError(ValidationError error) {
+    return ValidationIssue(
+      code: error.code ?? 'validation_error',
+      input: error.received,
+      path: error.path,
+      message: error.message,
+      context: error.context ?? {},
+      expected: error.expected,
+      received: ValidationError._getTypeName(error.received),
+    );
+  }
+
+  /// Creates a ValidationIssue for type mismatch errors
+  factory ValidationIssue.typeMismatch({
+    required dynamic input,
+    required List<String> path,
+    required String expected,
+    String? customMessage,
+  }) {
+    final defaultMessage =
+        'Expected $expected, but received ${ValidationError._getTypeName(input)}';
+    return ValidationIssue(
+      code: 'invalid_type',
+      input: input,
+      path: path,
+      message: customMessage ?? defaultMessage,
+      context: {
+        'expected': expected,
+        'received': ValidationError._getTypeName(input)
+      },
+      expected: expected,
+      received: ValidationError._getTypeName(input),
+    );
+  }
+
+  /// Creates a ValidationIssue for constraint violations
+  factory ValidationIssue.constraint({
+    required dynamic input,
+    required List<String> path,
+    required String code,
+    required String constraint,
+    Map<String, dynamic>? additionalContext,
+    String? customMessage,
+  }) {
+    return ValidationIssue(
+      code: code,
+      input: input,
+      path: path,
+      message: customMessage ?? constraint,
+      context: additionalContext ?? {},
+      expected: constraint,
+      received: input?.toString() ?? 'null',
+    );
+  }
+
+  /// Gets the full path as a string (e.g., "user.address.street")
+  String get fullPath => path.join('.');
+
+  /// Creates a copy with modified properties
+  ValidationIssue copyWith({
+    String? code,
+    dynamic input,
+    List<String>? path,
+    String? message,
+    Map<String, dynamic>? context,
+    String? expected,
+    String? received,
+  }) {
+    return ValidationIssue(
+      code: code ?? this.code,
+      input: input ?? this.input,
+      path: path ?? this.path,
+      message: message ?? this.message,
+      context: context ?? this.context,
+      expected: expected ?? this.expected,
+      received: received ?? this.received,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ValidationIssue(code: $code, path: ${fullPath.isEmpty ? 'root' : fullPath}, message: $message)';
   }
 }

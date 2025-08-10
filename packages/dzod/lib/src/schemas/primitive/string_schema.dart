@@ -36,6 +36,9 @@ class StringSchema extends Schema<String> {
   /// Convert to uppercase flag
   final bool _toUpperCase;
 
+  /// Custom error message generator
+  final ErrorMessageFunction? _customErrorGenerator;
+
   const StringSchema({
     super.description,
     super.metadata,
@@ -49,6 +52,7 @@ class StringSchema extends Schema<String> {
     bool trim = false,
     bool toLowerCase = false,
     bool toUpperCase = false,
+    ErrorMessageFunction? customErrorGenerator,
   })  : _minLength = minLength,
         _maxLength = maxLength,
         _exactLength = exactLength,
@@ -58,7 +62,8 @@ class StringSchema extends Schema<String> {
         _isUuid = isUuid,
         _trim = trim,
         _toLowerCase = toLowerCase,
-        _toUpperCase = toUpperCase;
+        _toUpperCase = toUpperCase,
+        _customErrorGenerator = customErrorGenerator;
 
   @override
   ValidationResult<String> validate(dynamic input,
@@ -71,6 +76,7 @@ class StringSchema extends Schema<String> {
             path: path,
             received: input,
             expected: 'string',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -99,6 +105,7 @@ class StringSchema extends Schema<String> {
             constraint: 'exact length of $_exactLength',
             code: 'exact_length',
             context: {'expected': _exactLength, 'actual': value.length},
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -113,6 +120,7 @@ class StringSchema extends Schema<String> {
             constraint: 'minimum length of $_minLength',
             code: 'min_length',
             context: {'expected': _minLength, 'actual': value.length},
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -127,6 +135,7 @@ class StringSchema extends Schema<String> {
             constraint: 'maximum length of $_maxLength',
             code: 'max_length',
             context: {'expected': _maxLength, 'actual': value.length},
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -142,6 +151,7 @@ class StringSchema extends Schema<String> {
             constraint: 'match pattern ${_pattern!.pattern}',
             code: 'pattern_mismatch',
             context: {'pattern': _pattern!.pattern},
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -156,6 +166,7 @@ class StringSchema extends Schema<String> {
             received: value,
             constraint: 'valid email address',
             code: 'invalid_email',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -170,6 +181,7 @@ class StringSchema extends Schema<String> {
             received: value,
             constraint: 'valid URL',
             code: 'invalid_url',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -184,6 +196,7 @@ class StringSchema extends Schema<String> {
             received: value,
             constraint: 'valid UUID',
             code: 'invalid_uuid',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -207,6 +220,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -225,6 +239,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -243,6 +258,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -261,6 +277,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -279,6 +296,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -297,6 +315,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -315,6 +334,7 @@ class StringSchema extends Schema<String> {
       trim: _trim,
       toLowerCase: _toLowerCase,
       toUpperCase: _toUpperCase,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -373,30 +393,30 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string starts with the given prefix
-  StringSchema startsWith(String prefix) {
+  Schema<String> startsWith(String prefix) {
     return refine(
       (value) => value.startsWith(prefix),
       message: 'must start with "$prefix"',
       code: 'starts_with',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string ends with the given suffix
-  StringSchema endsWith(String suffix) {
+  Schema<String> endsWith(String suffix) {
     return refine(
       (value) => value.endsWith(suffix),
       message: 'must end with "$suffix"',
       code: 'ends_with',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string contains the given substring
-  StringSchema contains(String substring) {
+  Schema<String> contains(String substring) {
     return refine(
       (value) => value.contains(substring),
       message: 'must contain "$substring"',
       code: 'contains',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is non-empty
@@ -409,21 +429,21 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string is a valid date
-  StringSchema date() {
+  Schema<String> date() {
     return refine(
       (value) => DateTime.tryParse(value) != null,
       message: 'must be a valid date',
       code: 'invalid_date',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid datetime
-  StringSchema datetime() {
+  Schema<String> datetime() {
     return refine(
       (value) => DateTime.tryParse(value) != null,
       message: 'must be a valid datetime',
       code: 'invalid_datetime',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid IP address
@@ -548,8 +568,14 @@ class StringSchema extends Schema<String> {
   // Helper methods for validation
 
   bool _isValidEmail(String email) {
+    // Updated regex pattern:
+    // - Doesn't start with a dot
+    // - No consecutive dots
+    // - More comprehensive character set for local part
+    // - Case insensitive
     final emailRegex = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+      r"^(?!\.)(?!.*\.\.)([a-z0-9_'+\-\.]*)[a-z0-9_+-]@([a-z0-9][a-z0-9\-]*\.)+[a-z]{2,}$",
+      caseSensitive: false,
     );
     return emailRegex.hasMatch(email);
   }

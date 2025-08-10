@@ -7,11 +7,16 @@ class BooleanSchema extends Schema<bool> {
   /// Expected boolean value (if specified)
   final bool? _expectedValue;
 
+  /// Custom error message generator
+  final ErrorMessageFunction? _customErrorGenerator;
+
   const BooleanSchema({
     super.description,
     super.metadata,
     bool? expectedValue,
-  }) : _expectedValue = expectedValue;
+    ErrorMessageFunction? customErrorGenerator,
+  })  : _expectedValue = expectedValue,
+        _customErrorGenerator = customErrorGenerator;
 
   @override
   ValidationResult<bool> validate(dynamic input,
@@ -24,6 +29,7 @@ class BooleanSchema extends Schema<bool> {
             path: path,
             received: input,
             expected: 'boolean',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -39,6 +45,7 @@ class BooleanSchema extends Schema<bool> {
             constraint: 'value must be $_expectedValue',
             code: 'unexpected_boolean_value',
             context: {'expected': _expectedValue, 'actual': input},
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -52,6 +59,7 @@ class BooleanSchema extends Schema<bool> {
         description: description,
         metadata: metadata,
         expectedValue: true,
+        customErrorGenerator: _customErrorGenerator,
       );
 
   /// Creates a schema that only accepts false
@@ -59,6 +67,7 @@ class BooleanSchema extends Schema<bool> {
         description: description,
         metadata: metadata,
         expectedValue: false,
+        customErrorGenerator: _customErrorGenerator,
       );
 
   /// Checks if boolean is true

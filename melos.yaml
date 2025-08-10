@@ -5,11 +5,7 @@ packages:
   - plugins/*/*
   - packages/*
   - packages/*/*
-  - packages/nonstop_cli/bricks/flutter_app_for_mono_repo/hooks
-  - packages/nonstop_cli/bricks/flutter_package_for_mono_repo/hooks
-  - packages/nonstop_cli/bricks/flutter_project_with_mono_repo/hooks
-  - packages/nonstop_cli/bricks/flutter_plugin_for_mono_repo/hooks
-  - packages/dzod/example
+  - packages/nonstop_cli/bricks/*/hooks
 
 command:
   version:

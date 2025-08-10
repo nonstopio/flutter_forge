@@ -17,13 +17,36 @@ class DZod {
   static DZod instance = DZod._();
 
   /// Creates a string schema
-  StringSchema string() => const StringSchema();
+  ///
+  /// Supports TypeScript Zod-style custom error messages:
+  /// ```dart
+  /// z.string(error: (issue) => issue.input == null
+  ///   ? "String is required"
+  ///   : "Invalid string: ${issue.input}");
+  /// ```
+  StringSchema string({ErrorMessageFunction? error}) {
+    return StringSchema(customErrorGenerator: error);
+  }
 
   /// Creates a number schema
-  NumberSchema number() => const NumberSchema();
+  ///
+  /// Supports TypeScript Zod-style custom error messages:
+  /// ```dart
+  /// z.number(error: (issue) => "Expected number, got: ${issue.input}");
+  /// ```
+  NumberSchema number({ErrorMessageFunction? error}) {
+    return NumberSchema(customErrorGenerator: error);
+  }
 
   /// Creates a boolean schema
-  BooleanSchema boolean() => const BooleanSchema();
+  ///
+  /// Supports TypeScript Zod-style custom error messages:
+  /// ```dart
+  /// z.boolean(error: (issue) => "Expected true or false, got: ${issue.input}");
+  /// ```
+  BooleanSchema boolean({ErrorMessageFunction? error}) {
+    return BooleanSchema(customErrorGenerator: error);
+  }
 
   /// Creates a null schema
   NullSchema null_() => const NullSchema();

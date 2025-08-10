@@ -36,6 +36,9 @@ class NumberSchema extends Schema<num> {
   /// Safe integer validation flag
   final bool _isSafeInt;
 
+  /// Custom error message generator
+  final ErrorMessageFunction? _customErrorGenerator;
+
   const NumberSchema({
     super.description,
     super.metadata,
@@ -49,6 +52,7 @@ class NumberSchema extends Schema<num> {
     bool isNonPositive = false,
     bool isFinite = false,
     bool isSafeInt = false,
+    ErrorMessageFunction? customErrorGenerator,
   })  : _min = min,
         _max = max,
         _exact = exact,
@@ -58,7 +62,8 @@ class NumberSchema extends Schema<num> {
         _isNonNegative = isNonNegative,
         _isNonPositive = isNonPositive,
         _isFinite = isFinite,
-        _isSafeInt = isSafeInt;
+        _isSafeInt = isSafeInt,
+        _customErrorGenerator = customErrorGenerator;
 
   @override
   ValidationResult<num> validate(dynamic input,
@@ -71,6 +76,7 @@ class NumberSchema extends Schema<num> {
             path: path,
             received: input,
             expected: 'number',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -87,6 +93,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'exact value of $_exact',
             code: 'exact_value',
+            customErrorGenerator: _customErrorGenerator,
             context: {'expected': _exact, 'actual': value},
           ),
         ),
@@ -102,6 +109,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'minimum value of $_min',
             code: 'min_value',
+            customErrorGenerator: _customErrorGenerator,
             context: {'expected': _min, 'actual': value},
           ),
         ),
@@ -116,6 +124,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'maximum value of $_max',
             code: 'max_value',
+            customErrorGenerator: _customErrorGenerator,
             context: {'expected': _max, 'actual': value},
           ),
         ),
@@ -145,6 +154,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'positive value',
             code: 'not_positive',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -158,6 +168,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'negative value',
             code: 'not_negative',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -171,6 +182,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'non-negative value',
             code: 'negative',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -184,6 +196,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'non-positive value',
             code: 'positive',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -198,6 +211,7 @@ class NumberSchema extends Schema<num> {
             received: value,
             constraint: 'finite value',
             code: 'not_finite',
+            customErrorGenerator: _customErrorGenerator,
           ),
         ),
       );
@@ -239,6 +253,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -257,6 +272,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -275,6 +291,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -293,6 +310,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -311,6 +329,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -329,6 +348,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -347,6 +367,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -365,6 +386,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: true,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
@@ -419,6 +441,7 @@ class NumberSchema extends Schema<num> {
       isNonPositive: _isNonPositive,
       isFinite: _isFinite,
       isSafeInt: _isSafeInt,
+      customErrorGenerator: _customErrorGenerator,
     );
   }
 
