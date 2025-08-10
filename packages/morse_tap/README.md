@@ -1,0 +1,310 @@
+<p align="center">
+  <a href="https://nonstopio.com">
+    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+  </a>
+  <h1 align="center">NonStop</h1>
+  <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
+  <p align="center">
+    <a href="https://nonstopio.com/about-us">About</a> |
+    <a href="https://nonstopio.com">Website</a>
+  </p>
+</p>
+
+# morse_tap
+
+[![Build Status](https://img.shields.io/pub/v/morse_tap.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/morse_tap)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+A Flutter package that provides Morse code input functionality using intuitive gestures. Create interactive Morse code experiences with single taps for dots, double taps for dashes, and long presses for spaces.
+
+## Features
+
+✨ **MorseTapDetector** - Widget that detects specific Morse code patterns using gestures  
+🎯 **MorseTextInput** - Real-time gesture-to-text conversion widget  
+🔄 **String Extensions** - Convert any string to/from Morse code  
+⚡ **Fast Algorithm** - Efficient Morse code conversion with comprehensive character support  
+🎨 **Intuitive Gestures** - Single tap = dot, double tap = dash, long press = space
+
+## Requirements
+
+- Flutter >=3.19.0
+- Dart >=3.3.0 <4.0.0
+
+## Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  morse_tap: ^0.0.1
+```
+
+Or install via command line:
+
+```bash
+flutter pub add morse_tap
+```
+
+## Quick Start
+
+Import the package:
+
+```dart
+import 'package:morse_tap/morse_tap.dart';
+```
+
+## Usage Examples
+
+### 1. MorseTapDetector - Pattern Detection
+
+Detect when users input a specific Morse code pattern using gestures:
+
+```dart
+MorseTapDetector(
+  expectedMorseCode: "... --- ...", // SOS pattern
+  onCorrectSequence: () {
+    print("SOS detected!");
+    // Handle correct sequence
+  },
+  onIncorrectSequence: () {
+    print("Wrong pattern, try again");
+  },
+  onDotAdded: () => print("Dot added"),
+  onDashAdded: () => print("Dash added"),
+  onSpaceAdded: () => print("Space added"),
+  child: Container(
+    width: 200,
+    height: 200,
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: const Center(
+      child: Text(
+        'Use Gestures for SOS',
+        style: TextStyle(color: Colors.white, fontSize: 20),
+      ),
+    ),
+  ),
+)
+```
+
+### 2. MorseTextInput - Real-time Conversion
+
+Convert tap input to text in real-time:
+
+```dart
+class MorseInputExample extends StatelessWidget {
+  final TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        MorseTextInput(
+          controller: controller,
+          autoConvertToText: true,
+          showMorsePreview: true,
+          onTextChanged: (text) {
+            print("Converted text: $text");
+          },
+          decoration: const InputDecoration(
+            labelText: 'Tap to input text',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        // Your converted text appears in the controller
+        TextField(
+          controller: controller,
+          readOnly: true,
+          decoration: const InputDecoration(
+            labelText: 'Output',
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
+### 3. String Extensions
+
+Easy string to Morse code conversion:
+
+```dart
+// Convert text to Morse code
+String morse = "HELLO WORLD".toMorseCode();
+print(morse); // ".... . .-.. .-.. --- / .-- --- .-. .-.. -.."
+
+// Convert Morse code back to text
+String text = "... --- ...".fromMorseCode();
+print(text); // "SOS"
+
+// Validate Morse input
+bool isValid = "... --- ...".isValidMorseSequence();
+print(isValid); // true
+
+// Check if string contains only Morse characters
+bool isMorseInput = "... abc".isValidMorseInput();
+print(isMorseInput); // false
+```
+
+## Configuration
+
+### Timing Configuration
+
+Customize tap timing thresholds:
+
+```dart
+MorseTapDetector(
+  expectedMorseCode: "...",
+  dotThreshold: Duration(milliseconds: 150), // Shorter for dots
+  dashThreshold: Duration(milliseconds: 400), // Longer for dashes
+  letterGap: Duration(milliseconds: 600),     // Gap between letters
+  sequenceTimeout: Duration(seconds: 5),     // Reset timeout
+  onTap: () => print("Correct!"),
+  child: MyButton(),
+)
+```
+
+### Visual Feedback
+
+Control visual feedback options:
+
+```dart
+MorseTextInput(
+  controller: controller,
+  showMorsePreview: true,              // Show Morse preview
+  feedbackColor: Colors.green,         // Tap feedback color
+  tapAreaHeight: 150.0,               // Height of tap area
+  autoConvertToText: false,           // Keep as Morse code
+)
+```
+
+## Supported Characters
+
+The package supports:
+- **Letters**: A-Z (26 letters)
+- **Numbers**: 0-9 (10 digits)  
+- **Punctuation**: . , ? ' ! / ( ) & : ; = + - _ " $ @
+
+## Morse Code Reference
+
+| Character | Morse Code |
+|-----------|------------|
+| A | .- |
+| B | -... |
+| C | -.-. |
+| S | ... |
+| O | --- |
+| 0 | ----- |
+| 1 | .---- |
+| 9 | ----. |
+
+*See the complete mapping in `MorseCodec` class documentation.*
+
+## Advanced Usage
+
+### Custom Morse Patterns
+
+Create custom pattern detection:
+
+```dart
+final customPattern = "HELP".toMorseCode();
+
+MorseTapDetector(
+  expectedMorseCode: customPattern,
+  onTap: () => showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text("Help Requested!"),
+      content: Text("Someone needs assistance."),
+    ),
+  ),
+  child: EmergencyButton(),
+)
+```
+
+### Multiple Pattern Detection
+
+Handle different patterns:
+
+```dart
+class MultiPatternDetector extends StatelessWidget {
+  final Map<String, String> patterns = {
+    'SOS': '... --- ...',
+    'OK': '--- -.-',
+    'YES': '-.-- . ...',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: patterns.entries.map((entry) {
+        return MorseTapDetector(
+          expectedMorseCode: entry.value,
+          onTap: () => handlePattern(entry.key),
+          child: PatternButton(label: entry.key),
+        );
+      }).toList(),
+    );
+  }
+
+  void handlePattern(String pattern) {
+    print("Pattern $pattern detected!");
+  }
+}
+```
+
+## Contributing
+
+We welcome contributions in various forms:
+
+- Proposing new features or enhancements.
+- Reporting and fixing bugs.
+- Engaging in discussions to help make decisions.
+- Improving documentation, as it is essential.
+- Sending Pull Requests is greatly appreciated!
+
+A big thank you to all our contributors! 🙌
+
+<br></br>
+<div align="center">
+  <a href="https://github.com/nonstopio/flutter_forge/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=nonstopio/flutter_forge"  alt="contributors"/>
+  </a>
+</div>
+
+---
+
+## 🔗 Connect with NonStop
+
+<div align="center">
+
+**Stay connected and get the latest updates!**
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
+[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
+[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
+
+</div>
+
+---
+
+<div align="center">
+
+>  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
+
+</div>
+
+## 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<div align="center">
+
+> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+
+</div>
