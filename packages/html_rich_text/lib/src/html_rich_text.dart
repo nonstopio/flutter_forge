@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that renders HTML-styled text using Flutter's RichText widget.
@@ -16,7 +17,7 @@ import 'package:flutter/material.dart';
 ///   },
 /// )
 /// ```
-class HtmlRichText extends StatelessWidget {
+class HtmlRichText extends StatefulWidget {
   /// The HTML-styled text to be rendered.
   ///
   /// This string can contain HTML-like tags that match the keys in [tagStyles].
@@ -60,6 +61,20 @@ class HtmlRichText extends StatelessWidget {
   /// Defaults to [TextOverflow.clip].
   final TextOverflow overflow;
 
+  /// Callback function that is called when a link is tapped.
+  ///
+  /// This callback receives the URL from the href attribute of the <a> tag.
+  /// If this is null, links will be styled but not clickable.
+  ///
+  /// Example:
+  /// ```dart
+  /// HtmlRichText(
+  ///   'Visit <a href="https://flutter.dev">Flutter</a>',
+  ///   onLinkTap: (url) => print('Tapped: $url'),
+  /// )
+  /// ```
+  final void Function(String url)? onLinkTap;
+
   /// Creates an [HtmlRichText] widget.
   ///
   /// The [htmlText] parameter is required and contains the text to be rendered.
@@ -80,7 +95,23 @@ class HtmlRichText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.maxLines,
     this.overflow = TextOverflow.clip,
+    this.onLinkTap,
   });
+
+  @override
+  State<HtmlRichText> createState() => _HtmlRichTextState();
+}
+
+class _HtmlRichTextState extends State<HtmlRichText> {
+  final List<TapGestureRecognizer> _recognizers = [];
+
+  @override
+  void dispose() {
+    for (final recognizer in _recognizers) {
+      recognizer.dispose();
+    }
+    super.dispose();
+  }
 
   /// Builds the widget by parsing HTML text and returning a [RichText] widget.
   ///
@@ -88,28 +119,58 @@ class HtmlRichText extends StatelessWidget {
   /// and creates a [RichText] widget with the appropriate styling.
   @override
   Widget build(BuildContext context) {
+    // Clear previous recognizers
+    for (final recognizer in _recognizers) {
+      recognizer.dispose();
+    }
+    _recognizers.clear();
+
     return RichText(
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-      text: _parseAdvancedHtmlToTextSpan(htmlText, context),
+      textAlign: widget.textAlign,
+      maxLines: widget.maxLines,
+      overflow: widget.overflow,
+      text: _parseAdvancedHtmlToTextSpan(widget.htmlText, context),
     );
   }
 
   TextSpan _parseAdvancedHtmlToTextSpan(String html, BuildContext context) {
     final List<TextSpan> spans = [];
 
-    // Return early if no tagStyles provided
-    if (tagStyles.isEmpty) {
+    // Check if we need to process HTML
+    final bool hasAnyTags = widget.tagStyles.isNotEmpty ||
+        html.contains('<a') ||
+        widget.onLinkTap != null;
+
+    if (!hasAnyTags) {
       return TextSpan(
         text: html,
-        style: style ?? Theme.of(context).textTheme.bodyMedium,
+        style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
       );
     }
 
-    // Create regex pattern for only the tags defined in tagStyles
-    final String tagPattern =
-        tagStyles.keys.map((tag) => '<$tag>(.*?)</$tag>').join('|');
+    // Create regex pattern for tags defined in tagStyles and <a> tags
+    final List<String> patterns = [];
+
+    // Add patterns for regular tags
+    for (final tag in widget.tagStyles.keys) {
+      if (tag != 'a') {
+        patterns.add('<$tag>(.*?)</$tag>');
+      }
+    }
+
+    // Always add pattern for <a> tags if they exist in the HTML
+    if (html.contains('<a')) {
+      patterns.add(r'<a(?:\s+href=["' ']([^"' ']*)[^>]*)?>([^<]*)</a>');
+    }
+
+    if (patterns.isEmpty) {
+      return TextSpan(
+        text: html,
+        style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
+      );
+    }
+
+    final String tagPattern = patterns.join('|');
     final RegExp tagRegex = RegExp(tagPattern, caseSensitive: false);
 
     int lastIndex = 0;
@@ -121,34 +182,85 @@ class HtmlRichText extends StatelessWidget {
         if (beforeText.isNotEmpty) {
           spans.add(TextSpan(
             text: beforeText,
-            style: style ?? Theme.of(context).textTheme.bodyMedium,
+            style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
           ));
         }
       }
 
       // Find which tag matched and get its content
       final String matchedTag = match.group(0)!;
-      String? tagName;
-      String? content;
 
-      for (final tag in tagStyles.keys) {
-        final tagPattern = RegExp('<$tag>(.*?)</$tag>', caseSensitive: false);
-        final tagMatch = tagPattern.firstMatch(matchedTag);
-        if (tagMatch != null) {
-          tagName = tag;
-          content = tagMatch.group(1);
-          break;
+      // Check if it's an <a> tag
+      final aTagPattern = RegExp(
+        r'<a(?:\s+href=["' ']([^"' ']*)[^>]*)?>([^<]*)</a>',
+        caseSensitive: false,
+      );
+      final aTagMatch = aTagPattern.firstMatch(matchedTag);
+
+      if (aTagMatch != null) {
+        // Handle <a> tag
+        final String? href = aTagMatch.group(1);
+        final String? linkText = aTagMatch.group(2);
+
+        if (linkText != null) {
+          final baseStyle =
+              widget.style ?? Theme.of(context).textTheme.bodyMedium;
+
+          // Get custom style for 'a' tag or use default link style
+          final linkStyle = widget.tagStyles['a'] ??
+              const TextStyle(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              );
+
+          final mergedStyle = baseStyle?.merge(linkStyle) ?? linkStyle;
+
+          if (href != null && widget.onLinkTap != null) {
+            // Create clickable link
+            final recognizer = TapGestureRecognizer()
+              ..onTap = () => widget.onLinkTap!(href);
+            _recognizers.add(recognizer);
+
+            spans.add(TextSpan(
+              text: linkText,
+              style: mergedStyle,
+              recognizer: recognizer,
+            ));
+          } else {
+            // Non-clickable styled link
+            spans.add(TextSpan(
+              text: linkText,
+              style: mergedStyle,
+            ));
+          }
         }
-      }
+      } else {
+        // Handle other tags
+        String? tagName;
+        String? content;
 
-      if (tagName != null && content != null) {
-        final baseStyle = style ?? Theme.of(context).textTheme.bodyMedium;
-        final tagStyleFromMap = tagStyles[tagName]!;
+        for (final tag in widget.tagStyles.keys) {
+          if (tag == 'a') continue; // Skip 'a' tag as it's handled separately
 
-        spans.add(TextSpan(
-          text: content,
-          style: baseStyle?.merge(tagStyleFromMap) ?? tagStyleFromMap,
-        ));
+          final tagPattern = RegExp('<$tag>(.*?)</$tag>', caseSensitive: false);
+          final tagMatch = tagPattern.firstMatch(matchedTag);
+          if (tagMatch != null) {
+            tagName = tag;
+            content = tagMatch.group(1);
+            break;
+          }
+        }
+
+        if (tagName != null && content != null) {
+          final baseStyle =
+              widget.style ?? Theme.of(context).textTheme.bodyMedium;
+          final tagStyleFromMap = widget.tagStyles[tagName]!;
+
+          spans.add(TextSpan(
+            text: content,
+            style: baseStyle?.merge(tagStyleFromMap) ?? tagStyleFromMap,
+          ));
+        }
       }
 
       lastIndex = match.end;
@@ -160,7 +272,7 @@ class HtmlRichText extends StatelessWidget {
       if (remainingText.isNotEmpty) {
         spans.add(TextSpan(
           text: remainingText,
-          style: style ?? Theme.of(context).textTheme.bodyMedium,
+          style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
         ));
       }
     }
@@ -169,7 +281,7 @@ class HtmlRichText extends StatelessWidget {
     if (spans.isEmpty) {
       return TextSpan(
         text: html,
-        style: style ?? Theme.of(context).textTheme.bodyMedium,
+        style: widget.style ?? Theme.of(context).textTheme.bodyMedium,
       );
     }
 
