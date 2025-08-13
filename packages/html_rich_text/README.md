@@ -81,6 +81,34 @@ HtmlRichText(
 )
 ```
 
+### Clickable Links Example
+
+```dart
+HtmlRichText(
+  'Visit <a href="https://flutter.dev">Flutter</a> and <a href="https://dart.dev">Dart</a> websites.',
+  onLinkTap: (url) {
+    // Handle link tap - open URL, navigate, etc.
+    print('Tapped: $url');
+  },
+)
+```
+
+### Custom Link Styling
+
+```dart
+HtmlRichText(
+  'Check our <a href="https://example.com">website</a> for more info.',
+  tagStyles: {
+    'a': TextStyle(
+      color: Colors.green,
+      fontWeight: FontWeight.bold,
+      decoration: TextDecoration.none,
+    ),
+  },
+  onLinkTap: (url) => launchUrl(Uri.parse(url)),
+)
+```
+
 ### Supported Parameters
 
 - `htmlText` (required): The HTML string to parse and display
@@ -89,6 +117,7 @@ HtmlRichText(
 - `textAlign`: Text alignment (default: `TextAlign.start`)
 - `maxLines`: Maximum number of lines to display
 - `overflow`: How overflowing text should be handled
+- `onLinkTap`: Callback function called when a link is tapped (receives the URL)
 
 ## Example Use Cases
 
@@ -128,6 +157,20 @@ HtmlRichText(
 )
 ```
 
+### Clickable Content with Links
+```dart
+HtmlRichText(
+  'Read our <a href="https://blog.example.com">latest blog post</a> or visit our <a href="https://example.com">homepage</a>.',
+  tagStyles: {
+    'a': TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+  },
+  onLinkTap: (url) {
+    // Open URL in browser, navigate to screen, etc.
+    launchUrl(Uri.parse(url));
+  },
+)
+```
+
 ## Performance Comparison
 
 Compared to traditional HTML rendering packages:
@@ -136,14 +179,23 @@ Compared to traditional HTML rendering packages:
 - **Zero** external dependencies
 - **Minimal** memory allocation
 
+## Supported Features
+
+✅ **Basic HTML Tags**: `<b>`, `<i>`, `<strong>`, `<u>`, and any custom tags  
+✅ **Clickable Links**: `<a href="...">` tags with tap callbacks  
+✅ **Custom Styling**: Define styles for any tag via `tagStyles`  
+✅ **Text Properties**: Alignment, max lines, overflow handling  
+✅ **Lightweight**: Zero external dependencies, minimal memory footprint  
+
 ## Limitations
 
 This package is designed for simple HTML text styling. It does not support:
 - Nested tags
-- Attributes (like `class`, `style`, or `href`)
+- Complex attributes (except `href` for links)
 - Complex HTML structures (tables, lists, etc.)
 - Images or other media
 - CSS styling
+- JavaScript or dynamic content
 
 For complex HTML rendering needs, consider using full-featured packages like `flutter_html`.
 

@@ -1,3 +1,8 @@
+## 1.1.0
+
+ - **FEAT**(html_rich_text): add support for clickable links with onLinkTap callback.
+ - **DOCS**(html_rich_text): update README with link functionality documentation.
+
 ## 1.0.4
 
  - **DOCS**(README): enhance connection section with social media links and acknowledgments.

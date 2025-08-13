@@ -162,6 +162,81 @@ class HtmlRichTextDemo extends StatelessWidget {
                 },
               ),
             ),
+            _buildExample(
+              'Clickable Links',
+              HtmlRichText(
+                'Check out <a href="https://flutter.dev">Flutter</a> and '
+                '<a href="https://dart.dev">Dart</a> for more information.',
+                onLinkTap: (url) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Tapped: $url'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildExample(
+              'Custom Link Styling',
+              HtmlRichText(
+                'Visit our <a href="https://example.com">website</a> for '
+                'more <a href="https://example.com/products">products</a>.',
+                tagStyles: const {
+                  'a': TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.none,
+                  ),
+                },
+                onLinkTap: (url) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Opening: $url'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildExample(
+              'Mixed Tags with Links',
+              HtmlRichText(
+                'This is <b>important</b>: visit <a href="https://flutter.dev">Flutter</a> '
+                'for <i>amazing</i> mobile development!',
+                tagStyles: const {
+                  'b': TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                  'i': TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.purple,
+                  ),
+                },
+                onLinkTap: (url) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Link clicked: $url'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+              ),
+            ),
+            _buildExample(
+              'Non-clickable Styled Links',
+              const HtmlRichText(
+                'This <a href="https://example.com">link</a> is styled but not clickable '
+                'because onLinkTap is not provided.',
+                tagStyles: {
+                  'a': TextStyle(
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w600,
+                  ),
+                },
+              ),
+            ),
           ],
         ),
       ),
