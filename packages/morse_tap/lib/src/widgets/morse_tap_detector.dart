@@ -1,5 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import '../models/haptic_config.dart';
+import '../utils/haptic_utils.dart';
 
 /// A widget that detects Morse code tap patterns and triggers callbacks
 /// when the correct sequence is tapped.
@@ -27,6 +30,7 @@ class MorseTapDetector extends StatefulWidget {
     required this.onCorrectSequence,
     required this.child,
     this.inputTimeout = const Duration(seconds: 10),
+    this.hapticConfig,
     this.onIncorrectSequence,
     this.onInputTimeout,
     this.onSequenceChange,
@@ -48,6 +52,10 @@ class MorseTapDetector extends StatefulWidget {
   /// This resets after each valid input, allowing users to take their time
   /// with long sequences as long as they keep entering characters.
   final Duration inputTimeout;
+
+  /// Haptic feedback configuration
+  /// If null, no haptic feedback will be provided
+  final HapticConfig? hapticConfig;
 
   /// Callback for when an incorrect sequence is detected
   final VoidCallback? onIncorrectSequence;
@@ -90,6 +98,14 @@ class _MorseTapDetectorState extends State<MorseTapDetector> {
   void _startInputTimeout() {
     _timeoutTimer?.cancel();
     _timeoutTimer = Timer(widget.inputTimeout, () {
+      // Trigger timeout haptic feedback
+      if (widget.hapticConfig != null) {
+        HapticUtils.executeFromConfig(
+          widget.hapticConfig,
+          widget.hapticConfig!.timeoutIntensity,
+        );
+      }
+
       _resetSequence();
       widget.onInputTimeout?.call();
     });
@@ -118,18 +134,42 @@ class _MorseTapDetectorState extends State<MorseTapDetector> {
     // Single tap = dot
     _addMorseCharacter('.');
     widget.onDotAdded?.call();
+
+    // Trigger haptic feedback
+    if (widget.hapticConfig != null) {
+      HapticUtils.executeFromConfig(
+        widget.hapticConfig,
+        widget.hapticConfig!.dotIntensity,
+      );
+    }
   }
 
   void _onDoubleTap() {
     // Double tap = dash
     _addMorseCharacter('-');
     widget.onDashAdded?.call();
+
+    // Trigger haptic feedback
+    if (widget.hapticConfig != null) {
+      HapticUtils.executeFromConfig(
+        widget.hapticConfig,
+        widget.hapticConfig!.dashIntensity,
+      );
+    }
   }
 
   void _onLongPress() {
     // Long press = space (letter separator)
     _addMorseCharacter(' ');
     widget.onSpaceAdded?.call();
+
+    // Trigger haptic feedback
+    if (widget.hapticConfig != null) {
+      HapticUtils.executeFromConfig(
+        widget.hapticConfig,
+        widget.hapticConfig!.spaceIntensity,
+      );
+    }
   }
 
   void _checkSequence() {
@@ -139,11 +179,29 @@ class _MorseTapDetectorState extends State<MorseTapDetector> {
     if (currentMorse == expectedMorse) {
       // Correct sequence detected!
       widget.onCorrectSequence();
+
+      // Trigger success haptic feedback
+      if (widget.hapticConfig != null) {
+        HapticUtils.executeFromConfig(
+          widget.hapticConfig,
+          widget.hapticConfig!.correctSequenceIntensity,
+        );
+      }
+
       _resetSequence();
     } else if (currentMorse.length >= expectedMorse.length ||
         !expectedMorse.startsWith(currentMorse)) {
       // Sequence is wrong or too long
       widget.onIncorrectSequence?.call();
+
+      // Trigger error haptic feedback
+      if (widget.hapticConfig != null) {
+        HapticUtils.executeFromConfig(
+          widget.hapticConfig,
+          widget.hapticConfig!.incorrectSequenceIntensity,
+        );
+      }
+
       _resetSequence();
     }
     // Otherwise, continue waiting for more input

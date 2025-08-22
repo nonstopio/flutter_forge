@@ -296,7 +296,6 @@ class _MorseTextInputState extends State<MorseTextInput>
         // Morse preview (optional)
         if (widget.showMorsePreview) ...[
           Container(
-            height: 80,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.grey[50],
@@ -306,6 +305,7 @@ class _MorseTextInputState extends State<MorseTextInput>
               ),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -326,49 +326,47 @@ class _MorseTextInputState extends State<MorseTextInput>
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        Text(
-                          currentMorse.isEmpty
-                              ? 'Tap below to input...'
-                              : currentMorse,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontFamily: 'monospace',
-                            fontWeight: FontWeight.w600,
-                            color: currentMorse.isEmpty
-                                ? Colors.grey[500]
-                                : Colors.black87,
+                const SizedBox(height: 6),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Text(
+                        currentMorse.isEmpty
+                            ? 'Tap below to input...'
+                            : currentMorse,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontFamily: 'monospace',
+                          fontWeight: FontWeight.w600,
+                          color: currentMorse.isEmpty
+                              ? Colors.grey[500]
+                              : Colors.black87,
+                        ),
+                      ),
+                      if (letterPreview.isNotEmpty) ...[
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            border: Border.all(color: Colors.blue[200]!),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            letterPreview,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.blue[700],
+                              fontFamily: 'monospace',
+                            ),
                           ),
                         ),
-                        if (letterPreview.isNotEmpty) ...[
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[50],
-                              border: Border.all(color: Colors.blue[200]!),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              letterPreview,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.blue[700],
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
-                    ),
+                    ],
                   ),
                 ),
               ],
