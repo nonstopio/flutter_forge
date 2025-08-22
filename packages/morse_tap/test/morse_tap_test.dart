@@ -31,27 +31,43 @@ void main() {
 
   group('MorseCodec direct methods', () {
     test('textToMorse handles multiple words', () {
-      expect(MorseCodec.textToMorse('HELLO WORLD'), 
-             '.... . .-.. .-.. --- / .-- --- .-. .-.. -..');
+      expect(
+        MorseCodec.textToMorse('HELLO WORLD'),
+        '.... . .-.. .-.. --- / .-- --- .-. .-.. -..',
+      );
     });
 
     test('morseToText handles multiple words', () {
-      expect(MorseCodec.morseToText('... --- ... / - . ... -'), 
-             'SOS TEST');
+      expect(MorseCodec.morseToText('... --- ... / - . ... -'), 'SOS TEST');
     });
 
     test('getCharacterDuration returns correct durations', () {
-      expect(MorseCodec.getCharacterDuration('.'), 
-             const Duration(milliseconds: 100));
-      expect(MorseCodec.getCharacterDuration('-'), 
-             const Duration(milliseconds: 300));
-      expect(MorseCodec.getCharacterDuration('x'), 
-             const Duration(milliseconds: 0));
+      expect(
+        MorseCodec.getCharacterDuration('.'),
+        const Duration(milliseconds: 100),
+      );
+      expect(
+        MorseCodec.getCharacterDuration('-'),
+        const Duration(milliseconds: 300),
+      );
+      expect(
+        MorseCodec.getCharacterDuration('x'),
+        const Duration(milliseconds: 0),
+      );
     });
 
     test('splitMorseSequence extracts dots and dashes', () {
-      expect(MorseCodec.splitMorseSequence('... --- ...'), 
-             ['.','.','.','-','-','-','.','.','.']);
+      expect(MorseCodec.splitMorseSequence('... --- ...'), [
+        '.',
+        '.',
+        '.',
+        '-',
+        '-',
+        '-',
+        '.',
+        '.',
+        '.',
+      ]);
     });
   });
 }
