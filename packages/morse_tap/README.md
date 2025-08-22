@@ -17,6 +17,8 @@
 
 A Flutter package that provides Morse code input functionality using intuitive gestures. Create interactive Morse code experiences with single taps for dots, double taps for dashes, and long presses for spaces.
 
+![Morse Tap Demo](morse_tap.png)
+
 ## Features
 
 ✨ **MorseTapDetector** - Widget that detects specific Morse code patterns using gestures  
@@ -68,6 +70,10 @@ MorseTapDetector(
   },
   onIncorrectSequence: () {
     print("Wrong pattern, try again");
+  },
+  onSequenceChange: (sequence) {
+    print("Current sequence: $sequence");
+    // Update UI with current input
   },
   onDotAdded: () => print("Dot added"),
   onDashAdded: () => print("Dash added"),
@@ -153,19 +159,19 @@ print(isMorseInput); // false
 
 ### Timing Configuration
 
-Customize tap timing thresholds:
+Customize the input timeout:
 
 ```dart
 MorseTapDetector(
-  expectedMorseCode: "...",
-  dotThreshold: Duration(milliseconds: 150), // Shorter for dots
-  dashThreshold: Duration(milliseconds: 400), // Longer for dashes
-  letterGap: Duration(milliseconds: 600),     // Gap between letters
-  sequenceTimeout: Duration(seconds: 5),     // Reset timeout
-  onTap: () => print("Correct!"),
+  expectedMorseCode: "... --- ...",
+  inputTimeout: Duration(seconds: 5),  // Time allowed for next input
+  onCorrectSequence: () => print("Correct!"),
   child: MyButton(),
 )
 ```
+
+Note: The timeout resets after each input, allowing users to take their time
+with long sequences as long as they keep entering characters.
 
 ### Visual Feedback
 
@@ -214,7 +220,7 @@ final customPattern = "HELP".toMorseCode();
 
 MorseTapDetector(
   expectedMorseCode: customPattern,
-  onTap: () => showDialog(
+  onCorrectSequence: () => showDialog(
     context: context,
     builder: (context) => AlertDialog(
       title: Text("Help Requested!"),
@@ -243,7 +249,7 @@ class MultiPatternDetector extends StatelessWidget {
       children: patterns.entries.map((entry) {
         return MorseTapDetector(
           expectedMorseCode: entry.value,
-          onTap: () => handlePattern(entry.key),
+          onCorrectSequence: () => handlePattern(entry.key),
           child: PatternButton(label: entry.key),
         );
       }).toList(),

@@ -1,7 +1,12 @@
 name: morse_tap
-description: "A Melos-managed project for mono-repo, created using NonStop CLI."
+description: "A Flutter package for Morse code input using intuitive gestures. Detect patterns, convert text in real-time, and create interactive Morse experiences."
 version: 0.0.1
-homepage:
+homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/morse_tap
+repository: https://github.com/nonstopio/flutter_forge
+
+screenshots:
+  - description: Morse Tap package demonstration showing tap detector and text input
+    path: morse_tap.png
 
 environment:
   sdk: ^3.8.1
