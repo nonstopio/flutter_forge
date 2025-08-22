@@ -1,3 +1,8 @@
+## 0.0.3
+
+ - **REFACTOR**(haptic_utils): improve import formatting and ensure newline at EOF.
+ - **FEAT**(morse_tap): add comprehensive platform support for web and desktop.
+
 ## 0.0.2
 
  - **REFACTOR**(morse_tap): update app title and improve layout with ListView.
