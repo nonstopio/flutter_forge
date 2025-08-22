@@ -9,7 +9,7 @@ import '../morse_algorithm.dart';
 /// - Single tap = dot (.)
 /// - Double tap = dash (-)
 /// - Long press = space between letters
-/// 
+///
 /// It converts Morse patterns into readable text automatically or provides raw Morse code.
 class MorseTextInput extends StatefulWidget {
   /// Creates a Morse text input widget.
@@ -132,7 +132,7 @@ class _MorseTextInputState extends State<MorseTextInput>
     // Cancel pending timers and start letter gap timer
     _letterGapTimer?.cancel();
     _wordGapTimer?.cancel();
-    
+
     _letterGapTimer = Timer(widget.letterGap, () {
       _completeLetter();
     });
@@ -148,7 +148,7 @@ class _MorseTextInputState extends State<MorseTextInput>
     // Cancel pending timers and start letter gap timer
     _letterGapTimer?.cancel();
     _wordGapTimer?.cancel();
-    
+
     _letterGapTimer = Timer(widget.letterGap, () {
       _completeLetter();
     });
@@ -159,14 +159,14 @@ class _MorseTextInputState extends State<MorseTextInput>
   void _onLongPress() {
     // Long press = complete current letter and add space
     _spaceController.forward().then((_) => _spaceController.reverse());
-    
+
     _letterGapTimer?.cancel();
     _wordGapTimer?.cancel();
-    
+
     if (_currentLetter.isNotEmpty) {
       _completeLetter();
     }
-    
+
     // Force word completion after a short delay to allow letter to process
     Timer(const Duration(milliseconds: 100), () {
       _completeWord();
@@ -310,8 +310,11 @@ class _MorseTextInputState extends State<MorseTextInput>
               children: [
                 Row(
                   children: [
-                    Icon(Icons.radio_button_checked, 
-                         size: 16, color: Colors.blue[600]),
+                    Icon(
+                      Icons.radio_button_checked,
+                      size: 16,
+                      color: Colors.blue[600],
+                    ),
                     const SizedBox(width: 6),
                     Text(
                       'Morse Code:',
@@ -330,13 +333,15 @@ class _MorseTextInputState extends State<MorseTextInput>
                     child: Row(
                       children: [
                         Text(
-                          currentMorse.isEmpty ? 'Tap below to input...' : currentMorse,
+                          currentMorse.isEmpty
+                              ? 'Tap below to input...'
+                              : currentMorse,
                           style: TextStyle(
                             fontSize: 16,
                             fontFamily: 'monospace',
                             fontWeight: FontWeight.w600,
-                            color: currentMorse.isEmpty 
-                                ? Colors.grey[500] 
+                            color: currentMorse.isEmpty
+                                ? Colors.grey[500]
                                 : Colors.black87,
                           ),
                         ),
@@ -344,7 +349,9 @@ class _MorseTextInputState extends State<MorseTextInput>
                           const SizedBox(width: 12),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.blue[50],
                               border: Border.all(color: Colors.blue[200]!),
@@ -374,7 +381,8 @@ class _MorseTextInputState extends State<MorseTextInput>
           controller: _internalController,
           readOnly: true,
           maxLines: 3,
-          decoration: widget.decoration ??
+          decoration:
+              widget.decoration ??
               InputDecoration(
                 hintText: widget.autoConvertToText
                     ? 'Converted text will appear here...'
@@ -451,7 +459,7 @@ class _MorseTextInputState extends State<MorseTextInput>
                         ],
                       ),
                     ),
-                    
+
                     // Current letter being typed
                     if (_currentLetter.isNotEmpty)
                       Positioned(
@@ -495,19 +503,31 @@ class _MorseTextInputState extends State<MorseTextInput>
                       const Positioned(
                         bottom: 8,
                         left: 8,
-                        child: Icon(Icons.circle, color: Colors.green, size: 12),
+                        child: Icon(
+                          Icons.circle,
+                          color: Colors.green,
+                          size: 12,
+                        ),
                       ),
                     if (_dashController.isAnimating)
                       const Positioned(
                         bottom: 8,
                         left: 28,
-                        child: Icon(Icons.remove, color: Colors.orange, size: 16),
+                        child: Icon(
+                          Icons.remove,
+                          color: Colors.orange,
+                          size: 16,
+                        ),
                       ),
                     if (_spaceController.isAnimating)
                       const Positioned(
                         bottom: 8,
                         left: 52,
-                        child: Icon(Icons.space_bar, color: Colors.purple, size: 16),
+                        child: Icon(
+                          Icons.space_bar,
+                          color: Colors.purple,
+                          size: 16,
+                        ),
                       ),
                   ],
                 ),
