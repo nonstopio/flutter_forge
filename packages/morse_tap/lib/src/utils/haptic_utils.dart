@@ -1,9 +1,9 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/haptic_config.dart';
 import '../models/haptic_feedback_type.dart';
+import 'platform_utils_io.dart' if (dart.library.html) 'platform_utils_web.dart';
 
 /// Utility class for managing haptic feedback in Morse code widgets.
 ///
@@ -42,7 +42,7 @@ class HapticUtils {
   /// Checks if haptic feedback is supported on the current platform
   static bool get isHapticSupported {
     if (kIsWeb) return false;
-    return Platform.isIOS || Platform.isAndroid;
+    return PlatformUtils.isHapticSupported;
   }
 
   /// Safely executes haptic feedback with error handling
