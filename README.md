@@ -34,7 +34,7 @@ A place where Flutter packages are crafted and built.
 | [![ns_intl_phone_input](https://img.shields.io/pub/v/ns_intl_phone_input.svg?label=ns_intl_phone_input&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/ns_intl_phone_input)     |
 | [![dzod](https://img.shields.io/pub/v/dzod.svg?label=dzod&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/dzod)                                                                 |
 | [![html_rich_text](https://img.shields.io/pub/v/html_rich_text.svg?label=html_rich_text&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/html_rich_text)                         |
-| [![morse_tap](https://img.shields.io/pub/v/morse_tap.svg?label=morse_tap&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/morse_tap)                                               |  
+| [![morse_tap](https://img.shields.io/pub/v/morse_tap.svg?label=morse_tap&logo=dart&color=blue&style=for-the-badge)](https://pub.dev/packages/morse_tap)                                             |  
 
 | Plugins                                                                                                                                                                                     |
 |:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

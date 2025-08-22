@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../models/haptic_config.dart';
 import '../models/haptic_feedback_type.dart';
-import 'platform_utils_io.dart' if (dart.library.html) 'platform_utils_web.dart';
+import 'platform_utils_io.dart'
+    if (dart.library.html) 'platform_utils_web.dart';
 
 /// Utility class for managing haptic feedback in Morse code widgets.
 ///
