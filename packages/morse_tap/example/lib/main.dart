@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morse_tap/morse_tap.dart';
+
 import 'haptic_config_modal.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MorseTapExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Morse Tap Example',
+      title: 'Morse Tap Detector',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       home: const HomePage(),
     );
@@ -205,16 +206,8 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
         children: [
-          MorseTapDetector(
-            expectedMorseCode: '...',
-            onCorrectSequence: () {},
-            child: CircleAvatar(),
-          ),
-          const SizedBox(height: 16),
-
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -443,8 +436,7 @@ class _MorseTextInputExampleState extends State<MorseTextInputExample> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
         children: [
           Card(
             child: Padding(
@@ -573,21 +565,15 @@ class _StringExtensionExampleState extends State<StringExtensionExample> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      padding: const EdgeInsets.all(8.0),
+      child: ListView(
         children: [
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(8.0),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'String Extensions',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
                   Text(
                     'Demonstrates the extension methods available on String for Morse code conversion.',
                   ),
