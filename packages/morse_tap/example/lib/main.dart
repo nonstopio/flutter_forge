@@ -104,6 +104,7 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
   String _currentTarget = 'SOS';
   Color _buttonColor = Colors.blue;
   String _gestureHint = '';
+  String _currentSequence = '';
 
   final Map<String, String> _targets = {
     'SOS': '... --- ...',
@@ -192,6 +193,13 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          MorseTapDetector(
+            expectedMorseCode: '...',
+            onCorrectSequence: () {},
+            child: CircleAvatar(),
+          ),
+          const SizedBox(height: 16),
+
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -221,6 +229,22 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
                       fontFamily: 'monospace',
                     ),
                   ),
+                  if (_currentSequence.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      'Current: $_currentSequence',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'monospace',
+                        color:
+                            _targets[_currentTarget]!.startsWith(
+                              _currentSequence,
+                            )
+                            ? Colors.green
+                            : Colors.orange,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -247,6 +271,7 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
                               'Use gestures to input $target (${_targets[target]})';
                           _buttonColor = Colors.blue;
                           _gestureHint = '';
+                          _currentSequence = '';
                         });
                       }
                     },
@@ -264,11 +289,15 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
               expectedMorseCode: _targets[_currentTarget]!,
               onCorrectSequence: _onCorrectSequence,
               onIncorrectSequence: _onIncorrectSequence,
-              onSequenceTimeout: _onTimeout,
+              onInputTimeout: _onTimeout,
+              onSequenceChange: (sequence) {
+                setState(() {
+                  _currentSequence = sequence;
+                });
+              },
               onDotAdded: _onDotAdded,
               onDashAdded: _onDashAdded,
               onSpaceAdded: _onSpaceAdded,
-              feedbackColor: _buttonColor,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
