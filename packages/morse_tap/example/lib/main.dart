@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:morse_tap/morse_tap.dart';
+import 'haptic_config_modal.dart';
 
 void main() {
   runApp(const MorseTapExampleApp());
@@ -105,6 +106,7 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
   Color _buttonColor = Colors.blue;
   String _gestureHint = '';
   String _currentSequence = '';
+  HapticConfig _hapticConfig = HapticConfig.defaultConfig;
 
   final Map<String, String> _targets = {
     'SOS': '... --- ...',
@@ -184,6 +186,19 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
     setState(() {
       _gestureHint = 'Added space';
     });
+  }
+
+  void _showHapticConfig() async {
+    final newConfig = await HapticConfigModal.show(
+      context,
+      initialConfig: _hapticConfig,
+    );
+
+    if (newConfig != null) {
+      setState(() {
+        _hapticConfig = newConfig;
+      });
+    }
   }
 
   @override
@@ -281,12 +296,30 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
             ),
           ),
 
+          const SizedBox(height: 16),
+
+          // Haptic configuration button
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _showHapticConfig,
+                  icon: const Icon(Icons.vibration),
+                  label: Text(
+                    'Haptic Settings ${_hapticConfig.enabled ? "(Enabled)" : "(Disabled)"}',
+                  ),
+                ),
+              ),
+            ],
+          ),
+
           const SizedBox(height: 24),
 
           // Morse tap detector
           Expanded(
             child: MorseTapDetector(
               expectedMorseCode: _targets[_currentTarget]!,
+              hapticConfig: _hapticConfig,
               onCorrectSequence: _onCorrectSequence,
               onIncorrectSequence: _onIncorrectSequence,
               onInputTimeout: _onTimeout,

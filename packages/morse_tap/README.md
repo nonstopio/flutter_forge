@@ -25,35 +25,8 @@ A Flutter package that provides Morse code input functionality using intuitive g
 🎯 **MorseTextInput** - Real-time gesture-to-text conversion widget  
 🔄 **String Extensions** - Convert any string to/from Morse code  
 ⚡ **Fast Algorithm** - Efficient Morse code conversion with comprehensive character support  
-🎨 **Intuitive Gestures** - Single tap = dot, double tap = dash, long press = space
-
-## Requirements
-
-- Flutter >=3.19.0
-- Dart >=3.3.0 <4.0.0
-
-## Installation
-
-Add to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  morse_tap: ^0.0.1
-```
-
-Or install via command line:
-
-```bash
-flutter pub add morse_tap
-```
-
-## Quick Start
-
-Import the package:
-
-```dart
-import 'package:morse_tap/morse_tap.dart';
-```
+🎨 **Intuitive Gestures** - Single tap = dot, double tap = dash, long press = space  
+📳 **Haptic Feedback** - Customizable tactile feedback for enhanced user experience
 
 ## Usage Examples
 
@@ -173,6 +146,36 @@ MorseTapDetector(
 Note: The timeout resets after each input, allowing users to take their time
 with long sequences as long as they keep entering characters.
 
+### Haptic Feedback
+
+Provide tactile feedback for gestures:
+
+```dart
+MorseTapDetector(
+  expectedMorseCode: "... --- ...",
+  hapticConfig: HapticConfig.defaultConfig,  // Enable haptic feedback
+  onCorrectSequence: () => print("Correct!"),
+  child: MyButton(),
+)
+```
+
+**Preset configurations:**
+```dart
+// Different preset options
+HapticConfig.disabled       // No haptic feedback
+HapticConfig.light          // Subtle feedback
+HapticConfig.defaultConfig  // Moderate feedback  
+HapticConfig.strong         // Intense feedback
+
+// Custom configuration
+HapticConfig(
+  enabled: true,
+  dotIntensity: HapticFeedbackType.lightImpact,
+  dashIntensity: HapticFeedbackType.mediumImpact,
+  correctSequenceIntensity: HapticFeedbackType.heavyImpact,
+)
+```
+
 ### Visual Feedback
 
 Control visual feedback options:
@@ -193,19 +196,6 @@ The package supports:
 - **Letters**: A-Z (26 letters)
 - **Numbers**: 0-9 (10 digits)  
 - **Punctuation**: . , ? ' ! / ( ) & : ; = + - _ " $ @
-
-## Morse Code Reference
-
-| Character | Morse Code |
-|-----------|------------|
-| A | .- |
-| B | -... |
-| C | -.-. |
-| S | ... |
-| O | --- |
-| 0 | ----- |
-| 1 | .---- |
-| 9 | ----. |
 
 *See the complete mapping in `MorseCodec` class documentation.*
 
@@ -231,37 +221,6 @@ MorseTapDetector(
 )
 ```
 
-### Multiple Pattern Detection
-
-Handle different patterns:
-
-```dart
-class MultiPatternDetector extends StatelessWidget {
-  final Map<String, String> patterns = {
-    'SOS': '... --- ...',
-    'OK': '--- -.-',
-    'YES': '-.-- . ...',
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: patterns.entries.map((entry) {
-        return MorseTapDetector(
-          expectedMorseCode: entry.value,
-          onCorrectSequence: () => handlePattern(entry.key),
-          child: PatternButton(label: entry.key),
-        );
-      }).toList(),
-    );
-  }
-
-  void handlePattern(String pattern) {
-    print("Pattern $pattern detected!");
-  }
-}
-```
-
 ## Contributing
 
 We welcome contributions in various forms:
@@ -272,18 +231,8 @@ We welcome contributions in various forms:
 - Improving documentation, as it is essential.
 - Sending Pull Requests is greatly appreciated!
 
-A big thank you to all our contributors! 🙌
-
-<br></br>
-<div align="center">
-  <a href="https://github.com/nonstopio/flutter_forge/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=nonstopio/flutter_forge"  alt="contributors"/>
-  </a>
-</div>
-
 ---
 
-## 🔗 Connect with NonStop
 
 <div align="center">
 
@@ -301,7 +250,7 @@ A big thank you to all our contributors! 🙌
 
 <div align="center">
 
->  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
+  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
 
@@ -311,6 +260,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+ 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
