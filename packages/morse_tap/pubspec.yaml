@@ -1,6 +1,6 @@
 name: morse_tap
 description: "A Flutter package for Morse code input using intuitive gestures. Detect patterns, convert text in real-time, and create interactive Morse experiences."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/nonstopio/flutter_forge/tree/main/packages/morse_tap
 repository: https://github.com/nonstopio/flutter_forge
 
