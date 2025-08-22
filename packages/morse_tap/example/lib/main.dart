@@ -313,7 +313,7 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
             ],
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Morse tap detector
           Expanded(
@@ -344,24 +344,26 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
                     ),
                   ],
                 ),
-                child: const Center(
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.touch_app, size: 48, color: Colors.white),
-                      SizedBox(height: 12),
-                      Text(
+                      Icon(Icons.touch_app, size: 40, color: Colors.white),
+                      const SizedBox(height: 8),
+                      const Text(
                         'TAP HERE',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
+                      const SizedBox(height: 6),
+                      const Text(
                         '1 tap = • | 2 taps = — | Hold = space',
-                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -370,38 +372,39 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
             ),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
 
           // Status message
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.grey[100],
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   _message,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 15),
                 ),
                 if (_gestureHint.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
+                      horizontal: 10,
+                      vertical: 3,
                     ),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       border: Border.all(color: Colors.blue[200]!),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       _gestureHint,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         color: Colors.blue[700],
                         fontWeight: FontWeight.w500,
                       ),
