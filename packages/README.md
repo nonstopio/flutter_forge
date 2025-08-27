@@ -23,3 +23,4 @@
 | ns_intl_phone_input  | [![ns_intl_phone_input pub.dev badge](https://img.shields.io/pub/v/ns_intl_phone_input.svg)](https://pub.dev/packages/ns_intl_phone_input)    | [`🔗`](ns_intl_phone_input/README.md)  |
 | html_rich_text       | [![html_rich_text pub.dev badge](https://img.shields.io/pub/v/html_rich_text.svg)](https://pub.dev/packages/html_rich_text)                   | [`🔗`](html_rich_text/README.md)       |
 | dzod                 | [![dzod pub.dev badge](https://img.shields.io/pub/v/dzod.svg)](https://pub.dev/packages/dzod)                                                 | [`🔗`](dzod/README.md)                 |
+| morse_tap            | [![morse_tap pub.dev badge](https://img.shields.io/pub/v/morse_tap.svg)](https://pub.dev/packages/morse_tap)                                  | [`🔗`](morse_tap/README.md)            |
