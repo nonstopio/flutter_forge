@@ -1,0 +1,157 @@
+# Package Configuration
+# This file defines all packages/plugins and their specific variables for README syncing.
+
+packages:
+  - name: connectivity_wrapper
+    path: packages/connectivity_wrapper
+    repo_path: packages/connectivity_wrapper
+    import_path: connectivity_wrapper
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: dzod
+    path: packages/dzod
+    repo_path: packages/dzod
+    import_path: dzod
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: timer_button
+    path: packages/timer_button
+    repo_path: packages/timer_button
+    import_path: timer_button
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: ns_intl_phone_input
+    path: packages/ns_intl_phone_input
+    repo_path: packages/ns_intl_phone_input
+    import_path: ns_intl_phone_input
+    author_name: Rajan Metaliya
+    github_username: rajan-nonstopio
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: html_rich_text
+    path: packages/html_rich_text
+    repo_path: packages/html_rich_text
+    import_path: html_rich_text
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: morse_tap
+    path: packages/morse_tap
+    repo_path: packages/morse_tap
+    import_path: morse_tap
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: ns_utils
+    path: packages/ns_utils
+    repo_path: packages/ns_utils
+    import_path: ns_utils/src
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+  - name: ns_firebase_utils
+    path: packages/ns_firebase_utils
+    repo_path: packages/ns_firebase_utils
+    import_path: ns_firebase_utils/src
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by
+
+plugins:
+  - name: contact_permission
+    path: plugins/contact_permission
+    repo_path: plugins/contact_permission
+    import_path: contact_permission
+    author_name: Ajay Kumar
+    github_username: ProjectAJ14
+    sections:
+      - nonstop-header
+      - badges
+      - getting-started
+      - import-package
+      - contributing
+      - connect
+      - star-footer
+      - license
+      - founded-by

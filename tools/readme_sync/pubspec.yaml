@@ -1,0 +1,11 @@
+name: readme_sync
+description: Tool to synchronize standardized README sections across packages
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  yaml: ^3.1.0
+  path: ^1.8.0
