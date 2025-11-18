@@ -1,3 +1,4 @@
+<!-- BEGIN:nonstop-header -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -9,33 +10,38 @@
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
+<!-- END:nonstop-header -->
 
 # ns_firebase_utils
 
+<!-- BEGIN:badges -->
 [![Build Status](https://img.shields.io/pub/v/ns_firebase_utils.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_firebase_utils)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 🚀 This package provides a comprehensive set of methods and extensions for Firebase, simplifying its integration into your Flutter projects while also adding valuable functionality.
 
+<!-- BEGIN:getting-started -->
 ## Getting Started
 
-1. Open your `pubspec.yaml` file.
-2. Add `ns_firebase_utils` as a dependency, replacing `[version]` with the latest release:
+1. Open your project's `pubspec.yaml` file.
+2. Add the `ns_firebase_utils` package to your dependencies, replacing `[version]` with the latest version:
+   ```yaml
+   dependencies:
+     flutter:
+       sdk: flutter
+     ns_firebase_utils: ^[version]
+   ```
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
 
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  ns_firebase_utils: ^[version]
-```
-
-3. Run `flutter pub get` or click the "Packages get" button in your IDE.
-
-## Importing the Package
+<!-- BEGIN:import-package -->
+## Import the Package
 
 ```dart
 import 'package:ns_firebase_utils/src.dart';
 ```
+<!-- END:import-package -->
 
 ## What's Included
 
@@ -57,6 +63,7 @@ This package offers a single plugin that conveniently adds all necessary Firebas
 
 Additionally, it provides a powerful set of methods to accelerate your development process.
 
+<!-- BEGIN:contributing -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -68,37 +75,38 @@ We welcome contributions in various forms:
 - Sending Pull Requests is greatly appreciated!
 
 A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
 
----
-
+<!-- BEGIN:connect -->
 ## 🔗 Connect with NonStop
 
-<div align="center">
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
 
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
-
----
-
+<!-- BEGIN:star-footer -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
+<!-- BEGIN:license -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
+<!-- END:founded-by -->

@@ -1,3 +1,4 @@
+<!-- BEGIN:nonstop-header -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -9,11 +10,14 @@
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
+<!-- END:nonstop-header -->
 
 # connectivity_wrapper
 
+<!-- BEGIN:badges -->
 [![Build Status](https://img.shields.io/pub/v/connectivity_wrapper.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/connectivity_wrapper)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
 
@@ -28,13 +32,31 @@ This plugin allows Flutter apps provide feedback on your app when it's not conne
 - Android Gradle Plugin >=8.3.0
 - Gradle wrapper >=8.4
 
-## Usage
+<!-- BEGIN:getting-started -->
+## Getting Started
+
+1. Open your project's `pubspec.yaml` file.
+2. Add the `connectivity_wrapper` package to your dependencies, replacing `[version]` with the latest version:
+   ```yaml
+   dependencies:
+     flutter:
+       sdk: flutter
+     connectivity_wrapper: ^[version]
+   ```
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
+
+<!-- BEGIN:import-package -->
+## Import the Package
 
 ```dart
 import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 ```
+<!-- END:import-package -->
 
-Check if device is connected to internet or not 
+## Usage
+
+Check if device is connected to internet or not
 
 ```dart
 ...
@@ -191,7 +213,7 @@ body: ConnectivityWidgetWrapper(
 <img src="https://cdn-images-1.medium.com/max/600/1*OeVKSyfV2X9VhupXRdwb2g.png" alt="Image 3" style="width: 280px; object-fit: cover; aspect-ratio: 9/16;">
 
 ## Custom Alignment and Disable User Interaction
- 
+
 
 ```dart
 ...
@@ -290,6 +312,9 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
 whether you can reliably make a network connection. Always guard your app code
 against timeouts and errors that might come from the network layer.
 
+---
+
+<!-- BEGIN:contributing -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -301,6 +326,7 @@ We welcome contributions in various forms:
 - Sending Pull Requests is greatly appreciated!
 
 A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
 
 <br></br>
 <div align="center">
@@ -311,34 +337,38 @@ A big thank you to all our contributors! 🙌
 
 ---
 
+<!-- BEGIN:connect -->
 ## 🔗 Connect with NonStop
 
-<div align="center">
-
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
 
 ---
 
+<!-- BEGIN:star-footer -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
+<!-- BEGIN:license -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
+<!-- END:founded-by -->

@@ -1,3 +1,4 @@
+<!-- BEGIN:nonstop-header -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -9,11 +10,14 @@
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
+<!-- END:nonstop-header -->
 
 # morse_tap
 
+<!-- BEGIN:badges -->
 [![Build Status](https://img.shields.io/pub/v/morse_tap.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/morse_tap)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 A Flutter package that provides Morse code input functionality using intuitive gestures. Create interactive Morse code experiences with single taps for dots, double taps for dashes, and long presses for spaces.
 
@@ -21,12 +25,34 @@ A Flutter package that provides Morse code input functionality using intuitive g
 
 ## Features
 
-✨ **MorseTapDetector** - Widget that detects specific Morse code patterns using gestures  
-🎯 **MorseTextInput** - Real-time gesture-to-text conversion widget  
-🔄 **String Extensions** - Convert any string to/from Morse code  
-⚡ **Fast Algorithm** - Efficient Morse code conversion with comprehensive character support  
-🎨 **Intuitive Gestures** - Single tap = dot, double tap = dash, long press = space  
+✨ **MorseTapDetector** - Widget that detects specific Morse code patterns using gestures
+🎯 **MorseTextInput** - Real-time gesture-to-text conversion widget
+🔄 **String Extensions** - Convert any string to/from Morse code
+⚡ **Fast Algorithm** - Efficient Morse code conversion with comprehensive character support
+🎨 **Intuitive Gestures** - Single tap = dot, double tap = dash, long press = space
 📳 **Haptic Feedback** - Customizable tactile feedback for enhanced user experience
+
+<!-- BEGIN:getting-started -->
+## Getting Started
+
+1. Open your project's `pubspec.yaml` file.
+2. Add the `morse_tap` package to your dependencies, replacing `[version]` with the latest version:
+   ```yaml
+   dependencies:
+     flutter:
+       sdk: flutter
+     morse_tap: ^[version]
+   ```
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
+
+<!-- BEGIN:import-package -->
+## Import the Package
+
+```dart
+import 'package:morse_tap/morse_tap.dart';
+```
+<!-- END:import-package -->
 
 ## Usage Examples
 
@@ -221,6 +247,7 @@ MorseTapDetector(
 )
 ```
 
+<!-- BEGIN:contributing -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -231,35 +258,39 @@ We welcome contributions in various forms:
 - Improving documentation, as it is essential.
 - Sending Pull Requests is greatly appreciated!
 
----
+A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
 
+<!-- BEGIN:connect -->
+## 🔗 Connect with NonStop
 
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
+
+<!-- BEGIN:star-footer -->
 <div align="center">
 
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
+>  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
----
-
-<div align="center">
-
-  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
-
-</div>
-
+<!-- BEGIN:license -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by -->
 <div align="center">
 
- 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
+<!-- END:founded-by -->
