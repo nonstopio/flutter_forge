@@ -1,4 +1,4 @@
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -18,17 +18,9 @@
   <strong>⚡ Enterprise-grade Dart schema validation library</strong>
 </p>
 
-<!-- BEGIN:badges -->
-<p align="center">
-  <a href="https://pub.dev/packages/dzod"><img src="https://img.shields.io/pub/v/dzod.svg?label=dzod&logo=dart&color=blue&style=for-the-badge" alt="pub package"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg?style=for-the-badge" alt="License"></a>
-  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-Ready-02569B.svg?style=for-the-badge&logo=flutter" alt="Flutter"></a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Test_Coverage-99.3%25-darkgreen.svg?style=for-the-badge" alt="Test Coverage">
-  <img src="https://img.shields.io/badge/Tests-1588+-blue.svg?style=for-the-badge" alt="Tests">
-</p>
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
+[![Build Status](https://img.shields.io/pub/v/dzod.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
 
 ---
@@ -45,7 +37,7 @@ Dzod is an **enterprise-grade** Dart schema validation library heavily inspired 
 
 ---
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
@@ -59,7 +51,7 @@ Dzod is an **enterprise-grade** Dart schema validation library heavily inspired 
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
@@ -1069,7 +1061,7 @@ for (final entry in userSchema.shape.entries) {
 
 ---
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -1083,7 +1075,7 @@ We welcome contributions in various forms:
 A big thank you to all our contributors! 🙌
 <!-- END:contributing -->
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
 <p align="center">
@@ -1095,7 +1087,7 @@ A big thank you to all our contributors! 🙌
 </p>
 <!-- END:connect -->
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
@@ -1103,13 +1095,13 @@ A big thank you to all our contributors! 🙌
 </div>
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**

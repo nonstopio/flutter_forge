@@ -1,4 +1,4 @@
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -14,7 +14,7 @@
 
 # Timer Button
 
-<!-- BEGIN:badges -->
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [![Build Status](https://img.shields.io/pub/v/timer_button.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
@@ -28,12 +28,11 @@ specified time delay.
 
 A customizable button widget capable of activation after a designated time interval.
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
-2. Add the `timer_button` package to your dependencies, replacing `[version]` with the latest
-   version:
+2. Add the `timer_button` package to your dependencies, replacing `[version]` with the latest version:
    ```yaml
    dependencies:
      flutter:
@@ -43,7 +42,7 @@ A customizable button widget capable of activation after a designated time inter
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
@@ -99,7 +98,7 @@ function:
 
 ---
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -115,7 +114,7 @@ A big thank you to all our contributors! 🙌
 
 ---
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
 <p align="center">
@@ -129,7 +128,7 @@ A big thank you to all our contributors! 🙌
 
 ---
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
@@ -137,13 +136,13 @@ A big thank you to all our contributors! 🙌
 </div>
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**

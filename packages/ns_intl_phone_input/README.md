@@ -1,4 +1,4 @@
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -14,13 +14,9 @@
 
 # Flutter Phone Validation Package by Nonstop IO
 
-<!-- BEGIN:badges -->
-<p align="center">
-<a href="https://pub.dev/packages/ns_intl_phone_input"><img src="https://img.shields.io/pub/v/ns_intl_phone_input.svg" alt="Pub"></a>
-<a href="https://codecov.io/gh/Rajan-Metaliya/ns_intl_phone_input" >
- <img src="https://codecov.io/gh/Rajan-Metaliya/ns_intl_phone_input/graph/badge.svg?token=COLM0SJLJA"  alt="codecov"/>
- </a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
+[![Build Status](https://img.shields.io/pub/v/ns_intl_phone_input.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
 
 
@@ -48,7 +44,7 @@ The Flutter Phone Validation Package by Nonstop IO is a versatile and easy-to-us
 
 - **Support for area codes of country:** The package provides support for area codes within countries. Users can input phone numbers with area codes, and the package takes this into consideration during validation. This feature enhances the package's flexibility and applicability to regions where area codes are an integral part of phone numbers.
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
@@ -62,7 +58,7 @@ The Flutter Phone Validation Package by Nonstop IO is a versatile and easy-to-us
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
@@ -213,7 +209,7 @@ Thank you for choosing the Flutter Phone Validation Package by Nonstop IO. Happy
 
 ---
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -227,7 +223,7 @@ We welcome contributions in various forms:
 A big thank you to all our contributors! 🙌
 <!-- END:contributing -->
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
 <p align="center">
@@ -239,7 +235,7 @@ A big thank you to all our contributors! 🙌
 </p>
 <!-- END:connect -->
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
@@ -247,13 +243,13 @@ A big thank you to all our contributors! 🙌
 </div>
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Rajan Metaliya](https://github.com/rajan-nonstopio) 🎉**

@@ -1,4 +1,4 @@
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -14,7 +14,7 @@
 
 # HTML Rich Text
 
-<!-- BEGIN:badges -->
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [![Build Status](https://img.shields.io/pub/v/html_rich_text.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/html_rich_text)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
@@ -36,7 +36,7 @@ HTML Rich Text is an ultra-lightweight solution for parsing and displaying HTML-
 - **O(n) Performance**: Single-pass parsing algorithm for optimal performance
 - **Tree-Shaking Friendly**: Unused code is automatically removed during compilation
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
@@ -50,7 +50,7 @@ HTML Rich Text is an ultra-lightweight solution for parsing and displaying HTML-
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
@@ -208,7 +208,7 @@ This package is designed for simple HTML text styling. It does not support:
 
 For complex HTML rendering needs, consider using full-featured packages like `flutter_html`.
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -222,7 +222,7 @@ We welcome contributions in various forms:
 A big thank you to all our contributors! 🙌
 <!-- END:contributing -->
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
 <p align="center">
@@ -234,7 +234,7 @@ A big thank you to all our contributors! 🙌
 </p>
 <!-- END:connect -->
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
@@ -242,13 +242,13 @@ A big thank you to all our contributors! 🙌
 </div>
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**

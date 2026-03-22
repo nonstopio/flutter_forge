@@ -1,4 +1,4 @@
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -14,7 +14,7 @@
 
 # contact_permission
 
-<!-- BEGIN:badges -->
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [![Build Status](https://img.shields.io/pub/v/contact_permission.svg)](https://github.com/nonstopio/flutter_forge/tree/main/plugins/contact_permission)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
@@ -37,7 +37,7 @@ A plugin for Flutter that requests and verifies contact permissions.
 > on many devices. 
 >This predicament led to the development of this package.
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
@@ -51,7 +51,7 @@ A plugin for Flutter that requests and verifies contact permissions.
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
@@ -106,7 +106,7 @@ import 'package:contact_permission/contact_permission.dart';
 
 
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
@@ -120,7 +120,7 @@ We welcome contributions in various forms:
 A big thank you to all our contributors! 🙌
 <!-- END:contributing -->
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
 <p align="center">
@@ -132,7 +132,7 @@ A big thank you to all our contributors! 🙌
 </p>
 <!-- END:connect -->
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
@@ -140,13 +140,13 @@ A big thank you to all our contributors! 🙌
 </div>
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**

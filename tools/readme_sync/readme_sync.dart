@@ -263,10 +263,16 @@ class ReadmeSyncer {
     }
   }
 
+  static const _markerWarning =
+      'auto-generated, do not edit. Run `melos sync:readme` to update';
+
+  String _beginMarker(String sectionId) =>
+      '<!-- BEGIN:$sectionId — $_markerWarning -->';
+
   bool _hasMarkers(String content, String sectionId) {
-    final beginMarker = '<!-- BEGIN:$sectionId -->';
+    final hasBegin = content.contains('<!-- BEGIN:$sectionId');
     final endMarker = '<!-- END:$sectionId -->';
-    return content.contains(beginMarker) && content.contains(endMarker);
+    return hasBegin && content.contains(endMarker);
   }
 
   String _renderTemplate(SectionTemplate template, PackageConfig package) {
@@ -289,17 +295,20 @@ class ReadmeSyncer {
   }
 
   String _replaceSectionContent(String readme, String sectionId, String newContent) {
-    final beginMarker = '<!-- BEGIN:$sectionId -->';
+    final beginPrefix = '<!-- BEGIN:$sectionId';
     final endMarker = '<!-- END:$sectionId -->';
 
-    final beginIndex = readme.indexOf(beginMarker);
+    final beginIndex = readme.indexOf(beginPrefix);
     final endIndex = readme.indexOf(endMarker);
 
     if (beginIndex == -1 || endIndex == -1) {
       return readme;
     }
 
-    final before = readme.substring(0, beginIndex + beginMarker.length);
+    // Find the end of the BEGIN marker line (closing -->)
+    final beginLineEnd = readme.indexOf('-->', beginIndex) + 3;
+
+    final before = readme.substring(0, beginIndex) + _beginMarker(sectionId);
     final after = readme.substring(endIndex);
 
     return '$before\n$newContent\n$after';

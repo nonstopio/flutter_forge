@@ -40,13 +40,13 @@ tools/readme_sync/
 READMEs use HTML comments to mark managed sections:
 
 ```markdown
-<!-- BEGIN:section-id -->
+<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [This content will be managed by the sync tool]
 <!-- END:section-id -->
 
 [Package-specific content here - never touched by the tool]
 
-<!-- BEGIN:another-section -->
+<!-- BEGIN:another-section — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [Another managed section]
 <!-- END:another-section -->
 ```
@@ -188,7 +188,7 @@ packages:
 In your package's README.md, add markers around sections you want managed:
 
 ```markdown
-<!-- BEGIN:nonstop-header -->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   ... existing content ...
 </p>
@@ -196,18 +196,18 @@ In your package's README.md, add markers around sections you want managed:
 
 # my_new_package
 
-<!-- BEGIN:badges -->
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [![Build Status]...]
 <!-- END:badges -->
 
 Your package description here...
 
-<!-- BEGIN:getting-started -->
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 ...
 <!-- END:getting-started -->
 
-<!-- BEGIN:import-package -->
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 ...
 <!-- END:import-package -->
@@ -216,27 +216,27 @@ Your package description here...
 
 [Your package-specific content - never touched]
 
-<!-- BEGIN:contributing -->
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 ...
 <!-- END:contributing -->
 
-<!-- BEGIN:connect -->
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 ...
 <!-- END:connect -->
 
-<!-- BEGIN:star-footer -->
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 ...
 <!-- END:star-footer -->
 
-<!-- BEGIN:license -->
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 ...
 <!-- END:license -->
 
-<!-- BEGIN:founded-by -->
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 ...
 <!-- END:founded-by -->
@@ -318,7 +318,7 @@ dart run tools/readme_sync/readme_sync.dart --validate
 
 **Solution**: Add the markers manually:
 ```markdown
-<!-- BEGIN:section-id -->
+<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [existing content]
 <!-- END:section-id -->
 ```
@@ -334,7 +334,7 @@ dart run tools/readme_sync/readme_sync.dart --validate
 **Problem**: Content not updating after sync.
 
 **Solution**:
-1. Check markers are exact: `<!-- BEGIN:section-id -->` (case-sensitive)
+1. Check markers are exact: `<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->` (case-sensitive)
 2. Ensure no extra spaces in marker comments
 3. Run with `--verbose` to see what's happening
 4. Validate with `--validate` flag
