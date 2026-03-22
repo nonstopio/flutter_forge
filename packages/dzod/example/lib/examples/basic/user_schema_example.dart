@@ -178,7 +178,7 @@ class _UserSchemaExampleState extends State<UserSchemaExample> {
 
             // Role Dropdown
             DropdownButtonFormField<String>(
-              value: _selectedRole,
+              initialValue: _selectedRole,
               onChanged: (value) {
                 setState(() {
                   _selectedRole = value!;

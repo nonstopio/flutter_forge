@@ -187,7 +187,7 @@ class _AuthenticationSchemaExampleState
         return Column(
           children: [
             DropdownButtonFormField<String>(
-              value: _providerController.text,
+              initialValue: _providerController.text,
               onChanged: (value) {
                 setState(() {
                   _providerController.text = value!;
@@ -309,7 +309,7 @@ class _AuthenticationSchemaExampleState
           children: [
             // Auth method selector
             DropdownButtonFormField<String>(
-              value: _selectedMethod,
+              initialValue: _selectedMethod,
               onChanged: (value) {
                 setState(() {
                   _selectedMethod = value!;

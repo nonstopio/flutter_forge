@@ -160,7 +160,7 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedManipulation,
+                    initialValue: _selectedManipulation,
                     onChanged: (value) {
                       setState(() {
                         _selectedManipulation = value!;

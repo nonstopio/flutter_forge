@@ -198,7 +198,7 @@ class _ErrorCodeSystemExampleState extends State<ErrorCodeSystemExample> {
           children: [
             // Example selector
             DropdownButtonFormField<String>(
-              value: _selectedExample,
+              initialValue: _selectedExample,
               onChanged: (value) {
                 setState(() {
                   _selectedExample = value!;
