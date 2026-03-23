@@ -1,3 +1,4 @@
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -9,11 +10,14 @@
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
+<!-- END:nonstop-header -->
 
 # HTML Rich Text
 
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
 [![Build Status](https://img.shields.io/pub/v/html_rich_text.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/html_rich_text)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 A lightweight Flutter package for rendering HTML-styled text without heavy dependencies. Perfect for simple HTML text rendering with minimal overhead.
 
@@ -32,22 +36,27 @@ HTML Rich Text is an ultra-lightweight solution for parsing and displaying HTML-
 - **O(n) Performance**: Single-pass parsing algorithm for optimal performance
 - **Tree-Shaking Friendly**: Unused code is automatically removed during compilation
 
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
-1. Add `html_rich_text` to your `pubspec.yaml`:
+1. Open your project's `pubspec.yaml` file.
+2. Add the `html_rich_text` package to your dependencies, replacing `[version]` with the latest version:
    ```yaml
    dependencies:
      flutter:
        sdk: flutter
-     html_rich_text: ^1.0.0
+     html_rich_text: ^[version]
    ```
-2. Run `flutter pub get` to fetch the package.
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
 
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Import the Package
 
 ```dart
 import 'package:html_rich_text/html_rich_text.dart';
 ```
+<!-- END:import-package -->
 
 ## Usage
 
@@ -199,45 +208,50 @@ This package is designed for simple HTML text styling. It does not support:
 
 For complex HTML rendering needs, consider using full-featured packages like `flutter_html`.
 
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
 
 We welcome contributions in various forms:
 
-- Proposing new features or enhancements
-- Reporting and fixing bugs
-- Improving documentation
-- Sending Pull Requests
+- Proposing new features or enhancements.
+- Reporting and fixing bugs.
+- Engaging in discussions to help make decisions.
+- Improving documentation, as it is essential.
+- Sending Pull Requests is greatly appreciated!
 
----
+A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
 
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
-<div align="center">
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
 
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
-
----
-
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
+<!-- END:founded-by -->

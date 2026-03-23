@@ -123,7 +123,7 @@ class _IntrospectionExampleState extends State<IntrospectionExample> {
           children: [
             // Schema selector
             DropdownButtonFormField<String>(
-              value: _selectedSchema,
+              initialValue: _selectedSchema,
               onChanged: (value) {
                 setState(() {
                   _selectedSchema = value!;

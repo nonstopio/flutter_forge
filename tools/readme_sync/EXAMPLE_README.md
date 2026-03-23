@@ -1,3 +1,9 @@
+# Example README with Markers
+
+This is an example showing the correct placement of section markers in a package README.
+
+---
+
 <!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
@@ -12,25 +18,33 @@
 </p>
 <!-- END:nonstop-header -->
 
-# ns_firebase_utils
+# example_package
 
 <!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
-[![Build Status](https://img.shields.io/pub/v/ns_firebase_utils.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_firebase_utils)
+[![Build Status](https://img.shields.io/pub/v/example_package.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/example_package)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
 
-🚀 This package provides a comprehensive set of methods and extensions for Firebase, simplifying its integration into your Flutter projects while also adding valuable functionality.
+A brief description of what your package does. This content is NOT managed and can be customized per package.
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+**Note**: This section is package-specific and won't be touched by the sync tool.
 
 <!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
-2. Add the `ns_firebase_utils` package to your dependencies, replacing `[version]` with the latest version:
+2. Add the `example_package` package to your dependencies, replacing `[version]` with the latest version:
    ```yaml
    dependencies:
      flutter:
        sdk: flutter
-     ns_firebase_utils: ^[version]
+     example_package: ^[version]
    ```
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
@@ -39,29 +53,45 @@
 ## Import the Package
 
 ```dart
-import 'package:ns_firebase_utils/ns_firebase_utils/src.dart';
+import 'package:example_package/example_package.dart';
 ```
 <!-- END:import-package -->
 
-## What's Included
+## Usage
 
-This package offers a single plugin that conveniently adds all necessary Firebase dependencies to your project:
+This section contains package-specific usage examples and is NOT managed by the sync tool.
 
-```yaml
-  cloud_firestore: ^5.5.0
-  cloud_functions: ^5.1.5
-  fake_cloud_firestore: ^3.1.0
-  firebase_analytics: ^11.3.5
-  firebase_auth: ^5.3.3
-  firebase_core: ^3.8.0
-  firebase_crashlytics: ^4.1.5
-  firebase_dynamic_links: ^6.0.10
-  firebase_messaging: ^15.1.5
-  firebase_remote_config: ^5.1.5
-  firebase_storage: ^12.3.6
+### Basic Example
+
+```dart
+// Your package-specific example code here
+void main() {
+  // Example usage
+}
 ```
 
-Additionally, it provides a powerful set of methods to accelerate your development process.
+### Advanced Example
+
+```dart
+// More complex examples
+class MyExample {
+  // Implementation
+}
+```
+
+## Configuration
+
+Any package-specific configuration details go here. This content is preserved.
+
+## API Reference
+
+Document your package's API here. This is package-specific content.
+
+## Troubleshooting
+
+Common issues and solutions specific to your package.
+
+---
 
 <!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Contributing
@@ -77,6 +107,8 @@ We welcome contributions in various forms:
 A big thank you to all our contributors! 🙌
 <!-- END:contributing -->
 
+---
+
 <!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
@@ -88,6 +120,8 @@ A big thank you to all our contributors! 🙌
   <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
 </p>
 <!-- END:connect -->
+
+---
 
 <!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
@@ -106,7 +140,61 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
-> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+> 🎉 [Founded by Your Name](https://github.com/yourusername) 🎉**
 
 </div>
 <!-- END:founded-by -->
+
+---
+
+## Key Points About Markers
+
+### ✅ Correct Usage
+
+1. **Exact syntax**: `<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->` and `<!-- END:section-id -->`
+2. **Case-sensitive**: Section IDs must match exactly
+3. **No extra spaces**: Markers must be exact
+4. **Paired properly**: Every BEGIN must have matching END
+5. **Full lines**: Markers should be on their own lines
+
+### ❌ Common Mistakes
+
+```markdown
+<!-- BEGIN: section-id -->          ❌ Extra space after colon
+<!-- Begin:section-id -->            ❌ Wrong capitalization
+<!-- BEGIN:section-id-->             ❌ Missing space before -->
+<!--BEGIN:section-id -->             ❌ Missing space after <!--
+<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->
+Some content
+<!-- END:different-id -->            ❌ Mismatched section IDs
+```
+
+### 📋 Available Section IDs
+
+- `nonstop-header`
+- `badges`
+- `getting-started`
+- `import-package`
+- `contributing`
+- `connect`
+- `star-footer`
+- `license`
+- `founded-by`
+
+### 🎯 Best Practices
+
+1. **Place markers around entire sections** including headings
+2. **Keep package-specific content outside markers**
+3. **Maintain blank lines** between sections for readability
+4. **Use horizontal rules (`---`)** to visually separate sections
+5. **Test with --dry-run** before applying changes
+6. **Validate with --validate** after adding markers
+
+### 🔄 Workflow
+
+1. Copy this example as a starting point
+2. Replace `example_package` with your package name
+3. Add your package-specific content in unmarked sections
+4. Run validation: `dart run tools/readme_sync/readme_sync.dart --validate --package your_package`
+5. Preview changes: `dart run tools/readme_sync/readme_sync.dart --dry-run --package your_package`
+6. Apply sync: `dart run tools/readme_sync/readme_sync.dart --package your_package`

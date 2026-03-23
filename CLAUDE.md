@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `melos exec -- flutter pub upgrade` - Upgrade all packages in the workspace
 - `melos run update_nonstop_cli_version` - Update CLI version across packages
 - `melos run update_nonstop_cli_bundles` - Update CLI bundles
+- `melos sync:readme` - Sync standardized README sections across all packages
 
 ### Just Commands (Alternative)
 - `just upgrade_pub_packages` - Upgrade Flutter and Dart packages across workspace
@@ -25,7 +26,7 @@ This is a Flutter/Dart monorepo managed by Melos with the following structure:
 ### Core Organization
 - **packages/**: Dart packages (libraries, utilities, CLI tools)
 - **plugins/**: Flutter plugins (platform-specific functionality)
-- **tools/**: Maintenance scripts for CLI version and bundle updates
+- **tools/**: Maintenance scripts for CLI version, bundle updates, and README standardization
 
 ### Key Packages
 - **nonstop_cli**: CLI tool with Mason bricks for project generation
@@ -64,6 +65,33 @@ This is a Flutter/Dart monorepo managed by Melos with the following structure:
 - Command structure in `lib/commands/`
 - Includes doctor command for environment validation
 - Template bundles are auto-updated via tools scripts
+
+## README Standardization (readme_sync)
+
+The repository uses an automated tool to maintain consistency across package READMEs.
+
+### How It Works
+- Common sections (headers, contributing, social links, etc.) are defined in centralized templates
+- READMEs use HTML comment markers to identify managed sections: `<!-- BEGIN:section-id -->` and `<!-- END:section-id -->`
+- Only content between markers is synced; package-specific content is preserved
+- Templates support variable substitution (package name, author, repo path, etc.)
+
+### Usage
+- **Sync all packages**: `melos sync:readme`
+- **Sync specific package**: `dart run tools/readme_sync/readme_sync.dart --package package_name`
+- **Preview changes**: `dart run tools/readme_sync/readme_sync.dart --dry-run`
+- **Validate markers**: `dart run tools/readme_sync/readme_sync.dart --validate`
+
+### Configuration Files
+- **templates/sections.yaml**: Centralized section templates
+- **config/packages.yaml**: Package-specific variables and section assignments
+- See `tools/readme_sync/README.md` for detailed documentation
+- See `tools/readme_sync/EXAMPLE_README.md` for marker placement examples
+
+### When to Use
+- After updating common content (contributing guidelines, social links, etc.)
+- When adding a new package to ensure consistent README structure
+- Before releases to ensure all READMEs are synchronized
 
 ## Important Notes
 

@@ -175,7 +175,7 @@ class _ErrorFormattingExampleState extends State<ErrorFormattingExample> {
 
             // Format selector
             DropdownButtonFormField<String>(
-              value: _selectedFormat,
+              initialValue: _selectedFormat,
               onChanged: (value) {
                 setState(() {
                   _selectedFormat = value!;

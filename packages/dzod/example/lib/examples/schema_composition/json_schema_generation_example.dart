@@ -253,7 +253,7 @@ class _JsonSchemaGenerationExampleState
           children: [
             // Schema selector
             DropdownButtonFormField<String>(
-              value: _selectedExample,
+              initialValue: _selectedExample,
               onChanged: (value) {
                 setState(() {
                   _selectedExample = value!;

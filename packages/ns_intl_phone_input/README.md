@@ -1,24 +1,23 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
+<p align="center">
+  <a href="https://nonstopio.com">
+    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+  </a>
+  <h1 align="center">NonStop</h1>
+  <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
+  <p align="center">
+    <a href="https://nonstopio.com/about-us">About</a> |
+    <a href="https://nonstopio.com">Website</a>
+  </p>
+</p>
+<!-- END:nonstop-header -->
 
 # Flutter Phone Validation Package by Nonstop IO
 
-<p align="center">
-<a href="https://pub.dev/packages/ns_intl_phone_input"><img src="https://img.shields.io/pub/v/ns_intl_phone_input.svg" alt="Pub"></a>
-<a href="https://codecov.io/gh/Rajan-Metaliya/ns_intl_phone_input" > 
- <img src="https://codecov.io/gh/Rajan-Metaliya/ns_intl_phone_input/graph/badge.svg?token=COLM0SJLJA"  alt="codecov"/> 
- </a>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
+[![Build Status](https://img.shields.io/pub/v/ns_intl_phone_input.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 
 The Flutter Phone Validation Package by Nonstop IO is a versatile and easy-to-use Flutter package designed to validate phone numbers from more than 200 countries. With this package, users can seamlessly integrate phone number validation into their Flutter applications, enhancing user experience and ensuring data integrity.
@@ -45,28 +44,27 @@ The Flutter Phone Validation Package by Nonstop IO is a versatile and easy-to-us
 
 - **Support for area codes of country:** The package provides support for area codes within countries. Users can input phone numbers with area codes, and the package takes this into consideration during validation. This feature enhances the package's flexibility and applicability to regions where area codes are an integral part of phone numbers.
 
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
-To use the Flutter Phone Validation Package in your project, follow these simple steps:
-
-1. Add the package to your `pubspec.yaml` file:
-
+1. Open your project's `pubspec.yaml` file.
+2. Add the `ns_intl_phone_input` package to your dependencies, replacing `[version]` with the latest version:
    ```yaml
    dependencies:
-     ns_intl_phone_input: ^1.0.0
+     flutter:
+       sdk: flutter
+     ns_intl_phone_input: ^[version]
    ```
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
 
-2. Install the package by running:
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
+## Import the Package
 
-   ```bash
-   flutter pub get
-   ```
-
-3. Import the package in your Dart file:
-
-   ```dart
-   import 'package:ns_intl_phone_input/ns_intl_phone_input.dart';
-   ```
+```dart
+import 'package:ns_intl_phone_input/ns_intl_phone_input.dart';
+```
+<!-- END:import-package -->
 
 4. Implement the `NsIntlPhoneInput` widget in your UI, providing the necessary callbacks and customization options.
 
@@ -211,34 +209,50 @@ Thank you for choosing the Flutter Phone Validation Package by Nonstop IO. Happy
 
 ---
 
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
+## Contributing
+
+We welcome contributions in various forms:
+
+- Proposing new features or enhancements.
+- Reporting and fixing bugs.
+- Engaging in discussions to help make decisions.
+- Improving documentation, as it is essential.
+- Sending Pull Requests is greatly appreciated!
+
+A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
+
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
-<div align="center">
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
 
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
-
----
-
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Rajan Metaliya](https://github.com/rajan-nonstopio) 🎉**
 
 </div>
+<!-- END:founded-by -->

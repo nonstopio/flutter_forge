@@ -328,7 +328,7 @@ class _SecurityBestPracticesExampleState
           children: [
             // Security example selector
             DropdownButtonFormField<String>(
-              value: _selectedExample,
+              initialValue: _selectedExample,
               onChanged: (value) {
                 setState(() {
                   _selectedExample = value!;

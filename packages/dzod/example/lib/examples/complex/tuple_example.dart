@@ -146,7 +146,7 @@ class _TupleExampleState extends State<TupleExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedTupleType,
+                    initialValue: _selectedTupleType,
                     onChanged: (value) {
                       setState(() {
                         _selectedTupleType = value!;

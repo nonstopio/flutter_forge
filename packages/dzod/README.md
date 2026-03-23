@@ -1,3 +1,4 @@
+<!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
     <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
@@ -9,6 +10,7 @@
     <a href="https://nonstopio.com">Website</a>
   </p>
 </p>
+<!-- END:nonstop-header -->
 
 <h1 align="center">🔐 Dzod</h1>
 
@@ -16,16 +18,10 @@
   <strong>⚡ Enterprise-grade Dart schema validation library</strong>
 </p>
 
-<p align="center">
-  <a href="https://pub.dev/packages/dzod"><img src="https://img.shields.io/pub/v/dzod.svg?label=dzod&logo=dart&color=blue&style=for-the-badge" alt="pub package"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-purple.svg?style=for-the-badge" alt="License"></a>
-  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-Ready-02569B.svg?style=for-the-badge&logo=flutter" alt="Flutter"></a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Test_Coverage-99.3%25-darkgreen.svg?style=for-the-badge" alt="Test Coverage">
-  <img src="https://img.shields.io/badge/Tests-1588+-blue.svg?style=for-the-badge" alt="Tests">
-</p>
+<!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
+[![Build Status](https://img.shields.io/pub/v/dzod.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+<!-- END:badges -->
 
 ---
 
@@ -41,12 +37,29 @@ Dzod is an **enterprise-grade** Dart schema validation library heavily inspired 
 
 ---
 
-## 🚀 Quick Start
+<!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
+## Getting Started
 
-```bash
-# Add to your pubspec.yaml
-dart pub add dzod
+1. Open your project's `pubspec.yaml` file.
+2. Add the `dzod` package to your dependencies, replacing `[version]` with the latest version:
+   ```yaml
+   dependencies:
+     flutter:
+       sdk: flutter
+     dzod: ^[version]
+   ```
+3. Run `flutter pub get` to fetch the package.
+<!-- END:getting-started -->
+
+<!-- BEGIN:import-package — auto-generated, do not edit. Run `melos sync:readme` to update -->
+## Import the Package
+
+```dart
+import 'package:dzod/dzod.dart';
 ```
+<!-- END:import-package -->
+
+## 🚀 Quick Start
 
 ### Example 1: Basic User Schema Validation
 
@@ -1048,34 +1061,50 @@ for (final entry in userSchema.shape.entries) {
 
 ---
 
+<!-- BEGIN:contributing — auto-generated, do not edit. Run `melos sync:readme` to update -->
+## Contributing
+
+We welcome contributions in various forms:
+
+- Proposing new features or enhancements.
+- Reporting and fixing bugs.
+- Engaging in discussions to help make decisions.
+- Improving documentation, as it is essential.
+- Sending Pull Requests is greatly appreciated!
+
+A big thank you to all our contributors! 🙌
+<!-- END:contributing -->
+
+<!-- BEGIN:connect — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 🔗 Connect with NonStop
 
-<div align="center">
+<p align="center">
+  <a href="https://www.linkedin.com/company/nonstopio"><img src="https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn"></a>
+  <a href="https://x.com/nonstopio"><img src="https://img.shields.io/badge/-X.com-000000?style=flat-square&logo=X&logoColor=white" alt="X.com"></a>
+  <a href="https://www.instagram.com/nonstopio/"><img src="https://img.shields.io/badge/-Instagram-E4405F?style=flat-square&logo=Instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://www.youtube.com/@nonstopio"><img src="https://img.shields.io/badge/-YouTube-FF0000?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube"></a>
+  <a href="mailto:hello@nonstopio.com"><img src="https://img.shields.io/badge/-Email-D14836?style=flat-square&logo=Gmail&logoColor=white" alt="Email"></a>
+</p>
+<!-- END:connect -->
 
-**Stay connected and get the latest updates!**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/nonstop-io)
-[![X.com](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/NonStopio)
-[![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/nonstopio_technologies/)
-[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@NonStopioTechnology)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:contact@nonstopio.com)
-
-</div>
-
----
-
+<!-- BEGIN:star-footer — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 >  ⭐ Star us on [GitHub](https://github.com/nonstopio/flutter_forge) if this helped you!
 
 </div>
+<!-- END:star-footer -->
 
+<!-- BEGIN:license — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<!-- END:license -->
 
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
 > 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
 
 </div>
+<!-- END:founded-by -->
