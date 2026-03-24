@@ -62,7 +62,6 @@ nonstop create <project-name> [arguments]
 | `--output-directory` | `-o`     | Output directory for the new project                  | Current directory                                                   |
 | `--description`      | `--desc` | Description for the new project                       | "A Melos-managed project for mono-repo, created using NonStop CLI." |
 | `--org-name`         | `--org`  | Organization name for the new project                 | `com.example`                                                       |
-| `--application-id`   |          | Bundle identifier on iOS or application id on Android | `<org-name>.<project-name>`                                         |
 
 #### 📦 Template Options
 

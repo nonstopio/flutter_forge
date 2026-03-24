@@ -96,6 +96,6 @@ The repository uses an automated tool to maintain consistency across package REA
 ## Important Notes
 
 - This is a workspace managed by Melos - always run commands from the root
-- Each package/plugin maintains its own changelog and version
+- Each package/plugin maintains its own changelog and version — **do not manually update CHANGELOG.md or pubspec.yaml versions**; versioning is managed by Melos
 - Use `melos exec` to run commands across all packages
 - The workspace includes both published packages and internal development tools

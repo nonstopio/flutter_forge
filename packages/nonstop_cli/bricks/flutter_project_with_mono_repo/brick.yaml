@@ -17,3 +17,8 @@ vars:
     type: string
     description: Description of the project
     prompt: What is your project's description?
+  org_name:
+    type: string
+    description: Organization name
+    prompt: What is your organization name?
+    default: com.example
