@@ -18,3 +18,12 @@ package-lock.json
 devtools_options.yaml
 .claude/sessions
 full_coverage_test.dart
+
+# Auto-generated Flutter platform folders in example apps (Issue #2)
+# Plugin native code (plugins/*/android/, plugins/*/ios/) is NOT affected
+**/example/android/
+**/example/ios/
+**/example/web/
+**/example/linux/
+**/example/macos/
+**/example/windows/
