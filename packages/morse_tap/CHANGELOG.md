@@ -1,3 +1,9 @@
+## 0.0.4
+
+ - **FIX**: remove test from morse_tap example.
+ - **FEAT**: add auto-generated warnings to managed README section markers.
+ - **FEAT**: add section markers to all package readme files.
+
 ## 0.0.3
 
  - **REFACTOR**(haptic_utils): improve import formatting and ensure newline at EOF.

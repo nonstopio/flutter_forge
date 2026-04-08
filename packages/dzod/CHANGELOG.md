@@ -1,3 +1,9 @@
+## 0.2.1
+
+ - **FIX**: replace deprecated Flutter 3.35 APIs in dzod example app.
+ - **FEAT**: add auto-generated warnings to managed README section markers.
+ - **FEAT**: add section markers to all package readme files.
+
 ## 0.2.0+1
 
  - **DOCS**(README): enhance connection section with social media links and acknowledgments.
