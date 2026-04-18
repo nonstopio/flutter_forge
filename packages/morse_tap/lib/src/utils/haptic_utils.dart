@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meta/meta.dart';
 import '../models/haptic_config.dart';
 import '../models/haptic_feedback_type.dart';
 import 'platform_utils_io.dart'
@@ -11,7 +12,7 @@ import 'platform_utils_io.dart'
 /// Provides safe execution of haptic feedback with platform detection,
 /// error handling, and user-friendly descriptions for haptic types.
 class HapticUtils {
-  HapticUtils._();
+  HapticUtils._(); // coverage:ignore-line
 
   /// Map of haptic feedback types to user-friendly display names
   static final Map<HapticFeedbackType, String> hapticTypeNames = {
@@ -40,9 +41,17 @@ class HapticUtils {
     HapticFeedbackType.vibrate,
   ];
 
+  /// Test-only override for the haptic-support detection. When set to a
+  /// non-null value the platform check is skipped.
+  @visibleForTesting
+  static bool? debugHapticSupportedOverride;
+
   /// Checks if haptic feedback is supported on the current platform
   static bool get isHapticSupported {
-    if (kIsWeb) return false;
+    if (debugHapticSupportedOverride != null) {
+      return debugHapticSupportedOverride!;
+    }
+    if (kIsWeb) return false; // coverage:ignore-line
     return PlatformUtils.isHapticSupported;
   }
 

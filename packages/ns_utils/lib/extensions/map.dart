@@ -105,7 +105,7 @@ extension MapExtensions on Map {
     String data = "{}";
     try {
       data = json.encode(this);
-    } on Exception catch (e, s) {
+    } catch (e, s) {
       errorLogsNS("Error in toJson\n\n *$this* ", e, s);
     }
     return data;
@@ -118,7 +118,7 @@ extension MapExtensions on Map {
     try {
       JsonEncoder encoder = const JsonEncoder.withIndent('  ', toEncodable);
       data = encoder.convert(this);
-    } on Exception catch (e, s) {
+    } catch (e, s) {
       errorLogsNS("Error in toPretty\n\n *$this*", e, s);
     }
     return data;
