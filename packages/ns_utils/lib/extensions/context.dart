@@ -138,7 +138,7 @@ extension ContextExtensions on BuildContext {
   void pop<T>({T? data}) {
     try {
       Navigator.of(this).pop(data);
-    } on Exception catch (e, s) {
+    } catch (e, s) {
       errorLogsNS('pop failed', e, s);
     }
   }

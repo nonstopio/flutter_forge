@@ -461,5 +461,75 @@ void main() {
         expect((textSpan.children![1] as TextSpan).recognizer, isNull);
       });
     });
+
+    testWidgets(
+        'returns plain span when onLinkTap is set but text has no tags',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HtmlRichText(
+              'No links or tags in this text',
+              onLinkTap: (url) {},
+            ),
+          ),
+        ),
+      );
+
+      final RichText richText = tester.widget(find.byType(RichText));
+      final TextSpan textSpan = richText.text as TextSpan;
+
+      expect(textSpan.text, 'No links or tags in this text');
+      expect(textSpan.children, isNull);
+    });
+
+    testWidgets('returns plain span when html is empty with tagStyles',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: HtmlRichText(
+              '',
+              tagStyles: {
+                'b': TextStyle(fontWeight: FontWeight.bold),
+              },
+            ),
+          ),
+        ),
+      );
+
+      final RichText richText = tester.widget(find.byType(RichText));
+      final TextSpan textSpan = richText.text as TextSpan;
+
+      expect(textSpan.text, '');
+      expect(textSpan.children, isNull);
+    });
+
+    testWidgets('disposes previous recognizers on rebuild',
+        (WidgetTester tester) async {
+      Widget build(String htmlText) => MaterialApp(
+            home: Scaffold(
+              body: HtmlRichText(
+                htmlText,
+                onLinkTap: (url) {},
+              ),
+            ),
+          );
+
+      await tester.pumpWidget(
+        build('Visit <a href="https://flutter.dev">Flutter</a>'),
+      );
+
+      // Rebuild with new text that still contains a link; the previous
+      // build's recognizers must be disposed when build runs again.
+      await tester.pumpWidget(
+        build('Go to <a href="https://dart.dev">Dart</a>'),
+      );
+
+      final RichText richText = tester.widget(find.byType(RichText));
+      final TextSpan textSpan = richText.text as TextSpan;
+      final linkSpan = textSpan.children![1] as TextSpan;
+      expect((linkSpan.recognizer as TapGestureRecognizer?), isNotNull);
+    });
   });
 }

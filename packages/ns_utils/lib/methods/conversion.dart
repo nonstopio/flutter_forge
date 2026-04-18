@@ -10,7 +10,7 @@ int toInt(
   int number = defaultValue;
   try {
     number = toDouble(value).toInt();
-  } on Exception catch (e, s) {
+  } catch (e, s) {
     errorLogsNS("toInt", e, s);
   }
   return number;
