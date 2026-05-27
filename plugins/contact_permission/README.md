@@ -1,7 +1,7 @@
 <!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
-    <img src="https://github.com/nonstopio.png" alt="Nonstop Logo" height="128" />
+    <img src="https://github.com/nonstopio.png?size=128" alt="Nonstop Logo" width="128" height="128" />
   </a>
   <h1 align="center">NonStop</h1>
   <p align="center">Digital Product Development Experts for Startups & Enterprises</p>
@@ -11,6 +11,14 @@
   </p>
 </p>
 <!-- END:nonstop-header -->
+
+<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
+<div align="center">
+
+> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+
+</div>
+<!-- END:founded-by -->
 
 # contact_permission
 
@@ -145,11 +153,3 @@ A big thank you to all our contributors! 🙌
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
-
-<!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
-<div align="center">
-
-> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
-
-</div>
-<!-- END:founded-by -->
