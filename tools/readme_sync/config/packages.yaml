@@ -10,6 +10,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -17,7 +18,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: dzod
     path: packages/dzod
@@ -27,6 +27,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -34,7 +35,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: timer_button
     path: packages/timer_button
@@ -44,6 +44,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -51,7 +52,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: ns_intl_phone_input
     path: packages/ns_intl_phone_input
@@ -61,6 +61,7 @@ packages:
     github_username: rajan-nonstopio
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -68,7 +69,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: html_rich_text
     path: packages/html_rich_text
@@ -78,6 +78,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -85,7 +86,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: morse_tap
     path: packages/morse_tap
@@ -95,6 +95,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -102,7 +103,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: ns_utils
     path: packages/ns_utils
@@ -112,6 +112,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -119,7 +120,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
   - name: ns_firebase_utils
     path: packages/ns_firebase_utils
@@ -129,6 +129,7 @@ packages:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -136,7 +137,6 @@ packages:
       - connect
       - star-footer
       - license
-      - founded-by
 
 plugins:
   - name: contact_permission
@@ -147,6 +147,7 @@ plugins:
     github_username: ProjectAJ14
     sections:
       - nonstop-header
+      - founded-by
       - badges
       - getting-started
       - import-package
@@ -154,4 +155,3 @@ plugins:
       - connect
       - star-footer
       - license
-      - founded-by
