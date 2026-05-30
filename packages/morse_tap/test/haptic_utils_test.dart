@@ -11,9 +11,9 @@ void main() {
     HapticUtils.debugHapticSupportedOverride = true;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      SystemChannels.platform,
-      (call) async => null,
-    );
+          SystemChannels.platform,
+          (call) async => null,
+        );
   });
 
   tearDown(() {
@@ -59,11 +59,11 @@ void main() {
       final methods = <String?>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-        if (call.method == 'HapticFeedback.vibrate') {
-          methods.add(call.arguments as String?);
-        }
-        return null;
-      });
+            if (call.method == 'HapticFeedback.vibrate') {
+              methods.add(call.arguments as String?);
+            }
+            return null;
+          });
       for (final type in HapticFeedbackType.values) {
         expect(await HapticUtils.triggerHaptic(type), isTrue);
       }
@@ -73,8 +73,8 @@ void main() {
     test('returns false when a platform call throws', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-        throw PlatformException(code: 'fail');
-      });
+            throw PlatformException(code: 'fail');
+          });
       expect(
         await HapticUtils.triggerHaptic(HapticFeedbackType.lightImpact),
         isFalse,
@@ -128,8 +128,9 @@ void main() {
     });
 
     test('createDropdownItem builds DropdownMenuItem with the name', () {
-      final item =
-          HapticUtils.createDropdownItem(HapticFeedbackType.lightImpact);
+      final item = HapticUtils.createDropdownItem(
+        HapticFeedbackType.lightImpact,
+      );
       expect(item, isA<DropdownMenuItem<HapticFeedbackType>>());
       expect(item.value, HapticFeedbackType.lightImpact);
     });
@@ -137,15 +138,16 @@ void main() {
 
   group('HapticUtils preset helpers', () {
     test('presetConfigs contains the expected labels', () {
-      expect(HapticUtils.presetConfigs.keys,
-          containsAll(['Disabled', 'Light', 'Default', 'Strong']));
+      expect(
+        HapticUtils.presetConfigs.keys,
+        containsAll(['Disabled', 'Light', 'Default', 'Strong']),
+      );
     });
 
     test('getPresetName returns the matching preset name', () {
       expect(HapticUtils.getPresetName(HapticConfig.disabled), 'Disabled');
       expect(HapticUtils.getPresetName(HapticConfig.light), 'Light');
-      expect(HapticUtils.getPresetName(HapticConfig.defaultConfig),
-          'Default');
+      expect(HapticUtils.getPresetName(HapticConfig.defaultConfig), 'Default');
       expect(HapticUtils.getPresetName(HapticConfig.strong), 'Strong');
     });
 
@@ -163,9 +165,9 @@ void main() {
       final methods = <String>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-        methods.add(call.method);
-        return null;
-      });
+            methods.add(call.method);
+            return null;
+          });
       await HapticUtils.testHaptic(HapticFeedbackType.lightImpact);
       expect(methods, contains('HapticFeedback.vibrate'));
     });
@@ -175,9 +177,9 @@ void main() {
       final methods = <String>[];
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-        methods.add(call.method);
-        return null;
-      });
+            methods.add(call.method);
+            return null;
+          });
       await HapticUtils.testHaptic(HapticFeedbackType.lightImpact);
       expect(methods, isEmpty);
     });
@@ -195,10 +197,7 @@ void main() {
 
     test('returns message when config is enabled but unsupported', () {
       HapticUtils.debugHapticSupportedOverride = false;
-      expect(
-        HapticUtils.validateConfig(HapticConfig.defaultConfig),
-        isNotNull,
-      );
+      expect(HapticUtils.validateConfig(HapticConfig.defaultConfig), isNotNull);
     });
   });
 

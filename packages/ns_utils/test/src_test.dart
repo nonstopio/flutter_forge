@@ -15,9 +15,9 @@ void main() {
     Object? loggedError;
     await NSUtils.instance.init(
       appLogsFunction: (obj, [Object detail = '']) => loggedApp = obj,
-      errorLogsFunction:
-          (obj, [dynamic err, StackTrace stack = StackTrace.empty]) =>
-              loggedError = obj,
+      errorLogsFunction: (obj,
+              [dynamic err, StackTrace stack = StackTrace.empty]) =>
+          loggedError = obj,
     );
 
     appLogsNS('hello app');

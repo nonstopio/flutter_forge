@@ -462,8 +462,7 @@ void main() {
       });
     });
 
-    testWidgets(
-        'returns plain span when onLinkTap is set but text has no tags',
+    testWidgets('returns plain span when onLinkTap is set but text has no tags',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(

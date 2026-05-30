@@ -26,18 +26,13 @@ void main() {
   });
 
   testWidgets('asserts without controller or onTextChanged', (tester) async {
-    expect(
-      () => MorseTextInput(),
-      throwsA(isA<AssertionError>()),
-    );
+    expect(() => MorseTextInput(), throwsA(isA<AssertionError>()));
   });
 
   testWidgets('renders preview + text field + tap area', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: MorseTextInput(onTextChanged: (_) {}),
-        ),
+        home: Scaffold(body: MorseTextInput(onTextChanged: (_) {})),
       ),
     );
     expect(find.text('Tap for Morse Input'), findsOneWidget);
@@ -48,10 +43,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: MorseTextInput(
-            onTextChanged: (_) {},
-            showMorsePreview: false,
-          ),
+          body: MorseTextInput(onTextChanged: (_) {}, showMorsePreview: false),
         ),
       ),
     );
@@ -79,8 +71,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
   });
 
-  testWidgets('dash taps emit Morse output when autoConvert is off',
-      (tester) async {
+  testWidgets('dash taps emit Morse output when autoConvert is off', (
+    tester,
+  ) async {
     final changes = <String>[];
     await tester.pumpWidget(
       MaterialApp(
@@ -169,21 +162,19 @@ void main() {
     expect(find.text('Morse'), findsOneWidget);
   });
 
-  testWidgets('disposes internal controller when not provided',
-      (tester) async {
+  testWidgets('disposes internal controller when not provided', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: MorseTextInput(onTextChanged: (_) {}),
-        ),
+        home: Scaffold(body: MorseTextInput(onTextChanged: (_) {})),
       ),
     );
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('animations update feedback color and value (smoke)',
-      (tester) async {
+  testWidgets('animations update feedback color and value (smoke)', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

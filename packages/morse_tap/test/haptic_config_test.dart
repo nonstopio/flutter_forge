@@ -42,7 +42,10 @@ void main() {
       expect(copy.dashIntensity, HapticFeedbackType.selectionClick);
       expect(copy.spaceIntensity, HapticFeedbackType.vibrate);
       expect(copy.correctSequenceIntensity, HapticFeedbackType.lightImpact);
-      expect(copy.incorrectSequenceIntensity, HapticFeedbackType.selectionClick);
+      expect(
+        copy.incorrectSequenceIntensity,
+        HapticFeedbackType.selectionClick,
+      );
       expect(copy.timeoutIntensity, HapticFeedbackType.vibrate);
     });
 
@@ -58,6 +61,7 @@ void main() {
       expect(a == a, isTrue);
       expect(a == const HapticConfig(), isTrue);
       expect(a == const HapticConfig(enabled: true), isFalse);
+      // ignore: unrelated_type_equality_checks
       expect(a == 'not a config', isFalse);
     });
 
@@ -76,10 +80,7 @@ void main() {
         isFalse,
       );
       expect(
-        a ==
-            a.copyWith(
-              correctSequenceIntensity: HapticFeedbackType.vibrate,
-            ),
+        a == a.copyWith(correctSequenceIntensity: HapticFeedbackType.vibrate),
         isFalse,
       );
       expect(

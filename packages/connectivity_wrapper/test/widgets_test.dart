@@ -75,8 +75,7 @@ void main() {
       );
     });
 
-    testWidgets('asserts when color + decoration are both set',
-        (tester) async {
+    testWidgets('asserts when color + decoration are both set', (tester) async {
       expect(
         () => ConnectivityWidgetWrapper(
           color: Colors.red,
@@ -175,8 +174,7 @@ void main() {
       expect(find.byType(Column), findsOneWidget);
     });
 
-    testWidgets('disableInteraction with custom decoration',
-        (tester) async {
+    testWidgets('disableInteraction with custom decoration', (tester) async {
       await tester.pumpWidget(
         _withStatus(
           ConnectivityStatus.DISCONNECTED,
@@ -207,8 +205,7 @@ void main() {
   });
 
   group('ConnectivityScreenWrapper', () {
-    testWidgets('asserts when color + decoration are both set',
-        (tester) async {
+    testWidgets('asserts when color + decoration are both set', (tester) async {
       expect(
         () => ConnectivityScreenWrapper(
           color: Colors.red,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ns_utils/utils/sizes.dart' as sizes;
-import 'package:ns_utils/src.dart';
 
 class _Capture extends StatefulWidget {
   const _Capture({required this.onContext});

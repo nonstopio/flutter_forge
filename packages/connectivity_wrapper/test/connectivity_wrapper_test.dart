@@ -32,8 +32,7 @@ void main() {
 
   group('ConnectivityWrapper singleton', () {
     test('instance returns the same object', () {
-      expect(ConnectivityWrapper.instance,
-          same(ConnectivityWrapper.instance));
+      expect(ConnectivityWrapper.instance, same(ConnectivityWrapper.instance));
     });
 
     test('default addresses list is non-empty on non-web', () {
@@ -211,8 +210,7 @@ void main() {
       expect(ConnectivityWrapper.instance.lastStatus, isNull);
 
       // Restore
-      ConnectivityWrapper.instance.checkInterval =
-          const Duration(seconds: 2);
+      ConnectivityWrapper.instance.checkInterval = const Duration(seconds: 2);
     });
   });
 }

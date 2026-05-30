@@ -1,6 +1,5 @@
 import 'package:cli_core/cli_core.dart';
 import 'package:mason/mason.dart';
-import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 

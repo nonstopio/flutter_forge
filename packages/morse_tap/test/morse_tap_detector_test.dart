@@ -24,9 +24,9 @@ void main() {
     HapticUtils.debugHapticSupportedOverride = true;
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      SystemChannels.platform,
-      (call) async => null,
-    );
+          SystemChannels.platform,
+          (call) async => null,
+        );
   });
 
   tearDown(() {
@@ -70,8 +70,9 @@ void main() {
     );
   }
 
-  testWidgets('triggers onCorrectSequence when tapped correctly',
-      (tester) async {
+  testWidgets('triggers onCorrectSequence when tapped correctly', (
+    tester,
+  ) async {
     var correct = 0;
     final changes = <String>[];
     await tester.pumpWidget(
@@ -88,8 +89,9 @@ void main() {
     expect(changes.last, '');
   });
 
-  testWidgets('triggers onIncorrectSequence when sequence diverges',
-      (tester) async {
+  testWidgets('triggers onIncorrectSequence when sequence diverges', (
+    tester,
+  ) async {
     var incorrect = 0;
     await tester.pumpWidget(
       buildDetector(
@@ -104,8 +106,9 @@ void main() {
     expect(incorrect, greaterThan(0));
   });
 
-  testWidgets('triggers incorrect when sequence exceeds expected',
-      (tester) async {
+  testWidgets('triggers incorrect when sequence exceeds expected', (
+    tester,
+  ) async {
     var incorrect = 0;
     await tester.pumpWidget(
       buildDetector(
@@ -171,10 +174,7 @@ void main() {
   testWidgets('works without haptic config', (tester) async {
     var correct = 0;
     await tester.pumpWidget(
-      buildDetector(
-        expected: '.',
-        onCorrect: () => correct++,
-      ),
+      buildDetector(expected: '.', onCorrect: () => correct++),
     );
     await _singleTap(tester, find.byType(GestureDetector));
     expect(correct, 1);

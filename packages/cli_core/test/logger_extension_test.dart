@@ -67,7 +67,8 @@ void main() {
     test('default resolver returns fallback when stdout has no terminal', () {
       // In the test environment stdout never has a real terminal, so this
       // exercises the fallback path of the default resolver.
-      expect(ext.defaultTerminalColumnsForTest(), ext.fallbackStdoutTerminalColumns);
+      expect(ext.defaultTerminalColumnsForTest(),
+          ext.fallbackStdoutTerminalColumns);
     });
   });
 }
