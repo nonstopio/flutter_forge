@@ -53,3 +53,6 @@ scripts:
     run: dart run tools/update_nonstop_cli_version.dart
   update_nonstop_cli_bundles:
     run: dart run tools/update_nonstop_cli_bundles.dart
+  sync:readme:
+    description: "Sync README sections across all packages"
+    run: dart run tools/readme_sync/readme_sync.dart

@@ -1,3 +1,9 @@
+# Example README with Markers
+
+This is an example showing the correct placement of section markers in a package README.
+
+---
+
 <!-- BEGIN:nonstop-header — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <p align="center">
   <a href="https://nonstopio.com">
@@ -15,37 +21,38 @@
 <!-- BEGIN:founded-by — auto-generated, do not edit. Run `melos sync:readme` to update -->
 <div align="center">
 
-> 🎉 [Founded by Ajay Kumar](https://github.com/ProjectAJ14) 🎉**
+> 🎉 [Founded by Your Name](https://github.com/yourusername) 🎉**
 
 </div>
 <!-- END:founded-by -->
 
-# Timer Button
+# example_package
 
 <!-- BEGIN:badges — auto-generated, do not edit. Run `melos sync:readme` to update -->
-[![Build Status](https://img.shields.io/pub/v/timer_button.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/timer_button)
+[![Build Status](https://img.shields.io/pub/v/example_package.svg)](https://github.com/nonstopio/flutter_forge/tree/main/packages/example_package)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
 
-A versatile Flutter package that provides a timer button widget, which becomes enabled after a
-specified time delay.
+A brief description of what your package does. This content is NOT managed and can be customized per package.
 
-![Timer Button](https://cdn-images-1.medium.com/max/640/1*NhgmN1C4ltcQA-o34SYbIQ.gif)
+## Features
 
-## Overview
+- Feature 1
+- Feature 2
+- Feature 3
 
-A customizable button widget capable of activation after a designated time interval.
+**Note**: This section is package-specific and won't be touched by the sync tool.
 
 <!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
 1. Open your project's `pubspec.yaml` file.
-2. Add the `timer_button` package to your dependencies, replacing `[version]` with the latest version:
+2. Add the `example_package` package to your dependencies, replacing `[version]` with the latest version:
    ```yaml
    dependencies:
      flutter:
        sdk: flutter
-     timer_button: ^[version]
+     example_package: ^[version]
    ```
 3. Run `flutter pub get` to fetch the package.
 <!-- END:getting-started -->
@@ -54,55 +61,43 @@ A customizable button widget capable of activation after a designated time inter
 ## Import the Package
 
 ```dart
-import 'package:timer_button/timer_button.dart';
+import 'package:example_package/example_package.dart';
 ```
 <!-- END:import-package -->
 
 ## Usage
 
-To use the Timer Button, follow these steps:
+This section contains package-specific usage examples and is NOT managed by the sync tool.
 
-1. Set the button type. There are six types to choose from:
-    - ElevatedButton (`buttonType: ButtonType.elevatedButton`) - default
-    - TextButton (`buttonType: ButtonType.textButton`)
-    - OutlineButton (`buttonType: ButtonType.outlineButton`)
-    - Custom (`buttonType: ButtonType.custom`)
-2. Specify the button label using `label: "Your Label"`.
-3. Set the timeout duration in seconds with `timeOutInSeconds: 20`.
-4. Customize the button's color using `color: Colors.deepPurple`.
-5. Define the disabled color with `disabledColor: Colors.red`.
-
-## Example
-
-Default Timer Button:
+### Basic Example
 
 ```dart
-                TimerButton(
-                  label: "Try Again",
-                  timeOutInSeconds: 5,
-                  onPressed: () {
-                    log("Time for some action!");
-                  },
-                ),
+// Your package-specific example code here
+void main() {
+  // Example usage
+}
 ```
 
-With `TimerButton.builder`: You can customize the button's appearance by passing a `builder`
-function:
+### Advanced Example
 
 ```dart
-                TimerButton.builder(
-                  builder: (context, timeLeft) {
-                    return Text(
-                      "Custom: $timeLeft",
-                      style: const TextStyle(color: Colors.red),
-                    );
-                  },
-                  onPressed: () {
-                    log("Time for some action!");
-                  },
-                  timeOutInSeconds: 5,
-                ),
+// More complex examples
+class MyExample {
+  // Implementation
+}
 ```
+
+## Configuration
+
+Any package-specific configuration details go here. This content is preserved.
+
+## API Reference
+
+Document your package's API here. This is package-specific content.
+
+## Troubleshooting
+
+Common issues and solutions specific to your package.
 
 ---
 
@@ -149,3 +144,57 @@ A big thank you to all our contributors! 🙌
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 <!-- END:license -->
+
+---
+
+## Key Points About Markers
+
+### ✅ Correct Usage
+
+1. **Exact syntax**: `<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->` and `<!-- END:section-id -->`
+2. **Case-sensitive**: Section IDs must match exactly
+3. **No extra spaces**: Markers must be exact
+4. **Paired properly**: Every BEGIN must have matching END
+5. **Full lines**: Markers should be on their own lines
+
+### ❌ Common Mistakes
+
+```markdown
+<!-- BEGIN: section-id -->          ❌ Extra space after colon
+<!-- Begin:section-id -->            ❌ Wrong capitalization
+<!-- BEGIN:section-id-->             ❌ Missing space before -->
+<!--BEGIN:section-id -->             ❌ Missing space after <!--
+<!-- BEGIN:section-id — auto-generated, do not edit. Run `melos sync:readme` to update -->
+Some content
+<!-- END:different-id -->            ❌ Mismatched section IDs
+```
+
+### 📋 Available Section IDs
+
+- `nonstop-header`
+- `badges`
+- `getting-started`
+- `import-package`
+- `contributing`
+- `connect`
+- `star-footer`
+- `license`
+- `founded-by`
+
+### 🎯 Best Practices
+
+1. **Place markers around entire sections** including headings
+2. **Keep package-specific content outside markers**
+3. **Maintain blank lines** between sections for readability
+4. **Use horizontal rules (`---`)** to visually separate sections
+5. **Test with --dry-run** before applying changes
+6. **Validate with --validate** after adding markers
+
+### 🔄 Workflow
+
+1. Copy this example as a starting point
+2. Replace `example_package` with your package name
+3. Add your package-specific content in unmarked sections
+4. Run validation: `dart run tools/readme_sync/readme_sync.dart --validate --package your_package`
+5. Preview changes: `dart run tools/readme_sync/readme_sync.dart --dry-run --package your_package`
+6. Apply sync: `dart run tools/readme_sync/readme_sync.dart --package your_package`

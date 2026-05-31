@@ -1,3 +1,8 @@
+## 1.2.0
+
+ - **FEAT**: add auto-generated warnings to managed README section markers.
+ - **FEAT**: add section markers to all package readme files.
+
 ## 1.1.0
 
  - **FEAT**(html_rich_text): add support for clickable links with onLinkTap callback.

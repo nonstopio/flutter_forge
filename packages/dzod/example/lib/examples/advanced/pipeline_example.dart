@@ -233,7 +233,7 @@ class _PipelineExampleState extends State<PipelineExample> {
           children: [
             // Pipeline selector
             DropdownButtonFormField<String>(
-              value: _selectedExample,
+              initialValue: _selectedExample,
               onChanged: (value) {
                 setState(() {
                   _selectedExample = value!;

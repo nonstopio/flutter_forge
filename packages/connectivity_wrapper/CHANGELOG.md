@@ -1,3 +1,8 @@
+## 1.3.0
+
+ - **FEAT**: add auto-generated warnings to managed README section markers.
+ - **FEAT**: add section markers to all package readme files.
+
 ## 1.2.8
 
  - **DOCS**(README): enhance connection section with social media links and acknowledgments.

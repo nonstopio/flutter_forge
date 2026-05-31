@@ -119,7 +119,7 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedArrayType,
+                    initialValue: _selectedArrayType,
                     onChanged: (value) {
                       setState(() {
                         _selectedArrayType = value!;

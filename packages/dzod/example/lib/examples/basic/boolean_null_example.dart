@@ -64,7 +64,7 @@ class _BooleanNullExampleState extends State<BooleanNullExample> {
           children: [
             // Validator selection
             DropdownButtonFormField<String>(
-              value: _selectedValidator,
+              initialValue: _selectedValidator,
               onChanged: (value) {
                 setState(() {
                   _selectedValidator = value!;
@@ -133,35 +133,31 @@ class _BooleanNullExampleState extends State<BooleanNullExample> {
                         ),
                         const SizedBox(height: 12),
 
-                        Row(
-                          children: [
-                            Expanded(
-                              child: RadioListTile<bool>(
-                                title: const Text('true'),
-                                value: true,
-                                groupValue: _booleanValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _booleanValue = value;
-                                  });
-                                },
-                                contentPadding: EdgeInsets.zero,
+                        RadioGroup<bool>(
+                          groupValue: _booleanValue,
+                          onChanged: (value) {
+                            setState(() {
+                              _booleanValue = value;
+                            });
+                          },
+                          child: const Row(
+                            children: [
+                              Expanded(
+                                child: RadioListTile<bool>(
+                                  title: Text('true'),
+                                  value: true,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: RadioListTile<bool>(
-                                title: const Text('false'),
-                                value: false,
-                                groupValue: _booleanValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _booleanValue = value;
-                                  });
-                                },
-                                contentPadding: EdgeInsets.zero,
+                              Expanded(
+                                child: RadioListTile<bool>(
+                                  title: Text('false'),
+                                  value: false,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ],

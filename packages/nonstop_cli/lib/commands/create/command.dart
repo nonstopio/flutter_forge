@@ -23,11 +23,6 @@ class CreateCommand extends Command<int> {
         _generatorFromBrick = generatorFromBrick ?? MasonGenerator.fromBrick {
     argParser
       ..addOption(
-        'application-id',
-        help: 'The bundle identifier on iOS or application id on Android. '
-            '(defaults to <org-name>.<project-name>)',
-      )
-      ..addOption(
         'output-directory',
         abbr: 'o',
         help: 'The desired output directory when creating a new project.',
@@ -204,13 +199,11 @@ class CreateCommand extends Command<int> {
   Map<String, dynamic> getTemplateVars() {
     final projectName = this.projectName;
     final projectDescription = this.projectDescription;
-    final applicationId = argResults['application-id'] as String?;
 
     return <String, dynamic>{
       'name': projectName,
       'description': projectDescription,
       'org_name': orgName,
-      if (applicationId != null) 'application_id': applicationId
     };
   }
 }

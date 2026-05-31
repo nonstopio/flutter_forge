@@ -233,7 +233,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           children: [
             // Message type selector
             DropdownButtonFormField<String>(
-              value: _selectedType,
+              initialValue: _selectedType,
               onChanged: (value) {
                 setState(() {
                   _selectedType = value!;

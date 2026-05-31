@@ -170,7 +170,7 @@ class _CoercionExampleState extends State<CoercionExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedType,
+                    initialValue: _selectedType,
                     onChanged: (value) {
                       setState(() {
                         _selectedType = value!;

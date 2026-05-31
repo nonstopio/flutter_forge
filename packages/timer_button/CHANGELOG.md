@@ -1,3 +1,9 @@
+## 2.4.0
+
+ - **FIX**: prevent timer button negative countdown and enhance example app.
+ - **FEAT**: add auto-generated warnings to managed README section markers.
+ - **FEAT**: add section markers to all package readme files.
+
 ## 2.3.3
 
  - **REFACTOR**(timer_button): add SafeStateMixin and improve timer state management.

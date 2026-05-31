@@ -102,7 +102,7 @@ class _StringValidationExampleState extends State<StringValidationExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedValidator,
+                    initialValue: _selectedValidator,
                     onChanged: (value) {
                       setState(() {
                         _selectedValidator = value!;

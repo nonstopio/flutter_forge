@@ -21,7 +21,7 @@ final flutterPluginForMonoRepoBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "commands/flutter_plugin_create_command.dart",
       "data":
-          "aW1wb3J0ICdwYWNrYWdlOmNsaV9jb3JlL2NsaV9jb3JlLmRhcnQnIHNob3cgQmFzZUZsdXR0ZXJDb21tYW5kOwppbXBvcnQgJ3BhY2thZ2U6bWFzb24vbWFzb24uZGFydCc7CgpmaW5hbCBjbGFzcyBGbHV0dGVyUGx1Z2luQ3JlYXRlQ29tbWFuZCBleHRlbmRzIEJhc2VGbHV0dGVyQ29tbWFuZCB7CiAgQG92ZXJyaWRlCiAgRnV0dXJlPHZvaWQ+IHJ1bihIb29rQ29udGV4dCBjb250ZXh0KSBhc3luYyB7CiAgICBmaW5hbCBTdHJpbmcgbmFtZSA9IGNvbnRleHQudmFyc1snbmFtZSddOwogICAgZmluYWwgU3RyaW5nIGRlc2NyaXB0aW9uID0gY29udGV4dC52YXJzWydkZXNjcmlwdGlvbiddOwogICAgZmluYWwgYXBwTmFtZSA9IG5hbWUuc25ha2VDYXNlOwoKICAgIGF3YWl0IGNyZWF0ZUZsdXR0ZXJQcm9qZWN0KAogICAgICBjb250ZXh0OiBjb250ZXh0LAogICAgICBuYW1lOiBhcHBOYW1lLAogICAgICBkZXNjcmlwdGlvbjogZGVzY3JpcHRpb24sCiAgICAgIG91dHB1dFBhdGg6ICcuJywKICAgICAgdGVtcGxhdGU6ICdwbHVnaW4nLAogICAgKTsKCiAgICBmaW5hbCBpc01vbm9SZXBvID0gY29udGV4dC52YXJzWydpc19tb25vX3JlcG8nXSA/PyBmYWxzZTsKICAgIGlmIChpc01vbm9SZXBvKSB7CiAgICAgIGF3YWl0IHJlbW92ZUFuYWx5c2lzT3B0aW9ucygKICAgICAgICBjb250ZXh0OiBjb250ZXh0LAogICAgICAgIHByb2plY3RQYXRoOiBhcHBOYW1lLAogICAgICApOwogICAgfQogIH0KfQo=",
+          "aW1wb3J0ICdwYWNrYWdlOmNsaV9jb3JlL2NsaV9jb3JlLmRhcnQnIHNob3cgQmFzZUZsdXR0ZXJDb21tYW5kOwppbXBvcnQgJ3BhY2thZ2U6bWFzb24vbWFzb24uZGFydCc7CgpmaW5hbCBjbGFzcyBGbHV0dGVyUGx1Z2luQ3JlYXRlQ29tbWFuZCBleHRlbmRzIEJhc2VGbHV0dGVyQ29tbWFuZCB7CiAgQG92ZXJyaWRlCiAgRnV0dXJlPHZvaWQ+IHJ1bihIb29rQ29udGV4dCBjb250ZXh0KSBhc3luYyB7CiAgICBmaW5hbCBTdHJpbmcgbmFtZSA9IGNvbnRleHQudmFyc1snbmFtZSddOwogICAgZmluYWwgU3RyaW5nIGRlc2NyaXB0aW9uID0gY29udGV4dC52YXJzWydkZXNjcmlwdGlvbiddOwogICAgZmluYWwgU3RyaW5nIG9yZ05hbWUgPSBjb250ZXh0LnZhcnNbJ29yZ19uYW1lJ10gPz8gJ2NvbS5leGFtcGxlJzsKICAgIGZpbmFsIGFwcE5hbWUgPSBuYW1lLnNuYWtlQ2FzZTsKCiAgICBhd2FpdCBjcmVhdGVGbHV0dGVyUHJvamVjdCgKICAgICAgY29udGV4dDogY29udGV4dCwKICAgICAgbmFtZTogYXBwTmFtZSwKICAgICAgZGVzY3JpcHRpb246IGRlc2NyaXB0aW9uLAogICAgICBvdXRwdXRQYXRoOiAnLicsCiAgICAgIHRlbXBsYXRlOiAncGx1Z2luJywKICAgICAgb3JnTmFtZTogb3JnTmFtZSwKICAgICk7CgogICAgZmluYWwgaXNNb25vUmVwbyA9IGNvbnRleHQudmFyc1snaXNfbW9ub19yZXBvJ10gPz8gZmFsc2U7CiAgICBpZiAoaXNNb25vUmVwbykgewogICAgICBhd2FpdCByZW1vdmVBbmFseXNpc09wdGlvbnMoCiAgICAgICAgY29udGV4dDogY29udGV4dCwKICAgICAgICBwcm9qZWN0UGF0aDogYXBwTmFtZSwKICAgICAgKTsKICAgIH0KICB9Cn0K",
       "type": "text"
     },
     {
@@ -76,6 +76,12 @@ final flutterPluginForMonoRepoBundle = MasonBundle.fromJson(<String, dynamic>{
       "type": "string",
       "description": "Description of the project",
       "prompt": "What is your project's description?"
+    },
+    "org_name": {
+      "type": "string",
+      "description": "Organization name",
+      "default": "com.example",
+      "prompt": "What is your organization name?"
     }
   }
 });

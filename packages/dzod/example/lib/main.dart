@@ -177,7 +177,7 @@ class _ValidationShowcasePageState extends State<ValidationShowcasePage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     child: DropdownButtonFormField<String>(
-                      value: _selectedCategory,
+                      initialValue: _selectedCategory,
                       onChanged: (value) {
                         setState(() {
                           _selectedCategory = value!;

@@ -90,7 +90,7 @@ class _EnumExampleState extends State<EnumExample> {
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
-                    value: _selectedEnumType,
+                    initialValue: _selectedEnumType,
                     onChanged: (value) {
                       setState(() {
                         _selectedEnumType = value!;

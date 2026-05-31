@@ -1,3 +1,7 @@
+## 0.0.7+4
+
+ - **FIX**: pass --org-name to all templates and remove unsupported --application-id.
+
 ## 0.0.7+3
 
  - **DOCS**(README): enhance connection section with social media links and acknowledgments.

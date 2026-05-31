@@ -562,6 +562,69 @@ void main() {
         expect(button.onPressed, isNotNull);
         expect(find.text('Negative'), findsOneWidget);
       });
+
+      testWidgets(
+          'should never display negative counter values with negative timeOutInSeconds',
+          (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: TimerButton(
+                label: 'NegInput',
+                onPressed: () {},
+                timeOutInSeconds: -5,
+              ),
+            ),
+          ),
+        );
+
+        // Counter should be clamped to 0, not -5
+        expect(find.text('NegInput |  0s'), findsOneWidget);
+
+        // After frame callback, button should be enabled immediately
+        await tester.pump();
+        final button =
+            tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        expect(button.onPressed, isNotNull);
+        expect(find.text('NegInput'), findsOneWidget);
+      });
+
+      testWidgets(
+          'should clamp counter to 0 and not show negative values during countdown',
+          (tester) async {
+        int lastSeenSeconds = 999;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: TimerButton.builder(
+                builder: (context, seconds) {
+                  lastSeenSeconds = seconds;
+                  return Text('Time: $seconds');
+                },
+                onPressed: () {},
+                timeOutInSeconds: 2,
+              ),
+            ),
+          ),
+        );
+
+        expect(lastSeenSeconds, 2);
+
+        // Tick past the timeout
+        await tester.pump(const Duration(seconds: 1));
+        await tester.pump();
+        expect(lastSeenSeconds, 1);
+
+        await tester.pump(const Duration(seconds: 1));
+        await tester.pump();
+        expect(lastSeenSeconds, 0);
+
+        // Pump additional seconds — counter should stay at 0
+        await tester.pump(const Duration(seconds: 1));
+        await tester.pump();
+        expect(lastSeenSeconds, 0);
+        expect(lastSeenSeconds >= 0, isTrue);
+      });
     });
   });
 

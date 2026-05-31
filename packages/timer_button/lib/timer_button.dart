@@ -115,12 +115,15 @@ class _TimerButtonState extends State<TimerButton> with SafeStateMixin {
   int _timeCounter = 0;
   Timer? _timer;
 
+  int get _safeTimeout =>
+      widget.timeOutInSeconds < 0 ? 0 : widget.timeOutInSeconds;
+
   String get _timerText => '$_timeCounter${widget.secPostFix}';
 
   @override
   void initState() {
     super.initState();
-    _timeCounter = widget.timeOutInSeconds;
+    _timeCounter = _safeTimeout;
     _timeUpFlag = widget.timeUpFlag;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_timeCounter <= 0) {
@@ -139,13 +142,14 @@ class _TimerButtonState extends State<TimerButton> with SafeStateMixin {
   }
 
   void _updateTime() {
-    if (_timeUpFlag) {
+    if (_timeUpFlag || _timeCounter <= 0) {
       return;
     }
-    _timer = Timer(const Duration(seconds: aSec), () async {
+    _timer = Timer(const Duration(seconds: aSec), () {
       if (!mounted) return;
       _timeCounter--;
       if (_timeCounter <= 0) {
+        _timeCounter = 0;
         _timeUpFlag = true;
       }
       safeSetState();
@@ -157,10 +161,10 @@ class _TimerButtonState extends State<TimerButton> with SafeStateMixin {
 
   void _onPressed() {
     widget.onPressed();
-    // reset the timer when the button is pressed
     if (widget.resetTimerOnPressed) {
+      _timer?.cancel();
       _timeUpFlag = false;
-      _timeCounter = widget.timeOutInSeconds;
+      _timeCounter = _safeTimeout;
       safeSetState();
       _updateTime();
     }
