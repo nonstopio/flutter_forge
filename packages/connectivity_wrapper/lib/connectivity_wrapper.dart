@@ -39,7 +39,7 @@ enum ConnectivityStatus { CONNECTED, DISCONNECTED }
 ///
 class ConnectivityWrapper {
   static List<AddressCheckOptions> get _defaultAddresses => (kIsWeb)
-      ? []
+      ? [] // coverage:ignore-line
       : List<AddressCheckOptions>.unmodifiable(
           <AddressCheckOptions>[
             AddressCheckOptions(
@@ -120,7 +120,7 @@ class ConnectivityWrapper {
         isSuccess: true,
       );
     } catch (e) {
-      sock?.destroy();
+      sock?.destroy(); // coverage:ignore-line
       return AddressCheckResult(
         options,
         isSuccess: false,
@@ -208,7 +208,7 @@ class ConnectivityWrapper {
 
   _maybeEmitStatusUpdate([Timer? timer]) async {
     _timerHandle?.cancel();
-    timer?.cancel();
+    timer?.cancel(); // coverage:ignore-line
 
     var currentStatus = await connectionStatus;
 

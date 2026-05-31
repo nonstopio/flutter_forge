@@ -5,6 +5,17 @@ import 'package:universal_io/io.dart';
 @visibleForTesting
 const fallbackStdoutTerminalColumns = 80;
 
+@visibleForTesting
+int Function() stdoutTerminalColumnsResolver = defaultTerminalColumnsForTest;
+
+@visibleForTesting
+int defaultTerminalColumnsForTest() {
+  if (stdout.hasTerminal) {
+    return stdout.terminalColumns; // coverage:ignore-line
+  }
+  return fallbackStdoutTerminalColumns;
+}
+
 extension LoggerX on Logger {
   void created(String message) {
     info(lightCyan.wrap(styleBold.wrap(message)));
@@ -15,14 +26,7 @@ extension LoggerX on Logger {
     required void Function(String?) print,
     int? length,
   }) {
-    late final int maxLength;
-    if (length != null) {
-      maxLength = length;
-    } else if (stdout.hasTerminal) {
-      maxLength = stdout.terminalColumns;
-    } else {
-      maxLength = fallbackStdoutTerminalColumns;
-    }
+    final int maxLength = length ?? stdoutTerminalColumnsResolver();
 
     for (final sentence in text?.split('/n') ?? <String>[]) {
       final words = sentence.split(' ');

@@ -12,7 +12,7 @@ extension ListExtensions on List {
     String data = defaultString;
     try {
       data = json.encode(this);
-    } on Exception catch (e, s) {
+    } catch (e, s) {
       errorLogsNS("ERROR in getJson", e, s);
     }
     return data;
@@ -21,13 +21,12 @@ extension ListExtensions on List {
   ///List to coma separated Value
   ///
   String toComaSeparatedValues() {
-    String data = toString();
     try {
-      data = join(', ');
-    } on Exception catch (e, s) {
+      return join(', ');
+    } catch (e, s) {
       errorLogsNS("ERROR in toComaSeparatedValues", e, s);
+      return defaultString;
     }
-    return data;
   }
 }
 

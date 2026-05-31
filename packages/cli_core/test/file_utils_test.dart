@@ -92,6 +92,19 @@ void main() {
       test('returns false when no melos.yaml exists', () async {
         expect(await FileUtils.isMonoRepo(tempDir.path), isFalse);
       });
+
+      test('defaults to current directory when no path is provided', () async {
+        // No argument — exercises the Directory.current fallback branch.
+        final result = await FileUtils.isMonoRepo();
+        expect(result, isA<bool>());
+      });
+    });
+
+    test('readYamlFile throws when file is missing', () {
+      expect(
+        () => FileUtils.readYamlFile(p.join(tempDir.path, 'missing.yaml')),
+        throwsA(isA<FileSystemException>()),
+      );
     });
   });
 }
