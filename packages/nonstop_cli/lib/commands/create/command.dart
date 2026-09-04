@@ -5,12 +5,17 @@ import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:mason/mason.dart';
 import 'package:meta/meta.dart';
+import 'package:nonstop_cli/commands/create/modules.dart';
 import 'package:nonstop_cli/commands/create/templates.dart';
 import 'package:nonstop_cli/template.dart';
 import 'package:nonstop_cli/utils/utils.dart';
 import 'package:path/path.dart' as path;
 
 const _defaultOrgName = 'com.example';
+
+/// Characters that cannot survive being written into a double-quoted YAML
+/// scalar and a Dart string literal unchanged.
+const _unsafeDescriptionCharacters = ['"', r'\', r'$'];
 const _defaultDescription =
     'A Melos-managed project for mono-repo, created using NonStop CLI.';
 
@@ -54,7 +59,22 @@ class CreateCommand extends Command<int> {
               'Generate a Flutter application for a Melos-managed mono-repo.',
           'plugin': 'Generate a Flutter plugin for a Melos-managed mono-repo.',
         },
+      )
+      ..addFlag(
+        'defaults',
+        abbr: 'y',
+        negatable: false,
+        help: 'Skip the module picker and accept the recommended selection.',
       );
+
+    for (final module in templateModules) {
+      argParser.addFlag(
+        module.flag,
+        help: '${module.description}.',
+        defaultsTo: null,
+        hide: true,
+      );
+    }
   }
 
   final Logger logger;
@@ -104,7 +124,53 @@ class CreateCommand extends Command<int> {
     return args.first;
   }
 
-  String get projectDescription => argResults['description'] as String? ?? '';
+  String get projectDescription {
+    final description = _askIfUnset(
+      'description',
+      'Describe ${lightCyan.wrap(projectName)}:',
+    );
+    _validateDescription(description);
+    return description;
+  }
+
+  /// The description is interpolated into YAML, Dart string literals and
+  /// Markdown, so a few characters would produce a project that does not
+  /// parse. Rejecting them beats silently mangling the text.
+  void _validateDescription(String description) {
+    final offending =
+        _unsafeDescriptionCharacters.where(description.contains).toList();
+    if (offending.isEmpty) return;
+
+    usageException(
+      'The description cannot contain ${offending.map((c) => '"$c"').join(', ')}.\n\n'
+      'It is written into pubspec.yaml, Dart string literals and README.md, '
+      'and these characters break at least one of them.',
+    );
+  }
+
+  /// Whether this process can hold an interactive conversation.
+  ///
+  /// Both ends have to be a terminal: mason_logger reads from stdin but draws
+  /// the prompt on stdout, and piping either one is enough to break it.
+  bool get _canPrompt =>
+      argResults['defaults'] != true && stdin.hasTerminal && stdout.hasTerminal;
+
+  /// Returns [option], prompting for it when the user did not pass it and
+  /// there is a terminal to ask on.
+  ///
+  /// Falling back to the option's default keeps scripted and CI runs working.
+  String _askIfUnset(String option, String question) {
+    final fallback = argResults[option] as String? ?? '';
+    if (argResults.wasParsed(option) || !_canPrompt) return fallback;
+    try {
+      final answer = logger.prompt(question, defaultValue: fallback).trim();
+      return answer.isEmpty ? fallback : answer;
+    } catch (error) {
+      // Some CI runners advertise a terminal they cannot actually drive.
+      logger.detail('Prompt unavailable, using default: $error');
+      return fallback;
+    }
+  }
 
   @override
   String get invocation => 'nonstop $name <project-name> [arguments]';
@@ -179,7 +245,14 @@ class CreateCommand extends Command<int> {
       logger: logger,
     );
 
-    final _ = await generator.generate(target, vars: vars, logger: logger);
+    // The app skeleton is scaffolded by `flutter create` in the pre-gen hook,
+    // so the brick's own `lib/` and `pubspec.yaml` are expected to land on top.
+    final _ = await generator.generate(
+      target,
+      vars: vars,
+      logger: logger,
+      fileConflictResolution: FileConflictResolution.overwrite,
+    );
 
     await generator.hooks.postGen(
       vars: vars,
@@ -204,13 +277,80 @@ class CreateCommand extends Command<int> {
       'name': projectName,
       'description': projectDescription,
       'org_name': orgName,
+      if (argResults['template'] == 'mono') ...selectedModules(),
+    };
+  }
+
+  /// Resolves which optional modules the generated mono-repo should contain.
+  ///
+  /// Explicit `--network` / `--no-network` style flags always win. Whatever is
+  /// left is asked for once, as a single multi-select, unless `--defaults` was
+  /// passed or there is no terminal to ask on.
+  @visibleForTesting
+  Map<String, bool> selectedModules() {
+    final answered = <String, bool>{
+      for (final module in templateModules)
+        if (argResults.wasParsed(module.flag))
+          module.key: argResults[module.flag] as bool,
+    };
+
+    final shouldPrompt = answered.length < templateModules.length && _canPrompt;
+
+    final selection = shouldPrompt ? _promptForModules(answered) : answered;
+
+    final requested = <String, bool>{
+      for (final module in templateModules)
+        module.key: selection[module.key] ?? module.defaultValue,
+    };
+    final resolved = resolveModuleImplications(requested);
+
+    for (final module in templateModules) {
+      if (resolved[module.key]! && !requested[module.key]!) {
+        logger.info(
+          '${lightYellow.wrap('+')} ${module.label} is required by '
+          '${module.impliedBy.where((o) => resolved[o]!).join(', ')}, '
+          'adding it.',
+        );
+      }
+    }
+
+    return resolved;
+  }
+
+  Map<String, bool> _promptForModules(Map<String, bool> answered) {
+    final pending = templateModules
+        .where((module) => !answered.containsKey(module.key))
+        .toList();
+
+    logger.info('');
+    final List<TemplateModule> chosen;
+    try {
+      chosen = logger.chooseAny<TemplateModule>(
+        'Which modules should ${lightCyan.wrap(projectName)} start with?',
+        choices: pending,
+        defaultValues: pending.where((module) => module.defaultValue).toList(),
+        display: (module) =>
+            '${module.label} ${darkGray.wrap('- ${module.description}')}',
+      );
+    } catch (error) {
+      // Some CI runners advertise a terminal they cannot actually drive.
+      logger.detail('Module picker unavailable, using defaults: $error');
+      return answered;
+    }
+
+    return {
+      ...answered,
+      for (final module in pending) module.key: chosen.contains(module),
     };
   }
 }
 
 extension on CreateCommand {
   String get orgName {
-    final orgName = argResults['org-name'] as String? ?? _defaultOrgName;
+    final orgName = _askIfUnset(
+      'org-name',
+      'What is the organization for ${lightCyan.wrap(projectName)}?',
+    );
     _validateOrgName(orgName);
     return orgName;
   }
