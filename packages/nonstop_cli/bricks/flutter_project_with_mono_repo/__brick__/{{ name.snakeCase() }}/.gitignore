@@ -12,5 +12,7 @@ pubspec_overrides.yaml
 .flutter-plugins-dependencies
 *.iml
 *.lock
+# Apps ship a binary; pin their resolution.
+!apps/*/pubspec.lock
 mason-lock.json
 .mason

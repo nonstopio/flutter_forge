@@ -1,0 +1,17 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:{{name.snakeCase()}}/app.dart';
+import 'package:{{name.snakeCase()}}/bootstrap.dart' as bootstrap;
+
+void main() {
+  testWidgets('the app boots and reaches its first screen', (tester) async {
+    // Exercises the whole graph: module init order, DI registration and the
+    // splash redirect. If a module forgets to register something, this fails
+    // here rather than on a device.
+    await bootstrap.init();
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+{{#dashboard}}    expect(find.text('Explore'), findsWidgets);
+{{/dashboard}}  });
+}

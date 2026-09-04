@@ -1,9 +1,9 @@
 name: flutter_project_with_mono_repo
-description: A Flutter project within a Melos-managed mono-repo.
+description: A production-shaped Flutter mono-repo - app shell, design system, localization and the platform modules you pick.
 
-repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/nonstop_cli
+repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/nonstop_cli
 
-version: 1.0.0
+version: 2.0.0
 
 environment:
   mason: ">=0.1.0-dev.52 <0.1.0"
@@ -22,3 +22,48 @@ vars:
     description: Organization name
     prompt: What is your organization name?
     default: com.example
+  network:
+    type: boolean
+    description: Dio-based HTTP client with auth and logging interceptors
+    prompt: Include the network package?
+    default: true
+  auth:
+    type: boolean
+    description: Firebase Authentication with email, Google and Apple sign-in
+    prompt: Include authentication?
+    default: true
+  firestore:
+    type: boolean
+    description: Cloud Firestore and Cloud Functions wiring
+    prompt: Include Cloud Firestore?
+    default: false
+  notifications:
+    type: boolean
+    description: Firebase Cloud Messaging, permissions and token registration
+    prompt: Include push notifications?
+    default: true
+  analytics:
+    type: boolean
+    description: Event tracking behind a swappable client
+    prompt: Include analytics?
+    default: true
+  crashlytics:
+    type: boolean
+    description: Crash and non-fatal error reporting
+    prompt: Include crash reporting?
+    default: true
+  feature_flags:
+    type: boolean
+    description: Firebase Remote Config feature flags
+    prompt: Include feature flags?
+    default: true
+  developer:
+    type: boolean
+    description: In-app developer tools behind a hidden gesture
+    prompt: Include developer tools?
+    default: true
+  dashboard:
+    type: boolean
+    description: Bottom-navigation shell with starter tabs
+    prompt: Include the dashboard shell?
+    default: true
