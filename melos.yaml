@@ -23,8 +23,11 @@ command:
 scripts:
   lint:
     description: "Run format and analyze all packages"
+    # Brick sources are mustache templates, not valid Dart, so the formatter
+    # has to skip them - `dart format` has no exclude of its own.
     run: |
-      dart format --set-exit-if-changed . &&
+      find . -name '*.dart' -not -path '*/__brick__/*' -not -path '*/.dart_tool/*' \
+        -exec dart format --set-exit-if-changed {} + &&
       dart analyze --fatal-infos .
     exec:
       concurrency: 5
