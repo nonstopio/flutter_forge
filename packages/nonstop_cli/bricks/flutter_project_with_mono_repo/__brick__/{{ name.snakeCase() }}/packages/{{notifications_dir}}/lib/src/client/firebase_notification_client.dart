@@ -219,16 +219,13 @@ class FirebaseNotificationClient implements NotificationClient {
         '$_tag: Notification opened from $source: ${notification?.title} - ${notification?.body}',
       );
 
-      final data = message.data;
-      final actionType = data['type'];
-      if (actionType == null) return;
+      // Deep link contract: send a `route` in the message data and the app
+      // navigates there, e.g. {"route": "/home/orders/42"}. Branch on your own
+      // payload fields here if you need something richer than a path.
+      final route = message.data['route'];
+      if (route is! String || route.isEmpty) return;
 
-      if (actionType == 'surveyAssignments') {
-        final id = data['id'];
-        if (id == null) return;
-        final router = di.get<GoRouter>();
-        router.push('/home/survey/assignment/$id');
-      }
+      di.get<GoRouter>().push(route);
     } catch (e, s) {
       _logger.e('$_tag: Error handling notification opened', e, s);
     }

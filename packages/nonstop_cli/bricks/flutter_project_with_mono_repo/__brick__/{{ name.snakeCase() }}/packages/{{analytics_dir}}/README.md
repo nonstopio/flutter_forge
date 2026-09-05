@@ -57,14 +57,14 @@ await AnalyticsHelper.logEvent(
 // Feature usage
 await AnalyticsHelper.logEvent(
   AnalyticsEvents.feature.used,
-  parameters: {'feature_name': 'health_sync'},
+  parameters: {'feature_name': 'export'},
 );
 
-// Survey events
+// A group of your own, added to AnalyticsEvents
 await AnalyticsHelper.logEvent(
-  AnalyticsEvents.survey.completed,
+  AnalyticsEvents.feature.tutorialCompleted,
   parameters: {
-    'survey_id': 'wellness_assessment',
+    'tutorial_id': 'getting_started',
     'duration_seconds': 120,
   },
 );
@@ -74,17 +74,13 @@ await AnalyticsHelper.logEvent(
 
 ```dart
 // Feature tracking
-await AnalyticsHelper.logFeatureUsed('health_dashboard');
-
-// Survey tracking
-await AnalyticsHelper.logSurveyStarted('mood_tracker');
-await AnalyticsHelper.logSurveyCompleted('mood_tracker', duration: 45);
+await AnalyticsHelper.logFeatureUsed('export');
 
 // Error tracking
 await AnalyticsHelper.logAppError('network_timeout');
 
 // Button interactions
-await AnalyticsHelper.logButtonPressed('start_assessment');
+await AnalyticsHelper.logButtonPressed('get_started');
 
 // Authentication events
 await AnalyticsHelper.logSignIn(method: 'google');
@@ -141,16 +137,6 @@ AnalyticsEvents.feature.tutorialCompleted
 AnalyticsEvents.app.open
 AnalyticsEvents.app.background
 AnalyticsEvents.app.foreground
-
-// Survey events
-AnalyticsEvents.survey.started
-AnalyticsEvents.survey.completed
-AnalyticsEvents.survey.abandoned
-
-// Health data events
-AnalyticsEvents.health.dataSynced
-AnalyticsEvents.health.deviceConnected
-AnalyticsEvents.health.goalAchieved
 
 // Error events
 AnalyticsEvents.error.appError
@@ -237,13 +223,7 @@ await AnalyticsHelper.logEvent(
 );
 
 // User uses a feature
-await AnalyticsHelper.logFeatureUsed('health_sync');
-
-// User completes a survey
-await AnalyticsHelper.logSurveyCompleted(
-  'wellness_assessment',
-  duration: 180,
-);
+await AnalyticsHelper.logFeatureUsed('export');
 ```
 
 ### Error Tracking
@@ -256,7 +236,7 @@ try {
     'api_call_failed',
     errorMessage: error.toString(),
     parameters: {
-      'endpoint': '/api/health/sync',
+      'endpoint': '/api/items',
       'user_id': userId,
     },
   );

@@ -38,7 +38,7 @@ jobs:
           
           
           # Get packages that have changes using melos diff
-          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"biomedict_workspace\") | .name]" 2>/dev/null || echo '[]')
+          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"flutter_forge_workspace\") | .name]" 2>/dev/null || echo '[]')
           if [ "$packages" = "" ] || [ "$packages" = "null" ]; then
             packages="[]"
           fi

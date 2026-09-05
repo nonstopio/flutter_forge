@@ -1,7 +1,8 @@
-/// Structured analytics event names organized by category
+/// Structured analytics event names organized by category.
 ///
-/// Usage: AnalyticsEvents.user.authenticatedRedirect
-/// This provides type-safe, discoverable event names and prevents typos
+/// Usage: `AnalyticsEvents.user.authenticatedRedirect`. Naming events here
+/// instead of inline keeps them discoverable and typo-free, and gives you one
+/// place to add the groups your own product needs.
 class AnalyticsEvents {
   AnalyticsEvents._();
 
@@ -22,12 +23,6 @@ class AnalyticsEvents {
 
   /// App lifecycle events
   static const app = _AppEvents();
-
-  /// Survey and assessment events
-  static const survey = _SurveyEvents();
-
-  /// Health data and biokit events
-  static const health = _HealthEvents();
 
   /// Profile-related events
   static const profile = _ProfileEvents();
@@ -150,52 +145,7 @@ class _AppEvents {
   String get uninstalled => 'app_uninstalled';
 }
 
-class _SurveyEvents {
-  const _SurveyEvents();
 
-  /// Survey started
-  String get started => 'survey_started';
-
-  /// Survey completed
-  String get completed => 'survey_completed';
-
-  /// Survey abandoned/cancelled
-  String get abandoned => 'survey_abandoned';
-
-  /// Survey question answered
-  String get questionAnswered => 'survey_question_answered';
-
-  /// Survey progress saved
-  String get progressSaved => 'survey_progress_saved';
-
-  /// Survey results viewed
-  String get resultsViewed => 'survey_results_viewed';
-}
-
-class _HealthEvents {
-  const _HealthEvents();
-
-  /// Health data synced
-  String get dataSynced => 'health_data_synced';
-
-  /// Wearable device connected
-  String get deviceConnected => 'health_device_connected';
-
-  /// Wearable device disconnected
-  String get deviceDisconnected => 'health_device_disconnected';
-
-  /// Health metric recorded
-  String get metricRecorded => 'health_metric_recorded';
-
-  /// Health goal set
-  String get goalSet => 'health_goal_set';
-
-  /// Health goal achieved
-  String get goalAchieved => 'health_goal_achieved';
-
-  /// Health report generated
-  String get reportGenerated => 'health_report_generated';
-}
 
 class _ProfileEvents {
   const _ProfileEvents();

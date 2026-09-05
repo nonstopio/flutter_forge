@@ -1,5 +1,10 @@
 import 'package:equatable/equatable.dart';
 
+/// Base type for events broadcast on the app-wide event channel.
+///
+/// Use this for the handful of things that genuinely cross feature
+/// boundaries - "the signed-in user changed", "this list is stale" - and keep
+/// everything else inside the feature that owns it.
 abstract class GlobalEventType extends Equatable {
   const GlobalEventType();
 
@@ -7,12 +12,9 @@ abstract class GlobalEventType extends Equatable {
   List<Object?> get props => [];
 }
 
-class RefreshSurveyAssignment extends GlobalEventType {
-  final String? id;
-
-  const RefreshSurveyAssignment(this.id);
-}
-
+/// Example event: something invalidated the current user's profile.
+///
+/// Replace this with your own events; it is here to show the shape.
 class RefreshProfile extends GlobalEventType {
   const RefreshProfile();
 }

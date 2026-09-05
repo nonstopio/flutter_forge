@@ -1,15 +1,40 @@
-import 'package:design_system/design_system.dart' as ds;
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 /// Banner shown above the sign-in and register forms.
 ///
-/// Swap this for your own artwork: add it under the app's `assets:` in
-/// pubspec.yaml and switch to `ds.HeaderType.asset` with an `assetPath`.
+/// Deliberately drawn from the theme rather than an image, so a fresh project
+/// has no asset to ship and nothing to fetch. Swap it for your own artwork:
+/// add the file under the app's `assets:` and use `design_system`'s `Header`
+/// with `HeaderType.asset`.
 Widget headerBuilder(BuildContext context) {
-  return const Padding(
-    padding: EdgeInsets.all(8),
-    child: ds.Header(
-      imageUrl: 'https://picsum.photos/1200/300',
+  final theme = Theme.of(context);
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 24),
+    child: Column(
+      children: [
+        Container(
+          height: 72,
+          width: 72,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Icon(
+            Icons.bolt_outlined,
+            size: 40,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          strings.app.name,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     ),
   );
 }

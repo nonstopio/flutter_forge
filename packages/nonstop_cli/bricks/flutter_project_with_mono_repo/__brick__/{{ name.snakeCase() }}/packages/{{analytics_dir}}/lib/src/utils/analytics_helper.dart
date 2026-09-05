@@ -170,34 +170,4 @@ class AnalyticsHelper {
     );
   }
 
-  /// Additional structured event helpers
-  static Future<void> logSurveyStarted(
-    String surveyId, {
-    Map<String, dynamic>? parameters,
-  }) async {
-    await logEvent(
-      AnalyticsEvents.survey.started,
-      parameters: {
-        'survey_id': surveyId,
-        'timestamp': DateTime.now().toIso8601String(),
-        ...?parameters,
-      },
-    );
-  }
-
-  static Future<void> logSurveyCompleted(
-    String surveyId, {
-    int? duration,
-    Map<String, dynamic>? parameters,
-  }) async {
-    await logEvent(
-      AnalyticsEvents.survey.completed,
-      parameters: {
-        'survey_id': surveyId,
-        if (duration != null) 'duration_seconds': duration,
-        'timestamp': DateTime.now().toIso8601String(),
-        ...?parameters,
-      },
-    );
-  }
 }
