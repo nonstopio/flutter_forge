@@ -66,7 +66,12 @@ jobs:
           melos bootstrap --scope="${{ matrix.package }}"
 
       - name: Format package
-        run: melos exec --scope="${{ matrix.package }}" -- dart format . --set-exit-if-changed
+        # Brick templates are mustache, not parseable Dart, and `dart format`
+        # has no exclude of its own - so filter the paths before it sees them.
+        run: |
+          melos exec --scope="${{ matrix.package }}" -- \
+            "find . -name '*.dart' -not -path '*/__brick__/*' -not -path '*/.dart_tool/*' \
+              -exec dart format --set-exit-if-changed {} +"
 
       - name: Analyze package
         run: melos exec --scope="${{ matrix.package }}" -- dart analyze --fatal-infos
