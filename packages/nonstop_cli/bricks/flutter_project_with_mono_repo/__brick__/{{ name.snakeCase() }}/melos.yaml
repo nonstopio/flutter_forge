@@ -3,13 +3,24 @@ name: {{ name.snakeCase() }}_workspace
 ###############################################################################
 # MONOREPO CONFIGURATION
 ###############################################################################
-# Define the packages that make up your monorepo
-# Customize these patterns to match your project structure
+# apps/     - runnable Flutter applications
+# features/ - vertical slices (ui + state + data) that an app composes
+# packages/ - horizontal capabilities shared by features (network, design, ...)
+# plugins/  - platform channels and native integrations
 packages:
   - apps/*
   - features/*
   - packages/*
   - plugins/*
+
+command:
+  bootstrap:
+    dependencies:
+      json_annotation: ^4.9.0
+    dev_dependencies:
+      build_runner: ^2.4.15
+      flutter_lints: ^5.0.0
+      json_serializable: ^6.9.5
 
 ###############################################################################
 # SCRIPTS
@@ -25,8 +36,11 @@ scripts:
 
   lint:
     description: "Run format and analyze all packages"
+    # `dart format` has no exclude of its own, so build output and the plugin
+    # sources CocoaPods symlinks into the app are filtered out here.
     run: |
-      dart format --set-exit-if-changed . &&
+      find . -name '*.dart' -not -path '*/build/*' -not -path '*/.dart_tool/*' \
+        -not -path '*/.symlinks/*' -exec dart format --set-exit-if-changed {} + &&
       dart analyze --fatal-infos .
     exec:
       concurrency: 5
@@ -49,12 +63,22 @@ scripts:
       dirExists: lib
 
   generate:
-    description: "Generate code for Dart packages using build_runner"
+    description: "Run build_runner in every package that needs codegen"
     run: dart run build_runner build --delete-conflicting-outputs
     exec:
       concurrency: 1
     packageFilters:
       dependsOn: build_runner
+
+  generate:i69n:
+    description: "Regenerate localization strings from messages.i69n.yaml"
+    run: |
+      dart run build_runner build --delete-conflicting-outputs &&
+      dart format lib/messages.i69n.dart
+    exec:
+      concurrency: 1
+    packageFilters:
+      scope: "localization"
 
   test:
     description: "Run all tests (Dart and Flutter)"
@@ -72,7 +96,6 @@ scripts:
 ###############################################################################
 # IDE CONFIGURATION
 ###############################################################################
-# Optional: Configure IDE integration
 ide:
   intellij:
     enabled: true

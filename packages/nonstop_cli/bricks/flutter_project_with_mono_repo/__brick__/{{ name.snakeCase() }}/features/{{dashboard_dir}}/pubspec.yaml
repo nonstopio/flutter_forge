@@ -1,0 +1,32 @@
+name: dashboard
+description: "Bottom-navigation shell and starter tabs for {{name.titleCase()}}."
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.29.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  go_router: ^15.1.3
+  core:
+    path: ../../packages/core
+  design_system:
+    path: ../../packages/design_system
+  di:
+    path: ../../packages/di
+  localization:
+    path: ../../packages/localization
+{{#auth}}  auth:
+    path: ../auth
+{{/auth}}{{#developer}}  developer:
+    path: ../../packages/developer
+{{/developer}}
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:

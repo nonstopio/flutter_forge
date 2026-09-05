@@ -1,28 +1,29 @@
-import 'dart:io';
-
-import 'package:cli_core/cli_core.dart' show BaseMelosCommand;
+import 'package:cli_core/cli_core.dart' show CliCommand;
 import 'package:mason/mason.dart';
 
-final class MelosCommand extends BaseMelosCommand {
+import 'checked_process.dart';
+
+final class MelosCommand extends CliCommand {
   @override
   Future<void> run(HookContext context) async {
     final String name = context.vars['name'];
     final appName = name.snakeCase;
 
-    await trackOperation(
+    await runChecked(
       context,
       startMessage: 'Activating Melos globally',
       endMessage: 'Melos activated globally',
-      operation: () => Process.run(
-        'dart',
-        ['pub', 'global', 'activate', 'melos'],
-        runInShell: true,
-      ),
+      executable: 'dart',
+      arguments: ['pub', 'global', 'activate', 'melos'],
     );
 
-    await bootstrap(
-      context: context,
-      workspacePath: appName,
+    await runChecked(
+      context,
+      startMessage: 'Running melos bootstrap',
+      endMessage: 'Dependencies installed',
+      executable: 'melos',
+      arguments: ['bootstrap'],
+      workingDirectory: appName,
     );
   }
 }

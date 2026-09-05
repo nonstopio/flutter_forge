@@ -38,7 +38,7 @@ jobs:
           
           
           # Get packages that have changes using melos diff
-          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"biomedict_workspace\") | .name]" 2>/dev/null || echo '[]')
+          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"flutter_forge_workspace\") | .name]" 2>/dev/null || echo '[]')
           if [ "$packages" = "" ] || [ "$packages" = "null" ]; then
             packages="[]"
           fi
@@ -66,7 +66,12 @@ jobs:
           melos bootstrap --scope="${{ matrix.package }}"
 
       - name: Format package
-        run: melos exec --scope="${{ matrix.package }}" -- dart format . --set-exit-if-changed
+        # Brick templates are mustache, not parseable Dart, and `dart format`
+        # has no exclude of its own - so filter the paths before it sees them.
+        run: |
+          melos exec --scope="${{ matrix.package }}" -- \
+            "find . -name '*.dart' -not -path '*/__brick__/*' -not -path '*/.dart_tool/*' \
+              -exec dart format --set-exit-if-changed {} +"
 
       - name: Analyze package
         run: melos exec --scope="${{ matrix.package }}" -- dart analyze --fatal-infos

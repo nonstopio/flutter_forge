@@ -68,6 +68,7 @@ nonstop create <project-name> [arguments]
 | `--output-directory` | `-o`     | Output directory for the new project                  | Current directory                                                   |
 | `--description`      | `--desc` | Description for the new project                       | "A Melos-managed project for mono-repo, created using NonStop CLI." |
 | `--org-name`         | `--org`  | Organization name for the new project                 | `com.example`                                                       |
+| `--defaults`         | `-y`     | Skip the module picker and take the recommended set   | Prompt                                                              |
 
 #### 📦 Template Options
 
@@ -75,7 +76,7 @@ nonstop create <project-name> [arguments]
 
 | Template  | 🎯 Description                                                   | 📁 Structure Created                                                    |
 |-----------|------------------------------------------------------------------|-------------------------------------------------------------------------|
-| `mono`    | 🏢 Generate a Flutter application along with mono-repo (default) | Complete mono-repo structure with apps, features, packages, and plugins |
+| `mono`    | 🏢 Generate a full app skeleton in a mono-repo (default)         | App shell, design system, localization and the modules you pick         |
 | `package` | 📦 Generate a Flutter package for a Melos-managed mono-repo      | Flutter package compatible with mono-repo structure                     |
 | `app`     | 📱 Generate a Flutter application for a Melos-managed mono-repo  | Flutter application configured for mono-repo structure                  |
 | `plugin`  | 🔌 Generate a Flutter plugin for a Melos-managed mono-repo       | Flutter plugin compatible with mono-repo structure                      |
@@ -83,6 +84,38 @@ nonstop create <project-name> [arguments]
 </div>
 
 #### 💡 Examples
+
+#### 🧩 Modules
+
+`mono` does not stop at empty folders. It asks which platform modules the app
+needs and generates them wired together - bootstrap order, DI registration,
+route table and all.
+
+```
+? Which modules should youtube start with?
+❯ ◉  Network          - Dio client, auth + logging interceptors, typed errors
+  ◉  Authentication   - Firebase Auth (email, Google, Apple) with route guards
+  ◯  Cloud Firestore  - Firestore + Cloud Functions wiring and timestamp converters
+  ◉  Push notifications
+  ◉  Analytics
+  ◉  Crash reporting
+  ◉  Feature flags
+  ◉  Developer tools
+  ◉  Dashboard shell
+```
+
+Answer non-interactively with `-y` (recommended set) or per module:
+
+```bash
+nonstop create youtube -y --no-notifications --firestore
+```
+
+Two rules are applied for you, because the code will not compile otherwise:
+push notifications pull in `network`, and developer tools pull in
+`feature_flags`.
+
+Every project also gets `core`, `di`, `design_system`, `localization` and
+`utils` - the pieces every app needs.
 
 <details>
 <summary><strong>🏢 Create a mono-repo project</strong></summary>
@@ -96,15 +129,33 @@ This creates the following structure:
 ```
 youtube/
 ├── 📱 apps/
-│   └── youtube/
+│   └── youtube/          # bootstrap, router, splash - no business logic
 ├── 🧩 features/
+│   ├── auth/             # Firebase Auth + route guards
+│   └── dashboard/        # bottom-navigation shell
 ├── 📦 packages/
+│   ├── core/             # logger, DI bootstrap, observers, error types
+│   ├── design_system/    # Material 3 theme, components, toasts
+│   ├── di/               # service locator
+│   ├── localization/     # type-safe strings (i69n)
+│   ├── network/          # Dio client and interceptors
+│   ├── analytics/
+│   ├── crashlytics/
+│   ├── feature_flags/
+│   ├── notifications/
+│   ├── developer/
+│   └── utils/
 ├── 🔌 plugins/
 ├── 📋 analysis_options.yaml
 ├── 📖 README.md
 ├── ⚙️ melos.yaml
 └── 📄 pubspec.yaml
 ```
+
+The generated workspace is bootstrapped, formatted and passes its own
+`melos lint` and `melos test` before you touch it. If you picked any Firebase
+module, run `flutterfire configure` in the app directory - the generated
+`firebase_options.dart` throws until you do.
 
 </details>
 

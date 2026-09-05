@@ -1,5 +1,16 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Generated code - regenerate it, do not lint it.
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.i69n.dart"
+    # Build output and the plugin sources CocoaPods symlinks into the app.
+    - "**/build/**"
+    - "**/ios/.symlinks/**"
+    - "**/macos/.symlinks/**"
+
 linter:
   rules:
     require_trailing_commas: true

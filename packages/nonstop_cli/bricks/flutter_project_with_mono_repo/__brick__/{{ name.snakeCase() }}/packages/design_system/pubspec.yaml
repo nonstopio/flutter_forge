@@ -1,0 +1,33 @@
+name: design_system
+description: "Theme, components and dialogs shared across {{name.titleCase()}}."
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.29.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.2.0
+  google_fonts: ^6.2.1
+  iconsax_flutter: ^1.0.1
+  loader_overlay: ^5.0.0
+  toastification: ^3.0.3
+  core:
+    path: ../core
+  di:
+    path: ../di
+  localization:
+    path: ../localization
+{{#network}}  network:
+    path: ../network
+{{/network}}
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
