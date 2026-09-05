@@ -1,3 +1,9 @@
+## 0.0.8
+
+ - **REFACTOR**(nonstop_cli): strip source-project domain from the template.
+ - **FEAT**(nonstop_cli): ask which modules a new project needs.
+ - **FEAT**(nonstop_cli): scaffold a production-shaped app in the mono-repo brick.
+
 ## 0.0.7+4
 
  - **FIX**: pass --org-name to all templates and remove unsupported --application-id.
