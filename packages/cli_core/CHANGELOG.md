@@ -1,3 +1,5 @@
+## 0.0.2
+
 ## 0.0.2-dev.6
 
  - **DOCS**(README): enhance connection section with social media links and acknowledgments.

@@ -1,3 +1,7 @@
+## 0.0.8+1
+
+ - Update a dependency to the latest release.
+
 ## 0.0.8
 
  - **REFACTOR**(nonstop_cli): strip source-project domain from the template.
