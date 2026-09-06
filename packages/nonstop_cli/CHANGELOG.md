@@ -1,3 +1,7 @@
+## 0.0.8+2
+
+ - **FIX**(nonstop_cli): boot apps before flutterfire configure.
+
 ## 0.0.8+1
 
  - Update a dependency to the latest release.
