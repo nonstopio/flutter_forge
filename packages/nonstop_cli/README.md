@@ -154,8 +154,9 @@ youtube/
 
 The generated workspace is bootstrapped, formatted and passes its own
 `melos lint` and `melos test` before you touch it. If you picked any Firebase
-module, run `flutterfire configure` in the app directory - the generated
-`firebase_options.dart` throws until you do.
+module, run `flutterfire configure` in the app directory when you want those
+features live. Until then the app still runs; Firebase-backed modules are
+skipped at startup.
 
 </details>
 

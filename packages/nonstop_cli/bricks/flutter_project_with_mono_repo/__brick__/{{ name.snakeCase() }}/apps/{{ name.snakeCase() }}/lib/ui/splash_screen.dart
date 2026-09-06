@@ -28,7 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _redirect() async {
     if (!mounted) return;
 {{#auth}}
-    if (!di.get<auth.AuthService>().isSignedIn) {
+    if (di.has<auth.AuthService>() &&
+        !di.get<auth.AuthService>().isSignedIn) {
       context.go(auth.AuthRoutes.signIn);
       return;
     }

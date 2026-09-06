@@ -41,6 +41,8 @@ final class GoAuthRoute extends GoRoute {
     super.pageBuilder,
   }) : super(
          redirect: (context, state) async {
+           if (!di.has<AuthService>()) return null;
+
            final authService = di.get<AuthService>();
 
            if (!authService.isSignedIn) {

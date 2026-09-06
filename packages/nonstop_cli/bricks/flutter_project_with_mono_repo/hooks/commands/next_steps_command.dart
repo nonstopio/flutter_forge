@@ -16,7 +16,7 @@ final class NextStepsCommand extends CliCommand {
         ..info('  dart pub global activate flutterfire_cli')
         ..info('  cd $appName/apps/$appName && flutterfire configure')
         ..info(
-          '  (until then lib/firebase_options.dart throws on purpose)',
+          '  (the app still runs; Firebase features stay off until then)',
         );
     }
 

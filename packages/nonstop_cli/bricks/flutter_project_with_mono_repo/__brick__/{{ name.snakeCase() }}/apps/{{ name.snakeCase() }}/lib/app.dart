@@ -24,6 +24,7 @@ class _AppState extends State<App> {
     // sign-in once you would rather ask a user who has committed to the app.
     _lifecycleListener = AppLifecycleListener(onResume: _clearBadge);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!di.has<NotificationClient>()) return;
       final logger = di.get<Logger>();
       try {
         await di.get<NotificationClient>().init();
@@ -34,6 +35,7 @@ class _AppState extends State<App> {
 {{/notifications}}  }
 {{#notifications}}
   void _clearBadge() {
+    if (!di.has<NotificationClient>()) return;
     final logger = di.get<Logger>();
     try {
       di.get<NotificationClient>().clearBadge();
