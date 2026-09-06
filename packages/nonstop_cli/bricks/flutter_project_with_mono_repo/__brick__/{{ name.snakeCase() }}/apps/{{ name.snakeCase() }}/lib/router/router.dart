@@ -5,7 +5,8 @@
 {{/dashboard}}import 'package:design_system/design_system.dart';
 {{#developer}}import 'package:developer/developer.dart' as developer;
 {{/developer}}import 'package:di/di.dart';
-import 'package:flutter/foundation.dart';
+{{#analytics}}import 'package:firebase_core/firebase_core.dart';
+{{/analytics}}import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
@@ -36,7 +37,7 @@ class AppRouter {
       observers: [
         NavigationHistoryObserver(),
         core.CoreRouteObserver(),
-{{#analytics}}        AnalyticsRouteObserver(),
+{{#analytics}}        if (Firebase.apps.isNotEmpty) AnalyticsRouteObserver(),
 {{/analytics}}      ],
       errorBuilder: (context, state) => ErrorScreen(
         title: strings.errors.page_not_found,

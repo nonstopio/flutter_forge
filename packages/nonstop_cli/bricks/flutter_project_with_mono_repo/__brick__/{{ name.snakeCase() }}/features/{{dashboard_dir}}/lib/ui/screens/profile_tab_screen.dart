@@ -60,6 +60,7 @@ class ProfileTabScreen extends StatelessWidget {
     );
 
     if (confirmed != true || !context.mounted) return;
+    if (!di.has<auth.AuthService>()) return;
 
     await di.get<auth.AuthService>().signOut();
     if (context.mounted) context.go(auth.AuthRoutes.signIn);

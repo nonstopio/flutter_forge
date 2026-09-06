@@ -45,8 +45,8 @@ melos bootstrap
 {{#firebase}}
 ### Firebase
 
-This project uses Firebase, so configure it before the first run - the
-generated `lib/firebase_options.dart` deliberately throws until you do:
+This project uses Firebase, so run this before those features will work.
+The rest of the app still boots without it:
 
 ```sh
 dart pub global activate flutterfire_cli

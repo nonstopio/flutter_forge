@@ -46,9 +46,14 @@ void resolveModuleVars(HookContext context) {
   final usesFirebase =
       _firebaseBackedModules.any((module) => _flag(context, module));
   context.vars['firebase'] = usesFirebase;
+  // Empty path segment → mason skips the file, so a project with no Firebase
+  // modules never ships a placeholder `firebase_options.dart`.
+  context.vars['firebase_options_file'] =
+      usesFirebase ? 'firebase_options.dart' : '';
 
-  // The boot test runs the real bootstrap, which a Firebase project cannot do
-  // until `flutterfire configure` has been run. An empty file name makes mason
-  // skip the file, so those projects simply ship without it.
+  // The boot test runs the real bootstrap. Firebase projects can boot before
+  // `flutterfire configure` now (those modules are skipped), but after
+  // configure the splash may land on sign-in instead of the dashboard, so
+  // they still don't ship this file.
   context.vars['smoke_test_file'] = usesFirebase ? '' : 'smoke_test.dart';
 }
