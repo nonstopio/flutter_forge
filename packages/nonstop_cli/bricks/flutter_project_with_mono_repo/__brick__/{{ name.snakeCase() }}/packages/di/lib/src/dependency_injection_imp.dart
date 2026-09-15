@@ -24,7 +24,8 @@ class GetItDependencyInjection implements DependencyInjection {
   @override
   Future<void> dispose() async {
     // Call dispose functions for all registered instances
-    for (final entry in _disposeFunctions.entries) {
+    // Dependents are registered after dependencies; tear them down first.
+    for (final entry in _disposeFunctions.entries.toList().reversed) {
       final type = entry.key;
       final disposeFunc = entry.value;
       final instance = _registeredInstances[type];
@@ -70,6 +71,13 @@ class GetItDependencyInjection implements DependencyInjection {
   Future<void> unregister<T extends Object>(final T? instance) async {
     if (!_getIt.isRegistered<T>()) {
       return;
+    }
+    if (instance != null && !identical(instance, _getIt.get<T>())) {
+      throw ArgumentError.value(
+        instance,
+        'instance',
+        'Does not match the registered instance of $T',
+      );
     }
 
     // Call dispose function if it exists

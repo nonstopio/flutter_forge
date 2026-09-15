@@ -2,9 +2,7 @@
 ///
 /// Feature packages declare their own route constants; these are the ones
 /// every app has.
-class CoreRoutes {
-  CoreRoutes._();
-
+abstract final class CoreRoutes {
   static const String root = '/';
   static const String home = '/home';
   static const String dashboard = '/home/dashboard';

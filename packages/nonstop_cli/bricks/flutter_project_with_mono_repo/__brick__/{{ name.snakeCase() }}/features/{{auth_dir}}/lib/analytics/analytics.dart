@@ -8,8 +8,7 @@
 {{^analytics}}///
 /// Analytics is not enabled in this project, so the log methods are no-ops.
 /// Wire them up by adding the `analytics` package back to `pubspec.yaml`.
-{{/analytics}}class AuthAnalytics {
-  const AuthAnalytics._();
+{{/analytics}}abstract final class AuthAnalytics {
 
   /// 'google', 'apple' or 'email', derived from the signed-in provider.
   static String getAuthMethod(List<UserInfo>? providerData) {

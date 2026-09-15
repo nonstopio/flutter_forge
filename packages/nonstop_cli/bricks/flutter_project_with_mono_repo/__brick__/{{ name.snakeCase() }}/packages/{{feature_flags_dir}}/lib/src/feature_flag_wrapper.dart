@@ -3,13 +3,14 @@ import 'package:feature_flags/src/feature_flag_service.dart';
 import 'package:flutter/material.dart';
 
 /// A wrapper widget that conditionally renders content based on feature flags
-class FeatureFlagWrapper extends StatelessWidget {
+class FeatureFlagWrapper extends StatefulWidget {
   const FeatureFlagWrapper({
     super.key,
     required this.flagKey,
     required this.builder,
     this.defaultValue = false,
     this.loading,
+    this.service,
   });
 
   /// The feature flag key to check
@@ -23,34 +24,61 @@ class FeatureFlagWrapper extends StatelessWidget {
 
   /// Widget to show while loading the feature flag value
   final Widget? loading;
+  final FeatureFlag? service;
+
+  @override
+  State<FeatureFlagWrapper> createState() => _FeatureFlagWrapperState();
+}
+
+class _FeatureFlagWrapperState extends State<FeatureFlagWrapper> {
+  late Future<bool> _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = _checkFeatureFlag();
+  }
+
+  @override
+  void didUpdateWidget(FeatureFlagWrapper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.flagKey != widget.flagKey ||
+        oldWidget.defaultValue != widget.defaultValue ||
+        oldWidget.service != widget.service) {
+      _value = _checkFeatureFlag();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: _checkFeatureFlag(),
+      future: _value,
       builder: (context, snapshot) {
         // Show loading widget while waiting for feature flag
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return loading ?? const SizedBox.shrink();
+          return widget.loading ?? const SizedBox.shrink();
         }
 
         // Get the feature flag value, defaulting to false if there's an error
-        final isEnabled = snapshot.data ?? defaultValue;
+        final isEnabled = snapshot.data ?? widget.defaultValue;
 
         // Return the widget built by the builder function
-        return builder(context, isEnabled);
+        return widget.builder(context, isEnabled);
       },
     );
   }
 
   Future<bool> _checkFeatureFlag() async {
     try {
-      final featureFlag = di.get<FeatureFlag>();
-      return await featureFlag.isEnabled(flagKey, defaultValue: defaultValue);
+      final featureFlag = widget.service ?? di.get<FeatureFlag>();
+      return await featureFlag.isEnabled(
+        widget.flagKey,
+        defaultValue: widget.defaultValue,
+      );
     } catch (e) {
       // If there's an error accessing the feature flag service,
       // return the default value
-      return defaultValue;
+      return widget.defaultValue;
     }
   }
 }

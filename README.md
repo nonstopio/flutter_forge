@@ -20,6 +20,12 @@
 
 A place where Flutter packages are crafted and built.
 
+[NonStop CLI](packages/nonstop_cli/README.md) generates a Melos-managed Flutter
+starter with SOLID-oriented boundaries, offline unit/widget tests, a strict
+100% handwritten-runtime line-coverage gate and generated CI. Its template is
+verified by generating and building real applications, including minimal and
+optional-module configurations.
+
 - All shared [packages](packages/README.md) are in the `/packages` directory
 - All [plugins](plugins/README.md) are in the `/plugins` directory
 

@@ -22,6 +22,10 @@ final class NextStepsCommand extends CliCommand {
 
     logger
       ..info('')
+      ..info('Verify the workspace (from $appName):')
+      ..info('  dart run melos run lint')
+      ..info('  dart run melos run coverage')
+      ..info('')
       ..info('Run the app:')
       ..info('  cd $appName/apps/$appName && flutter run');
   }

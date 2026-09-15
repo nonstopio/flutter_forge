@@ -66,8 +66,8 @@ class CrashReport {
 
   @override
   int get hashCode =>
-      exception.hashCode ^
-      stackTrace.hashCode ^
+      exception.toString().hashCode ^
+      stackTrace.toString().hashCode ^
       fatal.hashCode ^
       timestamp.hashCode;
 }

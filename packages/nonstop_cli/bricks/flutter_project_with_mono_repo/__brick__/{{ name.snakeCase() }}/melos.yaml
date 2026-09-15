@@ -35,16 +35,8 @@ scripts:
       flutter: true
 
   lint:
-    description: "Run format and analyze all packages"
-    # `dart format` has no exclude of its own, so build output and the plugin
-    # sources CocoaPods symlinks into the app are filtered out here.
-    run: |
-      find . -name '*.dart' -not -path '*/build/*' -not -path '*/.dart_tool/*' \
-        -not -path '*/.symlinks/*' -exec dart format --set-exit-if-changed {} + &&
-      dart analyze --fatal-infos .
-    exec:
-      concurrency: 5
-      failFast: true
+    description: "Check formatting and analyze all workspace code"
+    run: dart run tool/check.dart
 
   fix:
     description: "Apply Dart automated fixes to all packages"
@@ -82,7 +74,11 @@ scripts:
 
   test:
     description: "Run all tests (Dart and Flutter)"
-    run: melos run test:select --no-select
+    run: dart run melos run test:select --no-select
+
+  coverage:
+    description: "Run every test and require 100% handwritten line coverage"
+    run: dart run tool/coverage.dart
 
   test:select:
     description: "Run tests in Flutter packages"

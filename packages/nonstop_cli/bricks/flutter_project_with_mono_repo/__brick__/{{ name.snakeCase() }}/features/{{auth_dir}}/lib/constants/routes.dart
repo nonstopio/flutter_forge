@@ -1,6 +1,4 @@
-class AuthRoutes {
-  AuthRoutes._();
-
+abstract final class AuthRoutes {
   static const String auth = '/auth';
 
   static const String signIn = '$auth/sign-in';

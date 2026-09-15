@@ -8,6 +8,10 @@ class DeveloperScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TalkerScreen(talker: di.get<Logger>().logger as Talker);
+    final logger = di.get<Logger>().logger;
+    if (logger is Talker) return TalkerScreen(talker: logger);
+    return const Scaffold(
+      body: Center(child: Text('This logger has no interactive viewer.')),
+    );
   }
 }

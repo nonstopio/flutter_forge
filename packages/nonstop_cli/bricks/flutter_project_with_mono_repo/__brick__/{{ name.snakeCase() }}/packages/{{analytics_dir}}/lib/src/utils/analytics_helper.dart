@@ -5,24 +5,15 @@ import 'package:core/core.dart';
 import 'package:di/di.dart';
 
 class AnalyticsHelper {
-  static AnalyticsClient? _client;
-  static Logger? _logger;
+  static AnalyticsClient? get _analyticsClient => _getAnalyticsClient();
 
-  static AnalyticsClient? get _analyticsClient {
-    _client ??= _getAnalyticsClient();
-    return _client;
-  }
-
-  static Logger get _log {
-    _logger ??= di.get<Logger>();
-    return _logger!;
-  }
+  static Logger? get _log => di.has<Logger>() ? di.get<Logger>() : null;
 
   static AnalyticsClient? _getAnalyticsClient() {
     try {
       return di.get<AnalyticsClient>();
     } catch (e) {
-      _log.w('Analytics client not available: $e');
+      _log?.w('Analytics client not available: $e');
       return null;
     }
   }
@@ -38,7 +29,7 @@ class AnalyticsHelper {
     try {
       await client.logEvent(name: name, parameters: parameters);
     } catch (e, s) {
-      _log.e('Failed to log analytics event: $name', e, s);
+      _log?.e('Failed to log analytics event: $name', e, s);
     }
   }
 
@@ -53,7 +44,7 @@ class AnalyticsHelper {
     try {
       await client.logLogin(loginMethod: method, parameters: parameters);
     } catch (e, s) {
-      _log.e('Failed to log sign in event', e, s);
+      _log?.e('Failed to log sign in event', e, s);
     }
   }
 
@@ -68,7 +59,7 @@ class AnalyticsHelper {
     try {
       await client.logSignUp(signUpMethod: method, parameters: parameters);
     } catch (e, s) {
-      _log.e('Failed to log sign up event', e, s);
+      _log?.e('Failed to log sign up event', e, s);
     }
   }
 
@@ -80,7 +71,7 @@ class AnalyticsHelper {
     try {
       await client.setUserId(userId);
     } catch (e, s) {
-      _log.e('Failed to set analytics user ID', e, s);
+      _log?.e('Failed to set analytics user ID', e, s);
     }
   }
 
@@ -95,7 +86,7 @@ class AnalyticsHelper {
     try {
       await client.setUserProperty(name: name, value: value);
     } catch (e, s) {
-      _log.e('Failed to set analytics user property: $name', e, s);
+      _log?.e('Failed to set analytics user property: $name', e, s);
     }
   }
 
@@ -107,7 +98,7 @@ class AnalyticsHelper {
     try {
       await client.logAppOpen(parameters: parameters);
     } catch (e, s) {
-      _log.e('Failed to log app open event', e, s);
+      _log?.e('Failed to log app open event', e, s);
     }
   }
 
@@ -119,7 +110,7 @@ class AnalyticsHelper {
     try {
       await client.logCustomEvent(event);
     } catch (e, s) {
-      _log.e('Failed to log custom analytics event: ${event.name}', e, s);
+      _log?.e('Failed to log custom analytics event: ${event.name}', e, s);
     }
   }
 
@@ -169,5 +160,4 @@ class AnalyticsHelper {
       },
     );
   }
-
 }

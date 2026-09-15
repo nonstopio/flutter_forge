@@ -25,7 +25,7 @@ class SignInScreen extends StatelessWidget {
       oauthButtonVariant: ui_auth.OAuthButtonVariant.icon_and_text,
       actions: [
         ui_auth.ForgotPasswordAction((context, email) {
-          logger.d('Navigating to forgot password screen for email: $email');
+          logger.d('Navigating to forgot password screen');
 
           final uri = Uri(
             path: AuthRoutes.forgotPassword,
@@ -34,7 +34,7 @@ class SignInScreen extends StatelessWidget {
           context.push(uri.toString());
         }),
         ui_auth.AuthStateChangeAction<ui_auth.SignedIn>((context, state) async {
-          logger.d('User signed in successfully: ${state.user?.email}');
+          logger.d('User signed in successfully');
 
           final method = AuthAnalytics.getAuthMethod(state.user?.providerData);
 
@@ -50,9 +50,7 @@ class SignInScreen extends StatelessWidget {
           context,
           state,
         ) async {
-          logger.d(
-            'User signed in successfully: ${state.credential.user?.email}',
-          );
+          logger.d('User signed in successfully');
 
           final method = AuthAnalytics.getAuthMethod(
             state.credential.user?.providerData,

@@ -1,8 +1,6 @@
 import 'package:intl/intl.dart';
 
-final class DateTimeConverter {
-  const DateTimeConverter();
-
+abstract final class DateTimeConverter {
   /// Converts a [DateTime] to a [String] in the format 'MMMM d, y'.
   /// If the [date] is null, it returns an empty string.
   ///

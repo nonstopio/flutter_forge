@@ -41,14 +41,15 @@ Future<void> registerNetworkWithDI(
         '🔓 No AuthTokenProvider found in DI, creating unauthenticated client',
       );
     }
-  } else if (config.authTokenProvider != null) {
+  } else if (useAuthentication && config.authTokenProvider != null) {
     authTokenProvider = config.authTokenProvider;
     logger.d('🔐 Using provided AuthTokenProvider');
   }
 
   // Create network config with auth provider if available
   late final NetworkConfig finalConfig;
-  if (authTokenProvider != null && config.authTokenProvider == null) {
+  if (!useAuthentication ||
+      (authTokenProvider != null && config.authTokenProvider == null)) {
     // Create a new config with the auth provider
     finalConfig = DefaultNetworkConfig(
       baseUrl: config.baseUrl,
@@ -63,7 +64,7 @@ Future<void> registerNetworkWithDI(
     finalConfig = config;
   }
 
-  final networkClient = DioNetworkClient(finalConfig);
+  final networkClient = DioNetworkClient(finalConfig, logger: logger);
   di.register<NetworkClient>(
     networkClient,
     dispose: (client) => client.dispose(),

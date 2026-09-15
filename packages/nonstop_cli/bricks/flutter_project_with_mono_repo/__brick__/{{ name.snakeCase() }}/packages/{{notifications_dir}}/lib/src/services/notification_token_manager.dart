@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:core/logger/logger.dart';
 import 'package:di/di.dart';
@@ -57,7 +57,7 @@ class FirebaseTokenManager implements NotificationTokenManager {
 
       final deviceId = await _deviceInfo.generateDeviceId();
       final deviceName = await _deviceInfo.getDeviceName();
-      final deviceType = Platform.isIOS ? 'ios' : 'android';
+      final deviceType = kIsWeb ? 'web' : defaultTargetPlatform.name;
 
       final request = DeviceTokenRequest(
         fcmToken: fcmToken,
@@ -66,11 +66,12 @@ class FirebaseTokenManager implements NotificationTokenManager {
         deviceType: deviceType,
       );
 
-      await _networkClient.post<Map<String, dynamic>>(
+      final response = await _networkClient.post<Map<String, dynamic>>(
         '/device-tokens/me',
         data: request.toJson(),
         fromJsonT: (json) => json as Map<String, dynamic>,
       );
+      _networkClient.handleSuccessResponse(response);
       _logger.i('$_tag: FCM token registered successfully');
       return deviceId;
     } catch (e, s) {
@@ -84,10 +85,11 @@ class FirebaseTokenManager implements NotificationTokenManager {
     try {
       _logger.i('$_tag: Removing FCM token from backend');
 
-      await _networkClient.delete<Map<String, dynamic>>(
+      final response = await _networkClient.delete<Map<String, dynamic>>(
         '/device-tokens/me/$deviceId',
         fromJsonT: (json) => json as Map<String, dynamic>,
       );
+      _networkClient.handleSuccessResponse(response);
       _logger.i('$_tag: FCM token removed successfully');
     } catch (e, s) {
       _logger.e('$_tag: Error removing FCM token', e, s);

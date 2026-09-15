@@ -19,7 +19,7 @@ class RegisterScreen extends StatelessWidget {
       showAuthActionSwitch: false,
       actions: [
         ui_auth.AuthStateChangeAction<ui_auth.SignedIn>((context, state) async {
-          logger.d('User registered successfully: ${state.user?.email}');
+          logger.d('User registered successfully');
 
           final method = AuthAnalytics.getAuthMethod(state.user?.providerData);
 
@@ -35,9 +35,7 @@ class RegisterScreen extends StatelessWidget {
           context,
           state,
         ) async {
-          logger.d(
-            'User created successfully: ${state.credential.user?.email}',
-          );
+          logger.d('User created successfully');
 
           final method = AuthAnalytics.getAuthMethod(
             state.credential.user?.providerData,

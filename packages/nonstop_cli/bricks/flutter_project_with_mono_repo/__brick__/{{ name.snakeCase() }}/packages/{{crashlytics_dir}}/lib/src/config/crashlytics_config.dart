@@ -81,7 +81,9 @@ class CrashlyticsConfig {
       enableCustomLogs.hashCode ^
       logBufferSize.hashCode ^
       enableUserMetadata.hashCode ^
-      customKeys.hashCode;
+      Object.hashAllUnordered(
+        customKeys.entries.map((entry) => Object.hash(entry.key, entry.value)),
+      );
 
   bool _mapEquals(Map<String, dynamic> a, Map<String, dynamic> b) {
     if (a.length != b.length) return false;

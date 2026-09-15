@@ -3,9 +3,7 @@
 /// Usage: `AnalyticsEvents.user.authenticatedRedirect`. Naming events here
 /// instead of inline keeps them discoverable and typo-free, and gives you one
 /// place to add the groups your own product needs.
-class AnalyticsEvents {
-  AnalyticsEvents._();
-
+abstract final class AnalyticsEvents {
   /// User-related events
   static const user = _UserEvents();
 
@@ -144,8 +142,6 @@ class _AppEvents {
   /// App uninstalled
   String get uninstalled => 'app_uninstalled';
 }
-
-
 
 class _ProfileEvents {
   const _ProfileEvents();

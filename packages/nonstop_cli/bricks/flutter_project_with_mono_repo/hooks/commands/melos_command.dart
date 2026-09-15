@@ -11,18 +11,19 @@ final class MelosCommand extends CliCommand {
 
     await runChecked(
       context,
-      startMessage: 'Activating Melos globally',
-      endMessage: 'Melos activated globally',
+      startMessage: 'Installing workspace tooling',
+      endMessage: 'Workspace tooling installed',
       executable: 'dart',
-      arguments: ['pub', 'global', 'activate', 'melos'],
+      arguments: ['pub', 'get'],
+      workingDirectory: appName,
     );
 
     await runChecked(
       context,
       startMessage: 'Running melos bootstrap',
       endMessage: 'Dependencies installed',
-      executable: 'melos',
-      arguments: ['bootstrap'],
+      executable: 'dart',
+      arguments: ['run', 'melos', 'bootstrap'],
       workingDirectory: appName,
     );
   }

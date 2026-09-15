@@ -1,3 +1,15 @@
+## Unreleased
+
+- Refactor the mono-repo template around injectable SDK adapters, explicit app
+  composition and owned asynchronous lifecycles.
+- Fix authenticated request retries, response contracts, token refresh races,
+  remote-config defaults, notification registration and fail-closed guards.
+- Generate offline unit/widget tests, a strict 100% handwritten-runtime line
+  coverage gate, portable quality commands, architecture docs and GitHub CI.
+- Verify every module selection structurally and representative fresh projects
+  through analysis, tests, coverage and web builds.
+- Generate from the shipped bundle and use workspace-local Melos for bootstrap.
+
 ## 0.0.8+2
 
  - **FIX**(nonstop_cli): boot apps before flutterfire configure.
@@ -98,4 +110,3 @@
 
  - **FIX**(nonstop_cli): rename nonstop_cli.dart to nonstop.dart.
  - **FEAT**(nonstop_cli): initial release of core commands.
-

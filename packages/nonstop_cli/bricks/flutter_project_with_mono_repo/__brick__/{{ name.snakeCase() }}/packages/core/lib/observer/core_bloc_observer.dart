@@ -1,34 +1,29 @@
 import 'package:bloc/bloc.dart';
 import 'package:core/core.dart';
 import 'package:di/di.dart';
-import 'package:talker_bloc_logger/talker_bloc_logger_observer.dart';
-import 'package:talker_bloc_logger/talker_bloc_logger_settings.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class CoreBlocObserver extends BlocObserver {
-  final TalkerBlocObserver _observer;
+  final Logger _logger;
 
-  CoreBlocObserver()
-    : _observer = TalkerBlocObserver(
-        talker: di.get<Logger>().logger as Talker,
-        settings: TalkerBlocLoggerSettings(printEventFullData: true),
-      );
+  CoreBlocObserver({Logger? logger}) : _logger = logger ?? di.get<Logger>();
 
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
-    _observer.onEvent(bloc, event);
+    _logger.d('${bloc.runtimeType}: event ${event.runtimeType}');
   }
 
   @override
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
-    _observer.onTransition(bloc, transition);
+    _logger.d(
+      '${bloc.runtimeType}: ${transition.currentState.runtimeType} -> ${transition.nextState.runtimeType}',
+    );
   }
 
   @override
   void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
     super.onError(bloc, error, stackTrace);
-    _observer.onError(bloc, error, stackTrace);
+    _logger.e('${bloc.runtimeType}: unhandled error', error, stackTrace);
   }
 }

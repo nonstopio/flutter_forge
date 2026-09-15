@@ -2,15 +2,15 @@
 {{/auth}}import 'package:dashboard/ui/screens/index.dart';
 import 'package:go_router/go_router.dart';
 
-{{#auth}}/// Every shell branch is guarded - unauthenticated users bounce to sign-in.
+{{#auth}}/// Demo content is available before Firebase configuration; configured apps
+/// require a signed-in identity. Do not enable this bypass for protected data.
 typedef _ShellRoute = auth.GoAuthRoute;{{/auth}}{{^auth}}typedef _ShellRoute = GoRoute;{{/auth}}
 
 /// Bottom-navigation shell for the signed-in part of the app.
 ///
 /// Add a tab by adding a [StatefulShellBranch] here and a destination in
 /// [DashboardShellScreen].
-class DashboardRouter {
-  const DashboardRouter._();
+abstract final class DashboardRouter {
 
   static const String home = '/home/dashboard';
   static const String explore = '/home/explore';
@@ -24,7 +24,8 @@ class DashboardRouter {
         StatefulShellBranch(
           routes: [
             _ShellRoute(
-              path: home,
+{{#auth}}              allowUnconfigured: true,
+{{/auth}}              path: home,
               builder: (context, state) => const HomeTabScreen(),
             ),
           ],
@@ -32,7 +33,8 @@ class DashboardRouter {
         StatefulShellBranch(
           routes: [
             _ShellRoute(
-              path: explore,
+{{#auth}}              allowUnconfigured: true,
+{{/auth}}              path: explore,
               builder: (context, state) => const ExploreTabScreen(),
             ),
           ],
@@ -40,7 +42,8 @@ class DashboardRouter {
         StatefulShellBranch(
           routes: [
             _ShellRoute(
-              path: profile,
+{{#auth}}              allowUnconfigured: true,
+{{/auth}}              path: profile,
               builder: (context, state) => const ProfileTabScreen(),
             ),
           ],

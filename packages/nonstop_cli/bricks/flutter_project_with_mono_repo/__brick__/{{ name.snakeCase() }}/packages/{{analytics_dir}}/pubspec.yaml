@@ -17,6 +17,7 @@ dependencies:
     path: ../di
 
 dev_dependencies:
+  mocktail: ^1.0.4
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0

@@ -5,7 +5,7 @@ import 'package:network/network.dart';
 import 'package:notifications/src/exceptions/notification_exceptions.dart';
 
 abstract class NotificationPermissionManager {
-  Future<bool> requestPermissions();
+  Future<bool> requestPermissions({bool provisional = false});
 }
 
 class FirebasePermissionManager implements NotificationPermissionManager {
@@ -21,10 +21,12 @@ class FirebasePermissionManager implements NotificationPermissionManager {
        _firebaseMessaging = firebaseMessaging ?? FirebaseMessaging.instance;
 
   @override
-  Future<bool> requestPermissions() async {
+  Future<bool> requestPermissions({bool provisional = false}) async {
     try {
       _logger.i('$_tag: Requesting notification permissions');
-      final authSettings = await _firebaseMessaging.requestPermission();
+      final authSettings = await _firebaseMessaging.requestPermission(
+        provisional: provisional,
+      );
 
       final isGranted =
           authSettings.authorizationStatus == AuthorizationStatus.authorized ||

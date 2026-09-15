@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:core/core.dart';
-import 'package:di/di.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localization/localization.dart';
@@ -10,17 +9,18 @@ import 'package:network/src/config/network_config.dart';
 import 'package:network/src/exceptions/network_exceptions.dart';
 import 'package:network/src/interceptors/auth_interceptor.dart';
 import 'package:network/src/models/network_response.dart';
-import 'package:talker_dio_logger/talker_dio_logger.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:network/src/interceptors/logging_interceptor.dart';
 
 class DioNetworkClient implements NetworkClient {
-  DioNetworkClient(this._config) : _dio = Dio() {
+  DioNetworkClient(this._config, {required Logger logger, Dio? dio})
+    : _logger = logger,
+      _dio = dio ?? Dio() {
     _setupDio();
   }
 
   final NetworkConfig _config;
   final Dio _dio;
-  final Logger _logger = di.get<Logger>();
+  final Logger _logger;
 
   void _setupDio() {
     _dio.options = BaseOptions(
@@ -34,20 +34,14 @@ class DioNetworkClient implements NetworkClient {
 
     // Add authentication interceptor if token provider is available
     if (_config.authTokenProvider != null) {
-      _dio.interceptors.add(AuthInterceptor(_config.authTokenProvider!));
+      _dio.interceptors.add(
+        AuthInterceptor(_config.authTokenProvider!, dio: _dio, logger: _logger),
+      );
       _logger.d('🔐 Auth interceptor added to network client');
     }
 
     if (_config.enableLogging) {
-      _dio.interceptors.add(
-        TalkerDioLogger(
-          talker: di.get<Logger>().logger as Talker,
-          settings: TalkerDioLoggerSettings(
-            printResponseData: true,
-            printResponseTime: true,
-          ),
-        ),
-      );
+      _dio.interceptors.add(LoggingInterceptor(logger: _logger));
     }
   }
 
@@ -165,15 +159,15 @@ class DioNetworkClient implements NetworkClient {
         if (responseData.containsKey('success')) {
           if (responseData['success'] == true) {
             return SuccessResponse.fromJson({
+              ...responseData,
               'statusCode': response.statusCode ?? 200,
               'headers': response.headers.map,
-              ...responseData,
             }, fromJsonT);
           } else {
-            ErrorResponse.fromJson({
+            return ErrorResponse<T>.fromJson({
+              ...responseData,
               'statusCode': response.statusCode ?? 500,
               'headers': response.headers.map,
-              ...responseData,
             });
           }
         }
@@ -181,14 +175,16 @@ class DioNetworkClient implements NetworkClient {
 
       // Ideally, should not reach here if the API follows the
       // standard response format
-      _logger.w('Invalid response format: ${response.data}');
+      _logger.d('Decoding response without an API envelope');
 
       // Fallback to a generic success response
-      return SuccessResponse.fromJson({
-        'statusCode': response.statusCode ?? 200,
-        'headers': response.headers.map,
-        'data': response.data,
-      }, (value) => value as T);
+      return SuccessResponse<T>(
+        statusCode: response.statusCode ?? 200,
+        headers: response.headers.map,
+        success: true,
+        timestamp: DateTime.now().toIso8601String(),
+        data: fromJsonT(response.data),
+      );
     } catch (e, s) {
       _logger.e('Error parsing response', e);
       return ErrorResponse(
@@ -228,9 +224,9 @@ class DioNetworkClient implements NetworkClient {
           responseData.containsKey('success') &&
           responseData['success'] == false) {
         return ErrorResponse.fromJson({
+          ...responseData,
           'statusCode': response?.statusCode ?? 500,
           'headers': response?.headers.map,
-          ...responseData,
         });
       }
     } catch (e) {
@@ -296,7 +292,7 @@ class DioNetworkClient implements NetworkClient {
   T handleResponse<T>(final NetworkResponse<T> response) {
     switch (response) {
       case SuccessResponse<T>():
-        return response.data!;
+        return response.data;
       case ErrorResponse<T>():
         throw UnknownNetworkException(
           message: response.message ?? strings.errors.network_error,

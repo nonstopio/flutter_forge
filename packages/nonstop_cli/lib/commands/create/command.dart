@@ -23,9 +23,7 @@ class CreateCommand extends Command<int> {
   CreateCommand({
     required this.logger,
     @visibleForTesting MasonGeneratorFromBundle? generatorFromBundle,
-    @visibleForTesting MasonGeneratorFromBrick? generatorFromBrick,
-  })  : _generatorFromBundle = generatorFromBundle ?? MasonGenerator.fromBundle,
-        _generatorFromBrick = generatorFromBrick ?? MasonGenerator.fromBrick {
+  }) : _generatorFromBundle = generatorFromBundle ?? MasonGenerator.fromBundle {
     argParser
       ..addOption(
         'output-directory',
@@ -79,7 +77,6 @@ class CreateCommand extends Command<int> {
 
   final Logger logger;
   final MasonGeneratorFromBundle _generatorFromBundle;
-  final MasonGeneratorFromBrick _generatorFromBrick;
 
   @override
   String get name => 'create';
@@ -204,19 +201,10 @@ class CreateCommand extends Command<int> {
     }
   }
 
-  Future<MasonGenerator> _getGeneratorForTemplate() async {
-    try {
-      final brick = Brick.version(
-        name: template.bundle.name,
-        version: '^${template.bundle.version}',
-      );
-      logger.detail(
-        '''Building generator from brick: ${brick.name} ${brick.location.version}''',
-      );
-      return await _generatorFromBrick(brick);
-    } catch (error) {
-      logger.detail('Building generator from brick failed: $error');
-    }
+  /// Use the tested template shipped with this CLI version, without silently
+  /// replacing it with a different registry version at generation time.
+  @visibleForTesting
+  Future<MasonGenerator> createGenerator() async {
     logger.detail(
       '''Building generator from bundle ${template.bundle.name} ${template.bundle.version}''',
     );
@@ -227,7 +215,7 @@ class CreateCommand extends Command<int> {
   Future<int> run() async {
     logger.logSignature();
     final template = this.template;
-    final generator = await _getGeneratorForTemplate();
+    final generator = await createGenerator();
     final result = await runCreate(generator, template);
 
     return result;

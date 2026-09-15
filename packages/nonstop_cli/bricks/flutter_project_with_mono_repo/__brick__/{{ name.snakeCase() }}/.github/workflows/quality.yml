@@ -1,0 +1,24 @@
+name: Template quality
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - run: dart pub get
+      - run: dart run melos bootstrap
+      - run: dart run melos run lint
+      - run: dart run melos run coverage
+      - run: flutter build web
+        working-directory: apps/{{name.snakeCase()}}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: coverage/lcov.info
