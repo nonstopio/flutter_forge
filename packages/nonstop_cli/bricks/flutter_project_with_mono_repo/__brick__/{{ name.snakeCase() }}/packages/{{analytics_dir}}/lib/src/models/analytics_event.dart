@@ -20,7 +20,14 @@ class AnalyticsEvent {
   }
 
   @override
-  int get hashCode => name.hashCode ^ parameters.hashCode;
+  int get hashCode => Object.hash(
+    name,
+    parameters == null
+        ? null
+        : Object.hashAllUnordered(
+            parameters!.entries.map((e) => Object.hash(e.key, e.value)),
+          ),
+  );
 
   bool _mapEquals(Map<String, dynamic>? a, Map<String, dynamic>? b) {
     if (a == null) return b == null;

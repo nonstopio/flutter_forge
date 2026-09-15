@@ -1,32 +1,29 @@
 import 'package:core/logger/logger.dart';
-import 'package:di/di.dart';
 import 'package:feature_flags/feature_flags.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 /// Firebase Remote Config implementation of FeatureFlagProvider
 class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
-  late final FirebaseRemoteConfig _remoteConfig;
+  final FirebaseRemoteConfig _remoteConfig;
   final FeatureFlagsConfig _config;
-  late final Logger logger;
+  final Logger logger;
 
-  FirebaseRemoteConfigProvider({FeatureFlagsConfig? config})
-    : _config =
-          config ??
-          const FeatureFlagsConfig(
-            defaultParameters: {},
-            fetchTimeout: Duration(seconds: 10),
-            minimumFetchInterval: Duration(hours: 1),
-          ) {
-    if (di.has<Logger>()) {
-      logger = di.get<Logger>();
-    }
-  }
+  FirebaseRemoteConfigProvider({
+    required FirebaseRemoteConfig remoteConfig,
+    required this.logger,
+    FeatureFlagsConfig? config,
+  }) : _remoteConfig = remoteConfig,
+       _config =
+           config ??
+           const FeatureFlagsConfig(
+             defaultParameters: {},
+             fetchTimeout: Duration(seconds: 10),
+             minimumFetchInterval: Duration(hours: 1),
+           );
 
   @override
   Future<void> init() async {
     try {
-      _remoteConfig = FirebaseRemoteConfig.instance;
-
       // Configure settings
       await _remoteConfig.setConfigSettings(
         RemoteConfigSettings(
@@ -46,12 +43,6 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
       logger.i('Remote Config activated: $activated');
       logger.i('Last fetch status: ${_remoteConfig.lastFetchStatus}');
       logger.i('Last fetch time: ${_remoteConfig.lastFetchTime}');
-
-      // Log all current values for debugging
-      final allValues = _remoteConfig.getAll();
-      for (final entry in allValues.entries) {
-        logger.i('Remote Config - ${entry.key}: ${entry.value.asString()}');
-      }
     } catch (e, stackTrace) {
       logger.e('Failed to initialize Firebase Remote Config', e, stackTrace);
       rethrow;
@@ -65,13 +56,10 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
   @override
   Future<bool> getBool(String key, {bool defaultValue = false}) async {
     try {
-      final value = _remoteConfig.getBool(key);
       final configValue = _remoteConfig.getValue(key);
-      logger.i(
-        'Getting bool flag "$key": value=$value,'
-        ' source=${configValue.source}',
-      );
-      return value;
+      return configValue.source == ValueSource.valueStatic
+          ? defaultValue
+          : _remoteConfig.getBool(key);
     } catch (e) {
       logger.e(
         'Failed to get bool flag: $key, using default: $defaultValue',
@@ -84,8 +72,9 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
   @override
   Future<String> getString(String key, {String defaultValue = ''}) async {
     try {
-      final value = _remoteConfig.getString(key);
-      return value.isEmpty ? defaultValue : value;
+      return _remoteConfig.getValue(key).source == ValueSource.valueStatic
+          ? defaultValue
+          : _remoteConfig.getString(key);
     } catch (e) {
       logger.w('Failed to get string flag: $key, using default: $defaultValue');
       return defaultValue;
@@ -95,7 +84,9 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
   @override
   Future<int> getInt(String key, {int defaultValue = 0}) async {
     try {
-      return _remoteConfig.getInt(key);
+      return _remoteConfig.getValue(key).source == ValueSource.valueStatic
+          ? defaultValue
+          : _remoteConfig.getInt(key);
     } catch (e) {
       logger.w('Failed to get int flag: $key, using default: $defaultValue');
       return defaultValue;
@@ -105,7 +96,9 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
   @override
   Future<double> getDouble(String key, {double defaultValue = 0.0}) async {
     try {
-      return _remoteConfig.getDouble(key);
+      return _remoteConfig.getValue(key).source == ValueSource.valueStatic
+          ? defaultValue
+          : _remoteConfig.getDouble(key);
     } catch (e) {
       logger.w('Failed to get double flag: $key, using default: $defaultValue');
       return defaultValue;

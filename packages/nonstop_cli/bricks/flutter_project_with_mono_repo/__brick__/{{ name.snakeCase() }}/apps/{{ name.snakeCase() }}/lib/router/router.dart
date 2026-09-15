@@ -4,40 +4,28 @@
 {{#dashboard}}import 'package:dashboard/dashboard.dart';
 {{/dashboard}}import 'package:design_system/design_system.dart';
 {{#developer}}import 'package:developer/developer.dart' as developer;
-{{/developer}}import 'package:di/di.dart';
-{{#analytics}}import 'package:firebase_core/firebase_core.dart';
-{{/analytics}}import 'package:flutter/foundation.dart';
+{{/developer}}{{#analytics}}import 'package:di/di.dart';
+{{/analytics}}
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:{{name.snakeCase()}}/ui/splash_screen.dart';
 
 /// The app's single [GoRouter].
 ///
 /// Feature packages expose their own `routes` list and are spliced in here, so
 /// adding a feature is one import plus one spread - no route table to merge.
-class AppRouter {
-  const AppRouter._();
+abstract final class AppRouter {
 
-  static final GoRouter _router = createRouter();
-
-  static RouterDelegate<Object> get routerDelegate => _router.routerDelegate;
-
-  static RouteInformationParser<Object> get routeInformationParser =>
-      _router.routeInformationParser;
-
-  static RouteInformationProvider? get routeInformationProvider =>
-      _router.routeInformationProvider;
-
-  static GoRouter createRouter() {
+  static GoRouter createRouter({String? initialLocation}) {
     final router = GoRouter(
       debugLogDiagnostics: kDebugMode,
-      initialLocation: core.CoreRoutes.root,
+      initialLocation: initialLocation ?? core.CoreRoutes.root,
       observers: [
-        NavigationHistoryObserver(),
         core.CoreRouteObserver(),
-{{#analytics}}        if (Firebase.apps.isNotEmpty) AnalyticsRouteObserver(),
+{{#analytics}}        if (di.has<AnalyticsClient>())
+          AnalyticsRouteObserver(client: di.get<AnalyticsClient>(), logger: di.get<core.Logger>()),
 {{/analytics}}      ],
       errorBuilder: (context, state) => ErrorScreen(
         title: strings.errors.page_not_found,
@@ -80,7 +68,6 @@ class AppRouter {
       ],
     );
 
-    di.register<GoRouter>(router);
     return router;
   }
 {{#auth}}

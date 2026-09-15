@@ -1,13 +1,12 @@
 import 'package:core/core.dart';
 import 'package:di/di.dart';
 import 'package:flutter/material.dart';
-import 'package:navigation_history_observer/navigation_history_observer.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class CoreRouteObserver extends NavigatorObserver {
-  CoreRouteObserver() : _observer = di.get<Logger>().logger as Talker;
+  CoreRouteObserver({Logger? logger}) : _logger = logger ?? di.get<Logger>();
 
-  final Talker _observer;
+  final Logger _logger;
 
   @override
   void didPush(Route route, Route? previousRoute) {
@@ -15,7 +14,7 @@ class CoreRouteObserver extends NavigatorObserver {
     if (route.settings.name == null) {
       return;
     }
-    _observer.logCustom(TalkerRouteLog(route: route, type: RouteLogType.push));
+    _logger.d(TalkerRouteLog._createMessage(route, RouteLogType.push));
   }
 
   @override
@@ -24,7 +23,7 @@ class CoreRouteObserver extends NavigatorObserver {
     if (route.settings.name == null) {
       return;
     }
-    _observer.logCustom(TalkerRouteLog(route: route, type: RouteLogType.pop));
+    _logger.d(TalkerRouteLog._createMessage(route, RouteLogType.pop));
   }
 
   @override
@@ -33,9 +32,7 @@ class CoreRouteObserver extends NavigatorObserver {
     if (route.settings.name == null) {
       return;
     }
-    _observer.logCustom(
-      TalkerRouteLog(route: route, type: RouteLogType.remove),
-    );
+    _logger.d(TalkerRouteLog._createMessage(route, RouteLogType.remove));
   }
 
   @override
@@ -44,9 +41,7 @@ class CoreRouteObserver extends NavigatorObserver {
     if (newRoute?.settings.name == null) {
       return;
     }
-    _observer.logCustom(
-      TalkerRouteLog(route: newRoute!, type: RouteLogType.replace),
-    );
+    _logger.d(TalkerRouteLog._createMessage(newRoute!, RouteLogType.replace));
   }
 }
 
@@ -67,22 +62,6 @@ class TalkerRouteLog extends TalkerLog {
     buffer.write(type.name);
     buffer.write(' route named ');
     buffer.write(route.settings.name ?? 'null');
-
-    final args = route.settings.arguments;
-    if (args != null) {
-      buffer.write('\nArguments: $args');
-    }
-
-    final historyObserver = NavigationHistoryObserver();
-    final history = historyObserver.history;
-    if (history.isEmpty) {
-      buffer.write('\nHistory: na');
-    } else {
-      final historyAsString = historyObserver.history
-          .map((r) => r.settings.name)
-          .join(' -> ');
-      buffer.write('\nHistory: $historyAsString');
-    }
 
     return buffer.toString();
   }

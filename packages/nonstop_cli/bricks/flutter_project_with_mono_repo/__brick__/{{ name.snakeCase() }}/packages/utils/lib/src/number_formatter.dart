@@ -58,9 +58,8 @@ extension IntTimeFormatting on int {
 }
 
 extension DateTimeFormatting on DateTime {
-  String formatRelative() {
-    final now = DateTime.now();
-    final difference = now.difference(this);
+  String formatRelative({DateTime? now}) {
+    final difference = (now ?? DateTime.now()).difference(this);
 
     if (difference.inMinutes < 1) {
       return 'Just now';

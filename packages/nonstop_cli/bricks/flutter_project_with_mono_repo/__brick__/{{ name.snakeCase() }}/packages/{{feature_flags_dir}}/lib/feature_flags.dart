@@ -4,11 +4,13 @@ import 'package:core/logger/logger.dart';
 import 'package:di/di.dart';
 import 'package:feature_flags/src/feature_flag_service.dart';
 import 'package:feature_flags/src/register.dart';
+import 'package:feature_flags/src/feature_flag_provider.dart';
 
 export 'src/index.dart';
 
 /// Initialize the feature flags module and register with DI
 Future<void> init({
+  FeatureFlagProvider? provider,
   FeatureFlagsConfig config = const FeatureFlagsConfig(
     fetchTimeout: Duration(seconds: 10),
     minimumFetchInterval: Duration(minutes: 30),
@@ -18,7 +20,7 @@ Future<void> init({
   final logger = di.get<Logger>();
   try {
     logger.i('init feature flags module with Firebase Remote Config');
-    await registerFeatureFlagsWithDI(config: config);
+    await registerFeatureFlagsWithDI(config: config, provider: provider);
     final service = di.get<FeatureFlag>();
     await service.init();
     logger.i('Feature flags module initialized with Firebase Remote Config');

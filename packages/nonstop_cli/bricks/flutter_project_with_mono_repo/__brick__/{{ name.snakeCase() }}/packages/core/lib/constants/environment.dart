@@ -6,9 +6,7 @@
 /// ```sh
 /// flutter run --dart-define=BASE_URL=https://staging.example.com
 /// ```
-class Environment {
-  Environment._();
-
+abstract final class Environment {
   static const bool useEmulators = bool.fromEnvironment('USE_EMULATORS');
 
   static const String baseUrl = String.fromEnvironment(

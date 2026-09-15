@@ -1,6 +1,4 @@
 /// App-wide default values.
-class Defaults {
-  Defaults._();
-
+abstract final class Defaults {
   static const int defaultPageSize = 20;
 }

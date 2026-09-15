@@ -46,14 +46,24 @@ void resolveModuleVars(HookContext context) {
   final usesFirebase =
       _firebaseBackedModules.any((module) => _flag(context, module));
   context.vars['firebase'] = usesFirebase;
+  context.vars['emulators'] =
+      _flag(context, 'auth') || _flag(context, 'firestore');
+  context.vars['firebase_sdk_mocks'] = _firebaseBackedModules
+      .where((module) => module != 'firestore')
+      .any((module) => _flag(context, module));
   // Empty path segment → mason skips the file, so a project with no Firebase
   // modules never ships a placeholder `firebase_options.dart`.
   context.vars['firebase_options_file'] =
       usesFirebase ? 'firebase_options.dart' : '';
 
-  // The boot test runs the real bootstrap. Firebase projects can boot before
-  // `flutterfire configure` now (those modules are skipped), but after
-  // configure the splash may land on sign-in instead of the dashboard, so
-  // they still don't ship this file.
-  context.vars['smoke_test_file'] = usesFirebase ? '' : 'smoke_test.dart';
+  // Every project ships an entrypoint smoke test. SDK-specific suites and
+  // lifecycle adapters are omitted only when their module is absent.
+  context.vars['notification_lifecycle_file'] =
+      _flag(context, 'notifications') ? 'notification_lifecycle.dart' : '';
+  context.vars['notification_lifecycle_test_file'] =
+      _flag(context, 'notifications') ? 'notification_lifecycle_test.dart' : '';
+  context.vars['firebase_bootstrap_test_file'] =
+      usesFirebase ? 'firebase_bootstrap_test.dart' : '';
+  context.vars['auth_token_provider_test_file'] =
+      _flag(context, 'network') ? 'token_provider_test.dart' : '';
 }

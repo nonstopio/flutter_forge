@@ -1,210 +1,87 @@
-import 'dart:convert';
-import 'dart:io';
+import 'dart:math';
 
 import 'package:core/logger/logger.dart';
-import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:di/di.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notifications/src/device_info/device_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// Concrete implementation of DeviceInfo for Android and iOS only
-/// Generates consistent device identifiers using stable device characteristics
+/// Persists a random installation identifier, independent of hardware models.
+class SharedPreferencesInstallationIdStore implements InstallationIdStore {
+  SharedPreferencesInstallationIdStore({SharedPreferences? preferences})
+    : _provided = preferences;
+  final SharedPreferences? _provided;
+  Future<SharedPreferences> get _preferences async =>
+      _provided ?? await SharedPreferences.getInstance();
+  static const _key = 'nonstop.installation_id';
+
+  @override
+  Future<String?> read() async => (await _preferences).getString(_key);
+
+  @override
+  Future<void> write(String id) async {
+    final saved = await (await _preferences).setString(_key, id);
+    if (!saved) throw StateError('Could not persist installation ID');
+  }
+}
+
+/// Supplies installation identity and a human-readable device label.
 class DeviceInfoImpl implements DeviceInfo {
-  static const String _tag = 'DeviceInfoImpl';
+  DeviceInfoImpl({
+    required Logger logger,
+    DeviceInfoPlugin? deviceInfoPlugin,
+    InstallationIdStore? store,
+    String Function()? createId,
+  }) : _logger = logger,
+       _plugin = deviceInfoPlugin ?? DeviceInfoPlugin(),
+       _store = store ?? SharedPreferencesInstallationIdStore(),
+       _createId = createId ?? _randomId;
 
   final Logger _logger;
-  final DeviceInfoPlugin _deviceInfoPlugin;
+  final DeviceInfoPlugin _plugin;
+  final InstallationIdStore _store;
+  final String Function() _createId;
+  Future<String>? _id;
 
-  DeviceInfoImpl({Logger? logger, DeviceInfoPlugin? deviceInfoPlugin})
-    : _logger = logger ?? di.get<Logger>(),
-      _deviceInfoPlugin = deviceInfoPlugin ?? DeviceInfoPlugin();
+  static String _randomId() {
+    final random = Random.secure();
+    return List.generate(
+      16,
+      (_) => random.nextInt(256).toRadixString(16).padLeft(2, '0'),
+    ).join();
+  }
 
   @override
   Future<String> generateDeviceId() async {
+    if (_id != null) return _id!;
+    final pending = _loadId();
+    _id = pending;
     try {
-      if (Platform.isAndroid) {
-        return await _generateAndroidDeviceId();
-      } else if (Platform.isIOS) {
-        return await _generateIOSDeviceId();
-      } else {
-        _logger.w('$_tag: Unsupported platform: ${Platform.operatingSystem}');
-        throw UnsupportedError('Only Android and iOS platforms are supported');
-      }
-    } catch (e) {
-      _logger.w('$_tag: Error generating device ID: $e');
-      return _generateFallbackId();
+      return await pending;
+    } catch (error) {
+      _id = null;
+      _logger.w('Installation ID storage failed: $error');
+      rethrow;
     }
+  }
+
+  Future<String> _loadId() async {
+    final existing = await _store.read();
+    if (existing != null && existing.isNotEmpty) return existing;
+    final id = _createId();
+    await _store.write(id);
+    return id;
   }
 
   @override
   Future<String> getDeviceName() async {
     try {
-      if (Platform.isAndroid) {
-        return await _getAndroidDeviceName();
-      } else if (Platform.isIOS) {
-        return await _getIOSDeviceName();
-      } else {
-        _logger.w('$_tag: Unsupported platform: ${Platform.operatingSystem}');
-        throw UnsupportedError('Only Android and iOS platforms are supported');
-      }
-    } catch (e) {
-      _logger.w('$_tag: Error getting device name: $e');
-      return _getFallbackDeviceName();
+      final data = (await _plugin.deviceInfo).data;
+      final name = data['name'] ?? data['model'] ?? data['computerName'];
+      if (name is String && name.isNotEmpty) return name;
+    } catch (error) {
+      _logger.w('Device name unavailable: $error');
     }
-  }
-
-  /// Generate Android device ID using stable hardware characteristics
-  Future<String> _generateAndroidDeviceId() async {
-    try {
-      final androidInfo = await _deviceInfoPlugin.androidInfo;
-
-      // Use only the most stable hardware characteristics that don't change
-      final stableCharacteristics = [
-        androidInfo.brand,
-        androidInfo.model,
-        androidInfo.device,
-        androidInfo.hardware,
-        androidInfo.board,
-        androidInfo.bootloader,
-        androidInfo.product,
-        // fingerprint contains build info but is generally stable for same device
-        androidInfo.fingerprint,
-        // Physical device indicator
-        androidInfo.isPhysicalDevice.toString(),
-        // Hardware features that are stable
-        androidInfo.supportedAbis.join(','),
-        androidInfo.supported32BitAbis.join(','),
-        androidInfo.supported64BitAbis.join(','),
-      ];
-
-      // Remove empty values and create a deterministic string
-      final cleanCharacteristics = stableCharacteristics
-          .where((char) => char.isNotEmpty && char != 'null')
-          .toList();
-
-      if (cleanCharacteristics.isEmpty) {
-        throw Exception('No stable characteristics found for Android device');
-      }
-
-      // Sort to ensure consistent ordering
-      cleanCharacteristics.sort();
-
-      final deviceString = cleanCharacteristics.join('|');
-      final deviceHash = _generateDeterministicHash(deviceString);
-
-      _logger.d(
-        '$_tag: Generated Android device ID from '
-        '${cleanCharacteristics.length} characteristics',
-      );
-      return 'android_$deviceHash';
-    } catch (e) {
-      _logger.w('$_tag: Android device ID generation failed: $e');
-      rethrow;
-    }
-  }
-
-  /// Generate iOS device ID using identifierForVendor or stable characteristics
-  Future<String> _generateIOSDeviceId() async {
-    try {
-      final iosInfo = await _deviceInfoPlugin.iosInfo;
-
-      // First preference: use identifierForVendor as it's designed to be stable
-      final identifier = iosInfo.identifierForVendor;
-      if (identifier != null && identifier.isNotEmpty && identifier != 'null') {
-        _logger.d('$_tag: Using iOS identifierForVendor');
-        return 'ios_$identifier';
-      }
-
-      // Fallback: use stable device characteristics
-      _logger.i(
-        '$_tag: iOS identifierForVendor not available, '
-        'using device characteristics',
-      );
-
-      final stableCharacteristics = [
-        iosInfo.model,
-        iosInfo.localizedModel,
-        iosInfo.systemName,
-        iosInfo.isPhysicalDevice.toString(),
-        // Machine identifier from utsname (hardware model)
-        iosInfo.utsname.machine,
-        iosInfo.utsname.sysname,
-        // These are generally stable for the same device model
-        iosInfo.utsname.nodename,
-      ];
-
-      // Remove empty values and create a deterministic string
-      final cleanCharacteristics = stableCharacteristics
-          .where((char) => char.isNotEmpty && char != 'null')
-          .toList();
-
-      if (cleanCharacteristics.isEmpty) {
-        throw Exception('No stable characteristics found for iOS device');
-      }
-
-      // Sort to ensure consistent ordering
-      cleanCharacteristics.sort();
-
-      final deviceString = cleanCharacteristics.join('|');
-      final deviceHash = _generateDeterministicHash(deviceString);
-
-      _logger.d(
-        '$_tag: Generated iOS device ID from '
-        '${cleanCharacteristics.length} characteristics',
-      );
-      return 'ios_$deviceHash';
-    } catch (e) {
-      _logger.w('$_tag: iOS device ID generation failed: $e');
-      rethrow;
-    }
-  }
-
-  /// Get Android device name in format "Brand Model"
-  Future<String> _getAndroidDeviceName() async {
-    final androidInfo = await _deviceInfoPlugin.androidInfo;
-    final brand = androidInfo.brand;
-    final model = androidInfo.model;
-
-    return '$brand $model';
-  }
-
-  /// Get iOS device name in format "Name (Model)"
-  Future<String> _getIOSDeviceName() async {
-    final iosInfo = await _deviceInfoPlugin.iosInfo;
-    final name = iosInfo.name;
-    final model = iosInfo.model;
-
-    return '$name ($model)';
-  }
-
-  /// Generate a deterministic hash from device characteristics
-  /// Uses SHA-256 to create a consistent, stable hash
-  String _generateDeterministicHash(String input) {
-    // Add a salt to make the hash more unique while keeping it deterministic
-    const salt = 'device_identifier_salt_2024';
-    final saltedInput = '$salt|$input';
-
-    final bytes = utf8.encode(saltedInput);
-    final digest = sha256.convert(bytes);
-
-    // Return first 16 characters for reasonable length
-    return digest.toString().substring(0, 16);
-  }
-
-  /// Generate a fallback device ID when all other methods fail
-  String _generateFallbackId() {
-    final platform = Platform.isAndroid ? 'android' : 'ios';
-
-    // Use a deterministic fallback based on platform
-    final fallbackString = '${platform}_fallback_device';
-    final fallbackHash = _generateDeterministicHash(fallbackString);
-
-    _logger.w('$_tag: Using deterministic fallback ID');
-    return '${platform}_$fallbackHash';
-  }
-
-  /// Get fallback device name when detection fails
-  String _getFallbackDeviceName() {
-    return Platform.isAndroid ? 'Android Device' : 'iOS Device';
+    return kIsWeb ? 'Web browser' : defaultTargetPlatform.name;
   }
 }

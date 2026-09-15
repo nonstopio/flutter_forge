@@ -39,8 +39,8 @@ packages, packages depend on nothing above them.
 ## Getting started
 
 ```sh
-dart pub global activate melos
-melos bootstrap
+dart pub get
+dart run melos bootstrap
 ```
 {{#firebase}}
 ### Firebase
@@ -71,25 +71,78 @@ To run against the Firebase emulator suite, add
 ## Day-to-day
 
 ```sh
-melos lint             # format + analyze everything
-melos test             # run every package's tests
-melos run generate     # build_runner where it is needed
-melos run generate:i69n  # regenerate strings after editing messages.i69n.yaml
+dart run melos run lint       # format-check and analyze
+dart run melos run test       # run every package's tests
+dart run melos run coverage   # tests + strict 100% line-coverage gate
+dart run melos run generate   # rebuild serializers
+dart run melos run generate:i69n  # rebuild localization
 ```
 
 ## Adding to the monorepo
 
 ```sh
-nonstop create package my_feature -o features
-nonstop create package my_package -o packages
-nonstop create app my_second_app -o apps
-nonstop create plugin my_plugin -o plugins
+nonstop create my_feature --template package -o features
+nonstop create my_package --template package -o packages
+nonstop create my_second_app --template app -o apps
+nonstop create my_plugin --template plugin -o plugins
 ```
 
 ## Where to start
 
-1. Replace the placeholder tabs in `features/dashboard`.
+1. Replace the {{#dashboard}}placeholder tabs in `features/dashboard`{{/dashboard}}{{^dashboard}}placeholder home screen in the app router{{/dashboard}}.
 2. Put your product strings in `packages/localization/lib/messages.i69n.yaml`.
 3. Set the palette in `packages/design_system/lib/generated/theme.dart`.
 4. Add feature modules and spread their routes into
    `apps/{{name.snakeCase()}}/lib/router/router.dart`.
+
+## Architecture and testing
+
+The starter separates the app view, routing, startup and foreground lifecycle.
+Clients accept injected SDKs, loggers and transports; feature code consumes small
+interfaces rather than subclassing platform SDKs. See [architecture](docs/architecture.md)
+for the SOLID boundaries and an example of adding a tested feature.
+
+Every generated package has tests. Unit and widget tests run without a Firebase
+account or network service; Firebase integration tests use offline platform doubles.
+The strict gate imports otherwise-unloaded libraries, runs all suites, merges their
+LCOV records and requires **100% executable-line coverage of workspace `lib/` code**.
+It includes entrypoints, startup, theme and error paths. Only compiler-generated
+`.g.dart`, `.freezed.dart` and `.i69n.dart` files are excluded.
+
+```sh
+dart run tool/coverage.dart
+# Inspect existing reports without rerunning tests (not a validation run):
+dart run tool/coverage.dart --report-only
+```
+
+The gate fails for failed tests, missing tests/reports, or uncovered lines.
+The merged report is `coverage/lcov.info`. Do not run two coverage jobs in the
+same checkout: each owns a temporary `test/coverage_imports_test.dart` fixture,
+removed on normal completion. After an interrupted run, inspect and remove only
+that generated fixture before retrying.
+
+Coverage is not a proof of correctness, branch completeness, security, or native
+plugin compatibility. Keep assertions about behavior, and add device integration
+tests for your Firebase project, native permissions, provider sign-in and backend.
+The generated GitHub Actions workflow checks analysis, tests, coverage and a web build.
+
+{{#auth}}### Authentication and demo mode
+
+`GoAuthRoute` denies access when authentication is missing or signed out.
+{{#dashboard}}The starter dashboard explicitly allows **unconfigured demo mode** so
+you can explore it before `flutterfire configure`. It contains no protected data.
+Do not use `allowUnconfigured: true` for real protected routes.
+{{/dashboard}}Client-side guards are navigation helpers; enforce authorization in
+backend endpoints and Firebase security rules.
+{{/auth}}
+{{#notifications}}### Notifications
+
+The SDK client owns subscriptions, not navigation or toast widgets. The app
+supplies callbacks, queues cold-start routes until the router is ready, and owns
+foreground lifecycle handling. Device IDs are random per installation and
+persisted locally; they are not hardware fingerprints.
+
+Implement the `POST /device-tokens/me` and `DELETE /device-tokens/me/:deviceId`
+backend endpoints before enabling token registration in production. Configure
+native capabilities, Firebase messaging and your app's permission explanation.
+{{/notifications}}

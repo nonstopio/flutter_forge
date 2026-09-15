@@ -1,65 +1,43 @@
+import 'dart:async';
+import 'package:analytics/src/client/analytics_client.dart';
 import 'package:core/core.dart';
-import 'package:di/di.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
-/// Analytics route observer that uses Firebase Analytics Observer internally
-/// while providing additional logging and error handling capabilities
+/// Tracks named pages through the analytics abstraction, including async errors.
 class AnalyticsRouteObserver extends NavigatorObserver {
-  AnalyticsRouteObserver()
-    : _logger = di.get<Logger>(),
-      _firebaseObserver = FirebaseAnalyticsObserver(
-        analytics: FirebaseAnalytics.instance,
-      );
+  AnalyticsRouteObserver({
+    required AnalyticsClient client,
+    required Logger logger,
+  }) : _client = client,
+       _logger = logger;
 
+  final AnalyticsClient _client;
   final Logger _logger;
-  final FirebaseAnalyticsObserver _firebaseObserver;
 
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    super.didPush(route, previousRoute);
-
+  Future<void> _track(Route<dynamic>? route) async {
+    if (route is! PageRoute || route.settings.name == null) return;
     try {
-      // Delegate to Firebase Analytics Observer for native screen tracking
-      _firebaseObserver.didPush(route, previousRoute);
-    } catch (e, s) {
-      _logger.e('Failed to track screen push event', e, s);
+      await _client.logScreenView(screenName: route.settings.name!);
+    } catch (error, stack) {
+      _logger.e('Failed to track screen navigation', error, stack);
     }
   }
 
   @override
-  void didPop(Route route, Route? previousRoute) {
-    super.didPop(route, previousRoute);
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPush(route, previousRoute);
+    unawaited(_track(route));
+  }
 
-    try {
-      // Delegate to Firebase Analytics Observer
-      _firebaseObserver.didPop(route, previousRoute);
-    } catch (e, s) {
-      _logger.e('Failed to track screen pop event', e, s);
-    }
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    unawaited(_track(previousRoute));
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-
-    try {
-      // Delegate to Firebase Analytics Observer
-      _firebaseObserver.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    } catch (e, s) {
-      _logger.e('Failed to track screen replace event', e, s);
-    }
-  }
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    super.didRemove(route, previousRoute);
-
-    try {
-      // Delegate to Firebase Analytics Observer
-      _firebaseObserver.didRemove(route, previousRoute);
-    } catch (e, s) {
-      _logger.e('Failed to track screen remove event', e, s);
-    }
+    unawaited(_track(newRoute));
   }
 }

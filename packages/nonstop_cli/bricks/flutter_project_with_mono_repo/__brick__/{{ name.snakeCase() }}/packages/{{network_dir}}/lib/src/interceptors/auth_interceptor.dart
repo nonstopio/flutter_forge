@@ -1,13 +1,24 @@
+import 'dart:async';
+
 import 'package:core/core.dart';
-import 'package:di/di.dart';
 import 'package:dio/dio.dart';
 import 'package:network/src/auth/auth_token_provider.dart';
 
+/// Adds session credentials and retries an authenticated request at most once.
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this._authTokenProvider) : _logger = di.get<Logger>();
+  AuthInterceptor(
+    this._authTokenProvider, {
+    required Dio dio,
+    required Logger logger,
+  }) : _dio = dio,
+       _logger = logger;
 
   final AuthTokenProvider _authTokenProvider;
+  final Dio _dio;
   final Logger _logger;
+  Future<String?>? _refreshing;
+  static const _managed = 'nonstop.auth.managed';
+  static const _retried = 'nonstop.auth.retried';
 
   @override
   void onRequest(
@@ -15,59 +26,68 @@ class AuthInterceptor extends Interceptor {
     RequestInterceptorHandler handler,
   ) async {
     try {
-      // Skip authentication for requests that already have authorization header
-      if (options.headers.containsKey('Authorization')) {
+      final origin = Uri.parse(options.baseUrl);
+      if (!origin.hasScheme || options.uri.origin != origin.origin) {
         handler.next(options);
         return;
       }
-
+      if (options.headers.keys.any(
+        (key) => key.toLowerCase() == 'authorization',
+      )) {
+        handler.next(options);
+        return;
+      }
       final token = await _authTokenProvider.getValidToken();
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
-        _logger.d('🔐 Added Bearer token to request: ${options.uri}');
-      } else {
-        _logger.d('🔓 No auth token available for request: ${options.uri}');
+        options.extra[_managed] = true;
       }
+      handler.next(options);
+    } catch (error) {
+      _logger.e('Unable to obtain an authentication token', error);
+      handler.next(options);
+    }
+  }
 
-      handler.next(options);
-    } catch (e) {
-      _logger.e('🚨 Error adding auth token to request', e);
-      handler.next(options);
+  Future<String?> _refresh() async {
+    if (_refreshing != null) return _refreshing;
+    final pending = _authTokenProvider.refreshToken();
+    _refreshing = pending;
+    try {
+      return await pending;
+    } finally {
+      _refreshing = null;
     }
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    // Handle 401 Unauthorized - token might be expired
-    if (err.response?.statusCode == 401) {
-      _logger.w('🔐 Received 401 Unauthorized, attempting token refresh');
-
-      try {
-        final newToken = await _authTokenProvider.refreshToken();
-        if (newToken != null) {
-          _logger.i('🔄 Token refreshed successfully, retrying request');
-
-          // Clone the request with new token
-          final requestOptions = err.requestOptions;
-          requestOptions.headers['Authorization'] = 'Bearer $newToken';
-
-          // Retry the request
-          final response = await Dio().fetch(requestOptions);
-          handler.resolve(response);
-          return;
-        } else {
-          _logger.w('❌ Token refresh failed, user needs to re-authenticate');
-        }
-      } catch (refreshError) {
-        _logger.e('🚨 Error during token refresh', refreshError);
+    final request = err.requestOptions;
+    if (err.response?.statusCode != 401 ||
+        request.extra[_managed] != true ||
+        request.extra[_retried] == true ||
+        request.data is Stream) {
+      handler.next(err);
+      return;
+    }
+    try {
+      final token = await _refresh();
+      if (token != null) {
+        final response = await _dio.fetch<dynamic>(
+          request.copyWith(
+            headers: {...request.headers, 'Authorization': 'Bearer $token'},
+            extra: {...request.extra, _retried: true},
+            data: request.data is FormData
+                ? (request.data as FormData).clone()
+                : request.data,
+          ),
+        );
+        handler.resolve(response);
+        return;
       }
+    } catch (refreshError) {
+      _logger.e('Authentication retry failed', refreshError);
     }
-
-    // Handle 403 Forbidden - user doesn't have permission
-    if (err.response?.statusCode == 403) {
-      _logger.w('🚫 Received 403 Forbidden, insufficient permissions');
-    }
-
     handler.next(err);
   }
 }

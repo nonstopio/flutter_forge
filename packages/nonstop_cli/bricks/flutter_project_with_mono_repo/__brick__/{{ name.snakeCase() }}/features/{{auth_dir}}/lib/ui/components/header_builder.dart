@@ -12,29 +12,33 @@ Widget headerBuilder(BuildContext context) {
 
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 24),
-    child: Column(
-      children: [
-        Container(
-          height: 72,
-          width: 72,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(20),
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 72,
+            width: 72,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Icon(
+              Icons.bolt_outlined,
+              size: 40,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
           ),
-          child: Icon(
-            Icons.bolt_outlined,
-            size: 40,
-            color: theme.colorScheme.onPrimaryContainer,
+          const SizedBox(height: 16),
+          Text(
+            strings.app.name,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          strings.app.name,
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

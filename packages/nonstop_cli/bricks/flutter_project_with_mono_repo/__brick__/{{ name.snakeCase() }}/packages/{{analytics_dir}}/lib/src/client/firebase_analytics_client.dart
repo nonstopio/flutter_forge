@@ -2,30 +2,33 @@ import 'package:analytics/src/client/analytics_client.dart';
 import 'package:analytics/src/config/analytics_config.dart';
 import 'package:analytics/src/models/analytics_event.dart';
 import 'package:core/core.dart';
-import 'package:di/di.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 class FirebaseAnalyticsClient implements AnalyticsClient {
-  FirebaseAnalyticsClient(this._config)
-    : _analytics = FirebaseAnalytics.instance {
-    _setupAnalytics();
-  }
+  FirebaseAnalyticsClient(
+    this._config, {
+    required FirebaseAnalytics analytics,
+    required Logger logger,
+  }) : _analytics = analytics,
+       _logger = logger,
+       _enabled = _config.enableAnalytics;
 
   final AnalyticsConfig _config;
   final FirebaseAnalytics _analytics;
-  final Logger _logger = di.get<Logger>();
+  final Logger _logger;
+  bool _enabled;
 
-  void _setupAnalytics() {
-    _analytics.setAnalyticsCollectionEnabled(_config.enableAnalytics);
+  Future<void> initialize() async {
+    await _analytics.setAnalyticsCollectionEnabled(_enabled);
 
     if (_config.userId != null) {
-      _analytics.setUserId(id: _config.userId);
+      await _analytics.setUserId(id: _config.userId);
       _logger.d('🔍 Analytics user ID set: ${_config.userId}');
     }
 
     if (_config.defaultUserProperties != null) {
       for (final entry in _config.defaultUserProperties!.entries) {
-        _analytics.setUserProperty(name: entry.key, value: entry.value);
+        await _analytics.setUserProperty(name: entry.key, value: entry.value);
       }
       _logger.d('🔍 Analytics default user properties set');
     }
@@ -43,7 +46,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
     Map<String, dynamic>? parameters,
   }) async {
     try {
-      if (!_config.enableAnalytics) {
+      if (!_enabled) {
         if (_config.enableDebugLogging) {
           _logger.d('🔍 Analytics disabled, skipping event: $name');
         }
@@ -52,7 +55,12 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
 
       await _analytics.logEvent(
         name: name,
-        parameters: parameters?.cast<String, Object>(),
+        parameters: parameters == null
+            ? null
+            : {
+                for (final entry in parameters.entries)
+                  if (entry.value != null) entry.key: entry.value as Object,
+              },
       );
 
       if (_config.enableDebugLogging) {
@@ -116,6 +124,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
     try {
       await _analytics.setAnalyticsCollectionEnabled(enabled);
+      _enabled = enabled;
 
       if (_config.enableDebugLogging) {
         _logger.d(

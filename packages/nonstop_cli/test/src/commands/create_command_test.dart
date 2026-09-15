@@ -1,3 +1,4 @@
+import 'package:mason/mason.dart' as mason;
 import 'package:mason_logger/mason_logger.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:nonstop_cli/commands/commands.dart';
@@ -5,6 +6,8 @@ import 'package:nonstop_cli/commands/create/modules.dart';
 import 'package:test/test.dart';
 
 class _MockLogger extends Mock implements Logger {}
+
+class _MockGenerator extends Mock implements mason.MasonGenerator {}
 
 /// Parses [args] through the real `create` parser so the tests exercise the
 /// same flag definitions users type.
@@ -16,6 +19,22 @@ Map<String, bool> modulesFor(List<String> args) {
 }
 
 void main() {
+  test('generation uses the bundle shipped with the selected CLI template',
+      () async {
+    final generator = _MockGenerator();
+    mason.MasonBundle? selected;
+    final command = CreateCommand(
+        logger: _MockLogger(),
+        generatorFromBundle: (bundle) async {
+          selected = bundle;
+          return generator;
+        });
+    command.argResultOverrides =
+        command.argParser.parse(['--defaults', 'example']);
+    expect(await command.createGenerator(), same(generator));
+    expect(selected?.name, 'flutter_project_with_mono_repo');
+    expect(selected?.files, isNotEmpty);
+  });
   group('create module selection', () {
     test('falls back to the recommended set with --defaults', () {
       final modules = modulesFor(['--defaults', 'my_app']);

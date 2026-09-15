@@ -32,12 +32,16 @@ class Header extends StatelessWidget {
   Widget _buildImage(BuildContext context) {
     switch (type) {
       case HeaderType.asset:
+        if (assetPath == null || assetPath!.isEmpty) {
+          return const Icon(Icons.image);
+        }
         return Hero(
           tag: assetPath!,
           child: Image.asset(
             assetPath!,
             fit: BoxFit.contain,
             alignment: Alignment.center,
+            errorBuilder: (_, _, _) => const Icon(Icons.image),
           ),
         );
       case HeaderType.image:

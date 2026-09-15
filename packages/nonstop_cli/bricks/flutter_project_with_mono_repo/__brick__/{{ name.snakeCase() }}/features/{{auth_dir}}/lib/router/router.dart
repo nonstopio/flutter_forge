@@ -39,9 +39,12 @@ final class GoAuthRoute extends GoRoute {
     required super.builder,
     List<GoRoute> super.routes = const [],
     super.pageBuilder,
+    bool allowUnconfigured = false,
   }) : super(
          redirect: (context, state) async {
-           if (!di.has<AuthService>()) return null;
+           if (!di.has<AuthService>()) {
+             return allowUnconfigured ? null : AuthRoutes.signIn;
+           }
 
            final authService = di.get<AuthService>();
 

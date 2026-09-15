@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 ///
 /// Swap these for your product's icon set - every navigation surface reads
 /// from here so a single edit re-skins the whole shell.
-class NavigationIcons {
-  const NavigationIcons._();
-
+abstract final class NavigationIcons {
   static const IconData home = Icons.home_outlined;
   static const IconData homeSelected = Icons.home;
 

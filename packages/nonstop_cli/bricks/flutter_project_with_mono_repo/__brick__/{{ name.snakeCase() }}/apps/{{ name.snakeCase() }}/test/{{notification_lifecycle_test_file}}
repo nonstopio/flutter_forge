@@ -1,0 +1,98 @@
+import 'package:core/core.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:notifications/notifications.dart';
+import 'package:{{name.snakeCase()}}/notification_lifecycle.dart';
+
+class _Logger implements Logger {
+  final errors = <Object?>[];
+  @override
+  Object get logger => this;
+  @override
+  void d(String message) {}
+  @override
+  void i(String message) {}
+  @override
+  void w(String message) {}
+  @override
+  void e(String message, [Object? error, StackTrace? stackTrace]) =>
+      errors.add(error);
+}
+
+class _Client implements NotificationClient {
+  int starts = 0;
+  int clears = 0;
+  bool fail = false;
+  @override
+  Future<void> init() async {
+    starts++;
+    if (fail) throw StateError('init failed');
+  }
+
+  @override
+  Future<void> clearBadge() async {
+    clears++;
+    if (fail) throw StateError('badge failed');
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+void main() {
+  testWidgets('initializes after the first frame and clears badge on resume', (
+    tester,
+  ) async {
+    final client = _Client();
+    final logger = _Logger();
+    await tester.pumpWidget(
+      NotificationLifecycle(
+        logger: logger,
+        client: client,
+        child: const SizedBox(),
+      ),
+    );
+    expect(client.starts, 1);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(client.clears, 1);
+    expect(logger.errors, isEmpty);
+    await tester.pumpWidget(const SizedBox());
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(client.clears, 1);
+  });
+
+  testWidgets('catches asynchronous initialization and badge failures', (
+    tester,
+  ) async {
+    final client = _Client()..fail = true;
+    final logger = _Logger();
+    await tester.pumpWidget(
+      NotificationLifecycle(
+        logger: logger,
+        client: client,
+        child: const SizedBox(),
+      ),
+    );
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(logger.errors, hasLength(2));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('works when notifications are not configured', (tester) async {
+    final logger = _Logger();
+    await tester.pumpWidget(
+      NotificationLifecycle(logger: logger, child: const SizedBox()),
+    );
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(logger.errors, isEmpty);
+  });
+}

@@ -5,49 +5,64 @@ import 'package:core/core.dart';
 import 'package:crashlytics/src/client/crashlytics_client.dart';
 import 'package:crashlytics/src/config/crashlytics_config.dart';
 import 'package:crashlytics/src/models/user_metadata.dart';
-import 'package:di/di.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 
 class FirebaseCrashlyticsClient implements CrashlyticsClient {
-  FirebaseCrashlyticsClient({required this.config, Logger? logger})
-    : _logger = logger ?? di.get<Logger>();
+  FirebaseCrashlyticsClient({
+    required this.config,
+    required Logger logger,
+    required FirebaseCrashlytics crashlytics,
+  }) : _logger = logger,
+       _crashlytics = crashlytics;
 
   final CrashlyticsConfig config;
   final Logger _logger;
-  late final FirebaseCrashlytics _crashlytics;
+  final FirebaseCrashlytics _crashlytics;
   final Queue<String> _logBuffer = Queue<String>();
   bool _isInitialized = false;
+  FlutterExceptionHandler? _previousFlutterHandler;
+  bool Function(Object, StackTrace)? _previousPlatformHandler;
+  FlutterExceptionHandler? _flutterHandler;
+  bool Function(Object, StackTrace)? _platformHandler;
 
   @override
   Future<void> initialize() async {
+    if (_isInitialized) return;
     try {
-      _crashlytics = FirebaseCrashlytics.instance;
-
       // Set crashlytics collection enabled based on config
       await _crashlytics.setCrashlyticsCollectionEnabled(
         config.enableInDebugMode || kReleaseMode,
       );
 
-      // Set up automatic Flutter error handling
-      if (config.enableAutomaticDataCollection) {
-        FlutterError.onError = (errorDetails) {
-          _crashlytics.recordFlutterFatalError(errorDetails);
-        };
+      // Apply startup metadata before advertising readiness.
+      for (final entry in config.customKeys.entries) {
+        await _crashlytics.setCustomKey(entry.key, entry.value);
+      }
+      _isInitialized = true;
 
-        // Catch errors from the Flutter framework that are not handled by FlutterError
-        PlatformDispatcher.instance.onError = (error, stack) {
-          _crashlytics.recordError(error, stack, fatal: true);
+      // Own the handlers we install and restore them on disposal.
+      if (config.enableAutomaticDataCollection) {
+        _previousFlutterHandler = FlutterError.onError;
+        _previousPlatformHandler = PlatformDispatcher.instance.onError;
+        _flutterHandler = (errorDetails) {
+          unawaited(
+            recordError(
+              errorDetails.exception,
+              errorDetails.stack,
+              fatal: true,
+            ),
+          );
+          _previousFlutterHandler?.call(errorDetails);
+        };
+        _platformHandler = (error, stack) {
+          unawaited(recordError(error, stack, fatal: true));
+          _previousPlatformHandler?.call(error, stack);
           return true;
         };
+        FlutterError.onError = _flutterHandler;
+        PlatformDispatcher.instance.onError = _platformHandler;
       }
-
-      // Set default custom keys
-      if (config.customKeys.isNotEmpty) {
-        await setCustomKeys(config.customKeys);
-      }
-
-      _isInitialized = true;
       _logger.i('🔥 Firebase Crashlytics initialized successfully');
     } catch (e, stackTrace) {
       _logger.e('❌ Failed to initialize Firebase Crashlytics: $e', stackTrace);
@@ -141,7 +156,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       await _crashlytics.setUserIdentifier(identifier);
-      _logger.d('👤 Set user identifier: $identifier');
+      _logger.d('👤 User identifier updated');
     } catch (e) {
       _logger.e('❌ Failed to set user identifier: $e');
     }
@@ -166,7 +181,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
       };
 
       await setCustomKeys(allAttributes);
-      _logger.d('👤 Set user metadata: $metadata');
+      _logger.d('👤 User metadata updated');
     } catch (e) {
       _logger.e('❌ Failed to set user metadata: $e');
     }
@@ -279,6 +294,14 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
   @override
   void dispose() {
+    if (_flutterHandler != null &&
+        identical(FlutterError.onError, _flutterHandler)) {
+      FlutterError.onError = _previousFlutterHandler;
+    }
+    if (_platformHandler != null &&
+        identical(PlatformDispatcher.instance.onError, _platformHandler)) {
+      PlatformDispatcher.instance.onError = _previousPlatformHandler;
+    }
     _logBuffer.clear();
     _isInitialized = false;
     _logger.d('🧹 Firebase Crashlytics client disposed');

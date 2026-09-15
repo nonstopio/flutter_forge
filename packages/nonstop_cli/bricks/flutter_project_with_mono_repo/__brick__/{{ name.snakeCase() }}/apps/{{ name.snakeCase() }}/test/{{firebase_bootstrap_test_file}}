@@ -1,0 +1,250 @@
+// Protected delegate methods are the FlutterFire platform mocking seam.
+// ignore_for_file: invalid_use_of_protected_member
+{{#analytics}}import 'package:analytics/analytics.dart';
+{{/analytics}}
+{{#auth}}import 'package:auth/auth.dart' as auth;
+{{/auth}}
+{{#auth}}import 'package:core/developer/emulators.dart' as emulators;
+{{/auth}}
+{{#crashlytics}}import 'package:crashlytics/crashlytics.dart';
+{{/crashlytics}}
+import 'package:di/di.dart';
+{{#feature_flags}}import 'package:feature_flags/feature_flags.dart';
+{{/feature_flags}}
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+{{#auth}}import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+{{/auth}}
+{{#analytics}}import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+{{/analytics}}
+{{#crashlytics}}import 'package:firebase_crashlytics_platform_interface/firebase_crashlytics_platform_interface.dart';
+{{/crashlytics}}
+{{#feature_flags}}import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
+{{/feature_flags}}
+{{#notifications}}import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+{{/notifications}}
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+{{#auth}}import 'package:go_router/go_router.dart';
+{{/auth}}
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+{{#notifications}}import 'package:notifications/notifications.dart';
+{{/notifications}}
+{{#firebase_sdk_mocks}}import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+{{/firebase_sdk_mocks}}
+import 'package:{{name.snakeCase()}}/bootstrap.dart' as bootstrap;
+import 'package:{{name.snakeCase()}}/main.dart' as entrypoint;
+import 'package:{{name.snakeCase()}}/app.dart';
+import 'package:{{name.snakeCase()}}/router/router.dart';
+
+class _Core extends MockFirebaseApp {
+  @override
+  Future<List<CoreInitializeResponse>> initializeCore() async {
+    final apps = await super.initializeCore();
+{{#crashlytics}}    apps.first.pluginConstants['plugins.flutter.io/firebase_crashlytics'] = {
+      'isCrashlyticsCollectionEnabled': false,
+    };
+{{/crashlytics}}    return apps;
+  }
+}
+
+{{#auth}}class _Auth extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseAuthPlatform {}
+{{/auth}}
+
+{{#analytics}}class _Analytics extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseAnalyticsPlatform {}
+{{/analytics}}
+
+{{#crashlytics}}class _Crash extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseCrashlyticsPlatform {}
+{{/crashlytics}}
+
+{{#feature_flags}}class _Flags extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseRemoteConfigPlatform {}
+{{/feature_flags}}
+
+{{#notifications}}class _Messaging extends Mock
+    with MockPlatformInterfaceMixin
+    implements FirebaseMessagingPlatform {}
+{{/notifications}}
+
+{{#auth}}class _User extends Mock
+    with MockPlatformInterfaceMixin
+    implements UserPlatform {}
+{{/auth}}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets(
+    'configured bootstrap composes all modules against offline platform doubles',
+    (tester) async {
+      TestFirebaseCoreHostApi.setUp(_Core());
+      final app = await Firebase.initializeApp();
+      registerFallbackValue(app);
+{{#feature_flags}}      registerFallbackValue(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 1),
+          minimumFetchInterval: Duration.zero,
+        ),
+      );
+{{/feature_flags}}{{#auth}}      final identity = _Auth();
+{{/auth}}
+{{#analytics}}      final analytics = _Analytics();
+{{/analytics}}
+{{#crashlytics}}      final crash = _Crash();
+{{/crashlytics}}
+{{#feature_flags}}      final flags = _Flags();
+{{/feature_flags}}
+{{#notifications}}      final messaging = _Messaging();
+{{/notifications}}
+{{#auth}}      FirebaseAuthPlatform.instance = identity;
+{{/auth}}
+{{#analytics}}      FirebaseAnalyticsPlatform.instance = analytics;
+{{/analytics}}
+{{#crashlytics}}      FirebaseCrashlyticsPlatform.instance = crash;
+{{/crashlytics}}
+{{#feature_flags}}      FirebaseRemoteConfigPlatform.instance = flags;
+{{/feature_flags}}
+{{#notifications}}      FirebaseMessagingPlatform.instance = messaging;
+{{/notifications}}
+{{#auth}}      when(
+        () => identity.delegateFor(app: any(named: 'app')),
+      ).thenReturn(identity);
+      when(
+        () => identity.setInitialValues(
+          currentUser: any(named: 'currentUser'),
+          languageCode: any(named: 'languageCode'),
+        ),
+      ).thenReturn(identity);
+      when(
+        identity.idTokenChanges,
+      ).thenAnswer((_) => const Stream<UserPlatform?>.empty());
+      when(
+        identity.authStateChanges,
+      ).thenAnswer((_) => const Stream<UserPlatform?>.empty());
+      when(
+        identity.userChanges,
+      ).thenAnswer((_) => const Stream<UserPlatform?>.empty());
+      when(
+        () => identity.useAuthEmulator(any(), any()),
+      ).thenAnswer((_) async {});
+{{/auth}}{{#analytics}}      when(
+        () => analytics.delegateFor(
+          app: any(named: 'app'),
+          webOptions: any(named: 'webOptions'),
+        ),
+      ).thenReturn(analytics);
+      when(
+        () => analytics.setAnalyticsCollectionEnabled(any()),
+      ).thenAnswer((_) async {});
+      when(
+        () => analytics.logEvent(
+          name: any(named: 'name'),
+          parameters: any(named: 'parameters'),
+        ),
+      ).thenAnswer((_) async {});
+{{/analytics}}{{#crashlytics}}      when(
+        () => crash.setInitialValues(
+          isCrashlyticsCollectionEnabled: any(
+            named: 'isCrashlyticsCollectionEnabled',
+          ),
+        ),
+      ).thenReturn(crash);
+      when(
+        () => crash.setCrashlyticsCollectionEnabled(any()),
+      ).thenAnswer((_) async {});
+      when(crash.checkForUnsentReports).thenAnswer((_) async => false);
+{{/crashlytics}}{{#feature_flags}}      when(() => flags.delegateFor(app: any(named: 'app'))).thenReturn(flags);
+      when(
+        () => flags.setInitialValues(
+          remoteConfigValues: any(named: 'remoteConfigValues'),
+        ),
+      ).thenReturn(flags);
+      when(() => flags.setConfigSettings(any())).thenAnswer((_) async {});
+      when(() => flags.setDefaults(any())).thenAnswer((_) async {});
+      when(flags.fetchAndActivate).thenAnswer((_) async => false);
+      when(() => flags.lastFetchTime).thenReturn(DateTime(2026));
+      when(
+        () => flags.lastFetchStatus,
+      ).thenReturn(RemoteConfigFetchStatus.success);
+{{/feature_flags}}{{#notifications}}      when(
+        () => messaging.delegateFor(app: any(named: 'app')),
+      ).thenReturn(messaging);
+      when(
+        () => messaging.setInitialValues(
+          isAutoInitEnabled: any(named: 'isAutoInitEnabled'),
+        ),
+      ).thenReturn(messaging);
+{{/notifications}}      addTearDown(di.reset);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      await bootstrap.init(firebaseOptions: app.options, useEmulators: true);
+      debugDefaultTargetPlatformOverride = null;
+{{#analytics}}      expect(di.has<AnalyticsClient>(), isTrue);
+{{/analytics}}
+{{#crashlytics}}      expect(di.has<CrashlyticsClient>(), isTrue);
+{{/crashlytics}}
+{{#feature_flags}}      expect(di.has<FeatureFlag>(), isTrue);
+{{/feature_flags}}
+{{#auth}}      expect(di.has<auth.AuthService>(), isTrue);
+{{/auth}}
+{{#notifications}}      expect(di.has<NotificationClient>(), isTrue);
+{{/notifications}}
+{{#notifications}}      expect(FirebaseTokenManager(), isA<NotificationTokenManager>());
+{{/notifications}}
+{{#notifications}}      expect(FirebasePermissionManager(), isA<NotificationPermissionManager>());
+{{/notifications}}
+{{#analytics}}      verify(
+        () => analytics.logEvent(
+          name: 'app_open',
+          parameters: any(named: 'parameters'),
+        ),
+      ).called(1);
+{{/analytics}}{{#auth}}      when(
+        () => identity.useAuthEmulator(any(), any()),
+      ).thenThrow(StateError('offline'));
+      await expectLater(emulators.init(), throwsStateError);
+{{/auth}}      late Widget composed;
+      await entrypoint.startApp(
+        initialize: (_) async {},
+        mount: (app) => composed = app,
+      );
+      expect(composed, isA<Widget>());
+      final router = AppRouter.createRouter(initialLocation: '/error');
+      addTearDown(router.dispose);
+      await tester.pumpWidget(App(router: router));
+      await tester.pumpAndSettle();
+{{#auth}}      final context = tester.element(find.byType(OutlinedButton));
+      final route = router.configuration.routes.whereType<GoRoute>().firstWhere(
+        (r) => r.path == auth.AuthRoutes.signIn,
+      );
+      final screen =
+          route.builder!(context, GoRouterState.of(context))
+              as auth.SignInScreen;
+      when(() => identity.currentUser).thenReturn(_User());
+      await screen.onSignedIn(context);
+      await tester.pumpAndSettle();
+{{#dashboard}}      expect(find.text('Explore'), findsWidgets);
+{{/dashboard}}
+{{/auth}}{{#notifications}}      await di.get<NotificationConfig>().onForeground!('Notice', 'Details');
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Notice'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
+{{/notifications}}{{#auth}}      when(() => identity.currentUser).thenReturn(null);
+      router.go('/');
+      await tester.pumpAndSettle();
+      expect(find.byType(auth.SignInScreen), findsOneWidget);
+{{/auth}}      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+}

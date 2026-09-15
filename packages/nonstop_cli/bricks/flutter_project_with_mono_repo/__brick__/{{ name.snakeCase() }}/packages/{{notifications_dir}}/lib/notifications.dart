@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:core/core.dart';
 import 'package:di/di.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:notifications/src/config/index.dart';
 import 'package:notifications/src/di/index.dart';
 
@@ -17,12 +18,14 @@ export 'src/services/index.dart';
 /// Initialize the notifications module with dependency injection
 Future<void> init({
   NotificationConfig config = const DefaultNotificationConfig(),
+  FirebaseMessaging? messaging,
 }) async {
   final logger = di.get<Logger>();
   try {
-    await registerNotificationWithDI(config);
+    await registerNotificationWithDI(config, messaging: messaging);
     logger.i('🔔 Notifications module initialized');
   } catch (e, s) {
     logger.e('🔔 Failed to initialize notifications module', e, s);
+    rethrow;
   }
 }

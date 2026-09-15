@@ -54,7 +54,9 @@ class UserMetadata {
       userId.hashCode ^
       email.hashCode ^
       name.hashCode ^
-      customAttributes.hashCode;
+      Object.hashAllUnordered(
+        customAttributes.entries.map((e) => Object.hash(e.key, e.value)),
+      );
 
   bool _mapEquals(Map<String, dynamic> a, Map<String, dynamic> b) {
     if (a.length != b.length) return false;

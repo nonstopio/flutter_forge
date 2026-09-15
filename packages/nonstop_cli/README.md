@@ -152,13 +152,60 @@ youtube/
 └── 📄 pubspec.yaml
 ```
 
-The generated workspace is bootstrapped, formatted and passes its own
-`melos lint` and `melos test` before you touch it. If you picked any Firebase
+The generated workspace is bootstrapped and formatted, with offline unit and
+widget tests and a strict 100% executable-line coverage gate. Run its checks:
+
+```bash
+dart run melos run lint
+dart run melos run coverage
+cd apps/youtube
+flutter run
+```
+
+Melos is a workspace dependency; no global Melos installation is needed.
+If you picked any Firebase
 module, run `flutterfire configure` in the app directory when you want those
 features live. Until then the app still runs; Firebase-backed modules are
 skipped at startup.
 
 </details>
+
+### Template quality and architecture
+
+The default `mono` template separates app composition, feature behavior and
+reusable adapters. SDK clients receive explicit dependencies, asynchronous
+startup is awaited, and disposable services own their subscriptions and error
+handlers. The generated `docs/architecture.md` explains the SOLID boundaries
+and how to extend them without coupling UI to infrastructure.
+
+Every runtime package includes tests. `dart run melos run coverage` runs them,
+imports otherwise untested libraries, merges cross-package coverage and fails
+below **100% executable-line coverage of handwritten runtime Dart**. Only
+generated `.g.dart`, `.freezed.dart` and `.i69n.dart` files are excluded; test,
+tooling and native platform code are outside this metric. Coverage does not
+prove every branch, platform integration or security property. Live Firebase,
+push delivery and backend authorization still need project-specific integration
+tests. The generated GitHub workflow checks formatting, analysis, coverage and
+a web build on Flutter 3.44.0.
+
+Templates are bundled with the CLI release, not fetched from the registry at
+generation time. To change the default template, generate an app, implement and
+verify the change there, then port it into the brick and rebuild the bundle:
+
+```bash
+# From packages/nonstop_cli; requires Flutter 3.44.0 and Mason CLI.
+dart pub get
+mason bundle bricks/flutter_project_with_mono_repo -t dart -o lib/commands/create
+dart format lib/commands/create/flutter_project_with_mono_repo_bundle.dart
+dart test --exclude-tags version-verify
+dart run tool/verify_template.dart full
+dart run tool/verify_template.dart minimal
+```
+
+The contract suite checks the source/bundle match and parses all 512 module
+selections. End-to-end CI generates fresh `full`, `default`, `minimal`,
+`auth-only`, `firestore-only` and `network-only` workspaces and runs their real
+checks. The verification tool retains each temporary workspace for diagnosis.
 
 <details>
 <summary><strong>📦 Create a Flutter package for a mono-repo</strong></summary>

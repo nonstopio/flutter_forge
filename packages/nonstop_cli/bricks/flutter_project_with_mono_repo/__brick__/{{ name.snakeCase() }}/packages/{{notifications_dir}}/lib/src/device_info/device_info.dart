@@ -3,3 +3,8 @@ abstract class DeviceInfo {
 
   Future<String> getDeviceName();
 }
+
+abstract class InstallationIdStore {
+  Future<String?> read();
+  Future<void> write(String id);
+}
