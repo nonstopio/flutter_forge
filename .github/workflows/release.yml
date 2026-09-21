@@ -28,18 +28,18 @@ jobs:
     steps:
       - name: Create release App token
         id: app
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
           permission-contents: write
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Read main when this serialized job starts, so queued merges accumulate.
           ref: main
           fetch-depth: 0
           token: ${{ steps.app.outputs.token }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - uses: subosito/flutter-action@v2
