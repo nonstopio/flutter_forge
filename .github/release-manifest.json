@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "base": "f20ffb8d9323a51a69d52bc7804a20a45f79a9c8",
+  "packages": [
+    {
+      "name": "nonstop_cli",
+      "version": "0.0.9+3",
+      "path": "packages/nonstop_cli",
+      "tag": "nonstop_cli-v0.0.9+3"
+    }
+  ]
+}
