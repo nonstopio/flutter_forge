@@ -1,0 +1,25 @@
+name: Release tooling
+
+on:
+  pull_request:
+    paths: ['tools/release/**', '.github/scripts/**', '.github/workflows/**', '.github/ISSUE_TEMPLATE/**']
+  push:
+    branches: [main]
+    paths: ['tools/release/**', '.github/scripts/**', '.github/workflows/**', '.github/ISSUE_TEMPLATE/**']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tools/release/*.test.mjs
+      - name: Validate GitHub Actions workflows
+        # actionlint also checks expressions, action inputs, and embedded shell.
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color .github/workflows/release.yml .github/workflows/publish.yml .github/workflows/release-failure.yml .github/workflows/release-tooling.yml

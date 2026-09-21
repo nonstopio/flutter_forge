@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a reproducible problem in a Flutter Forge package or tool.
+title: 'fix: '
+body:
+  - type: input
+    id: package
+    attributes:
+      label: Package and version
+      placeholder: 'nonstop_cli 0.0.8+2'
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Flutter/Dart versions, operating system and affected platforms.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps and minimal reproduction
+      description: Provide steps and a minimal code example or public reproduction repository. Remove credentials and private data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+      description: Include the complete relevant error or stack trace, with secrets removed.
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues for this problem.
+          required: true
+        - label: This is not a security vulnerability (see SECURITY.md for private reporting).
+          required: true

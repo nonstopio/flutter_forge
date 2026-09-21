@@ -43,7 +43,13 @@ void main() async {
   final logger = Logger();
   try {
     logger.info('Activating mason_cli');
-    await Process.run('dart', ['pub', 'global', 'activate', 'mason_cli']);
+    final activation = await Process.run(
+      'dart',
+      ['pub', 'global', 'activate', 'mason_cli', '0.1.2'],
+    );
+    if (activation.exitCode != 0) {
+      throw Exception('Failed to activate mason_cli: ${activation.stderr}');
+    }
     int updateCount = 0;
     for (final bundle in bundlePaths) {
       logger.info('Bundling ${bundle.fileName}');
@@ -59,26 +65,26 @@ void main() async {
 
       // Format the generated file
       final fullPath = '${bundle.output}/${bundle.fileName}';
-      await Process.run('dart', ['format', fullPath]);
+      final format = await Process.run('dart', ['format', fullPath]);
+      if (format.exitCode != 0) {
+        throw Exception('Failed to format $fullPath: ${format.stderr}');
+      }
 
       // Check if file is modified
       final isModified =
           await Process.run('git', ['diff', '--quiet', fullPath]);
       if (isModified.exitCode == 1) {
-        logger.info('Committing changes to ${bundle.fileName}');
-        await Process.run('git', ['add', fullPath]);
-        await Process.run(
-          'git',
-          [
-            'commit',
-            '-m',
-            'chore(nonstop_cli): update ${bundle.fileName} bundle'
-          ],
-        );
+        logger.info('Staging changes to ${bundle.fileName}');
+        final stage = await Process.run('git', ['add', fullPath]);
+        if (stage.exitCode != 0) {
+          throw Exception('Failed to stage $fullPath: ${stage.stderr}');
+        }
         updateCount++;
         logger.info('Successfully updated bundles for ${bundle.fileName}');
-      } else {
+      } else if (isModified.exitCode == 0) {
         logger.info('No changes detected for ${bundle.fileName}');
+      } else {
+        throw Exception('Failed to inspect $fullPath: ${isModified.stderr}');
       }
     }
     if (updateCount > 0) {

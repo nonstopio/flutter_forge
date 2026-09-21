@@ -101,3 +101,10 @@ optional-module configurations.
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Contributing and releases
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development and PR guidelines,
+[the release guide](docs/RELEASING.md) for automatic pub.dev publishing and authentication,
+[SECURITY.md](SECURITY.md) for private vulnerability reports, and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community expectations.

@@ -1,0 +1,46 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags: ['*-v[0-9]*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.deleted == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: pub.dev
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      # setup-dart configures short-lived pub.dev OIDC credentials. Install
+      # Flutter afterward so all commands use Flutter's bundled Dart SDK.
+      - name: Authenticate to pub.dev with OIDC
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: '3.12.0'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - name: Install Melos
+        run: dart pub global activate melos 6.3.3
+      - name: Validate and publish tagged package
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: node tools/release/release.mjs publish "$RELEASE_TAG" --execute

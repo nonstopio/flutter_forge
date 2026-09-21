@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest an improvement to a package, plugin or development tool.
+title: 'feat: '
+body:
+  - type: input
+    id: package
+    attributes:
+      label: Affected package or tool
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the use case and the current limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Include a small API or usage example if useful.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and compatibility
+      description: Mention workarounds, alternatives, and any expected breaking changes.

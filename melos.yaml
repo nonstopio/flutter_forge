@@ -14,7 +14,9 @@ packages:
 command:
   version:
     workspaceChangelog: false
-    fetchTags: true
+    # The release CLI fetches explicitly and checks the base SHA. Melos 6's
+    # fetchTags performs a git pull, which could change that base mid-release.
+    fetchTags: false
     updateGitTagRefs: false
     linkToCommits: false
     hooks:

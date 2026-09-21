@@ -1,0 +1,59 @@
+name: Prepare pub.dev release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    # The App's version commit must not recursively version the workspace.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, 'chore(release): publish packages')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Create release App token
+        id: app
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - uses: actions/checkout@v4
+        with:
+          # Read main when this serialized job starts, so queued merges accumulate.
+          ref: main
+          fetch-depth: 0
+          token: ${{ steps.app.outputs.token }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          cache: true
+      - name: Install release tools
+        run: |
+          dart pub get
+          dart pub global activate melos 6.3.3
+      - name: Configure release author
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Test release tooling
+        env:
+          RELEASE_INTEGRATION: '1'
+        run: node --test tools/release/*.test.mjs
+      - name: Version and validate changed packages
+        run: node tools/release/release.mjs prepare
+      - name: Push release commit and individual tags
+        run: node tools/release/release.mjs push
