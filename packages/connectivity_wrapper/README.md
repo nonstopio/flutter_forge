@@ -29,16 +29,16 @@
 
 This plugin allows Flutter apps provide feedback on your app when it's not connected to it, or when there's no connection.
 
-## Requirements
+## Compatibility and migration
 
-- Flutter >=3.19.0
-- Dart >=3.3.0 <4.0.0
-- iOS >=12.0
-- MacOS >=10.14
-- Android `compileSDK` 34
-- Java 17
-- Android Gradle Plugin >=8.3.0
-- Gradle wrapper >=8.4
+Requires Dart 3.6 or newer (below Dart 4) and upgrades `connectivity_plus` to
+the 7.x series. Upgrade application platform settings for that dependency: iOS
+13+, macOS 10.15+, Java 17, Android Gradle Plugin 8.12.1+, Gradle 8.13+, and
+Xcode 26.1.1+. Use a Flutter SDK that includes a compatible Dart SDK.
+
+Connectivity providers now cancel their subscriptions and close their streams
+on disposal; socket checks close sockets in `finally`. Existing widget usage
+remains the same.
 
 <!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
