@@ -142,6 +142,51 @@ void main() {
     },
   );
 
+  for (final command in ['diff', 'add']) {
+    test('version command fails when git $command returns an error', () async {
+      await write('pubspec.yaml', 'name: sample\nversion: 1.0.0\n');
+      await Directory(path.join(root.path, 'lib')).create();
+      await version.main(
+        cliDirectory: root.path,
+        logger: logger,
+        runProcess: (_, arguments) async => ProcessResult(
+          1,
+          arguments.first == command ? 2 : 1,
+          '',
+          'git failed',
+        ),
+      );
+      expect(exitCode, 1);
+    });
+  }
+
+  for (final command in ['pub', 'format', 'diff', 'add']) {
+    test('bundle command fails when $command returns an error', () async {
+      final input = await brick('sample');
+      final calls = <List<String>>[];
+      await bundles.main(
+        bundles: [input],
+        logger: logger,
+        runProcess: (executable, arguments) async {
+          calls.add([executable, ...arguments]);
+          return ProcessResult(
+            1,
+            arguments.first == command
+                ? 2
+                : arguments.first == 'diff'
+                ? 1
+                : 0,
+            '',
+            'command failed',
+          );
+        },
+      );
+      expect(exitCode, 1);
+      expect(calls.last[1], command);
+      expect(calls.where((call) => call[1] == 'commit'), isEmpty);
+    });
+  }
+
   test(
     'staging cleans its temporary directory if the source is missing',
     () async {
@@ -163,7 +208,7 @@ void main() {
   );
 
   test(
-    'bundle command formats and commits each changed generated file',
+    'bundle command formats and stages each changed generated file',
     () async {
       final inputs = [await brick('first'), await brick('second')];
       final calls = <List<String>>[];
@@ -194,11 +239,18 @@ void main() {
         },
       );
       expect(exitCode, 0);
-      expect(calls.first, ['dart', 'pub', 'global', 'activate', 'mason_cli']);
+      expect(calls.first, [
+        'dart',
+        'pub',
+        'global',
+        'activate',
+        'mason_cli',
+        '0.1.4',
+      ]);
       expect(calls.where((call) => call[0] == 'mason'), hasLength(2));
       expect(
         calls.where((call) => call[0] == 'git' && call[1] == 'commit'),
-        hasLength(2),
+        isEmpty,
       );
       expect(
         calls,

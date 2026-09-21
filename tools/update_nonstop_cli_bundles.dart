@@ -52,7 +52,16 @@ Future<void> main({
   exitCode = 0;
   try {
     logger.info('Activating mason_cli');
-    await runProcess('dart', ['pub', 'global', 'activate', 'mason_cli']);
+    final activation = await runProcess('dart', [
+      'pub',
+      'global',
+      'activate',
+      'mason_cli',
+      '0.1.4',
+    ]);
+    if (activation.exitCode != 0) {
+      throw Exception('Failed to activate mason_cli: ${activation.stderr}');
+    }
     int updateCount = 0;
     for (final bundle in bundles ?? bundlePaths) {
       logger.info('Bundling ${bundle.fileName}');
@@ -79,22 +88,25 @@ Future<void> main({
 
       // Format the generated file
       final fullPath = '${bundle.output}/${bundle.fileName}';
-      await runProcess('dart', ['format', fullPath]);
+      final format = await runProcess('dart', ['format', fullPath]);
+      if (format.exitCode != 0) {
+        throw Exception('Failed to format $fullPath: ${format.stderr}');
+      }
 
       // Check if file is modified
       final isModified = await runProcess('git', ['diff', '--quiet', fullPath]);
       if (isModified.exitCode == 1) {
-        logger.info('Committing changes to ${bundle.fileName}');
-        await runProcess('git', ['add', fullPath]);
-        await runProcess('git', [
-          'commit',
-          '-m',
-          'chore(nonstop_cli): update ${bundle.fileName} bundle',
-        ]);
+        logger.info('Staging changes to ${bundle.fileName}');
+        final stage = await runProcess('git', ['add', fullPath]);
+        if (stage.exitCode != 0) {
+          throw Exception('Failed to stage $fullPath: ${stage.stderr}');
+        }
         updateCount++;
         logger.info('Successfully updated bundles for ${bundle.fileName}');
-      } else {
+      } else if (isModified.exitCode == 0) {
         logger.info('No changes detected for ${bundle.fileName}');
+      } else {
+        throw Exception('Failed to inspect $fullPath: ${isModified.stderr}');
       }
     }
     if (updateCount > 0) {

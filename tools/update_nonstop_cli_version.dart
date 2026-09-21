@@ -46,13 +46,19 @@ const packageVersion = '$version';
     ]);
     if (isModified.exitCode == 1) {
       logger.info('version.dart has been modified');
-      await runProcess('git', ['add', versionFile.path]);
+      final stage = await runProcess('git', ['add', versionFile.path]);
+      if (stage.exitCode != 0) {
+        throw Exception('Failed to stage ${versionFile.path}: ${stage.stderr}');
+      }
       logger.info('${versionFile.path} has been staged');
       logger.success(
         'Successfully updated version.dart with '
         'version $version in $cliDirectory',
       );
       return;
+    }
+    if (isModified.exitCode != 0) {
+      throw Exception('Failed to inspect version.dart: ${isModified.stderr}');
     }
     logger.success('No changes detected');
   } catch (e) {

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/nonstopio/flutter_forge/blob/main/SECURITY.md
+    about: Follow the private reporting instructions; do not open a public vulnerability issue.
+  - name: Release setup and troubleshooting
+    url: https://github.com/nonstopio/flutter_forge/blob/main/docs/RELEASING.md
+    about: Authentication, release commands, and recovering a failed publication.
