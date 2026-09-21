@@ -142,7 +142,7 @@ extension MapExtensions on Map {
   }
 }
 
-dynamic toEncodable(object) {
+dynamic toEncodable(dynamic object) {
   if (object is String ||
       object is num ||
       object is Map ||

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:path/path.dart' as p;
+import 'package:yaml/yaml.dart';
 
 /// Utility methods for common file system operations.
 ///
@@ -81,35 +82,30 @@ class FileUtils {
     await file.writeAsString(content);
   }
 
-  /// Check if the current directory is part of a mono-repo.
+  /// Check the current directory and its ancestors for a mono-repo root.
   ///
-  /// First tries to detect using the melos command.
-  /// Falls back to checking for melos.yaml in current and parent directories.
-  ///
-  /// [path] - Optional path to check. Defaults to current directory.
+  /// Recognizes legacy `melos.yaml` files and native Dart pub workspaces.
+  /// [path] defaults to the current directory.
   static Future<bool> isMonoRepo([String? path]) async {
-    final workingDir = path ?? Directory.current.path;
+    var directory = p.normalize(p.absolute(path ?? Directory.current.path));
+    while (true) {
+      if (await File(p.join(directory, 'melos.yaml')).exists()) return true;
 
-    // Try with melos command first
-    try {
-      final melosResult = await Process.run(
-        'melos',
-        ['list', '--json'],
-        workingDirectory: workingDir,
-        runInShell: true,
-      );
-      if (melosResult.exitCode == 0 &&
-          melosResult.stdout.toString().isNotEmpty) {
-        return true;
+      final pubspec = File(p.join(directory, 'pubspec.yaml'));
+      if (await pubspec.exists()) {
+        try {
+          final configuration = loadYaml(await pubspec.readAsString());
+          if (configuration is Map && configuration['workspace'] is List) {
+            return true;
+          }
+        } on YamlException {
+          // An unrelated or unfinished pubspec does not identify a workspace.
+        }
       }
-    } catch (_) {
-      // Ignore melos command failures and fall back to file check
+
+      final parent = p.dirname(directory);
+      if (parent == directory) return false;
+      directory = parent;
     }
-
-    // Check for melos.yaml in current and parent directories
-    final currentMelosFile = File(p.join(workingDir, 'melos.yaml'));
-    final parentMelosFile = File(p.join(p.dirname(workingDir), 'melos.yaml'));
-
-    return currentMelosFile.existsSync() || parentMelosFile.existsSync();
   }
 }

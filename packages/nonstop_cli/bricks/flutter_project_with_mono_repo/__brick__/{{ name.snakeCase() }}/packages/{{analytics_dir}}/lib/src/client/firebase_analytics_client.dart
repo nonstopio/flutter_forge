@@ -144,7 +144,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   }) async {
     final eventParameters = <String, dynamic>{
       PredefinedParameters.screenName: screenName,
-      if (screenClass != null) PredefinedParameters.screenClass: screenClass,
+      PredefinedParameters.screenClass: ?screenClass,
       ...?parameters,
     };
 
@@ -165,7 +165,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
     Map<String, dynamic>? parameters,
   }) async {
     final eventParameters = <String, dynamic>{
-      if (loginMethod != null) PredefinedParameters.method: loginMethod,
+      PredefinedParameters.method: ?loginMethod,
       ...?parameters,
     };
 
@@ -178,7 +178,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
     Map<String, dynamic>? parameters,
   }) async {
     final eventParameters = <String, dynamic>{
-      if (signUpMethod != null) PredefinedParameters.method: signUpMethod,
+      PredefinedParameters.method: ?signUpMethod,
       ...?parameters,
     };
 

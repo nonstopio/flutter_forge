@@ -301,19 +301,7 @@ void main() {
     group('String content validation', () {
       test('should validate strings that start with prefix', () {
         final baseSchema = z.string();
-        try {
-          // This will throw due to incorrect cast, but we need coverage
-          baseSchema.startsWith('hello');
-        } catch (e) {
-          // Expected due to type cast issue
-        }
-
-        // Test the functionality manually to ensure it works
-        final startsWithSchema = baseSchema.refine(
-          (value) => value.startsWith('hello'),
-          message: 'must start with "hello"',
-          code: 'starts_with',
-        );
+        final startsWithSchema = baseSchema.startsWith('hello');
 
         expect(startsWithSchema.validate('hello world').isSuccess, true);
         expect(startsWithSchema.validate('hello').isSuccess, true);
@@ -325,19 +313,7 @@ void main() {
 
       test('should validate strings that end with suffix', () {
         final baseSchema = z.string();
-        try {
-          // This will throw due to incorrect cast, but we need coverage
-          baseSchema.endsWith('world');
-        } catch (e) {
-          // Expected due to type cast issue
-        }
-
-        // Test the functionality manually to ensure it works
-        final endsWithSchema = baseSchema.refine(
-          (value) => value.endsWith('world'),
-          message: 'must end with "world"',
-          code: 'ends_with',
-        );
+        final endsWithSchema = baseSchema.endsWith('world');
 
         expect(endsWithSchema.validate('hello world').isSuccess, true);
         expect(endsWithSchema.validate('world').isSuccess, true);
@@ -349,19 +325,7 @@ void main() {
 
       test('should validate strings that contain substring', () {
         final baseSchema = z.string();
-        try {
-          // This will throw due to incorrect cast, but we need coverage
-          baseSchema.contains('test');
-        } catch (e) {
-          // Expected due to type cast issue
-        }
-
-        // Test the functionality manually to ensure it works
-        final containsSchema = baseSchema.refine(
-          (value) => value.contains('test'),
-          message: 'must contain "test"',
-          code: 'contains',
-        );
+        final containsSchema = baseSchema.contains('test');
 
         expect(containsSchema.validate('testing').isSuccess, true);
         expect(containsSchema.validate('test').isSuccess, true);
@@ -374,19 +338,7 @@ void main() {
       test('should validate date strings', () {
         final baseSchema = z.string();
 
-        try {
-          // This will throw due to incorrect cast, but we need coverage
-          baseSchema.date();
-        } catch (e) {
-          // Expected due to type cast issue
-        }
-
-        // Test the functionality manually to ensure it works
-        final dateSchema = baseSchema.refine(
-          (value) => DateTime.tryParse(value) != null,
-          message: 'must be a valid date',
-          code: 'invalid_date',
-        );
+        final dateSchema = baseSchema.date();
 
         expect(dateSchema.validate('2023-12-25').isSuccess, true);
         expect(dateSchema.validate('2023-12-25T10:00:00').isSuccess, true);
@@ -399,19 +351,7 @@ void main() {
       test('should validate datetime strings', () {
         final baseSchema = z.string();
 
-        try {
-          // This will throw due to incorrect cast, but we need coverage
-          baseSchema.datetime();
-        } catch (e) {
-          // Expected due to type cast issue
-        }
-
-        // Test the functionality manually to ensure it works
-        final datetimeSchema = baseSchema.refine(
-          (value) => DateTime.tryParse(value) != null,
-          message: 'must be a valid datetime',
-          code: 'invalid_datetime',
-        );
+        final datetimeSchema = baseSchema.datetime();
 
         expect(datetimeSchema.validate('2023-12-25T10:00:00').isSuccess, true);
         expect(datetimeSchema.validate('2023-12-25').isSuccess, true);
@@ -783,18 +723,9 @@ void main() {
       });
     });
 
-    group('Coverage Tests for Cast Issue Methods', () {
-      // These tests are specifically designed to cover the lambda functions
-      // that are currently uncovered due to type casting issues
-
+    group('String content refinement regressions', () {
       test('should execute startsWith validation logic', () {
-        // Create a test that directly exercises the validation logic in line 378
-        final schema = z.string().refine(
-              (value) =>
-                  value.startsWith('hello'), // This matches line 378 exactly
-              message: 'must start with "hello"',
-              code: 'starts_with',
-            );
+        final schema = z.string().startsWith('hello');
 
         expect(schema.validate('hello world').isSuccess, true);
         expect(schema.validate('hello').isSuccess, true);
@@ -802,13 +733,7 @@ void main() {
       });
 
       test('should execute endsWith validation logic', () {
-        // Create a test that directly exercises the validation logic in line 387
-        final schema = z.string().refine(
-              (value) =>
-                  value.endsWith('world'), // This matches line 387 exactly
-              message: 'must end with "world"',
-              code: 'ends_with',
-            );
+        final schema = z.string().endsWith('world');
 
         expect(schema.validate('hello world').isSuccess, true);
         expect(schema.validate('world').isSuccess, true);
@@ -816,13 +741,7 @@ void main() {
       });
 
       test('should execute contains validation logic', () {
-        // Create a test that directly exercises the validation logic in line 396
-        final schema = z.string().refine(
-              (value) =>
-                  value.contains('test'), // This matches line 396 exactly
-              message: 'must contain "test"',
-              code: 'contains',
-            );
+        final schema = z.string().contains('test');
 
         expect(schema.validate('testing').isSuccess, true);
         expect(schema.validate('test').isSuccess, true);
@@ -830,14 +749,7 @@ void main() {
       });
 
       test('should execute date validation logic', () {
-        // Create a test that directly exercises the validation logic in line 414
-        final schema = z.string().refine(
-              (value) =>
-                  DateTime.tryParse(value) !=
-                  null, // This matches line 414 exactly
-              message: 'must be a valid date',
-              code: 'invalid_date',
-            );
+        final schema = z.string().date();
 
         expect(schema.validate('2023-12-25').isSuccess, true);
         expect(schema.validate('2023-12-25T10:00:00').isSuccess, true);
@@ -845,14 +757,7 @@ void main() {
       });
 
       test('should execute datetime validation logic', () {
-        // Create a test that directly exercises the validation logic in line 423
-        final schema = z.string().refine(
-              (value) =>
-                  DateTime.tryParse(value) !=
-                  null, // This matches line 423 exactly
-              message: 'must be a valid datetime',
-              code: 'invalid_datetime',
-            );
+        final schema = z.string().datetime();
 
         expect(schema.validate('2023-12-25T10:00:00').isSuccess, true);
         expect(schema.validate('2023-12-25').isSuccess, true);

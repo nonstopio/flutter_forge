@@ -131,7 +131,7 @@ class ObjectSchema extends Schema<Map<String, dynamic>> {
 
         case ObjectMode.passthrough:
           if (_catchall != null) {
-            final catchallResult = _catchall!.validate(value, [...path, key]);
+            final catchallResult = _catchall.validate(value, [...path, key]);
             if (catchallResult.isSuccess) {
               result[key] = catchallResult.data;
             } else {
@@ -235,7 +235,7 @@ class ObjectSchema extends Schema<Map<String, dynamic>> {
         case ObjectMode.passthrough:
           if (_catchall != null) {
             final catchallResult =
-                await _catchall!.validateAsync(value, [...path, key]);
+                await _catchall.validateAsync(value, [...path, key]);
             if (catchallResult.isSuccess) {
               result[key] = catchallResult.data;
             } else {

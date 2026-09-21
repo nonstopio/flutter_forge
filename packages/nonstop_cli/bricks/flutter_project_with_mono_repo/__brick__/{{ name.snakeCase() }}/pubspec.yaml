@@ -6,6 +6,95 @@ environment:
   sdk: '>=3.8.0 <4.0.0'
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
-  melos: ^6.2.0
+  flutter_lints: ^6.0.0
+  melos: ^8.8.0
   path: ^1.9.1
+
+workspace:
+  - apps/{{ name.snakeCase() }}
+  - packages/core
+  - packages/design_system
+  - packages/di
+  - packages/localization
+  - packages/utils
+{{#network}}  - packages/network
+{{/network}}{{#notifications}}  - packages/notifications
+{{/notifications}}{{#analytics}}  - packages/analytics
+{{/analytics}}{{#crashlytics}}  - packages/crashlytics
+{{/crashlytics}}{{#feature_flags}}  - packages/feature_flags
+{{/feature_flags}}{{#developer}}  - packages/developer
+{{/developer}}{{#auth}}  - features/auth
+{{/auth}}{{#dashboard}}  - features/dashboard
+{{/dashboard}}
+melos:
+  scripts:
+    clean:flutter:
+      description: "Run flutter clean in all Flutter packages"
+      exec:
+        command: flutter clean
+        concurrency: 4
+      packageFilters:
+        flutter: true
+
+    lint:
+      description: "Check formatting and analyze all workspace code"
+      run: dart run tool/check.dart
+
+    fix:
+      description: "Apply Dart automated fixes to all packages"
+      exec:
+        command: dart fix --apply
+        concurrency: 5
+      packageFilters:
+        dirExists: lib
+
+    fix:dry:
+      description: "Show Dart automated fixes without applying them"
+      exec:
+        command: dart fix --dry-run
+        concurrency: 5
+      packageFilters:
+        dirExists: lib
+
+    generate:
+      description: "Run build_runner in every package that needs codegen"
+      exec:
+        command: dart run build_runner build --delete-conflicting-outputs
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
+
+    generate:i69n:
+      description: "Regenerate localization strings from messages.i69n.yaml"
+      exec:
+        command: |
+          dart run build_runner build --delete-conflicting-outputs &&
+          dart format lib/messages.i69n.dart
+        concurrency: 1
+      packageFilters:
+        scope: "localization"
+
+    test:
+      description: "Run all tests (Dart and Flutter)"
+      run: dart run melos run test:select --no-select
+
+    coverage:
+      description: "Run every test and require 100% handwritten line coverage"
+      run: dart run tool/coverage.dart
+
+    test:select:
+      description: "Run tests in Flutter packages"
+      exec:
+        command: flutter test --coverage
+        concurrency: 5
+        failFast: true
+      packageFilters:
+        dirExists: test
+
+  ###############################################################################
+  # IDE CONFIGURATION
+  ###############################################################################
+  ide:
+    intellij:
+      enabled: true
+      moduleNamePrefix: ''

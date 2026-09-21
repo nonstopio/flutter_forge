@@ -5,16 +5,18 @@ publish_to: 'none'
 
 environment:
   sdk: ^3.8.0
-  flutter: ">=3.29.0"
+  flutter: ">=3.47.5"
 
 dependencies:
   flutter:
     sdk: flutter
-  get_it: ^8.0.3
+  get_it: ^9.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
+
+resolution: workspace

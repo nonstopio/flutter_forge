@@ -5,15 +5,15 @@ publish_to: 'none'
 
 environment:
   sdk: ^3.8.0
-  flutter: ">=3.29.0"
+  flutter: ">=3.47.5"
 
 dependencies:
   flutter:
     sdk: flutter
   dio: ^5.7.0
   json_annotation: ^4.9.0
-  talker_dio_logger: ^4.9.1
-  talker_flutter: ^4.4.1
+  talker_dio_logger: ^5.1.20
+  talker_flutter: ^5.1.20
   core:
     path: ../core
   localization:
@@ -25,8 +25,10 @@ dev_dependencies:
   mocktail: ^1.0.4
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   build_runner: ^2.4.15
   json_serializable: ^6.9.5
 
 flutter:
+
+resolution: workspace

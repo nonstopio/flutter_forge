@@ -2,122 +2,63 @@ name: Dart
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
-  FLUTTER_VERSION: "3.35.0"
+  FLUTTER_VERSION: "3.47.5"
 
 jobs:
-  discover:
+  quality:
     runs-on: ubuntu-latest
-    outputs:
-      packages: ${{ steps.packages.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: Bootstrap packages
-        run: melos bootstrap
-      - name: Get packages
-        id: packages
-        run: |
-          # Determine the base ref for comparison
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            BASE_REF="origin/${{ github.base_ref }}" 
-          else
-            BASE_REF="HEAD~1"
-          fi
-          
-          
-          # Get packages that have changes using melos diff
-          packages=$(melos list --diff="$BASE_REF" --json | jq -c "[.[] | select(.name != \"flutter_forge_workspace\") | .name]" 2>/dev/null || echo '[]')
-          if [ "$packages" = "" ] || [ "$packages" = "null" ]; then
-            packages="[]"
-          fi
-          echo "packages=$packages" >> $GITHUB_OUTPUT
-          echo "Changed packages: $packages"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Resolve workspace dependencies
+        run: flutter pub get --enforce-lockfile
+      - name: Verify coverage gate behavior
+        run: python3 -m unittest discover -s tools/tests
+      - name: Check formatting and analyze workspace
+        run: dart run melos run lint
+      - name: Require 100% coverage in every package
+        run: python3 tools/coverage.py
+      - name: Save test logs and coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace-coverage
+          path: |
+            coverage/
+            packages/**/coverage/
+            plugins/**/coverage/
+            tools/**/coverage/
 
-  build:
-    needs: discover
-    runs-on: ubuntu-latest
-    if: needs.discover.outputs.packages != '[]'
-    strategy:
-      matrix:
-        package: ${{ fromJson(needs.discover.outputs.packages) }}
+  native-permissions:
+    runs-on: macos-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
+      - uses: actions/setup-java@v4
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true
-
-      - name: Install dependencies
-        run: |
-          dart pub global activate melos
-          melos bootstrap --scope="${{ matrix.package }}"
-
-      - name: Format package
-        # Brick templates are mustache, not parseable Dart, and `dart format`
-        # has no exclude of its own - so filter the paths before it sees them.
-        run: |
-          melos exec --scope="${{ matrix.package }}" -- \
-            "find . -name '*.dart' -not -path '*/__brick__/*' -not -path '*/.dart_tool/*' \
-              -exec dart format --set-exit-if-changed {} +"
-
-      - name: Analyze package
-        run: melos exec --scope="${{ matrix.package }}" -- dart analyze --fatal-infos
-
-  test:
-    needs: [ discover, build ]
-    runs-on: ubuntu-latest
-    if: needs.discover.outputs.packages != '[]'
-    strategy:
-      matrix:
-        package: ${{ fromJson(needs.discover.outputs.packages) }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
+          distribution: temurin
+          java-version: "21"
+      - uses: actions/setup-python@v5
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true
-
-      - name: Install dependencies
-        run: |
-          dart pub global activate melos
-          melos bootstrap --scope="${{ matrix.package }}"
-
-      - name: Run tests
-        id: test-step
-        run: |
-          # Try Flutter test first (will only run if package has test dir and is Flutter package)
-          if melos exec --scope="${{ matrix.package }}" --dir-exists=test --flutter -- flutter test --coverage 2>/dev/null; then
-            echo "has_tests=true" >> $GITHUB_OUTPUT
-          # Try Dart test (will only run if package has test dir and is not Flutter package)  
-          elif melos exec --scope="${{ matrix.package }}" --dir-exists=test --no-flutter -- dart test --coverage 2>/dev/null; then
-            echo "has_tests=true" >> $GITHUB_OUTPUT
-          else
-            echo "No tests to run for ${{ matrix.package }}"
-            echo "has_tests=false" >> $GITHUB_OUTPUT
-          fi
-          
-          # Get package path for coverage upload
-          package_path=$(melos list --scope="${{ matrix.package }}" --json | jq -r ".[0].path")
-          echo "package_path=$package_path" >> $GITHUB_OUTPUT
-
-      - name: Upload coverage reports to Codecov
-        if: steps.test-step.outputs.has_tests == 'true'
-        uses: codecov/codecov-action@v5
+          python-version: "3.x"
+      - name: Require 100% native permission-plugin coverage
+        run: python3 plugins/contact_permission/native_tests/run.py
+      - name: Save native coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: ${{ matrix.package }}
-          files: ${{ steps.test-step.outputs.package_path }}/coverage/lcov.info
+          name: native-permission-coverage
+          path: |
+            plugins/contact_permission/native_tests/coverage/
+            plugins/contact_permission/native_tests/android/build/reports/

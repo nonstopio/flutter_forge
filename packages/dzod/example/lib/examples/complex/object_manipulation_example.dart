@@ -82,8 +82,6 @@ class _ObjectManipulationExampleState extends State<ObjectManipulationExample> {
 
   Schema _getCurrentSchema() {
     switch (_selectedManipulation) {
-      case 'base':
-        return _baseUserSchema;
       case 'picked':
         return _baseUserSchema.pick(['name', 'email']);
       case 'omitted':

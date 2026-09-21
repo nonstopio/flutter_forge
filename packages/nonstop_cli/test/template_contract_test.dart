@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:analyzer/dart/analysis/features.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:mason/mason.dart';
 import 'package:nonstop_cli/commands/create/flutter_project_with_mono_repo_bundle.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
+import 'package:yaml/yaml.dart';
 
 import '../bricks/flutter_project_with_mono_repo/hooks/commands/module_vars.dart';
 
@@ -55,16 +57,21 @@ void main() {
         .listSync(recursive: true)
         .whereType<File>()
         .where((file) =>
-            file.path.endsWith('.dart') ||
-            path.basename(file.path) == 'pubspec.yaml')
+            !path.split(path.relative(file.path, from: root)).any((part) =>
+                ['test', 'coverage', '.dart_tool', 'build'].contains(part)) &&
+            (file.path.endsWith('.dart') ||
+                path.basename(file.path) == 'pubspec.yaml'))
         .map((file) => path.relative(file.path, from: root))
         .toSet();
     final bundled = flutterProjectWithMonoRepoBundle.hooks;
     expect(bundled.map((file) => file.path).toSet(), expected);
     for (final file in bundled) {
-      expect(base64Decode(file.data),
-          File(path.join(root, file.path)).readAsBytesSync(),
-          reason: file.path);
+      final source = File(path.join(root, file.path));
+      final expectedBytes = file.path == 'pubspec.yaml'
+          ? utf8.encode(source.readAsStringSync().replaceAll(
+              RegExp(r'^resolution:\s*workspace\s*$', multiLine: true), ''))
+          : source.readAsBytesSync();
+      expect(base64Decode(file.data), expectedBytes, reason: file.path);
     }
   });
 
@@ -98,12 +105,41 @@ void main() {
           reason: 'mask $mask');
       expect(
           target.files.containsKey('contract_app/tool/coverage.dart'), isTrue);
+      final manifests = {
+        for (final entry in target.files.entries
+            .where((entry) => entry.key.endsWith('/pubspec.yaml')))
+          entry.key: loadYaml(utf8.decode(entry.value)) as YamlMap,
+      };
+      final workspace = manifests['contract_app/pubspec.yaml']!;
+      expect(workspace['melos'], isA<YamlMap>());
+      final members = (workspace['workspace'] as YamlList).cast<String>();
+      expect(
+        members.toSet(),
+        manifests.keys
+            .where((file) => file != 'contract_app/pubspec.yaml')
+            .map((file) => path.posix
+                .relative(path.posix.dirname(file), from: 'contract_app'))
+            .toSet(),
+        reason: 'mask $mask: workspace members must match generated packages',
+      );
+      for (final member in members) {
+        expect(manifests['contract_app/$member/pubspec.yaml']!['resolution'],
+            'workspace',
+            reason: '$member, mask $mask');
+      }
       for (final entry in target.files.entries
           .where((entry) => entry.key.endsWith('.dart'))) {
         final source = utf8.decode(entry.value);
         expect(source, isNot(contains('{{')),
             reason: '${entry.key}, mask $mask: unresolved template');
-        final parsed = parseString(content: source, throwIfDiagnostics: false);
+        final parsed = parseString(
+          content: source,
+          // Parse the language version promised by the generated workspace,
+          // rather than unreleased language experiments in a newer analyzer.
+          featureSet: FeatureSet.latestLanguageVersion()
+              .restrictToVersion(Version(3, 8, 0)),
+          throwIfDiagnostics: false,
+        );
         expect(parsed.errors, isEmpty, reason: '${entry.key}, mask $mask');
         for (final directive
             in parsed.unit.directives.whereType<UriBasedDirective>()) {

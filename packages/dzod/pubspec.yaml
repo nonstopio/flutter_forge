@@ -7,7 +7,7 @@ repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/dzod
 issue_tracker: https://github.com/nonstopio/flutter_forge/issues
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -17,8 +17,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.3
+  flutter_lints: ^6.0.0
   test: ^1.24.0
   mockito: ^5.4.0
 
-# No flutter-specific assets needed for this package 
+# No flutter-specific assets needed for this package
+
+resolution: workspace

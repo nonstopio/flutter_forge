@@ -5,13 +5,13 @@ publish_to: 'none'
 
 environment:
   sdk: ^3.8.0
-  flutter: ">=3.29.0"
+  flutter: ">=3.47.5"
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^3.14.0
-  firebase_remote_config: ^5.1.6
+  firebase_core: ^4.15.0
+  firebase_remote_config: ^6.7.0
   core:
     path: ../core
   di:
@@ -21,6 +21,8 @@ dev_dependencies:
   mocktail: ^1.0.4
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
+
+resolution: workspace

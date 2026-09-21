@@ -309,7 +309,8 @@ class _MorseTapDetectorExampleState extends State<MorseTapDetectorExample> {
           const SizedBox(height: 16),
 
           // Morse tap detector
-          Expanded(
+          SizedBox(
+            height: 220,
             child: MorseTapDetector(
               expectedMorseCode: _targets[_currentTarget]!,
               hapticConfig: _hapticConfig,
@@ -474,7 +475,7 @@ class _MorseTextInputExampleState extends State<MorseTextInputExample> {
           const SizedBox(height: 16),
 
           // Text input mode
-          Expanded(
+          SizedBox(
             child: MorseTextInput(
               controller: _autoConvert ? _textController : _morseController,
               autoConvertToText: _autoConvert,
@@ -598,7 +599,7 @@ class _StringExtensionExampleState extends State<StringExtensionExample> {
           const SizedBox(height: 16),
 
           // Outputs
-          Expanded(
+          SizedBox(
             child: Column(
               children: [
                 // Morse code output

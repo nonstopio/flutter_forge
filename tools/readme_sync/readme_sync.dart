@@ -1,32 +1,40 @@
 #!/usr/bin/env dart
+// Command output is intentionally written to stdout.
+// ignore_for_file: avoid_print
 
 import 'dart:io';
-import 'package:yaml/yaml.dart';
+
 import 'package:path/path.dart' as path;
+import 'package:yaml/yaml.dart';
 
 /// README Sync Tool
 ///
 /// Synchronizes standardized sections across all package READMEs.
 /// Uses HTML comment markers to identify managed sections.
 
-void main(List<String> args) async {
-  final config = Config.fromArgs(args);
+Future<void> main(List<String> args) async {
+  exitCode = await runReadmeSync(args);
+}
+
+/// Runs the command without terminating the host process.
+Future<int> runReadmeSync(List<String> args, {String? scriptDir}) async {
+  final config = Config.fromArgs(args, scriptDir: scriptDir);
 
   if (config.showHelp) {
     printHelp();
-    exit(0);
+    return 0;
   }
 
-  final syncer = ReadmeSyncer(config);
-
   try {
+    final syncer = ReadmeSyncer(config);
     await syncer.run();
+    return 0;
   } catch (e, stackTrace) {
     print('❌ Error: $e');
     if (config.verbose) {
       print(stackTrace);
     }
-    exit(1);
+    return 1;
   }
 }
 
@@ -49,9 +57,8 @@ class Config {
     required this.scriptDir,
   });
 
-  factory Config.fromArgs(List<String> args) {
+  factory Config.fromArgs(List<String> args, {String? scriptDir}) {
     final scriptPath = Platform.script.toFilePath();
-    final scriptDir = path.dirname(scriptPath);
 
     return Config(
       dryRun: args.contains('--dry-run') || args.contains('-d'),
@@ -60,7 +67,7 @@ class Config {
       addMarkers: args.contains('--add-markers'),
       specificPackage: _extractPackageName(args),
       showHelp: args.contains('--help') || args.contains('-h'),
-      scriptDir: scriptDir,
+      scriptDir: scriptDir ?? path.dirname(scriptPath),
     );
   }
 
@@ -102,12 +109,12 @@ class ReadmeSyncer {
     // Filter packages if specific package requested
     var packagesToProcess = packages;
     if (config.specificPackage != null) {
-      packagesToProcess = packages
-          .where((p) => p.name == config.specificPackage)
-          .toList();
+      packagesToProcess =
+          packages.where((p) => p.name == config.specificPackage).toList();
 
       if (packagesToProcess.isEmpty) {
-        throw Exception('Package "${config.specificPackage}" not found in configuration');
+        throw Exception(
+            'Package "${config.specificPackage}" not found in configuration');
       }
     }
 
@@ -137,7 +144,7 @@ class ReadmeSyncer {
       }
     }
 
-    print('\n' + '━' * 50);
+    print('\n${'━' * 50}');
     if (config.dryRun) {
       print('🔍 Dry run completed (no files modified)');
     } else {
@@ -151,7 +158,8 @@ class ReadmeSyncer {
 
   Future<void> _loadConfigurations() async {
     // Load section templates
-    final sectionsFile = File(path.join(config.scriptDir, 'templates', 'sections.yaml'));
+    final sectionsFile =
+        File(path.join(config.scriptDir, 'templates', 'sections.yaml'));
     if (!sectionsFile.existsSync()) {
       throw Exception('Templates file not found: ${sectionsFile.path}');
     }
@@ -166,12 +174,16 @@ class ReadmeSyncer {
       sections[id] = SectionTemplate(
         id: id,
         content: (data['content'] as String).trim(),
-        variables: (data['variables'] as YamlList?)?.map((e) => e as String).toList() ?? [],
+        variables: (data['variables'] as YamlList?)
+                ?.map((e) => e as String)
+                .toList() ??
+            [],
       );
     }
 
     // Load package configurations
-    final packagesFile = File(path.join(config.scriptDir, 'config', 'packages.yaml'));
+    final packagesFile =
+        File(path.join(config.scriptDir, 'config', 'packages.yaml'));
     if (!packagesFile.existsSync()) {
       throw Exception('Packages config file not found: ${packagesFile.path}');
     }
@@ -232,7 +244,8 @@ class ReadmeSyncer {
       final renderedContent = _renderTemplate(template, package);
 
       // Replace section content
-      final newContent = _replaceSectionContent(content, sectionId, renderedContent);
+      final newContent =
+          _replaceSectionContent(content, sectionId, renderedContent);
 
       if (newContent != content) {
         content = newContent;
@@ -294,19 +307,13 @@ class ReadmeSyncer {
     return content;
   }
 
-  String _replaceSectionContent(String readme, String sectionId, String newContent) {
+  String _replaceSectionContent(
+      String readme, String sectionId, String newContent) {
     final beginPrefix = '<!-- BEGIN:$sectionId';
     final endMarker = '<!-- END:$sectionId -->';
 
     final beginIndex = readme.indexOf(beginPrefix);
     final endIndex = readme.indexOf(endMarker);
-
-    if (beginIndex == -1 || endIndex == -1) {
-      return readme;
-    }
-
-    // Find the end of the BEGIN marker line (closing -->)
-    final beginLineEnd = readme.indexOf('-->', beginIndex) + 3;
 
     final before = readme.substring(0, beginIndex) + _beginMarker(sectionId);
     final after = readme.substring(endIndex);
@@ -349,7 +356,7 @@ class ReadmeSyncer {
       }
     }
 
-    print('\n' + '━' * 50);
+    print('\n${'━' * 50}');
     if (totalIssues == 0) {
       print('✅ Validation passed: All markers are present');
     } else {
@@ -358,7 +365,8 @@ class ReadmeSyncer {
     }
   }
 
-  Future<void> _addMarkersToPackages(List<PackageConfig> packagesToProcess) async {
+  Future<void> _addMarkersToPackages(
+      List<PackageConfig> packagesToProcess) async {
     print('➕ Adding markers to READMEs...\n');
 
     for (final package in packagesToProcess) {
@@ -372,7 +380,8 @@ class ReadmeSyncer {
 
       print('📝 ${package.name}');
       print('   ⚠️  Manual intervention required');
-      print('   Add markers like: <!-- BEGIN:section-name --> and <!-- END:section-name -->');
+      print(
+          '   Add markers like: <!-- BEGIN:section-name --> and <!-- END:section-name -->');
       print('   Sections needed: ${package.sections.join(", ")}');
     }
 

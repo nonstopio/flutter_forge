@@ -6,9 +6,12 @@ import 'package:nonstop_cli/utils/utils.dart';
 final class DoctorCommand extends Command<int> {
   DoctorCommand({
     required Logger logger,
-  }) : _logger = logger;
+    Doctor? doctor,
+  })  : _logger = logger,
+        _doctor = doctor ?? Doctor(logger: logger);
 
   final Logger _logger;
+  final Doctor _doctor;
 
   @override
   final String description = 'Show information about the installed tooling.';
@@ -22,8 +25,7 @@ final class DoctorCommand extends Command<int> {
   @override
   Future<int> run() async {
     _logger.logSignature();
-    Doctor doctor = Doctor(logger: _logger);
-    final bool success = await doctor.diagnose();
+    final bool success = await _doctor.diagnose();
     return success ? ExitCode.success.code : ExitCode.tempFail.code;
   }
 }

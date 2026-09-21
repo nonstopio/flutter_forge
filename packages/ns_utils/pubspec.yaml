@@ -7,21 +7,21 @@ repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_uti
 issue_tracker: https://github.com/nonstopio/flutter_forge/issues
 
 environment:
-  sdk: '>=2.18.4 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   after_layout: ^1.2.0
-  cached_network_image: ^3.3.0
-  device_info_plus: ^9.0.3
+  cached_network_image: ^4.0.0
+  device_info_plus: ^13.2.0
   flutter_screenutil: ^5.9.0
   flutter_spinkit: ^5.2.0
-  intl: ^0.18.1
-  package_info_plus: ^4.1.0
+  intl: ^0.20.3
+  package_info_plus: ^10.2.1
   recase: ^4.1.0
   shared_preferences: ^2.2.1
   visibility_detector: ^0.4.0+2
-  objectid: ^3.0.0
+  objectid: ^4.0.3
 
 
   flutter:
@@ -30,5 +30,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
+resolution: workspace

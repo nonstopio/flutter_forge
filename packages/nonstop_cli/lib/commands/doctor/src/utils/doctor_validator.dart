@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:nonstop_cli/commands/doctor/src/utils/utils.dart';
 
 enum ValidationType { crash, missing, partial, notAvailable, success }
@@ -6,7 +7,10 @@ enum ValidationType { crash, missing, partial, notAvailable, success }
 enum ValidationMessageType { error, warning, information }
 
 abstract class DoctorValidator {
-  DoctorValidator(this.title);
+  DoctorValidator(this.title, {this.runProcess = Process.runSync});
+
+  /// Executes tooling checks; injectable for isolated diagnostics and tests.
+  final ProcessResult Function(String, List<String>) runProcess;
 
   final String title;
 

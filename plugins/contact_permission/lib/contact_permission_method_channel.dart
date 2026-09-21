@@ -11,8 +11,9 @@ class MethodChannelContactPermission extends ContactPermissionPlatform {
 
   @override
   Future<bool> isPermissionGranted() async {
-    final version =
-        await methodChannel.invokeMethod<bool>('isPermissionGranted');
+    final version = await methodChannel.invokeMethod<bool>(
+      'isPermissionGranted',
+    );
     return version ?? false;
   }
 

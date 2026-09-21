@@ -8,7 +8,7 @@ Future<ValidationResult> commandVersionValidator(
   List<String> arguments = const ['--version'],
 }) async {
   try {
-    final result = Process.runSync(command, arguments);
+    final result = validator.runProcess(command, arguments);
     if (result.exitCode != 0) {
       return ValidationResult(
         ValidationType.missing,

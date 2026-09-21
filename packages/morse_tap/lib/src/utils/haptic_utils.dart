@@ -10,9 +10,7 @@ import 'platform_utils_io.dart'
 ///
 /// Provides safe execution of haptic feedback with platform detection,
 /// error handling, and user-friendly descriptions for haptic types.
-class HapticUtils {
-  HapticUtils._(); // coverage:ignore-line
-
+abstract final class HapticUtils {
   /// Map of haptic feedback types to user-friendly display names
   static final Map<HapticFeedbackType, String> hapticTypeNames = {
     HapticFeedbackType.lightImpact: 'Light',
@@ -50,7 +48,7 @@ class HapticUtils {
     if (debugHapticSupportedOverride != null) {
       return debugHapticSupportedOverride!;
     }
-    if (kIsWeb) return false; // coverage:ignore-line
+    if (kIsWeb) return false;
     return PlatformUtils.isHapticSupported;
   }
 

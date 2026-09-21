@@ -12,6 +12,10 @@ import 'checked_process.dart';
 /// This runs in pre-gen, so the brick's own `lib/` and `pubspec.yaml` are
 /// written over the counter-app that `flutter create` produces.
 final class FlutterCreateCommand extends CliCommand {
+  FlutterCreateCommand({this.runProcess = Process.run});
+
+  final ProcessRunner runProcess;
+
   @override
   Future<void> run(HookContext context) async {
     final String name = context.vars['name'];
@@ -24,6 +28,7 @@ final class FlutterCreateCommand extends CliCommand {
 
     await runChecked(
       context,
+      runProcess: runProcess,
       startMessage: 'Creating Flutter app: $appName',
       endMessage: 'Flutter app created',
       executable: 'flutter',

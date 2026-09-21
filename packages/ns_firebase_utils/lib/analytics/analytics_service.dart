@@ -15,7 +15,8 @@ class AppAnalytics implements FirebaseAnalytics {
   final Map<String, dynamic> _userInfo = {};
 
   /// Constructor initializes the Firebase Analytics instance
-  AppAnalytics() : _firebaseAnalytics = FirebaseAnalytics.instance;
+  AppAnalytics({FirebaseAnalytics? firebaseAnalytics})
+      : _firebaseAnalytics = firebaseAnalytics ?? FirebaseAnalytics.instance;
 
   /// Sets user information for analytics tracking
   Future<void> setUser({
@@ -71,6 +72,7 @@ class AppAnalytics implements FirebaseAnalytics {
     String? category,
     Map<String, dynamic>? parameters,
     AnalyticsCallOptions? callOptions,
+    List<AnalyticsEventItem>? items,
   }) {
     // Sanitize event name and category by replacing spaces with underscores
     name = name?.replaceAll(RegExp(r' '), '_');
@@ -114,6 +116,7 @@ class AppAnalytics implements FirebaseAnalytics {
       name: eventName,
       parameters: newParameters,
       callOptions: callOptions,
+      items: items,
     );
   }
 

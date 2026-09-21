@@ -5,6 +5,8 @@ import '../../widgets/result_display.dart';
 import '../../widgets/schema_display.dart';
 import '../../widgets/validation_card.dart';
 
+enum _AuthMethod { email, oauth, apikey }
+
 class AuthenticationSchemaExample extends StatefulWidget {
   const AuthenticationSchemaExample({super.key});
 
@@ -16,7 +18,7 @@ class AuthenticationSchemaExample extends StatefulWidget {
 class _AuthenticationSchemaExampleState
     extends State<AuthenticationSchemaExample> {
   final _formKey = GlobalKey<FormState>();
-  String _selectedMethod = 'email';
+  _AuthMethod _selectedMethod = _AuthMethod.email;
 
   // Controllers for different auth methods
   final _emailController = TextEditingController();
@@ -56,42 +58,40 @@ class _AuthenticationSchemaExampleState
 
   Map<String, dynamic> _buildAuthData() {
     switch (_selectedMethod) {
-      case 'email':
+      case _AuthMethod.email:
         return {
           'method': 'email',
           'email': _emailController.text,
           'password': _passwordController.text,
         };
-      case 'oauth':
+      case _AuthMethod.oauth:
         return {
           'method': 'oauth',
           'provider': _providerController.text,
           'token': _tokenController.text,
         };
-      case 'apikey':
+      case _AuthMethod.apikey:
         return {
           'method': 'apikey',
           'key': _apiKeyController.text,
           'secret': _apiSecretController.text,
         };
-      default:
-        return {};
     }
   }
 
   void _fillValidExample() {
     setState(() {
       switch (_selectedMethod) {
-        case 'email':
+        case _AuthMethod.email:
           _emailController.text = 'user@example.com';
           _passwordController.text = 'SecurePass123!';
           break;
-        case 'oauth':
+        case _AuthMethod.oauth:
           _providerController.text = 'google';
           _tokenController.text =
               'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
           break;
-        case 'apikey':
+        case _AuthMethod.apikey:
           _apiKeyController.text = '12345678901234567890123456789012';
           _apiSecretController.text =
               '1234567890123456789012345678901234567890123456789012345678901234';
@@ -103,15 +103,15 @@ class _AuthenticationSchemaExampleState
   void _fillInvalidExample() {
     setState(() {
       switch (_selectedMethod) {
-        case 'email':
+        case _AuthMethod.email:
           _emailController.text = 'invalid-email';
           _passwordController.text = 'weak';
           break;
-        case 'oauth':
+        case _AuthMethod.oauth:
           _providerController.text = 'google';
           _tokenController.text = 'invalid-jwt-token';
           break;
-        case 'apikey':
+        case _AuthMethod.apikey:
           _apiKeyController.text = 'too-short';
           _apiSecretController.text = 'not-hex';
           break;
@@ -131,7 +131,7 @@ class _AuthenticationSchemaExampleState
 
   Widget _buildAuthMethodForm() {
     switch (_selectedMethod) {
-      case 'email':
+      case _AuthMethod.email:
         return Column(
           children: [
             TextFormField(
@@ -183,7 +183,7 @@ class _AuthenticationSchemaExampleState
           ],
         );
 
-      case 'oauth':
+      case _AuthMethod.oauth:
         return Column(
           children: [
             DropdownButtonFormField<String>(
@@ -220,7 +220,7 @@ class _AuthenticationSchemaExampleState
           ],
         );
 
-      case 'apikey':
+      case _AuthMethod.apikey:
         return Column(
           children: [
             TextFormField(
@@ -265,32 +265,26 @@ class _AuthenticationSchemaExampleState
             ),
           ],
         );
-
-      default:
-        return const SizedBox.shrink();
     }
   }
 
-  Widget _buildMethodIcon(String method) {
+  Widget _buildMethodIcon(_AuthMethod method) {
     IconData icon;
     Color? color;
 
     switch (method) {
-      case 'email':
+      case _AuthMethod.email:
         icon = Icons.email;
         color = Colors.blue;
         break;
-      case 'oauth':
+      case _AuthMethod.oauth:
         icon = Icons.account_circle;
         color = Colors.orange;
         break;
-      case 'apikey':
+      case _AuthMethod.apikey:
         icon = Icons.vpn_key;
         color = Colors.green;
         break;
-      default:
-        icon = Icons.lock;
-        color = null;
     }
 
     return Icon(icon, color: color);
@@ -308,7 +302,7 @@ class _AuthenticationSchemaExampleState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Auth method selector
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<_AuthMethod>(
               initialValue: _selectedMethod,
               onChanged: (value) {
                 setState(() {
@@ -321,16 +315,16 @@ class _AuthenticationSchemaExampleState
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.security),
               ),
-              items: ['email', 'oauth', 'apikey'].map((method) {
+              items: _AuthMethod.values.map((method) {
                 return DropdownMenuItem(
                   value: method,
                   child: Row(
                     children: [
                       _buildMethodIcon(method),
                       const SizedBox(width: 8),
-                      Text(method == 'email'
+                      Text(method == _AuthMethod.email
                           ? 'Email/Password'
-                          : method == 'oauth'
+                          : method == _AuthMethod.oauth
                               ? 'OAuth Provider'
                               : 'API Key'),
                     ],

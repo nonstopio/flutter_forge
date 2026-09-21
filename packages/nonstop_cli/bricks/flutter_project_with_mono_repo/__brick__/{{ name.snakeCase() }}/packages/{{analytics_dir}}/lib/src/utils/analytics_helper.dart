@@ -138,7 +138,7 @@ class AnalyticsHelper {
       AnalyticsEvents.feature.buttonPressed,
       parameters: {
         'button_name': buttonName,
-        if (screenName != null) 'screen_name': screenName,
+        'screen_name': ?screenName,
         'timestamp': DateTime.now().toIso8601String(),
         ...?parameters,
       },
@@ -154,7 +154,7 @@ class AnalyticsHelper {
       AnalyticsEvents.error.appError,
       parameters: {
         'error_type': errorType,
-        if (errorMessage != null) 'error_message': errorMessage,
+        'error_message': ?errorMessage,
         'timestamp': DateTime.now().toIso8601String(),
         ...?parameters,
       },

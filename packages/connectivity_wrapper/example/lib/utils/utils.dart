@@ -8,7 +8,7 @@ class AppRoutes {
   }
 }
 
-showSnackBar(
+void showSnackBar(
   BuildContext context, {
   required String title,
   Color? color,

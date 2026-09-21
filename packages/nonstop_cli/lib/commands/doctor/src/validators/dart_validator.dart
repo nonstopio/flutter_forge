@@ -1,7 +1,7 @@
 import 'package:nonstop_cli/commands/doctor/src/utils/utils.dart';
 
 class DartValidator extends DoctorValidator {
-  DartValidator() : super('Dart');
+  DartValidator({super.runProcess}) : super('Dart');
 
   @override
   String get installHelp => 'https://dart.dev/get-dart';

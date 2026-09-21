@@ -29,10 +29,6 @@ void main() {
         .setMockMethodCallHandler(_connectivityChannel, null);
   });
 
-  // Both tests are combined so we make a single provider, exercise initial
-  // emission + forwarded emission, and tear down after both are observed.
-  // Closing the controller early conflicts with the provider's leaked
-  // subscription to the singleton wrapper.
   test('emits initial CONNECTED then forwards wrapper status', () async {
     final provider = ConnectivityProvider();
 
@@ -55,10 +51,8 @@ void main() {
     } finally {
       poller.cancel();
       await sub.cancel();
-      // Intentionally do not close provider.connectivityController here —
-      // the provider's internal subscription to the singleton wrapper is not
-      // exposed and may still push events; the controller will be GC'd once
-      // the test ends.
+      provider.dispose();
+      expect(ConnectivityWrapper.instance.hasListeners, isFalse);
     }
   });
 }

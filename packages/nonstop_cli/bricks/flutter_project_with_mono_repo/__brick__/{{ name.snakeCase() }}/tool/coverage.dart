@@ -75,7 +75,8 @@ Future<void> main(List<String> args) async {
             '// ignore_for_file: unused_import',
             for (final source in sources)
               "import 'package:$name/${p.relative(source.path, from: p.join(package.path, 'lib')).replaceAll(r'\', '/')}';",
-            'void main() {}',
+            "import 'package:flutter_test/flutter_test.dart';",
+            'void main() { TestWidgetsFlutterBinding.ensureInitialized(); }',
           ].join('\n'),
         );
         try {

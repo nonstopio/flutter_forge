@@ -18,11 +18,11 @@ class NetworkAwareWidgetScreen extends StatelessWidget {
           const TextField(
             decoration: InputDecoration(labelText: 'Email'),
           ),
-          const Spacer(),
+          const SizedBox(height: 10),
           const TextField(
             decoration: InputDecoration(labelText: 'Password'),
           ),
-          const Spacer(),
+          const SizedBox(height: 10),
           ConnectivityWidgetWrapper(
             stacked: false,
             offlineWidget: ElevatedButton(

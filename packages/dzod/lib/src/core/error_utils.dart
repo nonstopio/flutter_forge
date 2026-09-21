@@ -12,9 +12,7 @@ typedef ErrorGroupingFunction<T> = T Function(ValidationError error);
 typedef ErrorComparator = int Function(ValidationError a, ValidationError b);
 
 /// Comprehensive error filtering and grouping utilities
-class ErrorUtils {
-  const ErrorUtils._();
-
+abstract final class ErrorUtils {
   // ==================== FILTERING UTILITIES ====================
 
   /// Filters errors by error code

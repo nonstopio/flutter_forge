@@ -1,4 +1,4 @@
-library ns_utils;
+library;
 
 import 'services/shared_preferences/sp_service.dart';
 

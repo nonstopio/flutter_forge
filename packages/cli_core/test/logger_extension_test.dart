@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cli_core/cli_core.dart';
 import 'package:cli_core/src/logger_extension.dart' as ext;
 import 'package:mason_logger/mason_logger.dart';
@@ -5,6 +7,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 class _FakeLogger extends Mock implements Logger {}
+
+class _MockStdout extends Mock implements Stdout {}
 
 void main() {
   group('LoggerX.created', () {
@@ -69,6 +73,15 @@ void main() {
       // exercises the fallback path of the default resolver.
       expect(ext.defaultTerminalColumnsForTest(),
           ext.fallbackStdoutTerminalColumns);
+    });
+
+    test('default resolver reads the attached terminal width', () {
+      final output = _MockStdout();
+      when(() => output.hasTerminal).thenReturn(true);
+      when(() => output.terminalColumns).thenReturn(132);
+      IOOverrides.runZoned(() {
+        expect(ext.defaultTerminalColumnsForTest(), 132);
+      }, stdout: () => output);
     });
   });
 }

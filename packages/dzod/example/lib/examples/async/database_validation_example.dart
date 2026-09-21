@@ -76,17 +76,12 @@ class _DatabaseValidationExampleState extends State<DatabaseValidationExample> {
       'username': _usernameController.text,
     };
 
-    try {
-      final result = await userSchema.validateAsync(data);
-      setState(() {
-        _result = result;
-        _isValidating = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isValidating = false;
-      });
-    }
+    final result = await userSchema.validateAsync(data);
+    if (!mounted) return;
+    setState(() {
+      _result = result;
+      _isValidating = false;
+    });
   }
 
   void _fillAvailableExample() {

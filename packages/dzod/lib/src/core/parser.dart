@@ -3,9 +3,7 @@ import 'schema.dart';
 import 'validation_result.dart';
 
 /// Utility class for parsing and validation operations
-class Parser {
-  const Parser._();
-
+abstract final class Parser {
   /// Parses a value using a schema, throwing an exception if validation fails
   static T parse<T>(Schema<T> schema, dynamic input,
       [List<String> path = const []]) {

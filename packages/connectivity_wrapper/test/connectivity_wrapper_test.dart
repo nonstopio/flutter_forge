@@ -30,6 +30,52 @@ void main() {
 
   tearDown(_resetConnectivityMock);
 
+  test('isolated web checker uses transport status without socket addresses',
+      () async {
+    final checker = ConnectivityWrapper.forTesting(isWeb: true);
+    expect(checker.addresses, isEmpty);
+    _mockConnectivity(['wifi']);
+    expect(await checker.isConnected, isTrue);
+    _mockConnectivity(['none']);
+    expect(await checker.isConnected, isFalse);
+    expect(checker.lastTryResults, isEmpty);
+  });
+
+  test('injected checks determine status without accessing the network',
+      () async {
+    final checker = ConnectivityWrapper.forTesting();
+    expect(checker.addresses, isNotEmpty);
+    checker.networkChecker = () async => true;
+    expect(await checker.connectionStatus, ConnectivityStatus.CONNECTED);
+    checker.networkChecker = () async => false;
+    expect(await checker.connectionStatus, ConnectivityStatus.DISCONNECTED);
+    expect(checker.lastTryResults, isEmpty);
+  });
+
+  test('polling publishes status changes and suppresses repeated values',
+      () async {
+    final checker = ConnectivityWrapper.forTesting();
+    checker.checkInterval = const Duration(milliseconds: 5);
+    var checks = 0;
+    checker.networkChecker = () async => ++checks >= 3;
+    final statuses = <ConnectivityStatus>[];
+    final reconnected = Completer<void>();
+    final subscription = checker.onStatusChange.listen((status) {
+      statuses.add(status);
+      if (status == ConnectivityStatus.CONNECTED) reconnected.complete();
+    });
+    try {
+      await reconnected.future.timeout(const Duration(seconds: 2));
+      expect(statuses,
+          [ConnectivityStatus.DISCONNECTED, ConnectivityStatus.CONNECTED]);
+      expect(checks, greaterThanOrEqualTo(3));
+    } finally {
+      await subscription.cancel();
+    }
+    expect(checker.hasListeners, isFalse);
+    expect(checker.lastStatus, isNull);
+  });
+
   group('ConnectivityWrapper singleton', () {
     test('instance returns the same object', () {
       expect(ConnectivityWrapper.instance, same(ConnectivityWrapper.instance));
