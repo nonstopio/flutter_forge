@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:nonstop_cli/commands/create/flutter_project_with_mono_repo_bundle.dart';
 import 'package:path/path.dart' as p;
@@ -8,7 +9,11 @@ import 'package:test/test.dart';
 void main() {
   late Directory workspace;
   late File script;
-  final packages = p.absolute('.dart_tool/package_config.json');
+  late String packages;
+
+  setUpAll(() async {
+    packages = (await Isolate.packageConfig)!.toFilePath();
+  });
 
   File write(String name, String contents) {
     final file = File(p.join(workspace.path, name));

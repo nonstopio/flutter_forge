@@ -532,9 +532,7 @@ class _AnySchema extends Schema<dynamic> {
 }
 
 /// Utility functions for schema composition
-class SchemaUtils {
-  const SchemaUtils._();
-
+abstract final class SchemaUtils {
   /// Create a union of multiple schemas
   static Schema<T> union<T>(List<Schema<T>> schemas) {
     return const SchemaComposer().union(schemas);

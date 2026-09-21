@@ -68,8 +68,6 @@ class _ArrayAdvancedExampleState extends State<ArrayAdvancedExample> {
 
   Schema _getCurrentSchema() {
     switch (_selectedArrayType) {
-      case 'base':
-        return _baseArraySchema;
       case 'range':
         return _baseArraySchema.min(1).max(10);
       case 'exactLength':

@@ -27,3 +27,10 @@ full_coverage_test.dart
 **/example/linux/
 **/example/macos/
 **/example/windows/
+
+# Keep a reproducible resolution for the native Dart workspace.
+!/pubspec.lock
+
+# Python coverage-gate test caches.
+__pycache__/
+*.pyc

@@ -1,4 +1,4 @@
-library ns_firebase_utils;
+library;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ns_firebase_utils/analytics/analytics_service.dart';

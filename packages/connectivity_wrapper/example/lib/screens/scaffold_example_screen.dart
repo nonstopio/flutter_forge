@@ -68,7 +68,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             CheckboxListTile(
               title: const Text(Strings.customHeight),
               value: _customHeight,
@@ -87,7 +87,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             CheckboxListTile(
               title: const Text(Strings.customMessage),
               value: _customMessage,
@@ -106,11 +106,11 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             const ListTile(
               title: Text(Strings.customAlignment),
             ),
-            const Spacer(),
+            const SizedBox(height: 10),
             IconButton(
               icon: const Icon(Icons.arrow_upward),
               onPressed: () {
@@ -120,7 +120,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             IconButton(
               icon: const Icon(Icons.center_focus_strong),
               onPressed: () {
@@ -130,7 +130,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             IconButton(
               icon: const Icon(Icons.arrow_downward),
               onPressed: () {
@@ -140,7 +140,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
               },
             ),
             const Divider(),
-            const Spacer(),
+            const SizedBox(height: 10),
             CheckboxListTile(
               title: const Text(Strings.userInteraction),
               value: _disableInteraction,
@@ -153,7 +153,7 @@ class _ScaffoldExampleScreenState extends State<ScaffoldExampleScreen> {
                 });
               },
             ),
-            const Spacer(),
+            const SizedBox(height: 10),
           ],
         ),
       ),

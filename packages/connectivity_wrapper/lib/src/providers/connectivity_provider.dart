@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// which extends [ChangeNotifier].
 ///
 class ConnectivityProvider extends ChangeNotifier {
+  late final StreamSubscription<ConnectivityStatus> _subscription;
   StreamController<ConnectivityStatus> connectivityController =
       StreamController<ConnectivityStatus>();
 
@@ -24,10 +25,17 @@ class ConnectivityProvider extends ChangeNotifier {
     _updateConnectivityStatus();
   }
 
-  _updateConnectivityStatus() async {
-    ConnectivityWrapper.instance.onStatusChange
+  void _updateConnectivityStatus() {
+    _subscription = ConnectivityWrapper.instance.onStatusChange
         .listen((ConnectivityStatus connectivityStatus) {
       connectivityController.add(connectivityStatus);
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    connectivityController.close();
+    super.dispose();
   }
 }

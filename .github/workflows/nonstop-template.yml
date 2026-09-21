@@ -1,10 +1,10 @@
 name: NonStop generated template
 on:
   pull_request:
-    paths: ['packages/nonstop_cli/**', '.github/workflows/nonstop-template.yml']
+    paths: ['packages/nonstop_cli/**', 'packages/cli_core/**', 'pubspec.yaml', 'pubspec.lock', '.github/workflows/nonstop-template.yml']
   push:
     branches: [main]
-    paths: ['packages/nonstop_cli/**', '.github/workflows/nonstop-template.yml']
+    paths: ['packages/nonstop_cli/**', 'packages/cli_core/**', 'pubspec.yaml', 'pubspec.lock', '.github/workflows/nonstop-template.yml']
 permissions:
   contents: read
 jobs:
@@ -17,9 +17,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.0'
+          flutter-version: '3.47.5'
           cache: true
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - run: dart analyze --fatal-infos lib test tool
       - run: dart test --exclude-tags version-verify
   generated:
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.0'
+          flutter-version: '3.47.5'
           cache: true
-      - run: dart pub get
+      - run: flutter pub get --enforce-lockfile
       - run: dart run tool/verify_template.dart ${{ matrix.profile }}

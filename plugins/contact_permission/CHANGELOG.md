@@ -26,3 +26,9 @@
 ## 1.0.0
 
 * initial release.
+## Unreleased
+
+- Add native JVM and Swift/Objective-C unit tests with 100% executable line coverage.
+- Require Flutter 3.44 / Dart 3.12 and Android API 24 / iOS 15 or newer.
+- Update Android build tooling to AGP 9.4.1 / Gradle 9.7.1, use the Flutter-managed Kotlin configuration, and declare AndroidX/coroutine dependencies explicitly.
+- Use AndroidX Core 1.18.0, the latest version compatible with compile SDK 36 (Core 1.19.0 requires SDK 37).

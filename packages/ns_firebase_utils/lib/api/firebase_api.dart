@@ -7,9 +7,11 @@ SetOptions mergeOption = SetOptions(
 class FirebaseApi {
   final String path;
   late CollectionReference ref;
+  final FirebaseFirestore _firestore;
 
-  FirebaseApi(this.path) {
-    ref = FirebaseFirestore.instance.collection(path);
+  FirebaseApi(this.path, {FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance {
+    ref = _firestore.collection(path);
   }
 
   Future<QuerySnapshot> getDataCollection() {
@@ -40,7 +42,7 @@ class FirebaseApi {
   }
 
   WriteBatch batch() {
-    return FirebaseFirestore.instance.batch();
+    return _firestore.batch();
   }
 
   Future<void> updateDocument(

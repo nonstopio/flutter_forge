@@ -48,6 +48,12 @@ optional-module configurations.
 
 ---
 
+## Development and tests
+
+Use Flutter 3.47.5 and run `flutter pub get --enforce-lockfile` from the repository root. Melos configuration is in `pubspec.yaml`.
+
+Run `python3 tools/coverage.py` (or `dart run melos run test`) to test every workspace package and require 100% executable Dart line coverage. See [testing and dependency maintenance](docs/testing.md) for focused runs, generated-template validation, and coverage scope.
+
 ## 🔗 Connect with NonStop
 
 <div align="center">

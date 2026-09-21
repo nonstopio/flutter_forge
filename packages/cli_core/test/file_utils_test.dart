@@ -94,10 +94,46 @@ void main() {
       });
 
       test('defaults to current directory when no path is provided', () async {
-        // No argument — exercises the Directory.current fallback branch.
-        final result = await FileUtils.isMonoRepo();
-        expect(result, isA<bool>());
+        final original = Directory.current;
+        try {
+          Directory.current = tempDir;
+          await File('melos.yaml').writeAsString('name: test_workspace');
+          expect(await FileUtils.isMonoRepo(), isTrue);
+        } finally {
+          Directory.current = original;
+        }
       });
+
+      test('recognizes a pub workspace from a deeply nested member', () async {
+        await File(p.join(tempDir.path, 'pubspec.yaml')).writeAsString(
+          'name: root\nworkspace:\n  - packages/example\n',
+        );
+        final nested =
+            await Directory(p.join(tempDir.path, 'packages', 'example', 'lib'))
+                .create(recursive: true);
+        expect(await FileUtils.isMonoRepo(nested.path), isTrue);
+      });
+
+      test('recognizes an empty native workspace at its root', () async {
+        await File(p.join(tempDir.path, 'pubspec.yaml'))
+            .writeAsString('workspace: []\n');
+        expect(await FileUtils.isMonoRepo(tempDir.path), isTrue);
+      });
+
+      for (final contents in [
+        'name: regular_package\n# workspace: []\n',
+        'workspace: not-a-list\n',
+        'just a scalar',
+        'workspace: [unfinished',
+      ]) {
+        test(
+            'does not mistake unrelated or invalid YAML for a workspace: $contents',
+            () async {
+          await File(p.join(tempDir.path, 'pubspec.yaml'))
+              .writeAsString(contents);
+          expect(await FileUtils.isMonoRepo(tempDir.path), isFalse);
+        });
+      }
     });
 
     test('readYamlFile throws when file is missing', () {

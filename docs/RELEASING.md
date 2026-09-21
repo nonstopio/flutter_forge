@@ -1,6 +1,6 @@
 # Automated pub.dev releases
 
-Merging into `main` starts **Prepare pub.dev release**. Melos 6.3.3 determines
+Merging into `main` starts **Prepare pub.dev release**. Melos 8.8.0 determines
 version changes from Conventional Commits, updates affected dependents and
 changelogs, and runs the existing NonStop CLI generation hooks. The release CLI
 analyzes and tests the selected packages, creates one release commit, pushes it
@@ -60,6 +60,7 @@ GitHub Actions**, and enter:
 - Tag pattern: the exact value below, including literal `{{version}}`
 - Require GitHub Actions environment: **`pub.dev`**
 - If the UI offers event choices, enable **push** events.
+- Leave **workflow_dispatch** publishing disabled; retries use the original tag run.
 
 | Package / admin settings | Tag pattern |
 | --- | --- |
@@ -78,8 +79,8 @@ GitHub Actions**, and enter:
 To generate the current inventory locally:
 
 ```sh
-dart pub get
-dart pub global activate melos 6.3.3
+flutter pub get --enforce-lockfile
+dart run melos --version
 node tools/release/release.mjs auth
 ```
 
@@ -145,15 +146,13 @@ commits since the last package tags may be included in this first release.
 Confirm its generated version commit, package tag runs, and pub.dev versions.
 The version commit itself is excluded from recursive preparation.
 
-The new release checks use Flutter **3.44.0**, matching the existing NonStop
-template workflow. Packages on `origin/main` may have pre-existing SDK/dependency
-or analyzer failures (for example, `contact_permission` still declares Dart
-`<3.0.0`). Such packages need their compatibility fixes merged before they can
-pass this pipeline. The separate dependency/coverage PR is not included here.
+Release checks use Flutter **3.47.5** and the pinned **Melos 8.8.0** dependency
+from the current Dart workspace. All release commands use `dart run melos`;
+global Melos activation is not required.
 
 ## CLI usage
 
-Run from a checkout with Node 22+, Flutter 3.44.0 and Melos 6.3.3 on `PATH`:
+Run from a checkout with Node 22+, Flutter 3.47.5 and resolved workspace dependencies:
 
 ```sh
 node tools/release/release.mjs --help
@@ -189,8 +188,11 @@ node tools/release/release.mjs publish nonstop_cli-v0.0.9
 
 Replace the example tag with an actual prepared version. Uploading additionally
 requires `--execute` and a matching GitHub Actions tag-push context. Do not run
-Melos bootstrap in a publishing checkout: local dependency overrides would hide
-missing published dependencies.
+Melos bootstrap in a publishing checkout. The CLI temporarily resets workspace
+resolution using `pubspec_overrides.yaml` containing only `resolution:` so
+published dependencies are checked independently. It removes the override even
+on failure. Run `flutter pub get` at the root after a local dry run to restore
+the shared package resolution.
 
 ## Recover a failed release
 
@@ -207,8 +209,11 @@ failed retries; close them after verifying recovery.
   prepare workflow, which recomputes the release against current `main`.
 - **Version commit was pushed but some tags were not:** rerun the preparation
   workflow while that commit remains `main`; it reuses the commit without a
-  second version bump. If a later merge has landed, fetch the release SHA and
-  recover missing tags from a clean checkout with authenticated Git access:
+  second version bump. If a later merge has landed, run **Prepare pub.dev release
+  → Run workflow** on `main` with `recovery_sha` set to the full release commit
+  SHA. This uses the release App to recreate only missing tags under the tag
+  protection rules. For maintainers with permitted Git credentials, the equivalent
+  local command is:
 
   ```sh
   git fetch origin main --tags

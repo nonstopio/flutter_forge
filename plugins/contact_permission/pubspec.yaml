@@ -7,8 +7,8 @@ repository: https://github.com/nonstopio/flutter_forge/tree/main/plugins/contact
 issue_tracker: https://github.com/nonstopio/flutter_forge/issues
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
-  flutter: ">=2.5.0"
+  sdk: '>=3.12.0 <4.0.0'
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -73,3 +73,5 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+
+resolution: workspace

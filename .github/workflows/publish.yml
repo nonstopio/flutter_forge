@@ -33,13 +33,13 @@ jobs:
       - name: Authenticate to pub.dev with OIDC
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: '3.12.0'
+          sdk: '3.13.4'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.0'
+          flutter-version: '3.47.5'
           cache: true
-      - name: Install Melos
-        run: dart pub global activate melos 6.3.3
+      - name: Resolve workspace tools
+        run: flutter pub get --enforce-lockfile
       - name: Validate and publish tagged package
         env:
           RELEASE_TAG: ${{ github.ref_name }}

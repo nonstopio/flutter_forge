@@ -148,7 +148,7 @@ youtube/
 ├── 🔌 plugins/
 ├── 📋 analysis_options.yaml
 ├── 📖 README.md
-├── ⚙️ melos.yaml
+├── ⚙️ pubspec.yaml             native pub workspace + Melos scripts
 └── 📄 pubspec.yaml
 ```
 

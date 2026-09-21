@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, symlinkSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -57,6 +57,7 @@ function fixture(t, packages = [pkg('a'), pkg('b')]) {
   git('remote', 'add', 'origin', remote);
   mkdirSync(path.join(repo, '.github'));
   writeFileSync(path.join(repo, 'README.md'), 'fixture\n');
+  writeFileSync(path.join(repo, '.gitignore'), 'pubspec_overrides.yaml\n');
   git('add', '.'); git('commit', '-m', 'feat: initial');
   git('push', '-u', 'origin', 'main');
   const base = git('rev-parse', 'HEAD');
@@ -147,6 +148,7 @@ function publishFixture(t, { published = async () => false, failTest = false } =
     if (command === 'melos' && args.includes('--graph')) return JSON.stringify({ b: ['a'] });
     if (command === 'melos' && args.includes('--flutter')) return '[]';
     if (command === 'melos') return JSON.stringify([pkg('a'), pkg('b')].map((p) => ({ ...p, private: false, location: path.join(f.repo, p.path) })));
+    if (command === 'dart' && args[0] === 'pub' && args[1] === 'get') assert.equal(readFileSync(path.join(cwd, 'pubspec_overrides.yaml'), 'utf8'), 'resolution:\n');
     if (failTest && args[0] === 'test') throw new Error('tests failed');
     return '';
   } });
@@ -158,6 +160,7 @@ test('publish waits for dependencies, checks the package and dry-runs without up
   const f = publishFixture(t, { published: async (p) => p.name === 'a' && ++attempts >= 3 });
   await f.release.publish('b-v1.0.1');
   assert.equal(attempts, 3);
+  assert.equal(existsSync(path.join(f.repo, 'packages/b/pubspec_overrides.yaml')), false);
   assert.ok(f.commands.some((args) => args.join(' ') === 'dart test'));
   assert.ok(f.commands.some((args) => args.join(' ') === 'dart pub publish --dry-run'));
   assert.equal(f.commands.some((args) => args.includes('--force') || args.includes('bootstrap')), false);
@@ -166,6 +169,7 @@ test('publish waits for dependencies, checks the package and dry-runs without up
 test('failed tests and dependency timeout prevent publication', async (t) => {
   const f = publishFixture(t, { published: async (p) => p.name === 'a', failTest: true });
   await assert.rejects(f.release.publish('b-v1.0.1'), /tests failed/);
+  assert.equal(existsSync(path.join(f.repo, 'packages/b/pubspec_overrides.yaml')), false);
   assert.equal(f.commands.some((args) => args.includes('publish')), false);
   const timeout = publishFixture(t);
   await assert.rejects(timeout.release.publish('b-v1.0.1'), /Dependency a-v1.0.1 is unavailable/);
@@ -188,12 +192,11 @@ test('real Melos prepares a changed package and its dependent in one commit', { 
   const f = fixture(t);
   rmSync(path.join(f.repo, manifestPath));
   writeFileSync(path.join(f.repo, '.gitignore'), '.dart_tool/\n.idea/\n*.iml\npubspec_overrides.yaml\n*.lock\n');
-  writeFileSync(path.join(f.repo, 'pubspec.yaml'), 'name: release_fixture\nenvironment:\n  sdk: ">=3.0.0 <4.0.0"\ndev_dependencies:\n  melos: 6.3.3\n');
-  writeFileSync(path.join(f.repo, 'melos.yaml'), 'name: release_fixture\npackages:\n  - packages/*\ncommand:\n  version:\n    workspaceChangelog: false\n    fetchTags: false\n');
+  writeFileSync(path.join(f.repo, 'pubspec.yaml'), 'name: release_fixture\npublish_to: none\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\ndev_dependencies:\n  melos: 8.8.0\nworkspace:\n  - packages/forge_fixture_a\n  - packages/forge_fixture_b\nmelos:\n  command:\n    version:\n      workspaceChangelog: false\n      fetchTags: false\n');
   for (const name of ['a', 'b']) {
     const directory = path.join(f.repo, `packages/forge_fixture_${name}`);
     mkdirSync(path.join(directory, 'lib'), { recursive: true });
-    writeFileSync(path.join(directory, 'pubspec.yaml'), `name: forge_fixture_${name}\nversion: 0.0.1\nenvironment:\n  sdk: ">=3.0.0 <4.0.0"\n${name === 'b' ? 'dependencies:\n  forge_fixture_a: ^0.0.1\n' : ''}`);
+    writeFileSync(path.join(directory, 'pubspec.yaml'), `name: forge_fixture_${name}\nversion: 0.0.1\nresolution: workspace\nenvironment:\n  sdk: ">=3.12.0 <4.0.0"\n${name === 'b' ? 'dependencies:\n  forge_fixture_a: ^0.0.1\n' : ''}`);
     writeFileSync(path.join(directory, 'CHANGELOG.md'), '## 0.0.1\nInitial version.\n');
     writeFileSync(path.join(directory, `lib/${name}.dart`), 'const value = 1;\n');
   }
@@ -208,6 +211,6 @@ test('real Melos prepares a changed package and its dependent in one commit', { 
   f.release.published = async () => false;
   await f.release.prepare();
   assert.equal(f.git('rev-parse', 'HEAD^'), base);
-  assert.deepEqual(f.release.manifest().packages.map((p) => [p.name, p.version]), [['forge_fixture_a', '0.0.1+1'], ['forge_fixture_b', '0.0.1+1']]);
+  assert.deepEqual(f.release.manifest().packages.map((p) => [p.name, p.version]), [['forge_fixture_a', '0.0.2'], ['forge_fixture_b', '0.0.2']]);
   assert.equal(f.git('status', '--porcelain'), '');
 });

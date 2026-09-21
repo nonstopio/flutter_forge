@@ -2,9 +2,9 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - lib/generated/**
-    - test/**
-    - packages/nonstop_cli/bricks/**
+    - packages/nonstop_cli/bricks/**/__brick__/**
+    - "**/coverage/**"
+    - "**/build/**"
 linter:
   rules:
     constant_identifier_names: false

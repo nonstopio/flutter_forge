@@ -38,6 +38,9 @@ packages, packages depend on nothing above them.
 
 ## Getting started
 
+Use Flutter 3.47.5 or newer. The root `pubspec.yaml` declares the native Dart
+workspace and Melos scripts; member packages share a single dependency lockfile.
+
 ```sh
 dart pub get
 dart run melos bootstrap

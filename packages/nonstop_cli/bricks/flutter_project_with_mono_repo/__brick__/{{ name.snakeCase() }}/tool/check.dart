@@ -36,7 +36,7 @@ Future<void> main() async {
   sources.sort();
   for (final arguments in [
     ['format', '--output=none', '--set-exit-if-changed', ...sources],
-    ['analyze', '--fatal-infos', '.'],
+    ['analyze', '--fatal-infos', ...sources],
   ]) {
     final process = await Process.start('dart', arguments,
         mode: ProcessStartMode.inheritStdio);

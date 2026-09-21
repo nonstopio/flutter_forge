@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Repository release CLI. Requires Node 22+, Flutter and Melos 6.3.3.
+// Repository release CLI. Requires Node 22+ and the resolved Flutter workspace.
 import { spawnSync } from 'node:child_process';
-import { existsSync, realpathSync, writeFileSync } from 'node:fs';
+import { existsSync, realpathSync, writeFileSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -11,6 +11,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function run(command, args, cwd = root, capture = false) {
+  // Resolve the pinned workspace version, independent of global activation.
+  if (command === 'melos') { command = 'dart'; args = ['run', 'melos', ...args]; }
   if (!capture) console.log(`> ${command} ${args.join(' ')}`);
   const result = spawnSync(command, args, {
     cwd, encoding: 'utf8', stdio: capture ? 'pipe' : 'inherit',
@@ -154,9 +156,9 @@ export class Release {
     this.exec('git', ['commit', '-m', `${releaseSubject}\n\n${packages.map((pkg) => ` - ${pkg.tag}`).join('\n')}`]);
     console.log(`Prepared ${packages.length} package(s). Review the commit, then run push.`);
   }
-  validate(pkg) {
+  validate(pkg, flutter) {
     const directory = path.join(this.directory, pkg.path);
-    const flutter = JSON.parse(this.exec('melos', ['list', '--flutter', '--json'], true)).some((item) => item.name === pkg.name);
+    flutter ??= JSON.parse(this.exec('melos', ['list', '--flutter', '--json'], true)).some((item) => item.name === pkg.name);
     this.exec('dart', ['analyze', '--fatal-infos'], false, directory);
     if (existsSync(path.join(directory, 'test'))) this.exec(flutter ? 'flutter' : 'dart', ['test'], false, directory);
   }
@@ -220,14 +222,23 @@ export class Release {
       if (!available) throw new Error(`Dependency ${dependency.tag} is unavailable after 10 minutes. Resolve its publish failure, then rerun this tag workflow.`);
     }
     const directory = path.join(this.directory, pkg.path);
-    if (existsSync(path.join(directory, 'pubspec_overrides.yaml'))) throw new Error('Publish from a fresh checkout without pubspec_overrides.yaml or Melos bootstrap.');
-    // No bootstrap here: dependency checks must use packages from pub.dev.
-    this.exec('flutter', ['pub', 'get'], false, directory);
-    this.validate(pkg);
-    this.exec('dart', ['pub', 'publish', '--dry-run'], false, directory);
-    this.clean();
-    if (execute) this.exec('dart', ['pub', 'publish', '--force'], false, directory);
-    else console.log('Dry run passed. Upload is only enabled by --execute in the tag workflow.');
+    const override = path.join(directory, 'pubspec_overrides.yaml');
+    if (existsSync(override)) throw new Error('Publish from a fresh checkout without pubspec_overrides.yaml.');
+    const flutter = JSON.parse(this.exec('melos', ['list', '--flutter', '--json'], true)).some((item) => item.name === pkg.name);
+    // Dart's documented opt-out from workspace resolution. No dependency
+    // overrides: get/analyze/test/publish must resolve this package on pub.dev.
+    // pub excludes this file from the uploaded archive; the source stays intact.
+    writeFileSync(override, 'resolution:\n', { flag: 'wx' });
+    try {
+      this.exec(flutter ? 'flutter' : 'dart', ['pub', 'get'], false, directory);
+      this.validate(pkg, flutter);
+      this.exec('dart', ['pub', 'publish', '--dry-run'], false, directory);
+      this.clean();
+      if (execute) this.exec('dart', ['pub', 'publish', '--force'], false, directory);
+      else console.log('Dry run passed. Upload is only enabled by --execute in the tag workflow.');
+    } finally {
+      unlinkSync(override);
+    }
   }
 }
 

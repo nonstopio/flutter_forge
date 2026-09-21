@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       textEditingController: _phoneNumberController,
 
                       /// Enable or disable validation
-                      enableValidation: false,
+                      enableValidation: true,
                       autovalidateMode: AutovalidateMode.always,
 
                       /// Country selection options for UI experience

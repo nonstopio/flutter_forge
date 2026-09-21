@@ -6,19 +6,19 @@ repository: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_int
 issue_tracker: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_intl_phone_input/
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: '>=3.6.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   mask_text_input_formatter: ^2.9.0
-  equatable: ^2.0.7
+  equatable: ^2.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -26,3 +26,5 @@ flutter:
     - family: "AppleColorEmoji"
       fonts:
         - asset: assets/fonts/apple_color_emoji.ttf
+
+resolution: workspace

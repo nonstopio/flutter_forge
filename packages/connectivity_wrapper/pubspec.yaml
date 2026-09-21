@@ -10,16 +10,18 @@ screenshots:
     path: screenshots/icon.png
 
 environment:
-  sdk: ">=2.18.4 <4.0.0"
+  sdk: '>=3.6.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
-  connectivity_plus: ^6.1.2 # To check connectivity for web only
+  connectivity_plus: ^7.3.1 # To check connectivity for web only
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
+
+resolution: workspace

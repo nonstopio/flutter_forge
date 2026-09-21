@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      recovery_sha:
+        description: 'Optional full release commit SHA: retry only missing tags'
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -39,12 +44,12 @@ jobs:
           node-version: '22'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.44.0'
+          flutter-version: '3.47.5'
           cache: true
       - name: Install release tools
         run: |
-          dart pub get
-          dart pub global activate melos 6.3.3
+          flutter pub get --enforce-lockfile
+          dart run melos --version
       - name: Configure release author
         run: |
           git config user.name 'github-actions[bot]'
@@ -54,6 +59,13 @@ jobs:
           RELEASE_INTEGRATION: '1'
         run: node --test tools/release/*.test.mjs
       - name: Version and validate changed packages
+        if: inputs.recovery_sha == ''
         run: node tools/release/release.mjs prepare
       - name: Push release commit and individual tags
+        if: inputs.recovery_sha == ''
         run: node tools/release/release.mjs push
+      - name: Recover missing release tags
+        if: inputs.recovery_sha != ''
+        env:
+          RECOVERY_SHA: ${{ inputs.recovery_sha }}
+        run: node tools/release/release.mjs push-tags "$RECOVERY_SHA"

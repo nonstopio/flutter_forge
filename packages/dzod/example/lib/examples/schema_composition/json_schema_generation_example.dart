@@ -91,12 +91,8 @@ class _JsonSchemaGenerationExampleState
   }
 
   String get _jsonSchema {
-    try {
-      final schema = _currentSchema.toJsonSchema();
-      return const JsonEncoder.withIndent('  ').convert(schema);
-    } catch (e) {
-      return 'Error generating JSON Schema: $e';
-    }
+    final schema = _currentSchema.toJsonSchema();
+    return const JsonEncoder.withIndent('  ').convert(schema);
   }
 
   void _copyToClipboard() {

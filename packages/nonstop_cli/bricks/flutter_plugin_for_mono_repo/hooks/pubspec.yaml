@@ -1,7 +1,7 @@
 name: flutter_plugin_for_mono_repo_hooks
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   mason: ^0.1.2
@@ -9,5 +9,8 @@ dependencies:
   cli_core: ^0.0.2
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   test: ^1.21.0
+  mocktail: ^1.0.5
+
+resolution: workspace

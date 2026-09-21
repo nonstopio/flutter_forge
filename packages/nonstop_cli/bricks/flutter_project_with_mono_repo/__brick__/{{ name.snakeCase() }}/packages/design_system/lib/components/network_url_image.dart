@@ -20,7 +20,7 @@ class NetworkUrlImage extends StatelessWidget {
   @override
   Widget build(final BuildContext context) => CachedNetworkImage(
     imageUrl: url,
-    placeholder: (final context, final __) {
+    placeholder: (final context, final _) {
       final theme = Theme.of(context);
 
       return Container(

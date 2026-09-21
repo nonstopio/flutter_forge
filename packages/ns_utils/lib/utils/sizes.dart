@@ -12,9 +12,7 @@ double screenHeight = _defaultSize.height;
 ///Adapting screen and font size.
 ///Let your UI display a reasonable layout on different screen sizes!
 ///
-class Sizes {
-  Sizes._(); // coverage:ignore-line
-
+abstract final class Sizes {
   static bool initialized = false;
 
   ///initialize sizes
