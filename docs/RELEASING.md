@@ -191,8 +191,11 @@ requires `--execute` and a matching GitHub Actions tag-push context. Do not run
 Melos bootstrap in a publishing checkout. The CLI temporarily resets workspace
 resolution using `pubspec_overrides.yaml` containing only `resolution:` so
 published dependencies are checked independently. It removes the override even
-on failure. Run `flutter pub get` at the root after a local dry run to restore
-the shared package resolution.
+on failure. The isolated check analyzes `lib`, `bin`, and `test`; example apps
+and brick hooks are checked in the workspace during preparation and CI. It uses
+`pub get --no-example` and `flutter test --no-pub` to avoid resolving those
+separate workspaces while a package is isolated. Run `flutter pub get` at the
+root after a local dry run to restore the shared package resolution.
 
 ## Recover a failed release
 

@@ -135,20 +135,22 @@ test('manifest must belong to its release commit', (t) => {
   assert.throws(() => f.release.manifest(), /not the release commit/);
 });
 
-function publishFixture(t, { published = async () => false, failTest = false } = {}) {
+function publishFixture(t, { published = async () => false, failTest = false, flutter = false } = {}) {
   const f = fixture(t, [pkg('a'), pkg('b')]);
   f.git('push', 'origin', 'main');
   mkdirSync(path.join(f.repo, 'packages/a'), { recursive: true });
   mkdirSync(path.join(f.repo, 'packages/b/test'), { recursive: true });
+  mkdirSync(path.join(f.repo, 'packages/b/lib'), { recursive: true });
+  mkdirSync(path.join(f.repo, 'packages/b/example'), { recursive: true });
   // Empty directories aren't tracked and therefore don't dirty the fixture.
   const commands = [];
   const release = new Release({ directory: f.repo, published, pause: async () => {}, command: (command, args, cwd, capture) => {
     commands.push([command, ...args]);
     if (command === 'git') return run(command, args, cwd, true);
     if (command === 'melos' && args.includes('--graph')) return JSON.stringify({ b: ['a'] });
-    if (command === 'melos' && args.includes('--flutter')) return '[]';
+    if (command === 'melos' && args.includes('--flutter')) return JSON.stringify(flutter ? [{ name: 'b' }] : []);
     if (command === 'melos') return JSON.stringify([pkg('a'), pkg('b')].map((p) => ({ ...p, private: false, location: path.join(f.repo, p.path) })));
-    if (command === 'dart' && args[0] === 'pub' && args[1] === 'get') assert.equal(readFileSync(path.join(cwd, 'pubspec_overrides.yaml'), 'utf8'), 'resolution:\n');
+    if (['dart', 'flutter'].includes(command) && args[0] === 'pub' && args[1] === 'get') assert.equal(readFileSync(path.join(cwd, 'pubspec_overrides.yaml'), 'utf8'), 'resolution:\n');
     if (failTest && args[0] === 'test') throw new Error('tests failed');
     return '';
   } });
@@ -174,6 +176,20 @@ test('failed tests and dependency timeout prevent publication', async (t) => {
   const timeout = publishFixture(t);
   await assert.rejects(timeout.release.publish('b-v1.0.1'), /Dependency a-v1.0.1 is unavailable/);
   assert.equal(timeout.commands.some((args) => args.includes('publish')), false);
+});
+
+test('standalone Flutter checks do not reenter example workspace resolution', async (t) => {
+  const f = publishFixture(t, { published: async (p) => p.name === 'a', flutter: true });
+  await f.release.publish('b-v1.0.1');
+  const commands = f.commands.filter((args) => ['flutter', 'dart'].includes(args[0])).map((args) => args.join(' '));
+  assert.deepEqual(commands, [
+    'flutter pub get --no-example',
+    'dart analyze --fatal-infos lib',
+    'dart analyze --fatal-infos test',
+    'flutter test --no-pub',
+    'dart pub publish --dry-run',
+  ]);
+  assert.equal(existsSync(path.join(f.repo, 'packages/b/pubspec_overrides.yaml')), false);
 });
 
 test('already published package is skipped without resolving or publishing', async (t) => {

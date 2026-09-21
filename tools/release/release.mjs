@@ -156,11 +156,18 @@ export class Release {
     this.exec('git', ['commit', '-m', `${releaseSubject}\n\n${packages.map((pkg) => ` - ${pkg.tag}`).join('\n')}`]);
     console.log(`Prepared ${packages.length} package(s). Review the commit, then run push.`);
   }
-  validate(pkg, flutter) {
+  validate(pkg, flutter, standalone = false) {
     const directory = path.join(this.directory, pkg.path);
     flutter ??= JSON.parse(this.exec('melos', ['list', '--flutter', '--json'], true)).some((item) => item.name === pkg.name);
-    this.exec('dart', ['analyze', '--fatal-infos'], false, directory);
-    if (existsSync(path.join(directory, 'test'))) this.exec(flutter ? 'flutter' : 'dart', ['test'], false, directory);
+    // Examples and brick hooks are separate workspace packages. They are
+    // checked during preparation/CI, before opting out of workspace resolution.
+    const targets = standalone
+      ? ['lib', 'bin', 'test'].filter((item) => existsSync(path.join(directory, item)))
+      : [undefined];
+    for (const target of targets) this.exec('dart', ['analyze', '--fatal-infos', ...(target ? [target] : [])], false, directory);
+    if (existsSync(path.join(directory, 'test'))) {
+      this.exec(flutter ? 'flutter' : 'dart', ['test', ...(standalone && flutter ? ['--no-pub'] : [])], false, directory);
+    }
   }
   async push() {
     this.clean();
@@ -230,8 +237,8 @@ export class Release {
     // pub excludes this file from the uploaded archive; the source stays intact.
     writeFileSync(override, 'resolution:\n', { flag: 'wx' });
     try {
-      this.exec(flutter ? 'flutter' : 'dart', ['pub', 'get'], false, directory);
-      this.validate(pkg, flutter);
+      this.exec(flutter ? 'flutter' : 'dart', ['pub', 'get', '--no-example'], false, directory);
+      this.validate(pkg, flutter, true);
       this.exec('dart', ['pub', 'publish', '--dry-run'], false, directory);
       this.clean();
       if (execute) this.exec('dart', ['pub', 'publish', '--force'], false, directory);
