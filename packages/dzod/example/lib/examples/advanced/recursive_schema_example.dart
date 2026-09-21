@@ -224,8 +224,8 @@ class _RecursiveSchemaExampleState extends State<RecursiveSchemaExample> {
       return currentDepth;
     }
 
-    final children = node['children'] as List<dynamic>?;
-    if (children == null || children.isEmpty) {
+    final children = node['children'];
+    if (children is! List || children.isEmpty) {
       return currentDepth;
     }
 

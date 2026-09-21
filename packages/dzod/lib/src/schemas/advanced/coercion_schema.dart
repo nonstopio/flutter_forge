@@ -226,9 +226,7 @@ class CoercionSchema<T> extends Schema<T> {
 }
 
 /// Coercion utilities for common type conversions
-class CoercionUtils {
-  const CoercionUtils._();
-
+abstract final class CoercionUtils {
   /// Coerces input to string with advanced parsing options
   static String coerceToString(
     dynamic input, {
@@ -458,9 +456,7 @@ class CoercionUtils {
     );
 
     if (numValue is int) return numValue;
-    if (numValue is double) return numValue.round();
-
-    throw FormatException('Cannot convert $numValue to integer');
+    return numValue.round();
   }
 
   /// Coerces input to double with advanced precision and validation
@@ -485,10 +481,7 @@ class CoercionUtils {
       strict: strict,
     );
 
-    if (numValue is double) return numValue;
-    if (numValue is int) return numValue.toDouble();
-
-    throw FormatException('Cannot convert $numValue to double');
+    return numValue.toDouble();
   }
 
   /// Coerces input to boolean

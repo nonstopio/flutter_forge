@@ -10,10 +10,12 @@ class FirebaseStorageService {
     String path, {
     Function(String)? onProgress,
     Map<String, String> customMetadata = const {},
+    FirebaseStorage? storage,
   }) async {
     appLogsNS("uploadTask start");
     var stopwatch = Stopwatch()..start();
-    Reference storageReference = FirebaseStorage.instance.ref().child(path);
+    Reference storageReference =
+        (storage ?? FirebaseStorage.instance).ref().child(path);
     final UploadTask uploadTask = storageReference.putFile(
       file,
       SettableMetadata(

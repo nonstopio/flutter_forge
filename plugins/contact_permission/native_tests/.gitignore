@@ -1,0 +1,5 @@
+coverage/
+android/.gradle/
+android/.kotlin/
+android/build/
+android/gradle-run.log

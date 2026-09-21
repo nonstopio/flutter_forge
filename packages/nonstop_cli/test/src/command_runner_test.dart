@@ -52,6 +52,29 @@ void main() {
       verify(() => logger.info(updatePrompt)).called(1);
     });
 
+    test('verbose mode sets the log level and records explicit command flags',
+        () async {
+      expect(
+          await commandRunner
+              .run(['--verbose', 'create', '--template', 'app', '--help']),
+          0);
+      verify(() => logger.level = Level.verbose).called(1);
+      verify(() => logger.detail('    - template: app')).called(1);
+      verify(() => logger.detail('    - help: true')).called(1);
+    });
+
+    test('empty arguments print root usage', () async {
+      expect(await commandRunner.run([]), 0);
+      verify(() => logger.info(commandRunner.usage)).called(1);
+    });
+
+    test('an unavailable update service does not fail the command', () async {
+      when(() => pubUpdater.getLatestVersion(any()))
+          .thenThrow(StateError('offline'));
+      expect(await commandRunner.run(['--version']), 0);
+      verify(() => logger.info(packageVersion)).called(1);
+    });
+
     test(
       'Does not show update message when the shell calls the '
       'completion command',

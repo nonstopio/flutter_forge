@@ -19,9 +19,7 @@ const String emptyMessage = "Can't be Empty";
 const String passwordValidationMsg = "Minimum 6 characters,include upper and "
     "lower case letters,numbers,symbols(@,#,\$,%)";
 
-class ValidatorUtil {
-  ValidatorUtil._();
-
+abstract final class ValidatorUtil {
   static bool isFormValid(GlobalKey<FormState>? formKey) {
     try {
       final FormState? form = formKey?.currentState;

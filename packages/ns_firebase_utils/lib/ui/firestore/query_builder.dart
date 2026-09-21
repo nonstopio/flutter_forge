@@ -487,6 +487,8 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
               addAutomaticKeepAlives: addAutomaticKeepAlives,
               addRepaintBoundaries: addRepaintBoundaries,
               addSemanticIndexes: addSemanticIndexes,
+              // Preserve support for Flutter releases before scrollCacheExtent.
+              // ignore: deprecated_member_use
               cacheExtent: cacheExtent,
               semanticChildCount: semanticChildCount,
               dragStartBehavior: dragStartBehavior,

@@ -1,7 +1,7 @@
 import 'package:nonstop_cli/commands/doctor/src/utils/utils.dart';
 
 class MelosValidator extends DoctorValidator {
-  MelosValidator() : super('Melos');
+  MelosValidator({super.runProcess}) : super('Melos');
 
   @override
   String get installHelp =>

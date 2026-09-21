@@ -143,11 +143,6 @@ class JsonSchemaGenerator {
       ...schemaMap,
     };
 
-    // Add definitions if any were collected
-    if (context.definitions.isNotEmpty) {
-      result['definitions'] = context.definitions;
-    }
-
     return result;
   }
 
@@ -330,9 +325,6 @@ class JsonSchemaGenerator {
       }
       if (constraints['exclusiveMaximum'] != null) {
         result['exclusiveMaximum'] = constraints['exclusiveMaximum'];
-      }
-      if (constraints['multipleOf'] != null) {
-        result['multipleOf'] = constraints['multipleOf'];
       }
     } catch (e) {
       // Ignore constraint extraction errors
@@ -563,46 +555,22 @@ class JsonSchemaGenerator {
   /// Generate JSON Schema for UnionSchema
   Map<String, dynamic> _generateUnionSchema(
       UnionSchema schema, JsonSchemaContext context) {
-    try {
-      // Union schemas use anyOf in JSON Schema
-      // Since we can't access private _schemas field directly, we'll use a fallback
-      // In a real implementation, you'd need access to the schemas list
-      return {
-        'anyOf': [
-          // This would need actual access to schema._schemas
-          // schema._schemas.map((s) => _generateSchema(s, context)).toList()
-        ],
-        'description': 'Union schema - requires access to constituent schemas',
-      };
-    } catch (e) {
-      // Fallback
-      return {
-        'description': 'Union schema (schemas not accessible)',
-      };
-    }
+    // Constituent schemas are not exposed yet.
+    return {
+      'anyOf': <Map<String, dynamic>>[],
+      'description': 'Union schema - requires access to constituent schemas',
+    };
   }
 
   /// Generate JSON Schema for IntersectionSchema
   Map<String, dynamic> _generateIntersectionSchema(
       IntersectionSchema schema, JsonSchemaContext context) {
-    try {
-      // Intersection schemas use allOf in JSON Schema
-      // Since we can't access private _schemas field directly, we'll use a fallback
-      // In a real implementation, you'd need access to the schemas list
-      return {
-        'allOf': [
-          // This would need actual access to schema._schemas
-          // schema._schemas.map((s) => _generateSchema(s, context)).toList()
-        ],
-        'description':
-            'Intersection schema - requires access to constituent schemas',
-      };
-    } catch (e) {
-      // Fallback
-      return {
-        'description': 'Intersection schema (schemas not accessible)',
-      };
-    }
+    // Constituent schemas are not exposed yet.
+    return {
+      'allOf': <Map<String, dynamic>>[],
+      'description':
+          'Intersection schema - requires access to constituent schemas',
+    };
   }
 }
 

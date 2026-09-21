@@ -62,7 +62,7 @@ class RecordSchema<K, V> extends Schema<Map<K, V>> {
     Map<dynamic, dynamic> inputMap = input;
 
     // Length validations
-    if (_minEntries != null && inputMap.length < _minEntries!) {
+    if (_minEntries != null && inputMap.length < _minEntries) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -76,7 +76,7 @@ class RecordSchema<K, V> extends Schema<Map<K, V>> {
       );
     }
 
-    if (_maxEntries != null && inputMap.length > _maxEntries!) {
+    if (_maxEntries != null && inputMap.length > _maxEntries) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -95,7 +95,7 @@ class RecordSchema<K, V> extends Schema<Map<K, V>> {
 
     // Check required keys
     if (_requiredKeys != null) {
-      for (final requiredKey in _requiredKeys!) {
+      for (final requiredKey in _requiredKeys) {
         if (!inputMap.containsKey(requiredKey)) {
           errors.add(
             ValidationError.constraintViolation(
@@ -124,7 +124,7 @@ class RecordSchema<K, V> extends Schema<Map<K, V>> {
       // Validate key
       K validatedKey;
       if (_keySchema != null) {
-        final keyResult = _keySchema!.validate(key, [...path, 'key']);
+        final keyResult = _keySchema.validate(key, [...path, 'key']);
         if (keyResult.isSuccess) {
           validatedKey = keyResult.data as K;
         } else {
@@ -164,7 +164,7 @@ class RecordSchema<K, V> extends Schema<Map<K, V>> {
       // Validate value
       V validatedValue;
       if (_valueSchema != null) {
-        final valueResult = _valueSchema!.validate(
+        final valueResult = _valueSchema.validate(
           value,
           [...path, validatedKey.toString()],
         );

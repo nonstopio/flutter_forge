@@ -94,7 +94,7 @@ class NumberSchema extends Schema<num> {
     }
 
     // Range validations
-    if (_min != null && value < _min!) {
+    if (_min != null && value < _min) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -108,7 +108,7 @@ class NumberSchema extends Schema<num> {
       );
     }
 
-    if (_max != null && value > _max!) {
+    if (_max != null && value > _max) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(

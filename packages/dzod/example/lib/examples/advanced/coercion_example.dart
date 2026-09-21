@@ -5,6 +5,8 @@ import '../../widgets/result_display.dart';
 import '../../widgets/schema_display.dart';
 import '../../widgets/validation_card.dart';
 
+enum _CoercionType { number, boolean, date, list, advanced }
+
 class CoercionExample extends StatefulWidget {
   const CoercionExample({super.key});
 
@@ -16,31 +18,29 @@ class _CoercionExampleState extends State<CoercionExample> {
   final _formKey = GlobalKey<FormState>();
   final _inputController = TextEditingController();
 
-  String _selectedType = 'number';
+  _CoercionType _selectedType = _CoercionType.number;
   bool _strictMode = false;
 
   // Example 13: Automatic Type Coercion
   Schema get _currentSchema {
     switch (_selectedType) {
-      case 'number':
+      case _CoercionType.number:
         return _strictMode ? z.coerce.number(strict: true) : z.coerce.number();
-      case 'boolean':
+      case _CoercionType.boolean:
         return _strictMode
             ? z.coerce.boolean(strict: true)
             : z.coerce.boolean();
-      case 'date':
+      case _CoercionType.date:
         return _strictMode ? z.coerce.date(strict: true) : z.coerce.date();
-      case 'list':
+      case _CoercionType.list:
         return _strictMode ? z.coerce.list(strict: true) : z.coerce.list();
-      case 'advanced':
+      case _CoercionType.advanced:
         // Advanced number coercion with additional validation
         return z.coerce
             .number(strict: false)
             .transform((value) => double.parse(value.toStringAsFixed(2)))
             .refine((value) => value >= 0 && value <= 100,
                 message: 'Must be between 0 and 100');
-      default:
-        return z.string();
     }
   }
 
@@ -76,7 +76,7 @@ class _CoercionExampleState extends State<CoercionExample> {
   }
 
   Widget _buildExampleButtons() {
-    final examples = _examples[_selectedType] ?? [];
+    final examples = _examples[_selectedType.name] ?? [];
 
     return Wrap(
       spacing: 8,
@@ -95,11 +95,11 @@ class _CoercionExampleState extends State<CoercionExample> {
   }
 
   IconData _getExampleIcon(String example) {
-    if (_selectedType == 'number') {
+    if (_selectedType == _CoercionType.number) {
       if (RegExp(r'^\d+\.?\d*$').hasMatch(example)) {
         return Icons.check_circle;
       }
-    } else if (_selectedType == 'boolean') {
+    } else if (_selectedType == _CoercionType.boolean) {
       if (['true', '1', 'yes', 'on'].contains(example.toLowerCase())) {
         return Icons.toggle_on;
       } else if (['false', '0', 'no', 'off', '']
@@ -115,11 +115,11 @@ class _CoercionExampleState extends State<CoercionExample> {
 
     // For demonstration, we'll parse the input based on type
     switch (_selectedType) {
-      case 'number':
+      case _CoercionType.number:
         // Try to parse as number
         final num = double.tryParse(text);
         return num ?? text;
-      case 'boolean':
+      case _CoercionType.boolean:
         // Various boolean representations
         if (text.toLowerCase() == 'true' ||
             text == '1' ||
@@ -134,23 +134,17 @@ class _CoercionExampleState extends State<CoercionExample> {
           return false;
         }
         return text;
-      case 'date':
+      case _CoercionType.date:
         // Try to parse as date
         try {
           return DateTime.parse(text);
         } catch (_) {
           return text;
         }
-      case 'list':
-        // Try JSON parse first
-        try {
-          final parsed = text.contains('[') ? text : '[$text]';
-          return parsed;
-        } catch (_) {
-          // Fall back to comma-separated
-          return text.split(',').map((e) => e.trim()).toList();
-        }
-      default:
+      case _CoercionType.list:
+        // Keep the input in the bracketed form expected by the demo.
+        return text.contains('[') ? text : '[$text]';
+      case _CoercionType.advanced:
         return text;
     }
   }
@@ -169,7 +163,7 @@ class _CoercionExampleState extends State<CoercionExample> {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<String>(
+                  child: DropdownButtonFormField<_CoercionType>(
                     initialValue: _selectedType,
                     onChanged: (value) {
                       setState(() {
@@ -184,23 +178,23 @@ class _CoercionExampleState extends State<CoercionExample> {
                     ),
                     items: const [
                       DropdownMenuItem(
-                        value: 'number',
+                        value: _CoercionType.number,
                         child: Text('Number Coercion'),
                       ),
                       DropdownMenuItem(
-                        value: 'boolean',
+                        value: _CoercionType.boolean,
                         child: Text('Boolean Coercion'),
                       ),
                       DropdownMenuItem(
-                        value: 'date',
+                        value: _CoercionType.date,
                         child: Text('Date Coercion'),
                       ),
                       DropdownMenuItem(
-                        value: 'list',
+                        value: _CoercionType.list,
                         child: Text('List Coercion'),
                       ),
                       DropdownMenuItem(
-                        value: 'advanced',
+                        value: _CoercionType.advanced,
                         child: Text('Advanced Number'),
                       ),
                     ],
@@ -213,7 +207,7 @@ class _CoercionExampleState extends State<CoercionExample> {
                     const Text('Strict Mode'),
                     Switch(
                       value: _strictMode,
-                      onChanged: _selectedType != 'advanced'
+                      onChanged: _selectedType != _CoercionType.advanced
                           ? (value) {
                               setState(() {
                                 _strictMode = value;
@@ -250,7 +244,7 @@ class _CoercionExampleState extends State<CoercionExample> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      _descriptions[_selectedType] ?? '',
+                      _descriptions[_selectedType.name] ?? '',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     if (_strictMode) ...[
@@ -275,7 +269,7 @@ class _CoercionExampleState extends State<CoercionExample> {
               controller: _inputController,
               decoration: InputDecoration(
                 labelText: 'Input Value',
-                hintText: 'Enter value to coerce to $_selectedType',
+                hintText: 'Enter value to coerce to ${_selectedType.name}',
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.input),
               ),

@@ -50,17 +50,12 @@ class _ApiValidationExampleState extends State<ApiValidationExample> {
       _result = null;
     });
 
-    try {
-      final result = await apiSchema.validateAsync(_urlController.text);
-      setState(() {
-        _result = result;
-        _isValidating = false;
-      });
-    } catch (e) {
-      setState(() {
-        _isValidating = false;
-      });
-    }
+    final result = await apiSchema.validateAsync(_urlController.text);
+    if (!mounted) return;
+    setState(() {
+      _result = result;
+      _isValidating = false;
+    });
   }
 
   void _fillValidExample() {

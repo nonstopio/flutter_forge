@@ -747,8 +747,8 @@ void main() {
 
   group('Constants', () {
     test('should have correct constant values', () {
-      // These are private constants in the library, but we can test their effects
-      expect(1, equals(1)); // aSec
+      expect(aSec, 1);
+      expect(labelSplitter, ' |  ');
     });
   });
 }

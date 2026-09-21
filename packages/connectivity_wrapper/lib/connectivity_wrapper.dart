@@ -8,7 +8,7 @@
 /// (usually on timeout, default 10 sec)
 /// a false boolean is pushed to the same list.
 ///
-library connectivity_wrapper;
+library;
 
 import 'dart:async';
 import 'dart:io';
@@ -38,8 +38,8 @@ enum ConnectivityStatus { CONNECTED, DISCONNECTED }
 /// connectivity status of the device.
 ///
 class ConnectivityWrapper {
-  static List<AddressCheckOptions> get _defaultAddresses => (kIsWeb)
-      ? [] // coverage:ignore-line
+  static List<AddressCheckOptions> _defaultAddresses(bool isWeb) => isWeb
+      ? []
       : List<AddressCheckOptions>.unmodifiable(
           <AddressCheckOptions>[
             AddressCheckOptions(
@@ -81,9 +81,12 @@ class ConnectivityWrapper {
           ],
         );
 
-  List<AddressCheckOptions> addresses = _defaultAddresses;
+  List<AddressCheckOptions> addresses;
+  final bool _isWeb;
 
-  ConnectivityWrapper._() {
+  ConnectivityWrapper._({bool isWeb = kIsWeb})
+      : _isWeb = isWeb,
+        addresses = _defaultAddresses(isWeb) {
     _statusController.onListen = () {
       _maybeEmitStatusUpdate();
     };
@@ -96,6 +99,15 @@ class ConnectivityWrapper {
   /// [ConnectivityWrapper]'s singleton instance.
   ///
   static final ConnectivityWrapper instance = ConnectivityWrapper._();
+
+  /// Creates an isolated checker with a selected platform for unit tests.
+  @visibleForTesting
+  factory ConnectivityWrapper.forTesting({bool isWeb = false}) =>
+      ConnectivityWrapper._(isWeb: isWeb);
+
+  /// Optional deterministic network check for tests. Reset after use.
+  @visibleForTesting
+  Future<bool> Function()? networkChecker;
 
   /// [isHostReachable] is a function that checks if a host is reachable.
   ///
@@ -113,18 +125,18 @@ class ConnectivityWrapper {
         options.address ?? options.hostname,
         options.port,
         timeout: options.timeout,
-      )
-        ..destroy();
+      );
       return AddressCheckResult(
         options,
         isSuccess: true,
       );
     } catch (e) {
-      sock?.destroy(); // coverage:ignore-line
       return AddressCheckResult(
         options,
         isSuccess: false,
       );
+    } finally {
+      sock?.destroy();
     }
   }
 
@@ -138,8 +150,10 @@ class ConnectivityWrapper {
   /// to the network.
   ///
   Future<bool> get isConnected async {
+    final checker = networkChecker;
+    if (checker != null) return checker();
     bool connected = await _checkWebConnection();
-    if (kIsWeb) return connected;
+    if (_isWeb) return connected;
     if (!connected) return connected;
 
     List<Future<AddressCheckResult>> requests = [];
@@ -206,9 +220,8 @@ class ConnectivityWrapper {
 
   ConnectivityStatus? get lastStatus => _lastStatus;
 
-  _maybeEmitStatusUpdate([Timer? timer]) async {
+  Future<void> _maybeEmitStatusUpdate() async {
     _timerHandle?.cancel();
-    timer?.cancel(); // coverage:ignore-line
 
     var currentStatus = await connectionStatus;
 

@@ -1,3 +1,9 @@
+## Unreleased
+
+- Fix `startsWith`, `endsWith`, `contains`, `date`, and `datetime` throwing invalid casts when constructing a schema. They now return `Schema<String>`, consistent with other refinements. Apply string-specific checks first, for example `z.string().min(3).startsWith('abc')`.
+- Await inner asynchronous validation before applying an asynchronous refinement.
+- Upgrade dependencies and add regression tests for all executable library lines.
+
 ## 0.2.1
 
  - **FIX**: replace deprecated Flutter 3.35 APIs in dzod example app.
@@ -46,4 +52,3 @@
  - **DOCS**(dzod): fix README examples to match actual API implementation.
  - **DOCS**(dzod): update test coverage badge to 99.3%.
  - **BREAKING** **REFACTOR**(dzod): rename zod_bhai package to dzod.
-

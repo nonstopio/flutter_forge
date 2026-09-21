@@ -12,7 +12,7 @@ topics:
   - flutter
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   mason: ^0.1.2
@@ -20,9 +20,12 @@ dependencies:
   meta: ^1.15.0
   path: ^1.8.0
   universal_io: ^2.2.2
+  yaml: ^3.1.4
 
 dev_dependencies:
   test: ^1.24.9
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   mocktail: ^1.0.4
   build_runner: ^2.4.12
+
+resolution: workspace

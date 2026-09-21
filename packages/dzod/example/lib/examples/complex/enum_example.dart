@@ -59,8 +59,6 @@ class _EnumExampleState extends State<EnumExample> {
 
   Schema _getCurrentSchema() {
     switch (_selectedEnumType) {
-      case 'basic':
-        return _basicRoleSchema;
       case 'excluded':
         return _basicRoleSchema.exclude(['guest']);
       case 'extended':

@@ -89,7 +89,7 @@ class TupleSchema<T extends List<dynamic>> extends Schema<T> {
     // Validate rest elements if rest schema exists
     if (_restSchema != null) {
       for (int i = _elementSchemas.length; i < array.length; i++) {
-        final elementResult = _restSchema!.validate(
+        final elementResult = _restSchema.validate(
           array[i],
           [...path, i.toString()],
         );

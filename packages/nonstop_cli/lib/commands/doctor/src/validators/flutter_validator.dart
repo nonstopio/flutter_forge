@@ -1,7 +1,7 @@
 import 'package:nonstop_cli/commands/doctor/src/utils/utils.dart';
 
 class FlutterValidator extends DoctorValidator {
-  FlutterValidator() : super('Flutter');
+  FlutterValidator({super.runProcess}) : super('Flutter');
 
   @override
   String get installHelp => 'https://flutter.dev/docs/get-started/install';

@@ -8,7 +8,8 @@ class FirebaseGroupApi {
   final String collection;
   late Query<Map<String, dynamic>> query;
 
-  FirebaseGroupApi(this.collection) {
-    query = FirebaseFirestore.instance.collectionGroup(collection);
+  FirebaseGroupApi(this.collection, {FirebaseFirestore? firestore}) {
+    query =
+        (firestore ?? FirebaseFirestore.instance).collectionGroup(collection);
   }
 }

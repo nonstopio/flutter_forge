@@ -19,7 +19,11 @@ class ConnectivityAppWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<ConnectivityStatus>(
       initialData: ConnectivityStatus.CONNECTED,
-      create: (context) => ConnectivityProvider().connectivityStream,
+      create: (context) {
+        final provider = ConnectivityProvider();
+        provider.connectivityController.onCancel = provider.dispose;
+        return provider.connectivityStream;
+      },
       child: app,
     );
   }

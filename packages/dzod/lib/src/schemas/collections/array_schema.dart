@@ -65,7 +65,7 @@ class ArraySchema<T> extends Schema<List<T>> {
       );
     }
 
-    if (_minLength != null && array.length < _minLength!) {
+    if (_minLength != null && array.length < _minLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -79,7 +79,7 @@ class ArraySchema<T> extends Schema<List<T>> {
       );
     }
 
-    if (_maxLength != null && array.length > _maxLength!) {
+    if (_maxLength != null && array.length > _maxLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -161,7 +161,7 @@ class ArraySchema<T> extends Schema<List<T>> {
       );
     }
 
-    if (_minLength != null && array.length < _minLength!) {
+    if (_minLength != null && array.length < _minLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -175,7 +175,7 @@ class ArraySchema<T> extends Schema<List<T>> {
       );
     }
 
-    if (_maxLength != null && array.length > _maxLength!) {
+    if (_maxLength != null && array.length > _maxLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(

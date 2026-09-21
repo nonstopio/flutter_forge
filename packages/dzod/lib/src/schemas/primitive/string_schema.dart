@@ -104,7 +104,7 @@ class StringSchema extends Schema<String> {
       );
     }
 
-    if (_minLength != null && value.length < _minLength!) {
+    if (_minLength != null && value.length < _minLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -118,7 +118,7 @@ class StringSchema extends Schema<String> {
       );
     }
 
-    if (_maxLength != null && value.length > _maxLength!) {
+    if (_maxLength != null && value.length > _maxLength) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
@@ -133,15 +133,15 @@ class StringSchema extends Schema<String> {
     }
 
     // Pattern validation
-    if (_pattern != null && !_pattern!.hasMatch(value)) {
+    if (_pattern != null && !_pattern.hasMatch(value)) {
       return ValidationResult.failure(
         ValidationErrorCollection.single(
           ValidationError.constraintViolation(
             path: path,
             received: value,
-            constraint: 'match pattern ${_pattern!.pattern}',
+            constraint: 'match pattern ${_pattern.pattern}',
             code: 'pattern_mismatch',
-            context: {'pattern': _pattern!.pattern},
+            context: {'pattern': _pattern.pattern},
           ),
         ),
       );
@@ -373,30 +373,30 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string starts with the given prefix
-  StringSchema startsWith(String prefix) {
+  Schema<String> startsWith(String prefix) {
     return refine(
       (value) => value.startsWith(prefix),
       message: 'must start with "$prefix"',
       code: 'starts_with',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string ends with the given suffix
-  StringSchema endsWith(String suffix) {
+  Schema<String> endsWith(String suffix) {
     return refine(
       (value) => value.endsWith(suffix),
       message: 'must end with "$suffix"',
       code: 'ends_with',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string contains the given substring
-  StringSchema contains(String substring) {
+  Schema<String> contains(String substring) {
     return refine(
       (value) => value.contains(substring),
       message: 'must contain "$substring"',
       code: 'contains',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is non-empty
@@ -409,21 +409,21 @@ class StringSchema extends Schema<String> {
   }
 
   /// Checks if string is a valid date
-  StringSchema date() {
+  Schema<String> date() {
     return refine(
       (value) => DateTime.tryParse(value) != null,
       message: 'must be a valid date',
       code: 'invalid_date',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid datetime
-  StringSchema datetime() {
+  Schema<String> datetime() {
     return refine(
       (value) => DateTime.tryParse(value) != null,
       message: 'must be a valid datetime',
       code: 'invalid_datetime',
-    ) as StringSchema;
+    );
   }
 
   /// Checks if string is a valid IP address
@@ -837,7 +837,7 @@ class StringSchema extends Schema<String> {
     if (_minLength != null) constraints.add('min: $_minLength');
     if (_maxLength != null) constraints.add('max: $_maxLength');
     if (_exactLength != null) constraints.add('length: $_exactLength');
-    if (_pattern != null) constraints.add('pattern: ${_pattern!.pattern}');
+    if (_pattern != null) constraints.add('pattern: ${_pattern.pattern}');
     if (_isEmail) constraints.add('email');
     if (_isUrl) constraints.add('url');
     if (_isUuid) constraints.add('uuid');

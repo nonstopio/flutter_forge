@@ -2,6 +2,13 @@ import 'dart:io';
 
 import 'package:mason/mason.dart';
 
+typedef ProcessRunner = Future<ProcessResult> Function(
+  String executable,
+  List<String> arguments, {
+  String? workingDirectory,
+  bool runInShell,
+});
+
 /// Runs [executable] and throws when it fails.
 ///
 /// `cli_core`'s `trackOperation` reports success as soon as the future
@@ -17,12 +24,13 @@ Future<void> runChecked(
   required String executable,
   required List<String> arguments,
   String? workingDirectory,
+  ProcessRunner runProcess = Process.run,
 }) async {
   final progress = context.logger.progress(startMessage);
 
   final ProcessResult result;
   try {
-    result = await Process.run(
+    result = await runProcess(
       executable,
       arguments,
       workingDirectory: workingDirectory,

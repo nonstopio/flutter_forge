@@ -1,0 +1,4 @@
+# all-contributors-cli still permits an obsolete tmp release through inquirer.
+# The supported tmpNameSync API is unchanged; use the patched release.
+overrides:
+  tmp: ^0.2.7

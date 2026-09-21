@@ -446,7 +446,7 @@ class AsyncRefineSchema<T> extends Schema<T> {
   @override
   Future<ValidationResult<T>> validateAsync(dynamic input,
       [List<String> path = const []]) async {
-    final result = _schema.validate(input, path);
+    final result = await _schema.validateAsync(input, path);
     if (result.isSuccess) {
       final value = result.data as T;
       final isValid = await _validator(value);

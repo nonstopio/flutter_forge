@@ -1,8 +1,6 @@
 import 'package:flutter/services.dart';
 
-class DeviceService {
-  DeviceService._();
-
+abstract final class DeviceService {
   static Future<void> setOrientationToPortrait() async {
     await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
       DeviceOrientation.portraitUp,

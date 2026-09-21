@@ -1,7 +1,12 @@
-import 'package:cli_core/cli_core.dart' show BaseFlutterCommand;
+import 'package:cli_core/cli_core.dart' show BaseFlutterCommand, CliCommand;
 import 'package:mason/mason.dart';
 
-final class FlutterPluginCreateCommand extends BaseFlutterCommand {
+final class FlutterPluginCreateCommand extends CliCommand {
+  FlutterPluginCreateCommand({BaseFlutterCommand? flutter})
+      : _flutter = flutter ?? BaseFlutterCommand();
+
+  final BaseFlutterCommand _flutter;
+
   @override
   Future<void> run(HookContext context) async {
     final String name = context.vars['name'];
@@ -9,7 +14,7 @@ final class FlutterPluginCreateCommand extends BaseFlutterCommand {
     final String orgName = context.vars['org_name'] ?? 'com.example';
     final appName = name.snakeCase;
 
-    await createFlutterProject(
+    await _flutter.createFlutterProject(
       context: context,
       name: appName,
       description: description,
@@ -20,7 +25,7 @@ final class FlutterPluginCreateCommand extends BaseFlutterCommand {
 
     final isMonoRepo = context.vars['is_mono_repo'] ?? false;
     if (isMonoRepo) {
-      await removeAnalysisOptions(
+      await _flutter.removeAnalysisOptions(
         context: context,
         projectPath: appName,
       );

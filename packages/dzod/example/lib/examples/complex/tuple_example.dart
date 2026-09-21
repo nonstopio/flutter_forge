@@ -52,7 +52,6 @@ class _TupleExampleState extends State<TupleExample> {
   }
 
   void _clearInput() {
-    _tupleFormKey.currentState?.reset();
     _element1Controller.clear();
     _element2Controller.clear();
     _element3Controller.clear();
@@ -76,8 +75,6 @@ class _TupleExampleState extends State<TupleExample> {
 
   Schema _getCurrentSchema() {
     switch (_selectedTupleType) {
-      case 'basic':
-        return _basicTupleSchema;
       case 'withRest':
         return _basicTupleSchema.rest(z.string());
       case 'exactLength':

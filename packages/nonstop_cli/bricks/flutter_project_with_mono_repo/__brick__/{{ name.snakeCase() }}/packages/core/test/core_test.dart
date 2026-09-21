@@ -198,7 +198,7 @@ void main() {
       }
       routes.didReplace();
       final log = TalkerRouteLog(route: unnamed, type: RouteLogType.push);
-      expect(log.key, TalkerLogType.route.key);
+      expect(log.key, TalkerKey.route);
       expect(log.pen, isA<AnsiPen>());
       await bloc.close();
     },

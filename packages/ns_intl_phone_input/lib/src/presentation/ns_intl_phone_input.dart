@@ -54,7 +54,7 @@ class _NsIntlPhoneInputState extends State<NsIntlPhoneInput>
     });
   }
 
-  void _notifyListeners(text) {
+  void _notifyListeners(String text) {
     final unMastedValue = NSIntlPhoneHelper.getUnMaskedPhoneNumber(
       phoneNumber: text,
     );

@@ -5,6 +5,8 @@ import '../../widgets/result_display.dart';
 import '../../widgets/schema_display.dart';
 import '../../widgets/validation_card.dart';
 
+enum _MessageType { text, image, video, audio }
+
 class DiscriminatedUnionExample extends StatefulWidget {
   const DiscriminatedUnionExample({super.key});
 
@@ -15,7 +17,7 @@ class DiscriminatedUnionExample extends StatefulWidget {
 
 class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
   final _formKey = GlobalKey<FormState>();
-  String _selectedType = 'text';
+  _MessageType _selectedType = _MessageType.text;
 
   // Controllers for different message types
   final _textController = TextEditingController();
@@ -55,12 +57,12 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
 
   Map<String, dynamic> _buildMessageData() {
     switch (_selectedType) {
-      case 'text':
+      case _MessageType.text:
         return {
           'type': 'text',
           'content': _textController.text,
         };
-      case 'image':
+      case _MessageType.image:
         final data = {
           'type': 'image',
           'url': _imageUrlController.text,
@@ -69,38 +71,36 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           data['alt'] = _imageAltController.text;
         }
         return data;
-      case 'video':
+      case _MessageType.video:
         return {
           'type': 'video',
           'url': _videoUrlController.text,
           'duration': double.tryParse(_videoDurationController.text) ?? 0,
         };
-      case 'audio':
+      case _MessageType.audio:
         return {
           'type': 'audio',
           'url': _audioUrlController.text,
           'duration': double.tryParse(_audioDurationController.text) ?? 0,
         };
-      default:
-        return {};
     }
   }
 
   void _fillExample() {
     setState(() {
       switch (_selectedType) {
-        case 'text':
+        case _MessageType.text:
           _textController.text = 'Hello, this is a text message!';
           break;
-        case 'image':
+        case _MessageType.image:
           _imageUrlController.text = 'https://example.com/image.jpg';
           _imageAltController.text = 'A beautiful sunset';
           break;
-        case 'video':
+        case _MessageType.video:
           _videoUrlController.text = 'https://example.com/video.mp4';
           _videoDurationController.text = '120.5';
           break;
-        case 'audio':
+        case _MessageType.audio:
           _audioUrlController.text = 'https://example.com/audio.mp3';
           _audioDurationController.text = '180';
           break;
@@ -122,7 +122,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
 
   Widget _buildMessageTypeForm() {
     switch (_selectedType) {
-      case 'text':
+      case _MessageType.text:
         return TextFormField(
           controller: _textController,
           maxLines: 3,
@@ -134,7 +134,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           ),
         );
 
-      case 'image':
+      case _MessageType.image:
         return Column(
           children: [
             TextFormField(
@@ -159,7 +159,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           ],
         );
 
-      case 'video':
+      case _MessageType.video:
         return Column(
           children: [
             TextFormField(
@@ -185,7 +185,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           ],
         );
 
-      case 'audio':
+      case _MessageType.audio:
         return Column(
           children: [
             TextFormField(
@@ -210,17 +210,15 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
             ),
           ],
         );
-
-      default:
-        return const SizedBox.shrink();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     // Use extended schema if audio is selected
-    final currentSchema =
-        _selectedType == 'audio' ? extendedMessageSchema : messageSchema;
+    final currentSchema = _selectedType == _MessageType.audio
+        ? extendedMessageSchema
+        : messageSchema;
 
     return ValidationCard(
       title: 'Example 10: Discriminated Unions',
@@ -232,7 +230,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Message type selector
-            DropdownButtonFormField<String>(
+            DropdownButtonFormField<_MessageType>(
               initialValue: _selectedType,
               onChanged: (value) {
                 setState(() {
@@ -247,7 +245,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
               ),
               items: const [
                 DropdownMenuItem(
-                  value: 'text',
+                  value: _MessageType.text,
                   child: Row(
                     children: [
                       Icon(Icons.text_fields, size: 20),
@@ -257,7 +255,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
                   ),
                 ),
                 DropdownMenuItem(
-                  value: 'image',
+                  value: _MessageType.image,
                   child: Row(
                     children: [
                       Icon(Icons.image, size: 20),
@@ -267,7 +265,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
                   ),
                 ),
                 DropdownMenuItem(
-                  value: 'video',
+                  value: _MessageType.video,
                   child: Row(
                     children: [
                       Icon(Icons.videocam, size: 20),
@@ -277,7 +275,7 @@ class _DiscriminatedUnionExampleState extends State<DiscriminatedUnionExample> {
                   ),
                 ),
                 DropdownMenuItem(
-                  value: 'audio',
+                  value: _MessageType.audio,
                   child: Row(
                     children: [
                       Icon(Icons.audiotrack, size: 20),

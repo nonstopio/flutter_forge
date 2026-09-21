@@ -11,7 +11,7 @@ int Function() stdoutTerminalColumnsResolver = defaultTerminalColumnsForTest;
 @visibleForTesting
 int defaultTerminalColumnsForTest() {
   if (stdout.hasTerminal) {
-    return stdout.terminalColumns; // coverage:ignore-line
+    return stdout.terminalColumns;
   }
   return fallbackStdoutTerminalColumns;
 }
