@@ -27,6 +27,20 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 <!-- END:badges -->
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4). This release upgrades
+`cached_network_image` to 4.x, `device_info_plus` to 13.x, `package_info_plus`
+to 10.x, `intl` to 0.20.x, and `objectid` to 4.x. Some dependency APIs are
+re-exported, so migrate application code and direct dependency constraints
+together with those upstream major versions.
+
+Static utility classes including `Sizes`, `ValidatorUtil`, and `DeviceService`
+are `abstract final`; use their static methods rather than implementing them.
+JSON conversion, navigation, and numeric helpers now handle Dart errors as
+well as exceptions, and failed comma-separated list conversion returns the
+package's default string.
+
 ## Introduction
 
 ns_utils is a powerful Flutter utility library that simplifies and enhances your Flutter app development experience. It provides a collection of methods and extensions to streamline your code, making it more readable and efficient. Whether you need responsive design, date and time handling, map operations, string manipulation, or widget customization, ns_utils has got you covered.
