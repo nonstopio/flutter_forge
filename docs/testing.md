@@ -24,7 +24,7 @@ python3 tools/coverage.py --package ns_utils
 python3 tools/coverage.py --package packages/timer_button/example
 ```
 
-CI tests only the packages changed since the base commit, plus their workspace dependents (`melos list --diff=<base> --include-dependents`). The native permission job runs only when `contact_permission` is selected. Changes to shared inputs (root `pubspec.yaml`/`pubspec.lock`, `analysis_options.yaml`, root `test/`, `tools/coverage.py`, `tools/tests/`, root `tools/*.dart`, or the Dart workflow) run every package. Formatting and analysis always cover the whole workspace.
+CI tests only the packages changed since the base commit, plus their workspace dependents (`melos list --diff=<base> --include-dependents`), as a matrix with one parallel job per package. The native permission job runs only when `contact_permission` is selected. Changes to shared inputs (root `pubspec.yaml`/`pubspec.lock`, `analysis_options.yaml`, root `test/`, `tools/coverage.py`, `tools/tests/`, root `tools/*.dart`, or the Dart workflow) run every package. Formatting and analysis always cover the whole workspace.
 
 `--report-only` inspects existing reports and writes `summary-existing.json`; it does not establish a fresh passing result.
 
