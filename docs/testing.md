@@ -24,6 +24,8 @@ python3 tools/coverage.py --package ns_utils
 python3 tools/coverage.py --package packages/timer_button/example
 ```
 
+CI tests only the packages changed since the base commit, plus their workspace dependents (`melos list --diff=<base> --include-dependents`), as a matrix with one parallel job per package. The native permission job runs only when `contact_permission` is selected. Changes to shared inputs (root `pubspec.yaml`/`pubspec.lock`, `analysis_options.yaml`, root `test/`, `tools/coverage.py`, `tools/tests/`, root `tools/*.dart`, or the Dart workflow) run every package. Formatting and analysis always cover the whole workspace.
+
 `--report-only` inspects existing reports and writes `summary-existing.json`; it does not establish a fresh passing result.
 
 Mustache brick source is not runnable Dart until rendered. The separate generated-template workflow renders representative module combinations, analyzes them, and requires 100% handwritten Dart coverage inside the generated workspace. The template contract suite additionally validates every module selection. Hook bundles exclude local tests/build artifacts and workspace-only `resolution` metadata.

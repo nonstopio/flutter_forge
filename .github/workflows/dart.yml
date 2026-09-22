@@ -10,6 +10,35 @@ env:
   FLUTTER_VERSION: "3.47.5"
 
 jobs:
+  # Test only packages changed since the base (plus their dependents). Shared
+  # workspace inputs, or an unknown base, fall back to testing everything.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.select.outputs.packages }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get --enforce-lockfile
+      - id: select
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: |
+          if [[ -z "$BASE" || "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null \
+            || git diff --name-only "$BASE" HEAD | grep -qE '^(pubspec\.(yaml|lock)|analysis_options\.yaml|test/|tools/(coverage\.py|tests/|[^/]+\.dart)|\.github/workflows/dart\.yml)'; then
+            packages=$(dart pub workspace list --json | jq -c --arg root "$PWD" \
+              '[.packages[].path | if . == $root then "." else ltrimstr($root + "/") end]')
+          else
+            packages=$(dart run melos list --diff="$BASE" --include-dependents --parsable --relative | jq -Rsc 'split("\n") | map(select(. != ""))')
+          fi
+          echo "packages=$packages" >> "$GITHUB_OUTPUT"
+          echo "Testing: $packages"
+
   quality:
     runs-on: ubuntu-latest
     steps:
@@ -27,20 +56,49 @@ jobs:
         run: python3 -m unittest discover -s tools/tests
       - name: Check formatting and analyze workspace
         run: dart run melos run lint
-      - name: Require 100% coverage in every package
-        run: python3 tools/coverage.py
+
+  # One job per selected package; packages are independent, so they run in parallel.
+  test:
+    needs: changes
+    if: needs.changes.outputs.packages != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ fromJSON(needs.changes.outputs.packages) }}
+    name: test (${{ matrix.package }})
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+      - name: Resolve workspace dependencies
+        run: flutter pub get --enforce-lockfile
+      - name: Require 100% coverage
+        run: python3 tools/coverage.py --package "${{ matrix.package }}"
+      - id: artifact
+        if: always()
+        env:
+          PACKAGE: ${{ matrix.package }}
+        run: |
+          name="${PACKAGE//\//-}"
+          echo "name=coverage-${name/#./root}" >> "$GITHUB_OUTPUT"
       - name: Save test logs and coverage reports
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: workspace-coverage
+          name: ${{ steps.artifact.outputs.name }}
           path: |
             coverage/
-            packages/**/coverage/
-            plugins/**/coverage/
-            tools/**/coverage/
+            ${{ matrix.package }}/coverage/
 
   native-permissions:
+    needs: changes
+    if: contains(fromJSON(needs.changes.outputs.packages), 'plugins/contact_permission')
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
