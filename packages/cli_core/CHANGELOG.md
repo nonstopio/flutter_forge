@@ -1,3 +1,7 @@
+## 0.0.3
+
+ - **FEAT**(cli_core): release native workspace detection.
+
 ## 0.0.2
 
 ## 0.0.2-dev.6
