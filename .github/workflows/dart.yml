@@ -10,7 +10,39 @@ env:
   FLUTTER_VERSION: "3.47.5"
 
 jobs:
+  # Test only packages changed since the base (plus their dependents). Shared
+  # workspace inputs, or an unknown base, fall back to testing everything.
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.select.outputs.packages }}
+      all: ${{ steps.select.outputs.all }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+      - run: flutter pub get --enforce-lockfile
+      - id: select
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: |
+          if [[ -z "$BASE" || "$BASE" =~ ^0+$ ]] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null \
+            || git diff --name-only "$BASE" HEAD | grep -qE '^(pubspec\.(yaml|lock)|analysis_options\.yaml|test/|tools/(coverage\.py|tests/|[^/]+\.dart)|\.github/workflows/dart\.yml)'; then
+            echo "all=true" >> "$GITHUB_OUTPUT"
+            echo "Testing all packages"
+          else
+            packages=$(dart run melos list --diff="$BASE" --include-dependents --parsable --relative | xargs)
+            echo "all=false" >> "$GITHUB_OUTPUT"
+            echo "packages=$packages" >> "$GITHUB_OUTPUT"
+            echo "Testing: ${packages:-nothing}"
+          fi
+
   quality:
+    needs: changes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -27,8 +59,14 @@ jobs:
         run: python3 -m unittest discover -s tools/tests
       - name: Check formatting and analyze workspace
         run: dart run melos run lint
-      - name: Require 100% coverage in every package
-        run: python3 tools/coverage.py
+      - name: Require 100% coverage in changed packages
+        if: needs.changes.outputs.all == 'true' || needs.changes.outputs.packages != ''
+        env:
+          PACKAGES: ${{ needs.changes.outputs.packages }}
+        run: |
+          args=()
+          for package in $PACKAGES; do args+=(--package "$package"); done
+          python3 tools/coverage.py "${args[@]}"
       - name: Save test logs and coverage reports
         if: always()
         uses: actions/upload-artifact@v7
@@ -41,6 +79,8 @@ jobs:
             tools/**/coverage/
 
   native-permissions:
+    needs: changes
+    if: needs.changes.outputs.all == 'true' || contains(format(' {0} ', needs.changes.outputs.packages), ' plugins/contact_permission ')
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
