@@ -32,6 +32,13 @@ specified time delay.
 
 ![Timer Button](https://cdn-images-1.medium.com/max/640/1*NhgmN1C4ltcQA-o34SYbIQ.gif)
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4). Upgrade to a Flutter SDK containing
+a compatible Dart SDK before updating this package. The button API and timer
+behavior are unchanged; this release includes the package's SDK constraint
+and Dart workspace metadata updates.
+
 ## Overview
 
 A customizable button widget capable of activation after a designated time interval.

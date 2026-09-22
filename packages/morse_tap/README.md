@@ -31,6 +31,16 @@ A Flutter package that provides Morse code input functionality using intuitive g
 
 ![Morse Tap Demo](morse_tap.png)
 
+## Compatibility and migration
+
+Requires Dart 3.8.1 or newer (below Dart 4). `HapticUtils` is now an
+`abstract final` utility class. Continue calling its static methods; code that
+implements `HapticUtils` must move to its own interface or wrapper.
+
+Tests can set `HapticUtils.debugHapticSupportedOverride` to control haptic
+support without changing the host platform. Reset it to `null` during teardown
+to restore normal platform detection.
+
 ## Features
 
 ✨ **MorseTapDetector** - Widget that detects specific Morse code patterns using gestures

@@ -33,6 +33,18 @@
 
 ---
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4). Async refinements now await the
+wrapped schema's asynchronous validation.
+
+`StringSchema.startsWith`, `endsWith`, `contains`, `date`, and `datetime` return
+`Schema<String>` instead of using an invalid cast to `StringSchema`. Apply
+string-specific builders before these refinements, and use `Schema<String>`
+for the resulting value. Utility classes such as `Parser`, `SchemaUtils`,
+`ErrorUtils`, and `CoercionUtils` are static-only `abstract final` classes;
+call their static methods rather than implementing these classes.
+
 ## 🎯 What is Dzod?
 
 Dzod is an **enterprise-grade** Dart schema validation library heavily inspired by [Zod](https://zod.dev/) with advanced enterprise features. Built for production applications requiring robust data validation, type safety, and exceptional developer experience.

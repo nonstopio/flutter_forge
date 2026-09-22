@@ -30,6 +30,13 @@
 
 The Flutter Phone Validation Package by Nonstop IO is a versatile and easy-to-use Flutter package designed to validate phone numbers from more than 200 countries. With this package, users can seamlessly integrate phone number validation into their Flutter applications, enhancing user experience and ensuring data integrity.
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4) and `equatable` 2.1.0 or newer
+within the 2.x series. Use a Flutter SDK containing a compatible Dart SDK.
+The phone-input widget API remains unchanged; internal listener input is
+explicitly typed as `String`.
+
 ## Screenshots
 
 - Widget with Country Code and Phone Number Field:

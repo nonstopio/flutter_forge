@@ -45,6 +45,17 @@ A plugin for Flutter that requests and verifies contact permissions.
 > on many devices. 
 >This predicament led to the development of this package.
 
+## Compatibility and migration
+
+Requires Flutter 3.44 or newer and Dart 3.12 or newer (below Dart 4). Android
+now requires API 24+, compile SDK 36, and Java 17-compatible compilation.
+The plugin build uses Android Gradle Plugin 9.4.1 and the Gradle 9.7.1 wrapper.
+iOS deployment targets must be 15.0 or newer. Update the application's Android
+build configuration and iOS deployment target before upgrading.
+
+The permission-checking Dart API is unchanged. Applications that still need
+older Android or iOS releases should keep using the 1.x package series.
+
 <!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
