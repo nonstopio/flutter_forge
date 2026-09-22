@@ -1,3 +1,9 @@
+## 0.1.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**(morse_tap): release haptic utility updates.
+
 ## 0.0.4
 
  - **FIX**: remove test from morse_tap example.

@@ -1,3 +1,7 @@
+## 2.4.1
+
+ - **FIX**(timer_button): release Dart 3.6 compatibility.
+
 ## 2.4.0
 
  - **FIX**: prevent timer button negative countdown and enhance example app.

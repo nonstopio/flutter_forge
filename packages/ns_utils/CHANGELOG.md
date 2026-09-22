@@ -1,3 +1,9 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**(ns_utils): release dependency and utility updates.
+
 ## 1.3.0
 
  - **FEAT**: add auto-generated warnings to managed README section markers.

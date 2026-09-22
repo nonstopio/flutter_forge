@@ -1,3 +1,11 @@
+## 0.0.10+4
+
+ - Update a dependency to the latest release.
+
+## 0.0.9+3
+
+ - **FEAT**(nonstop_cli): harden the melos starter and enforce full coverage.
+
 ## Unreleased
 
 - Refactor the mono-repo template around injectable SDK adapters, explicit app

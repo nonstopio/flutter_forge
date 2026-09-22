@@ -22,6 +22,13 @@
 
 A shared utility package for CLI operations in Flutter Forge packages, providing core functionality for CLI commands, Flutter project management, and Melos workspace operations.
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4). `FileUtils.isMonoRepo` now searches
+the current directory and its ancestors for either `melos.yaml` or a native
+Dart `workspace` in `pubspec.yaml`. Detection no longer needs a globally installed
+Melos executable. Invalid YAML in an unrelated ancestor is ignored.
+
 ## Table of Contents
 
 - [Overview](#overview)

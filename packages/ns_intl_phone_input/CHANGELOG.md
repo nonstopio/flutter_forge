@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - **FIX**(ns_intl_phone_input): release phone input updates.
+
 ## 1.1.0
 
  - **FEAT**: add auto-generated warnings to managed README section markers.

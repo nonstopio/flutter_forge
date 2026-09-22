@@ -29,6 +29,17 @@
 
 🚀 This package provides a comprehensive set of methods and extensions for Firebase, simplifying its integration into your Flutter projects while also adding valuable functionality.
 
+## Compatibility and migration
+
+Requires Dart 3.6 or newer (below Dart 4) and the FlutterFire versions listed
+below. Upgrade directly declared Firebase dependencies and their platform
+configuration together; the previous Firebase major versions are no longer
+accepted. `firebase_dynamic_links` is no longer included by this package.
+
+`AppAnalytics`, `FirebaseApi`, and `FirebaseGroupApi` accept optional Firebase
+instances for testing. Storage uploads accept an optional storage instance,
+and analytics event logging forwards the optional `items` list.
+
 <!-- BEGIN:getting-started — auto-generated, do not edit. Run `melos sync:readme` to update -->
 ## Getting Started
 
@@ -56,17 +67,16 @@ import 'package:ns_firebase_utils/ns_firebase_utils/src.dart';
 This package offers a single plugin that conveniently adds all necessary Firebase dependencies to your project:
 
 ```yaml
-  cloud_firestore: ^5.5.0
-  cloud_functions: ^5.1.5
-  fake_cloud_firestore: ^3.1.0
-  firebase_analytics: ^11.3.5
-  firebase_auth: ^5.3.3
-  firebase_core: ^3.8.0
-  firebase_crashlytics: ^4.1.5
-  firebase_dynamic_links: ^6.0.10
-  firebase_messaging: ^15.1.5
-  firebase_remote_config: ^5.1.5
-  firebase_storage: ^12.3.6
+  cloud_firestore: ^6.10.0
+  cloud_functions: ^6.5.0
+  fake_cloud_firestore: ^4.3.0
+  firebase_analytics: ^12.6.0
+  firebase_auth: ^6.7.0
+  firebase_core: ^4.15.0
+  firebase_crashlytics: ^5.4.0
+  firebase_messaging: ^16.7.0
+  firebase_remote_config: ^6.7.0
+  firebase_storage: ^13.6.0
 ```
 
 Additionally, it provides a powerful set of methods to accelerate your development process.
