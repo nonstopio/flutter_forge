@@ -1,3 +1,9 @@
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**(dzod): release schema validation corrections.
+
 ## Unreleased
 
 - Fix `startsWith`, `endsWith`, `contains`, `date`, and `datetime` throwing invalid casts when constructing a schema. They now return `Schema<String>`, consistent with other refinements. Apply string-specific checks first, for example `z.string().min(3).startsWith('abc')`.

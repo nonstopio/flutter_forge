@@ -39,7 +39,7 @@ final flutterPackageForMonoRepoBundle = MasonBundle.fromJson(<String, dynamic>{
     {
       "path": "pubspec.yaml",
       "data":
-          "bmFtZTogZmx1dHRlcl9wYWNrYWdlX2Zvcl9tb25vX3JlcG9faG9va3MKCmVudmlyb25tZW50OgogIHNkazogJz49My42LjAgPDQuMC4wJwoKZGVwZW5kZW5jaWVzOgogIG1hc29uOiBeMC4xLjIKICBtYXNvbl9sb2dnZXI6IF4wLjMuMQogIGNsaV9jb3JlOiBeMC4wLjIKCmRldl9kZXBlbmRlbmNpZXM6CiAgZmx1dHRlcl9saW50czogXjYuMC4wCiAgdGVzdDogXjEuMjEuMAogIG1vY2t0YWlsOiBeMS4wLjUKCg==",
+          "bmFtZTogZmx1dHRlcl9wYWNrYWdlX2Zvcl9tb25vX3JlcG9faG9va3MKCmVudmlyb25tZW50OgogIHNkazogJz49My42LjAgPDQuMC4wJwoKZGVwZW5kZW5jaWVzOgogIG1hc29uOiBeMC4xLjIKICBtYXNvbl9sb2dnZXI6IF4wLjMuMQogIGNsaV9jb3JlOiBeMC4wLjMKCmRldl9kZXBlbmRlbmNpZXM6CiAgZmx1dHRlcl9saW50czogXjYuMC4wCiAgdGVzdDogXjEuMjEuMAogIG1vY2t0YWlsOiBeMS4wLjUKCg==",
       "type": "text"
     }
   ],

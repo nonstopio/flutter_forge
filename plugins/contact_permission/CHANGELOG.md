@@ -1,3 +1,9 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**(contact_permission): release native platform updates.
+
 ## 1.2.0
 
  - **FEAT**: add auto-generated warnings to managed README section markers.

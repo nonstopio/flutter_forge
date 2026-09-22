@@ -1,3 +1,7 @@
+## 1.2.1
+
+ - **FIX**(html_rich_text): release Dart 3.6 compatibility.
+
 ## 1.2.0
 
  - **FEAT**: add auto-generated warnings to managed README section markers.
