@@ -1,3 +1,9 @@
+## 0.0.11+5
+
+ - **FEAT**(nonstop_cli): generate a Claude Code setup and harden the app template.
+ - **FEAT**(nonstop_cli): add new members to the enclosing pub workspace.
+ - **DOCS**(nonstop_cli): always list Environment constants in core CLAUDE.md.
+
 ## 0.0.10+4
 
  - Update a dependency to the latest release.
