@@ -18,7 +18,7 @@ Exported from `package:core/core.dart` unless noted.
 | `Logger` | `abstract interface class` | `d`, `i`, `w`, `e(message, [error, stackTrace])`, `Object get logger` (raw backend) |
 | `registerLoggerWithDI()` | function | `di.register<Logger>(TalkerLoggerImpl(TalkerFlutter.init()))` |
 | `TalkerLoggerImpl` | implementation | Not in the barrel; import `package:core/logger/talker_logger_impl.dart` |
-| `Environment` | constants | `useEmulators` (`USE_EMULATORS`), `baseUrl` (`BASE_URL`) |
+| `Environment` | constants | `useEmulators` (`USE_EMULATORS`), `baseUrl` (`BASE_URL`, default `https://api.example.com`) |
 | `CoreRoutes`, `Keys`, `Defaults` | constants | Shell paths, query/extra keys, `defaultPageSize` |
 | `CoreRouter` | `abstract interface class` | `List<RouteBase> get routes`; feature/package routers `implements` it |
 | `CoreBlocObserver`, `CoreRouteObserver` | observers | Optional `logger:`; fall back to `di.get<Logger>()` |
