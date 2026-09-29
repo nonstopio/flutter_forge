@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(dart pub get)",
+      "Bash(dart run melos bootstrap)",
+      "Bash(dart run melos list:*)",
+      "Bash(dart run melos run lint)",
+      "Bash(dart run melos run test)",
+      "Bash(dart run melos run coverage)",
+      "Bash(dart run melos run generate)",
+      "Bash(dart run melos run generate:i69n)",
+      "Bash(dart run tool/check.dart)",
+      "Bash(dart run tool/coverage.dart:*)",
+      "Bash(dart format:*)",
+      "Bash(dart analyze:*)",
+      "Bash(flutter test:*)",
+      "Bash(flutter --version)",
+      "Bash(flutter doctor:*)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/*.keystore)",
+      "Read(**/*.jks)",
+      "Read(**/key.properties)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_generated.sh\"", "timeout": 5 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/format_dart.sh\"", "timeout": 30 }
+        ]
+      }
+    ]
+  }
+}

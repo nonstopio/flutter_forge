@@ -1,0 +1,61 @@
+import 'package:auth/auth.dart' as auth;
+import 'package:dashboard/dashboard.dart';
+import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
+
+/// First frame the user sees.
+///
+/// It exists to give async startup work (session restore, profile fetch) a
+/// place to happen before the app commits to a destination.
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _redirect());
+  }
+
+  Future<void> _redirect() async {
+    if (!mounted) return;
+
+    // Same rule as the dashboard guard, so the two can never disagree.
+    final signIn = auth.authRedirectLocation(allowUnconfigured: true);
+    if (signIn != null) {
+      context.go(signIn);
+      return;
+    }
+
+    // TODO: load whatever the first screen needs before navigating.
+    context.go(DashboardRouter.home);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              strings.app.name,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 32),
+            const DefaultLoader(),
+          ],
+        ),
+      ),
+    );
+  }
+}

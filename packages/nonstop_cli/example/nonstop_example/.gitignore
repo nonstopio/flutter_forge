@@ -1,0 +1,21 @@
+**/node_modules
+*.log
+build
+dist
+.sanity
+.DS_Store
+.idea
+coverage
+.dart_tool
+pubspec_overrides.yaml
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+*.lock
+# Apps ship a binary; pin their resolution.
+!apps/*/pubspec.lock
+mason-lock.json
+.mason
+
+# Per-machine Claude Code settings
+.claude/settings.local.json

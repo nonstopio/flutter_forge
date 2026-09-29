@@ -1,0 +1,31 @@
+name: developer
+description: "In-app developer tools for Nonstop Example: logs, flags and environment inspection."
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.47.5"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  go_router: ^18.0.1
+  talker_flutter: ^5.1.20
+  core:
+    path: ../core
+  di:
+    path: ../di
+  feature_flags:
+    path: ../feature_flags
+  localization:
+    path: ../localization
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+
+resolution: workspace

@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      i69n:
+        options:
+          default_locale: en
+          locales:
+            - en
+        generate_for:
+          - lib/messages.i69n.yaml

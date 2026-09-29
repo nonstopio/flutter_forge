@@ -65,6 +65,7 @@ This is a Flutter/Dart monorepo managed by Melos with the following structure:
 - Command structure in `lib/commands/`
 - Includes doctor command for environment validation
 - Template bundles are auto-updated via tools scripts
+- `example/nonstop_example/` is the committed output of `nonstop create` (all modules). After changing a brick, run `melos run generate:nonstop_example` and commit the diff; never hand-edit the snapshot. It is excluded from root lint/analyze and from pub publish (`.pubignore`)
 
 ## README Standardization (readme_sync)
 
