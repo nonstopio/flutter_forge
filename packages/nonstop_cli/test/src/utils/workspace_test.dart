@@ -60,6 +60,15 @@ void main() {
     expect(member.readAsStringSync(), 'name: a\n');
   });
 
+  test('skips a malformed pubspec on the way up', () {
+    final rootPubspec = write('pubspec.yaml', 'name: w\nworkspace:\n  - a\n');
+    write('group/pubspec.yaml', 'name: [unterminated\n');
+    final member = write('group/b/pubspec.yaml', 'name: b\n');
+
+    expect(registerWorkspaceMember(member.parent)?.path, rootPubspec.path);
+    expect(rootPubspec.readAsStringSync(), contains('group/b'));
+  });
+
   test('does nothing without a member pubspec', () {
     write('pubspec.yaml', 'name: w\nworkspace:\n  - a\n');
     final member = Directory(p.join(root.path, 'b'))..createSync();

@@ -61,6 +61,29 @@ void main() {
     }
   });
 
+  test('member templates join the enclosing workspace; mono does not',
+      () async {
+    final root = Directory.systemTemp.createTempSync('join_workspace_');
+    addTearDown(() => root.deleteSync(recursive: true));
+    File('${root.path}/pubspec.yaml')
+        .writeAsStringSync('name: w\nworkspace:\n  - packages/core\n');
+    final logger = _Logger();
+    final templates = CreateCommand(logger: logger).templates;
+    for (final (index, template) in templates.indexed) {
+      final member = Directory('${root.path}/packages/m$index')
+        ..createSync(recursive: true);
+      File('${member.path}/pubspec.yaml').writeAsStringSync('name: m$index\n');
+      await template.onGenerateComplete(logger, member);
+    }
+    final workspace = File('${root.path}/pubspec.yaml').readAsStringSync();
+    expect(workspace, isNot(contains('packages/m0')));
+    for (final index in [1, 2, 3]) {
+      expect(workspace, contains('packages/m$index'));
+    }
+    verify(() => logger.info(any(that: contains('to the workspace in'))))
+        .called(3);
+  });
+
   test('all templates show output directory and getting-started instructions',
       () async {
     final logger = _Logger();
