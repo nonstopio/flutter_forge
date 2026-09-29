@@ -2,7 +2,8 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-{{#network}}import 'package:network/network.dart';
+{{#dashboard}}import 'package:localization/localization.dart';
+{{/dashboard}}{{#network}}import 'package:network/network.dart';
 {{/network}}
 import 'package:{{name.snakeCase()}}/main.dart' as entrypoint;
 
@@ -17,7 +18,7 @@ void main() {
 {{#network}}    expect(di.has<NetworkClient>(), isTrue);
 {{/network}}
     expect(di.has<GoRouter>(), isTrue);
-{{#dashboard}}    expect(find.text('Explore'), findsWidgets);
+{{#dashboard}}    expect(find.text(strings.nav.explore), findsWidgets);
 {{/dashboard}}
     final router = di.get<GoRouter>();
     router.go('/unknown');

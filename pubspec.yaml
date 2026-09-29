@@ -58,7 +58,7 @@ melos:
       # and build artifacts; untracked source is included during development.
       run: |
         git ls-files -z --cached --others --exclude-standard -- '*.dart' \
-          ':(exclude)**/__brick__/**' ':(exclude)**/coverage/**' ':(exclude)**/build/**' \
+          ':(exclude)**/__brick__/**' ':(exclude)packages/nonstop_cli/example/nonstop_example/**' ':(exclude)**/coverage/**' ':(exclude)**/build/**' \
           | xargs -0 dart format --output=none --set-exit-if-changed &&
         dart analyze --fatal-infos .
     fix:
@@ -78,6 +78,9 @@ melos:
       run: dart run tools/update_nonstop_cli_version.dart
     update_nonstop_cli_bundles:
       run: dart run tools/update_nonstop_cli_bundles.dart
+    generate:nonstop_example:
+      description: "Regenerate packages/nonstop_cli/example/nonstop_example from the current bricks"
+      run: bash packages/nonstop_cli/tool/generate_example.sh
     sync:readme:
       description: "Sync README sections across all packages"
       run: dart run tools/readme_sync/readme_sync.dart

@@ -10,14 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  equatable: ^2.0.7
   firebase_auth: ^6.7.0
   firebase_core: ^4.15.0
   firebase_ui_auth: ^3.1.1
   firebase_ui_oauth_apple: ^2.1.1
   firebase_ui_oauth_google: ^2.1.1
   go_router: ^18.0.1
-  json_annotation: ^4.9.0
   core:
     path: ../../packages/core
   design_system:
@@ -26,8 +24,7 @@ dependencies:
     path: ../../packages/di
   localization:
     path: ../../packages/localization
-{{#firestore}}  cloud_firestore: ^6.10.0
-{{/firestore}}{{#network}}  network:
+{{#network}}  network:
     path: ../../packages/network
 {{/network}}{{#analytics}}  analytics:
     path: ../../packages/analytics

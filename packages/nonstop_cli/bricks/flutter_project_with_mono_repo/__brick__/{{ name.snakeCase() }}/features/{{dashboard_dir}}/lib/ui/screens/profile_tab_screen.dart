@@ -1,16 +1,19 @@
-{{#auth}}import 'package:auth/auth.dart' as auth;
-{{/auth}}import 'package:design_system/design_system.dart';
+import 'package:design_system/design_system.dart';
 {{#developer}}import 'package:developer/developer.dart';
-{{/developer}}{{#auth}}import 'package:di/di.dart';
-{{/auth}}import 'package:flutter/material.dart';
-{{#auth}}import 'package:go_router/go_router.dart';
-{{/auth}}import 'package:localization/localization.dart';
+{{/developer}}import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 /// Account tab: identity, settings entry points, sign out.
 ///
 /// This is deliberately thin - hang your real profile feature off it.
 class ProfileTabScreen extends StatelessWidget {
-  const ProfileTabScreen({super.key});
+  const ProfileTabScreen({super.key, this.onOpenSettings, this.onSignOut});
+
+  /// Shows the settings entry when set; runs when it is tapped.
+  final void Function(BuildContext context)? onOpenSettings;
+
+  /// Shows the sign-out action when set; runs after the user confirms.
+  final Future<void> Function(BuildContext context)? onSignOut;
 
   @override
   Widget build(BuildContext context) {
@@ -23,24 +26,29 @@ class ProfileTabScreen extends StatelessWidget {
             {{#developer}}// Tap the avatar 5x to open developer tools.
             OpenDevToolsWrapper(child: const _ProfileAvatar()),{{/developer}}{{^developer}}const _ProfileAvatar(),{{/developer}}
             const SizedBox(height: 24),
-            ListTile(
-              leading: const Icon(NavigationIcons.settings),
-              title: Text(strings.profile.settings),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
-            ),
-            {{#auth}}ListTile(
-              leading: const Icon(Icons.logout),
-              title: Text(strings.auth.sign_out),
-              onTap: () => _confirmSignOut(context),
-            ),{{/auth}}
+            if (onOpenSettings case final onOpenSettings?)
+              ListTile(
+                leading: const Icon(NavigationIcons.settings),
+                title: Text(strings.profile.settings),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => onOpenSettings(context),
+              ),
+            if (onSignOut case final onSignOut?)
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: Text(strings.auth.sign_out),
+                onTap: () => _confirmSignOut(context, onSignOut),
+              ),
           ],
         ),
       ),
     );
   }
-{{#auth}}
-  Future<void> _confirmSignOut(BuildContext context) async {
+
+  Future<void> _confirmSignOut(
+    BuildContext context,
+    Future<void> Function(BuildContext context) onSignOut,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -59,13 +67,9 @@ class ProfileTabScreen extends StatelessWidget {
       ),
     );
 
-    if (confirmed != true || !context.mounted) return;
-    if (!di.has<auth.AuthService>()) return;
-
-    await di.get<auth.AuthService>().signOut();
-    if (context.mounted) context.go(auth.AuthRoutes.signIn);
+    if (confirmed == true && context.mounted) await onSignOut(context);
   }
-{{/auth}}}
+}
 
 class _ProfileAvatar extends StatelessWidget {
   const _ProfileAvatar();

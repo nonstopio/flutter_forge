@@ -14,12 +14,12 @@ dependencies:
   talker_flutter: ^5.1.20
   core:
     path: ../core
-  design_system:
-    path: ../design_system
   di:
     path: ../di
   feature_flags:
     path: ../feature_flags
+  localization:
+    path: ../localization
 
 dev_dependencies:
   flutter_test:

@@ -31,7 +31,7 @@ dependencies:
 import 'package:localization/localization.dart';
 
 // Simple access to any string
-Text(strings.auth.login);           // "Login"
+Text(strings.auth.sign_in);         // "Sign In"
 Text(strings.generic.ok);           // "OK"
 Text(strings.profile.name);         // "Name"
 Text(strings.validation.required_field); // "This field is required"
@@ -45,7 +45,7 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () => _login(),
-      child: Text(strings.auth.login),
+      child: Text(strings.auth.sign_in),
     );
   }
 }
@@ -127,27 +127,21 @@ dart format . && dart analyze --fatal-infos .
 ```dart
 import 'package:localization/localization.dart';
 
-// Initialize (currently only supports English)
-LocalizationProvider.initialize();
-
 // Check supported locales
 if (LocalizationProvider.isLocaleSupported('en')) {
   // Handle supported locale
 }
 
-// Simple access to any string
-Text(strings.auth.login);           // "Login"
-
 ```
 
-### Future Multi-language Support
+### Adding a Locale
 
-This package is designed to support multiple languages in the future. The current implementation supports English only, but the structure is ready for:
+Only English ships today. To add one (e.g. Spanish):
 
-- Spanish (`es`)
-- French (`fr`)
-- German (`de`)
-- Additional languages as needed
+1. Add `lib/messages_es.i69n.yaml` with the same keys.
+2. Add `es` to `locales` in `build.yaml` and run `melos run generate:i69n`.
+3. Add `es` to `LocalizationProvider.supportedLocales` and switch on the
+   locale where `LocalizationProvider.messages` is chosen.
 
 ## Package Structure 📁
 

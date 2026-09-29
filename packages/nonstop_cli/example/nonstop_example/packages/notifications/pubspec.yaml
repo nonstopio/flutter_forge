@@ -1,0 +1,36 @@
+name: notifications
+description: "Firebase Cloud Messaging, permissions and device-token management for Nonstop Example."
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.47.5"
+
+dependencies:
+  shared_preferences: ^2.5.3
+  flutter:
+    sdk: flutter
+  app_badge_plus: ^1.1.2
+  device_info_plus: ^13.2.0
+  firebase_messaging: ^16.7.0
+  json_annotation: ^4.9.0
+  core:
+    path: ../core
+  di:
+    path: ../di
+  network:
+    path: ../network
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  json_serializable: ^6.9.5
+
+flutter:
+  uses-material-design: true
+
+resolution: workspace

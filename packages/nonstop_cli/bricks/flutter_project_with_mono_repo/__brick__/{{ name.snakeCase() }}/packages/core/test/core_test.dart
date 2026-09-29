@@ -7,12 +7,16 @@ import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:talker_flutter/talker_flutter.dart' hide TalkerRouteLog;
+import 'package:talker_flutter/talker_flutter.dart';
 
 class _Counter extends Bloc<int, int> {
   _Counter() : super(0) {
     on<int>((event, emit) => emit(event));
   }
+}
+
+class _Ping extends GlobalEventType {
+  const _Ping();
 }
 
 void main() {
@@ -28,12 +32,19 @@ void main() {
   test(
     'event base defines value equality and DI exposes its configured container',
     () {
-      final event = RefreshProfile();
+      final event = _Ping();
       expect(event.props, isEmpty);
-      expect(event, RefreshProfile());
+      expect(event, _Ping());
       expect(di.getIt.isRegistered<Logger>(), isTrue);
     },
   );
+
+  test('DI dispose failures are reported through the logger', () async {
+    final talker = di.get<Logger>().logger as Talker;
+    di.register<int>(1, dispose: (_) => throw StateError('cleanup'));
+    await di.reset();
+    expect(talker.history.last.exception, isA<StateError>());
+  });
 
   testWidgets('context event extension broadcasts to the owned channel', (
     tester,
@@ -49,30 +60,35 @@ void main() {
         ),
       ),
     );
-    context.fire(const RefreshProfile());
+    context.fire(const _Ping());
     await tester.pump();
     expect(
       context.read<GlobalEventChannel>().state.current,
-      const RefreshProfile(),
+      const _Ping(),
     );
   });
 
   test('event channel bounds history while retaining total counts', () async {
-    final channel = GlobalEventChannel(maxRecentEvents: 2);
+    final channel = GlobalEventChannel(
+      maxRecentEvents: 2,
+      logger: TalkerLoggerImpl(
+        Talker(settings: TalkerSettings(useConsoleLogs: false)),
+      ),
+    );
     final states = <GlobalEventState>[];
     final subscription = channel.stream.listen(states.add);
     for (var i = 0; i < 3; i++) {
-      channel.add(const FireGlobalEvent(eventType: RefreshProfile()));
+      channel.add(const FireGlobalEvent(eventType: _Ping()));
     }
     await pumpEventQueue();
     expect(states, hasLength(3));
     expect(channel.state.history, hasLength(2));
-    expect(channel.state.eventCounts[RefreshProfile], 3);
-    expect(channel.state.current, const RefreshProfile());
+    expect(channel.state.eventCounts[_Ping], 3);
+    expect(channel.state.current, const _Ping());
     expect(channel.state.copyWith(), channel.state);
     expect(channel.state.copyWith(maxRecentEvents: 9).maxRecentEvents, 9);
-    expect(const FireGlobalEvent(eventType: RefreshProfile()).props, [
-      const RefreshProfile(),
+    expect(const FireGlobalEvent(eventType: _Ping()).props, [
+      const _Ping(),
     ]);
     await subscription.cancel();
     await channel.close();
@@ -106,7 +122,7 @@ void main() {
       expect(find.text('Events: 0'), findsOneWidget);
       BlocProvider.of<GlobalEventChannel>(
         tester.element(find.text('Events: 0')),
-      ).add(const FireGlobalEvent(eventType: RefreshProfile()));
+      ).add(const FireGlobalEvent(eventType: _Ping()));
       await tester.pumpAndSettle();
       expect(find.text('Events: 1'), findsOneWidget);
       expect(listeners, 2);
@@ -125,6 +141,14 @@ void main() {
     );
     expect(DateTimeConverter.toViewFormatTime(null), '');
     expect(DateTimeConverter.toViewFormatTime(date), '1:14:15 PM');
+    // Every view format renders in local time, whatever zone the value is in.
+    final utc = date.toUtc();
+    expect(DateTimeConverter.toViewFormat(utc), 'January 15, 2026');
+    expect(
+      DateTimeConverter.toViewFormatWithTime(utc),
+      'January 15, 2026, 1:14 PM',
+    );
+    expect(DateTimeConverter.toViewFormatTime(utc), '1:14:15 PM');
     expect((null as String?).asBool, isFalse);
     for (final value in ['TRUE', 'true', '1']) {
       expect(value.asBool, isTrue);
@@ -197,9 +221,16 @@ void main() {
         routes.didReplace(newRoute: route);
       }
       routes.didReplace();
-      final log = TalkerRouteLog(route: unnamed, type: RouteLogType.push);
-      expect(log.key, TalkerKey.route);
-      expect(log.pen, isA<AnsiPen>());
+      final talker = di.get<Logger>().logger as Talker;
+      expect(
+        talker.history.map((log) => log.message),
+        containsAll([
+          'push route named /test',
+          'pop route named /test',
+          'remove route named /test',
+          'replace route named /test',
+        ]),
+      );
       await bloc.close();
     },
   );

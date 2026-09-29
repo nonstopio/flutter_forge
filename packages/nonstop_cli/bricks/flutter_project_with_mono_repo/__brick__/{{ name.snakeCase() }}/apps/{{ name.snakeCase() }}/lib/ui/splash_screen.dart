@@ -2,8 +2,7 @@
 {{/auth}}{{^dashboard}}import 'package:core/core.dart' as core;
 {{/dashboard}}{{#dashboard}}import 'package:dashboard/dashboard.dart';
 {{/dashboard}}import 'package:design_system/design_system.dart';
-{{#auth}}import 'package:di/di.dart';
-{{/auth}}import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 
@@ -28,9 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _redirect() async {
     if (!mounted) return;
 {{#auth}}
-    if (di.has<auth.AuthService>() &&
-        !di.get<auth.AuthService>().isSignedIn) {
-      context.go(auth.AuthRoutes.signIn);
+    // Same rule as the dashboard guard, so the two can never disagree.
+    final signIn = auth.authRedirectLocation(allowUnconfigured: true);
+    if (signIn != null) {
+      context.go(signIn);
       return;
     }
 {{/auth}}

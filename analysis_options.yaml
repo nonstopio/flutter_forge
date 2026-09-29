@@ -3,6 +3,8 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   exclude:
     - packages/nonstop_cli/bricks/**/__brick__/**
+    # Generated snapshot; verified inside its own workspace.
+    - packages/nonstop_cli/example/nonstop_example/**
     - "**/coverage/**"
     - "**/build/**"
 linter:

@@ -1,29 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:localization/messages.i69n.dart';
 
-/// Provides localization utilities for the {{name.titleCase()}} application
+/// Provides localization utilities for the {{name.titleCase()}} application.
+///
+/// Only English ships today. To add a locale, add
+/// `messages_<code>.i69n.yaml`, list the code under `locales` in `build.yaml`,
+/// regenerate, add it to [supportedLocales] and pick its generated messages
+/// class in [messages].
 class LocalizationProvider {
-  static Messages _messages = const Messages();
+  /// The messages for the current (English) locale.
+  static Messages get messages => const Messages();
 
-  /// Get the current messages instance
-  static Messages get messages => _messages;
-
-  /// Initialize localization (currently only supports English)
-  static void initialize({String locale = 'en'}) {
-    // Currently only supports English, future versions will support multiple locales
-    _messages = const Messages();
-  }
-
-  /// Get messages (currently only supports English)
-  static Messages getMessages(String locale) {
-    // Currently only supports English, future versions will support multiple locales
-    return const Messages();
-  }
-
-  /// Get the current locale
+  /// The current locale.
   static String get currentLocale => 'en';
 
-  /// Get supported locales (currently only English)
+  /// Locales with generated messages.
   static List<String> get supportedLocales => ['en'];
 
   /// Check if a locale is supported

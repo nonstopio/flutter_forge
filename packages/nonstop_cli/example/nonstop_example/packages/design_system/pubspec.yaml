@@ -1,0 +1,36 @@
+name: design_system
+description: "Theme, components and dialogs shared across Nonstop Example."
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.47.5"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cached_network_image: ^4.0.0
+  flutter_svg: ^2.2.0
+  google_fonts: ^8.2.1
+  iconsax_flutter: ^1.0.1
+  loader_overlay: ^5.0.0
+  toastification: ^3.0.3
+  core:
+    path: ../core
+  di:
+    path: ../di
+  localization:
+    path: ../localization
+  network:
+    path: ../network
+
+dev_dependencies:
+  mocktail: ^1.0.4
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+
+resolution: workspace

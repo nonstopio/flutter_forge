@@ -20,44 +20,24 @@
     return 'email';
   }
 
-  static Future<void> logSignInSuccess({
-    required String method,
-    String? userEmail,
-  }) async {
+  static Future<void> logSignInSuccess({required String method}) async {
 {{#analytics}}    await AnalyticsHelper.logSignIn(
       method: method,
-      parameters: _successParams(userEmail),
+      parameters: _successParams(),
     );
 {{/analytics}}  }
 
-  static Future<void> logSignUpSuccess({
-    required String method,
-    String? userEmail,
-  }) async {
+  static Future<void> logSignUpSuccess({required String method}) async {
 {{#analytics}}    await AnalyticsHelper.logSignUp(
       method: method,
-      parameters: _successParams(userEmail),
-    );
-{{/analytics}}  }
-
-  static Future<void> logUserCreationSuccess({
-    required String method,
-    String? userEmail,
-  }) async {
-{{#analytics}}    await AnalyticsHelper.logEvent(
-      AnalyticsEvents.user.authenticatedRedirect,
-      parameters: {
-        'auth_method': method,
-        'flow_type': 'registration',
-        ..._successParams(userEmail),
-      },
+      parameters: _successParams(),
     );
 {{/analytics}}  }
 
   static Future<void> logSignOutSuccess() async {
 {{#analytics}}    await AnalyticsHelper.logEvent(
       AnalyticsEvents.auth.signOut,
-      parameters: _successParams(null),
+      parameters: _successParams(),
     );
 {{/analytics}}  }
 
@@ -92,9 +72,8 @@
     );
 {{/analytics}}  }
 {{#analytics}}
-  static Map<String, Object?> _successParams(String? userEmail) => {
+  static Map<String, Object?> _successParams() => {
     'success': 'true',
-    'user_email_domain': userEmail?.split('@').last,
     'timestamp': DateTime.now().toIso8601String(),
   };
 {{/analytics}}}

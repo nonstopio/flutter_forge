@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 {{#network}}import 'package:core/core.dart';
 {{/network}}
 import 'package:design_system/design_system.dart' as ds;
-import 'package:design_system/toast/toasts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -214,10 +213,10 @@ void main() {
       ),
     );
     final callbacks = [
-      () => Toast.notification(title: 'Notice', body: 'Details'),
-      () => Toast.error(context, message: 'Notice', description: 'Details'),
-      () => Toast.success(context, message: 'Notice', description: 'Details'),
-      () => Toast.warning(context, message: 'Notice', description: 'Details'),
+      () => ds.Toast.notification(title: 'Notice', body: 'Details'),
+      () => ds.Toast.error(context, message: 'Notice', description: 'Details'),
+      () => ds.Toast.success(context, message: 'Notice', description: 'Details'),
+      () => ds.Toast.warning(context, message: 'Notice', description: 'Details'),
     ];
     for (final show in callbacks) {
       show();

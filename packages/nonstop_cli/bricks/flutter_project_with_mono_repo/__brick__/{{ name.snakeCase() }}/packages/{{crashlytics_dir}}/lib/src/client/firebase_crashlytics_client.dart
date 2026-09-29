@@ -42,7 +42,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
       _isInitialized = true;
 
       // Own the handlers we install and restore them on disposal.
-      if (config.enableAutomaticDataCollection) {
+      if (config.installGlobalErrorHandlers) {
         _previousFlutterHandler = FlutterError.onError;
         _previousPlatformHandler = PlatformDispatcher.instance.onError;
         _flutterHandler = (errorDetails) {
@@ -63,9 +63,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
         FlutterError.onError = _flutterHandler;
         PlatformDispatcher.instance.onError = _platformHandler;
       }
-      _logger.i('🔥 Firebase Crashlytics initialized successfully');
+      _logger.i('Firebase Crashlytics initialized successfully');
     } catch (e, stackTrace) {
-      _logger.e('❌ Failed to initialize Firebase Crashlytics: $e', stackTrace);
+      _logger.e('Failed to initialize Firebase Crashlytics', e, stackTrace);
       rethrow;
     }
   }
@@ -78,7 +78,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
     Iterable<Object> information = const [],
   }) async {
     if (!_isInitialized) {
-      _logger.w('⚠️ Crashlytics not initialized, skipping error recording');
+      _logger.w('Crashlytics not initialized, skipping error recording');
       return;
     }
 
@@ -91,10 +91,10 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
       );
 
       _logger.d(
-        '📝 Recorded ${fatal ? 'fatal' : 'non-fatal'} error: $exception',
+        'Recorded ${fatal ? 'fatal' : 'non-fatal'} error: $exception',
       );
     } catch (e) {
-      _logger.e('❌ Failed to record error: $e');
+      _logger.e('Failed to record error: $e');
     }
   }
 
@@ -106,7 +106,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
   }) async {
     if (!_isInitialized) {
       _logger.w(
-        '⚠️ Crashlytics not initialized, skipping Flutter fatal error recording',
+        'Crashlytics not initialized, skipping Flutter fatal error recording',
       );
       return;
     }
@@ -119,9 +119,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
       await _crashlytics.recordError(exception, stackTrace, fatal: true);
 
-      _logger.d('📝 Recorded Flutter fatal error: $exception');
+      _logger.d('Recorded Flutter fatal error: $exception');
     } catch (e) {
-      _logger.e('❌ Failed to record Flutter fatal error: $e');
+      _logger.e('Failed to record Flutter fatal error: $e');
     }
   }
 
@@ -142,9 +142,8 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
         _logBuffer.removeFirst();
       }
 
-      _logger.d('📊 Logged message: $message');
     } catch (e) {
-      _logger.e('❌ Failed to log message: $e');
+      _logger.e('Failed to log message: $e');
     }
   }
 
@@ -156,9 +155,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       await _crashlytics.setUserIdentifier(identifier);
-      _logger.d('👤 User identifier updated');
+      _logger.d('User identifier updated');
     } catch (e) {
-      _logger.e('❌ Failed to set user identifier: $e');
+      _logger.e('Failed to set user identifier: $e');
     }
   }
 
@@ -173,17 +172,10 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
         await setUserIdentifier(metadata.userId!);
       }
 
-      // Set custom attributes
-      final allAttributes = <String, dynamic>{
-        if (metadata.email != null) 'email': metadata.email!,
-        if (metadata.name != null) 'name': metadata.name!,
-        ...metadata.customAttributes,
-      };
-
-      await setCustomKeys(allAttributes);
-      _logger.d('👤 User metadata updated');
+      await setCustomKeys(metadata.customAttributes);
+      _logger.d('User metadata updated');
     } catch (e) {
-      _logger.e('❌ Failed to set user metadata: $e');
+      _logger.e('Failed to set user metadata: $e');
     }
   }
 
@@ -195,9 +187,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       await _crashlytics.setCustomKey(key, value);
-      _logger.d('🔑 Set custom key: $key = $value');
+      _logger.d('Set custom key: $key');
     } catch (e) {
-      _logger.e('❌ Failed to set custom key: $e');
+      _logger.e('Failed to set custom key: $e');
     }
   }
 
@@ -211,9 +203,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
       for (final entry in keys.entries) {
         await _crashlytics.setCustomKey(entry.key, entry.value);
       }
-      _logger.d('🔑 Set ${keys.length} custom keys');
+      _logger.d('Set ${keys.length} custom keys');
     } catch (e) {
-      _logger.e('❌ Failed to set custom keys: $e');
+      _logger.e('Failed to set custom keys: $e');
     }
   }
 
@@ -232,10 +224,10 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
     try {
       await _crashlytics.setCrashlyticsCollectionEnabled(enabled);
       _logger.d(
-        '⚙️ Crashlytics collection ${enabled ? 'enabled' : 'disabled'}',
+        'Crashlytics collection ${enabled ? 'enabled' : 'disabled'}',
       );
     } catch (e) {
-      _logger.e('❌ Failed to set crashlytics collection enabled: $e');
+      _logger.e('Failed to set crashlytics collection enabled: $e');
     }
   }
 
@@ -247,9 +239,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       await _crashlytics.sendUnsentReports();
-      _logger.d('📤 Sent unsent crash reports');
+      _logger.d('Sent unsent crash reports');
     } catch (e) {
-      _logger.e('❌ Failed to send unsent reports: $e');
+      _logger.e('Failed to send unsent reports: $e');
     }
   }
 
@@ -261,9 +253,9 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       await _crashlytics.deleteUnsentReports();
-      _logger.d('🗑️ Deleted unsent crash reports');
+      _logger.d('Deleted unsent crash reports');
     } catch (e) {
-      _logger.e('❌ Failed to delete unsent reports: $e');
+      _logger.e('Failed to delete unsent reports: $e');
     }
   }
 
@@ -275,10 +267,10 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
 
     try {
       final hasUnsent = await _crashlytics.checkForUnsentReports();
-      _logger.d('📋 Has unsent reports: $hasUnsent');
+      _logger.d('Has unsent reports: $hasUnsent');
       return hasUnsent;
     } catch (e) {
-      _logger.e('❌ Failed to check for unsent reports: $e');
+      _logger.e('Failed to check for unsent reports: $e');
       return false;
     }
   }
@@ -289,7 +281,7 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
   /// Clear the log buffer
   void clearLogBuffer() {
     _logBuffer.clear();
-    _logger.d('🧹 Cleared log buffer');
+    _logger.d('Cleared log buffer');
   }
 
   @override
@@ -304,6 +296,6 @@ class FirebaseCrashlyticsClient implements CrashlyticsClient {
     }
     _logBuffer.clear();
     _isInitialized = false;
-    _logger.d('🧹 Firebase Crashlytics client disposed');
+    _logger.d('Firebase Crashlytics client disposed');
   }
 }
