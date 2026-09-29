@@ -37,10 +37,10 @@ class _DashboardShellScreenState extends State<DashboardShellScreen> {
             selectedIcon: const Icon(NavigationIcons.homeSelected),
             label: strings.nav.home,
           ),
-          const NavigationDestination(
-            icon: Icon(NavigationIcons.explore),
-            selectedIcon: Icon(NavigationIcons.exploreSelected),
-            label: 'Explore',
+          NavigationDestination(
+            icon: const Icon(NavigationIcons.explore),
+            selectedIcon: const Icon(NavigationIcons.exploreSelected),
+            label: strings.nav.explore,
           ),
           NavigationDestination(
             icon: const Icon(NavigationIcons.profile),

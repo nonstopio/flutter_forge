@@ -5,6 +5,7 @@ import 'package:feature_flags/feature_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:localization/localization.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class _PlainLogger implements core.Logger {
@@ -38,10 +39,10 @@ void main() {
   tearDown(di.reset);
 
   testWidgets('a custom logger does not need to expose Talker', (tester) async {
-    await di.reset();
-    di.register<core.Logger>(_PlainLogger());
-    await tester.pumpWidget(const MaterialApp(home: DeveloperScreen()));
-    expect(find.text('This logger has no interactive viewer.'), findsOneWidget);
+    await tester.pumpWidget(
+      MaterialApp(home: DeveloperScreen(logger: _PlainLogger())),
+    );
+    expect(find.text(strings.developer.no_viewer), findsOneWidget);
   });
 
   testWidgets('disabled developer gesture remains inert', (tester) async {

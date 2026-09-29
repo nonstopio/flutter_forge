@@ -1,20 +1,26 @@
+import 'dart:async';
+
 import 'package:auth/analytics/analytics.dart';
 import 'package:auth/ui/components/footer_builder.dart';
 import 'package:auth/ui/components/header_builder.dart';
 import 'package:core/logger/logger.dart';
-import 'package:di/di.dart';
+import 'package:design_system/toast/toasts.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as ui_auth;
 import 'package:flutter/material.dart';
+import 'package:localization/localization.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key, required this.onSignedUp});
+  const RegisterScreen({
+    super.key,
+    required this.onSignedUp,
+    required this.logger,
+  });
 
-  final void Function(BuildContext context) onSignedUp;
+  final FutureOr<void> Function(BuildContext context) onSignedUp;
+  final Logger logger;
 
   @override
   Widget build(BuildContext context) {
-    final logger = di.get<Logger>();
-
     return ui_auth.RegisterScreen(
       showAuthActionSwitch: false,
       actions: [
@@ -22,14 +28,9 @@ class RegisterScreen extends StatelessWidget {
           logger.d('User registered successfully');
 
           final method = AuthAnalytics.getAuthMethod(state.user?.providerData);
+          unawaited(AuthAnalytics.logSignUpSuccess(method: method));
 
-          // Log successful sign in (when user already exists)
-          AuthAnalytics.logSignInSuccess(
-            method: method,
-            userEmail: state.user?.email,
-          );
-
-          onSignedUp(context);
+          await onSignedUp(context);
         }),
         ui_auth.AuthStateChangeAction<ui_auth.UserCreated>((
           context,
@@ -40,20 +41,9 @@ class RegisterScreen extends StatelessWidget {
           final method = AuthAnalytics.getAuthMethod(
             state.credential.user?.providerData,
           );
+          unawaited(AuthAnalytics.logSignUpSuccess(method: method));
 
-          // Log successful sign up
-          AuthAnalytics.logSignUpSuccess(
-            method: method,
-            userEmail: state.credential.user?.email,
-          );
-
-          // Log user creation success
-          AuthAnalytics.logUserCreationSuccess(
-            method: method,
-            userEmail: state.credential.user?.email,
-          );
-
-          onSignedUp(context);
+          await onSignedUp(context);
         }),
         ui_auth.AuthStateChangeAction<ui_auth.AuthFailed>((
           context,
@@ -61,17 +51,20 @@ class RegisterScreen extends StatelessWidget {
         ) async {
           logger.e('Registration failed: ${state.exception}');
 
-          // Log auth error
-          AuthAnalytics.logAuthError(
-            errorType: state.exception.runtimeType.toString(),
-            flowType: 'sign_up',
-            errorMessage: state.exception.toString(),
-            method: 'email',
+          unawaited(
+            AuthAnalytics.logAuthError(
+              errorType: state.exception.runtimeType.toString(),
+              flowType: 'sign_up',
+              errorMessage: state.exception.toString(),
+              method: 'email',
+            ),
           );
+
+          Toast.error(context, message: strings.errors.default_error_message);
         }),
       ],
       footerBuilder: (context, action) {
-        return footerBuilder(context, action, FooterType.register);
+        return footerBuilder(context, action, FooterType.register, logger);
       },
       headerBuilder: (context, constraints, shrinkOffset) {
         return headerBuilder(context);

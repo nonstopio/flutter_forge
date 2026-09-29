@@ -91,6 +91,49 @@ void main() {
     ).called(1);
   });
 
+  test('parameter values are coerced to types Firebase accepts', () async {
+    await client.logEvent(
+      name: 'typed',
+      parameters: {
+        'text': 'a',
+        'count': 2,
+        'ratio': 0.5,
+        'flag': true,
+        'when': DateTime.utc(2026),
+        'list': [1, 2],
+        'none': null,
+      },
+    );
+    verify(
+      () => sdk.logEvent(
+        name: 'typed',
+        parameters: {
+          'text': 'a',
+          'count': 2,
+          'ratio': 0.5,
+          'flag': 'true',
+          'when': DateTime.utc(2026).toString(),
+          'list': '[1, 2]',
+        },
+      ),
+    ).called(1);
+  });
+
+  test('user identifiers are never written to the log', () async {
+    await client.initialize();
+    await client.setUserId('secret-user');
+    when(
+      () => sdk.setUserId(id: any(named: 'id')),
+    ).thenThrow(StateError('user'));
+    await client.setUserId('secret-user');
+    final messages = [
+      ...verify(() => logger.d(captureAny())).captured,
+      ...verify(() => logger.e(captureAny(), any(), any())).captured,
+    ];
+    expect(messages.where((m) => '$m'.contains('user')), isNot(isEmpty));
+    expect(messages.where((m) => '$m'.contains('secret-user')), isEmpty);
+  });
+
   test('collection changes affect future logging', () async {
     await client.setAnalyticsCollectionEnabled(false);
     await client.logEvent(name: 'disabled');

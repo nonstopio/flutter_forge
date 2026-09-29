@@ -5,10 +5,11 @@ import 'package:core/logger/logger.dart';
 import 'package:di/di.dart';
 
 class GlobalEventChannel extends Bloc<FireGlobalEvent, GlobalEventState> {
-  final Logger _logger = di.get<Logger>();
+  final Logger _logger;
 
-  GlobalEventChannel({required int maxRecentEvents})
-    : super(GlobalEventState(maxRecentEvents: maxRecentEvents)) {
+  GlobalEventChannel({required int maxRecentEvents, Logger? logger})
+    : _logger = logger ?? di.get<Logger>(),
+      super(GlobalEventState(maxRecentEvents: maxRecentEvents)) {
     on<FireGlobalEvent>(_onFireGlobalEvent);
   }
 

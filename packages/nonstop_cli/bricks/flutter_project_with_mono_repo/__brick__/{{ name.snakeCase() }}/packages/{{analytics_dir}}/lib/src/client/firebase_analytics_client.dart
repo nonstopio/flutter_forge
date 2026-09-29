@@ -3,6 +3,7 @@ import 'package:analytics/src/config/analytics_config.dart';
 import 'package:analytics/src/models/analytics_event.dart';
 import 'package:core/core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 
 class FirebaseAnalyticsClient implements AnalyticsClient {
   FirebaseAnalyticsClient(
@@ -23,20 +24,19 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
 
     if (_config.userId != null) {
       await _analytics.setUserId(id: _config.userId);
-      _logger.d('🔍 Analytics user ID set: ${_config.userId}');
     }
 
     if (_config.defaultUserProperties != null) {
       for (final entry in _config.defaultUserProperties!.entries) {
         await _analytics.setUserProperty(name: entry.key, value: entry.value);
       }
-      _logger.d('🔍 Analytics default user properties set');
+      _logger.d('Analytics default user properties set');
     }
 
     if (_config.enableDebugLogging) {
-      _logger.d('🔍 Firebase Analytics initialized with debug logging enabled');
+      _logger.d('Firebase Analytics initialized with debug logging enabled');
     } else {
-      _logger.i('🔍 Firebase Analytics initialized');
+      _logger.i('Firebase Analytics initialized');
     }
   }
 
@@ -48,7 +48,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
     try {
       if (!_enabled) {
         if (_config.enableDebugLogging) {
-          _logger.d('🔍 Analytics disabled, skipping event: $name');
+          _logger.d('Analytics disabled, skipping event: $name');
         }
         return;
       }
@@ -57,21 +57,32 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
         name: name,
         parameters: parameters == null
             ? null
-            : {
-                for (final entry in parameters.entries)
-                  if (entry.value != null) entry.key: entry.value as Object,
-              },
+            : toFirebaseParameters(parameters),
       );
 
       if (_config.enableDebugLogging) {
-        _logger.d(
-          '🔍 Analytics event logged: $name with parameters: $parameters',
-        );
+        _logger.d('Analytics event logged: $name');
       }
     } catch (e, s) {
       _logger.e('Failed to log analytics event: $name', e, s);
     }
   }
+
+  /// Firebase accepts only `String` and `num` parameter values: `bool`
+  /// becomes `'true'`/`'false'`, other objects use `toString()`, nulls are
+  /// dropped.
+  @visibleForTesting
+  static Map<String, Object> toFirebaseParameters(
+    Map<String, dynamic> parameters,
+  ) => {
+    for (final MapEntry(:key, :value) in parameters.entries)
+      if (value != null)
+        key: switch (value) {
+          final String text => text,
+          final num number => number,
+          _ => value.toString(),
+        },
+  };
 
   @override
   Future<void> logCustomEvent(AnalyticsEvent event) async {
@@ -84,10 +95,10 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
       await _analytics.setUserId(id: userId);
 
       if (_config.enableDebugLogging) {
-        _logger.d('🔍 Analytics user ID set: $userId');
+        _logger.d('Analytics user ID updated');
       }
     } catch (e, s) {
-      _logger.e('Failed to set analytics user ID: $userId', e, s);
+      _logger.e('Failed to set analytics user ID', e, s);
     }
   }
 
@@ -100,7 +111,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
       await _analytics.setUserProperty(name: name, value: value);
 
       if (_config.enableDebugLogging) {
-        _logger.d('🔍 Analytics user property set: $name = $value');
+        _logger.d('Analytics user property set: $name');
       }
     } catch (e, s) {
       _logger.e('Failed to set analytics user property: $name', e, s);
@@ -113,7 +124,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
       await _analytics.resetAnalyticsData();
 
       if (_config.enableDebugLogging) {
-        _logger.d('🔍 Analytics data reset');
+        _logger.d('Analytics data reset');
       }
     } catch (e, s) {
       _logger.e('Failed to reset analytics data', e, s);
@@ -127,9 +138,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
       _enabled = enabled;
 
       if (_config.enableDebugLogging) {
-        _logger.d(
-          '🔍 Analytics collection ${enabled ? 'enabled' : 'disabled'}',
-        );
+        _logger.d('Analytics collection ${enabled ? 'enabled' : 'disabled'}');
       }
     } catch (e, s) {
       _logger.e('Failed to set analytics collection enabled: $enabled', e, s);
@@ -207,7 +216,7 @@ class FirebaseAnalyticsClient implements AnalyticsClient {
   void dispose() {
     // Firebase Analytics doesn't need explicit disposal
     if (_config.enableDebugLogging) {
-      _logger.d('🔍 Firebase Analytics client disposed');
+      _logger.d('Firebase Analytics client disposed');
     }
   }
 }

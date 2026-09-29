@@ -15,5 +15,7 @@ export 'router/core_router.dart';
 Future<void> init() async {
   registerLoggerWithDI();
   final logger = di.get<Logger>();
+  di.onDisposeError = (error, stack) =>
+      logger.e('Failed to dispose a DI registration', error, stack);
   logger.i('Core module initialized');
 }

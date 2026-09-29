@@ -12,8 +12,6 @@ dependencies:
     sdk: flutter
   dio: ^5.7.0
   json_annotation: ^4.9.0
-  talker_dio_logger: ^5.1.20
-  talker_flutter: ^5.1.20
   core:
     path: ../core
   localization:

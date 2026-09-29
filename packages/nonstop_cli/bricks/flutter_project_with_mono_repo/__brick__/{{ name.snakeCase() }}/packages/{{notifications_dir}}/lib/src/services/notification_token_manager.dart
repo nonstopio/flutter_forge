@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:core/logger/logger.dart';
-import 'package:di/di.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:network/network.dart';
 import 'package:notifications/notifications.dart';
 
-abstract class NotificationTokenManager {
+abstract interface class NotificationTokenManager {
   Future<String?> getFCMToken();
 
   Future<String> registerToken(String fcmToken);
@@ -25,14 +24,14 @@ class FirebaseTokenManager implements NotificationTokenManager {
   final FirebaseMessaging _firebaseMessaging;
 
   FirebaseTokenManager({
-    Logger? logger,
-    NetworkClient? networkClient,
-    DeviceInfo? deviceInfo,
-    FirebaseMessaging? firebaseMessaging,
-  }) : _logger = logger ?? di.get<Logger>(),
-       _networkClient = networkClient ?? di.get<NetworkClient>(),
-       _deviceInfo = deviceInfo ?? di.get<DeviceInfo>(),
-       _firebaseMessaging = firebaseMessaging ?? FirebaseMessaging.instance;
+    required Logger logger,
+    required NetworkClient networkClient,
+    required DeviceInfo deviceInfo,
+    required FirebaseMessaging firebaseMessaging,
+  }) : _logger = logger,
+       _networkClient = networkClient,
+       _deviceInfo = deviceInfo,
+       _firebaseMessaging = firebaseMessaging;
 
   @override
   Future<String?> getFCMToken() async {

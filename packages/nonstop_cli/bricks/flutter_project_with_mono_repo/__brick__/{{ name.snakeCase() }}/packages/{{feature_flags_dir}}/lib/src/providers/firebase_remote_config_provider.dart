@@ -1,5 +1,6 @@
 import 'package:core/logger/logger.dart';
-import 'package:feature_flags/feature_flags.dart';
+import 'package:feature_flags/src/config/feature_flags_config.dart';
+import 'package:feature_flags/src/providers/feature_flag_provider.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 /// Firebase Remote Config implementation of FeatureFlagProvider
@@ -13,44 +14,36 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
     required this.logger,
     FeatureFlagsConfig? config,
   }) : _remoteConfig = remoteConfig,
-       _config =
-           config ??
-           const FeatureFlagsConfig(
-             defaultParameters: {},
-             fetchTimeout: Duration(seconds: 10),
-             minimumFetchInterval: Duration(hours: 1),
-           );
+       _config = config ?? const FeatureFlagsConfig();
 
+  /// Applies settings and defaults, then fetches. A failed fetch (e.g. when
+  /// offline) is logged and startup continues with cached or default values.
   @override
   Future<void> init() async {
     try {
-      // Configure settings
       await _remoteConfig.setConfigSettings(
         RemoteConfigSettings(
-          fetchTimeout: _config.fetchTimeout ?? const Duration(seconds: 10),
-          minimumFetchInterval:
-              _config.minimumFetchInterval ?? const Duration(hours: 1),
+          fetchTimeout: _config.fetchTimeout,
+          minimumFetchInterval: _config.minimumFetchInterval,
         ),
       );
-
-      // Set default values
-      await _setDefaults();
-
-      // Fetch and activate
-      final activated = await _remoteConfig.fetchAndActivate();
-
-      logger.i('Firebase Remote Config initialized successfully');
-      logger.i('Remote Config activated: $activated');
-      logger.i('Last fetch status: ${_remoteConfig.lastFetchStatus}');
-      logger.i('Last fetch time: ${_remoteConfig.lastFetchTime}');
+      await _remoteConfig.setDefaults(_config.defaultParameters);
     } catch (e, stackTrace) {
       logger.e('Failed to initialize Firebase Remote Config', e, stackTrace);
       rethrow;
     }
-  }
 
-  Future<void> _setDefaults() async {
-    await _remoteConfig.setDefaults(_config.defaultParameters);
+    try {
+      final activated = await _remoteConfig.fetchAndActivate();
+      logger.i(
+        'Firebase Remote Config initialized (activated: $activated, '
+        'status: ${_remoteConfig.lastFetchStatus})',
+      );
+    } catch (e) {
+      logger.w(
+        'Remote Config fetch failed; using cached or default values: $e',
+      );
+    }
   }
 
   @override
@@ -127,10 +120,6 @@ class FirebaseRemoteConfigProvider implements FeatureFlagProvider {
 
   /// Get the last fetch status
   RemoteConfigFetchStatus get lastFetchStatus => _remoteConfig.lastFetchStatus;
-
-  /// Add a listener for config updates
-  Stream<RemoteConfigUpdate> get onConfigUpdated =>
-      _remoteConfig.onConfigUpdated;
 
   /// Get the current configuration
   FeatureFlagsConfig get config => _config;

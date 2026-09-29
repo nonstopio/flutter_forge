@@ -4,7 +4,6 @@ import 'package:app_badge_plus/app_badge_plus.dart';
 import 'package:core/logger/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart'
     hide NotificationSettings;
-import 'package:flutter/foundation.dart';
 import 'package:notifications/notifications.dart';
 
 /// Owns messaging subscriptions; presentation is supplied by the app.
@@ -73,8 +72,7 @@ class FirebaseNotificationClient implements NotificationClient {
             _logger.e('Foreground notification stream failed', error),
       );
       _openedSubscription = _openedMessages.listen(
-        (message) =>
-            unawaited(handleNotificationOpened(message, source: 'background')),
+        (message) => unawaited(handleNotificationOpened(message)),
         onError: (Object error) =>
             _logger.e('Opened notification stream failed', error),
       );
@@ -93,7 +91,7 @@ class FirebaseNotificationClient implements NotificationClient {
       final initial = await _messaging.getInitialMessage();
       if (_disposed) return;
       if (initial != null) {
-        await handleNotificationOpened(initial, source: 'terminated');
+        await handleNotificationOpened(initial);
       }
       await getFCMToken();
       await clearBadge();
@@ -156,10 +154,7 @@ class FirebaseNotificationClient implements NotificationClient {
   }
 
   @override
-  Future<void> handleNotificationOpened(
-    RemoteMessage message, {
-    String? source,
-  }) async {
+  Future<void> handleNotificationOpened(RemoteMessage message) async {
     if (_disposed) return;
     try {
       final route = message.data['route'];
@@ -173,6 +168,14 @@ class FirebaseNotificationClient implements NotificationClient {
     } catch (error, stack) {
       _logger.e('Notification navigation failed', error, stack);
     }
+  }
+
+  @override
+  Future<void> unregisterDevice() async {
+    final deviceId = _deviceId;
+    if (_disposed || deviceId == null) return;
+    await _tokenManager.unRegisterToken(deviceId);
+    _deviceId = null;
   }
 
   @override
@@ -200,8 +203,9 @@ class FirebaseNotificationClient implements NotificationClient {
   }
 }
 
-/// Background work runs in its own isolate, without app DI or navigation.
+/// Intentionally a no-op. FCM runs this in a separate background isolate where
+/// app DI, the logger and navigation do not exist, and the OS already shows
+/// notification payloads. Add isolate-safe work here (e.g. persisting data
+/// messages) if your app needs it.
 @pragma('vm:entry-point')
-Future<void> handleBackgroundNotification(RemoteMessage message) async {
-  debugPrint('Background notification received: ${message.messageId}');
-}
+Future<void> handleBackgroundNotification(RemoteMessage message) async {}

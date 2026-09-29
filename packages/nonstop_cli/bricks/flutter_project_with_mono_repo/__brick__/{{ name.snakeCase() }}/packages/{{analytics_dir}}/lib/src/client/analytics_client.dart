@@ -1,6 +1,6 @@
 import 'package:analytics/src/models/analytics_event.dart';
 
-abstract class AnalyticsClient {
+abstract interface class AnalyticsClient {
   Future<void> logEvent({
     required String name,
     Map<String, dynamic>? parameters,

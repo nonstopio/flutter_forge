@@ -7,5 +7,5 @@ it should hold almost no business logic of its own.
 Add another (an admin build, a white-label variant) with:
 
 ```sh
-nonstop create app my_other_app -o apps
+nonstop create my_other_app --template app -o apps
 ```

@@ -11,5 +11,5 @@ Features may depend on `packages/`, and should avoid depending on each other.
 Add one with:
 
 ```sh
-nonstop create package my_feature -o features
+nonstop create my_feature --template package -o features
 ```

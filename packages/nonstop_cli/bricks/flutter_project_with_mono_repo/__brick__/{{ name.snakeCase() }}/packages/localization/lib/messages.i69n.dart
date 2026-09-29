@@ -45,6 +45,7 @@ class Messages implements i69n.I69nMessageBundle {
   NotificationsMessages get notifications => NotificationsMessages(this);
   ErrorsMessages get errors => ErrorsMessages(this);
   ValidationMessages get validation => ValidationMessages(this);
+  DeveloperMessages get developer => DeveloperMessages(this);
   Object operator [](String key) {
     var index = key.indexOf('.');
     if (index > 0) {
@@ -70,6 +71,8 @@ class Messages implements i69n.I69nMessageBundle {
         return errors;
       case 'validation':
         return validation;
+      case 'developer':
+        return developer;
       default:
         return key;
     }
@@ -189,12 +192,6 @@ class GenericMessages implements i69n.I69nMessageBundle {
 class CommonMessages implements i69n.I69nMessageBundle {
   final Messages _parent;
   const CommonMessages(this._parent);
-  String get cancel => "Cancel";
-  String get ok => "OK";
-  String get save => "Save";
-  String get delete => "Delete";
-  String get edit => "Edit";
-  String get try_again => "Try Again";
   String get week => "Week";
   String get month => "Month";
   Object operator [](String key) {
@@ -204,18 +201,6 @@ class CommonMessages implements i69n.I69nMessageBundle {
           as i69n.I69nMessageBundle)[key.substring(index + 1)];
     }
     switch (key) {
-      case 'cancel':
-        return cancel;
-      case 'ok':
-        return ok;
-      case 'save':
-        return save;
-      case 'delete':
-        return delete;
-      case 'edit':
-        return edit;
-      case 'try_again':
-        return try_again;
       case 'week':
         return week;
       case 'month':
@@ -315,6 +300,9 @@ class NavMessages implements i69n.I69nMessageBundle {
   const NavMessages(this._parent);
   String get home => "Home";
   String get dashboard => "Dashboard";
+  String get explore => "Explore";
+  String get explore_placeholder =>
+      "Your second tab. Replace this with a real feature.";
   String get profile => "Profile";
   String get settings => "Settings";
   String get notifications => "Notifications";
@@ -329,6 +317,10 @@ class NavMessages implements i69n.I69nMessageBundle {
         return home;
       case 'dashboard':
         return dashboard;
+      case 'explore':
+        return explore;
+      case 'explore_placeholder':
+        return explore_placeholder;
       case 'profile':
         return profile;
       case 'settings':
@@ -572,6 +564,25 @@ class ValidationMessages implements i69n.I69nMessageBundle {
         return passwords_dont_match;
       case 'invalid_key_config':
         return invalid_key_config;
+      default:
+        return key;
+    }
+  }
+}
+
+class DeveloperMessages implements i69n.I69nMessageBundle {
+  final Messages _parent;
+  const DeveloperMessages(this._parent);
+  String get no_viewer => "This logger has no interactive viewer.";
+  Object operator [](String key) {
+    var index = key.indexOf('.');
+    if (index > 0) {
+      return (this[key.substring(0, index)]
+          as i69n.I69nMessageBundle)[key.substring(index + 1)];
+    }
+    switch (key) {
+      case 'no_viewer':
+        return no_viewer;
       default:
         return key;
     }

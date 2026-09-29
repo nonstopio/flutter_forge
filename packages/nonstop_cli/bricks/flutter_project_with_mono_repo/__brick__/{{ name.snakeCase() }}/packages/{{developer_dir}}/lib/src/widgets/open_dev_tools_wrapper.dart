@@ -132,7 +132,7 @@ class _OpenDevToolsWrapperState extends State<OpenDevToolsWrapper>
     final theme = Theme.of(context);
 
     return FeatureFlagWrapper(
-      flagKey: 'developer_screen_enabled',
+      flagKey: DeveloperFlags.screenEnabled,
       builder: (context, isEnabled) {
         if (!isEnabled) {
           return widget.child; // Just return the child if feature is disabled
@@ -162,7 +162,7 @@ class _OpenDevToolsWrapperState extends State<OpenDevToolsWrapper>
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red.withValues(alpha: 0.8),
+                            color: theme.colorScheme.error,
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(

@@ -34,12 +34,8 @@ void main() {
           provider == 'password' ? 'email' : provider.split('.').first,
         );
       }
-      await AuthAnalytics.logSignInSuccess(
-        method: 'email',
-        userEmail: 'person@example.test',
-      );
+      await AuthAnalytics.logSignInSuccess(method: 'email');
       await AuthAnalytics.logSignUpSuccess(method: 'email');
-      await AuthAnalytics.logUserCreationSuccess(method: 'email');
       await AuthAnalytics.logAuthError(errorType: 'test', flowType: 'sign_in');
       await AuthAnalytics.logSignOutError(errorMessage: 'test');
       await AuthAnalytics.logSignOutSuccess();
@@ -90,11 +86,18 @@ void main() {
         (routes[2].builder!(context, state) as ForgotPasswordScreen).email,
         isNull,
       );
+      final logger = di.get<core.Logger>();
       final signIn =
-          SignInScreen(onSignedIn: (_) => signedIn++).build(context)
+          SignInScreen(
+                onSignedIn: (_) => signedIn++,
+                logger: logger,
+              ).build(context)
               as ui.SignInScreen;
       final register =
-          RegisterScreen(onSignedUp: (_) => signedUp++).build(context)
+          RegisterScreen(
+                onSignedUp: (_) => signedUp++,
+                logger: logger,
+              ).build(context)
               as ui.RegisterScreen;
       final recovery =
           const ForgotPasswordScreen(
@@ -178,6 +181,37 @@ void main() {
     });
   }
 
+  for (final registered in [false, true]) {
+    testWidgets('signOut with registered service $registered', (tester) async {
+      final service = _AuthService();
+      when(service.signOut).thenAnswer((_) async {});
+      if (registered) di.register<AuthService>(service);
+      final router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, _) => TextButton(
+              onPressed: () => signOut(context),
+              child: const Text('out'),
+            ),
+          ),
+          GoRoute(
+            path: AuthRoutes.signIn,
+            builder: (_, _) => const Text('login'),
+          ),
+        ],
+      );
+      addTearDown(router.dispose);
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.tap(find.text('out'));
+      await tester.pumpAndSettle();
+      expect(find.text('login'), registered ? findsOneWidget : findsNothing);
+      registered
+          ? verify(service.signOut).called(1)
+          : verifyNever(service.signOut);
+    });
+  }
+
   testWidgets('footers navigate to the opposite authentication route', (
     tester,
   ) async {
@@ -187,7 +221,12 @@ void main() {
           GoRoute(
             path: '/',
             builder: (context, _) => Scaffold(
-              body: footerBuilder(context, ui.AuthAction.signIn, type),
+              body: footerBuilder(
+                context,
+                ui.AuthAction.signIn,
+                type,
+                di.get<core.Logger>(),
+              ),
             ),
           ),
           GoRoute(

@@ -5,21 +5,33 @@ import 'dart:developer' as dev;
 import 'package:di/src/dependency_injection.dart';
 import 'package:get_it/get_it.dart';
 
+/// Receives a failure thrown by a registration's dispose callback.
+typedef DisposeErrorHandler = void Function(Object error, StackTrace stack);
+
 /// Implementation of DependencyInjection using GetIt
 class GetItDependencyInjection implements DependencyInjection {
   final GetIt _getIt;
   final Map<Type, DisposeFunc> _disposeFunctions = {};
   final Map<Type, Object> _registeredInstances = {};
 
+  /// Called when a dispose callback throws; disposal carries on regardless.
+  ///
+  /// Defaults to `dart:developer` logging. Settable so the app can route it
+  /// to its logger once one is registered, without `di` depending on it.
+  DisposeErrorHandler onDisposeError;
+
   /// Creates a new instance with optional GetIt instance
   /// If no instance is provided, uses GetIt.instance
-  GetItDependencyInjection({GetIt? getIt}) : _getIt = getIt ?? GetIt.instance;
+  GetItDependencyInjection({GetIt? getIt, DisposeErrorHandler? onDisposeError})
+    : _getIt = getIt ?? GetIt.instance,
+      onDisposeError = onDisposeError ?? _logDisposeError;
 
-  @override
-  Future<void> init() async {
-    // GetIt doesn't require explicit initialization
-    // but we can use this to set up any global configurations
-  }
+  static void _logDisposeError(Object error, StackTrace stack) => dev.log(
+    'Error disposing a registered instance',
+    name: 'di',
+    error: error,
+    stackTrace: stack,
+  );
 
   @override
   Future<void> dispose() async {
@@ -33,13 +45,9 @@ class GetItDependencyInjection implements DependencyInjection {
       if (instance != null) {
         try {
           await disposeFunc(instance);
-        } catch (e) {
-          // Log error but continue disposing other instances
-          dev.log(
-            'Error disposing instance of type $type',
-            name: 'di',
-            error: e,
-          );
+        } catch (error, stack) {
+          // Report but continue disposing other instances
+          onDisposeError(error, stack);
         }
       }
     }
@@ -88,9 +96,9 @@ class GetItDependencyInjection implements DependencyInjection {
         if (registeredInstance != null) {
           await disposeFunc(registeredInstance);
         }
-      } catch (e) {
-        // Log error but continue with unregistration
-        dev.log('Error disposing instance of type $T', name: 'di', error: e);
+      } catch (error, stack) {
+        // Report but continue with unregistration
+        onDisposeError(error, stack);
       }
       _disposeFunctions.remove(T);
     }
@@ -113,10 +121,7 @@ class GetItDependencyInjection implements DependencyInjection {
   }
 
   @override
-  Future<void> reset() async {
-    await dispose();
-    await init();
-  }
+  Future<void> reset() => dispose();
 
   /// Get the underlying GetIt instance (for advanced usage)
   GetIt get getIt => _getIt;

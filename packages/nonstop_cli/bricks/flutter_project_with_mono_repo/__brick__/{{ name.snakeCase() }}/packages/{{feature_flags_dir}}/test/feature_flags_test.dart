@@ -27,7 +27,16 @@ void main() {
 
   test('reads require initialization; lifecycle is idempotent', () async {
     expect(service.isInitialized, isFalse);
-    await expectLater(service.isEnabled('flag'), throwsStateError);
+    expect(
+      () => service.isEnabled('flag'),
+      throwsA(
+        isA<StateError>().having(
+          (e) => e.message,
+          'message',
+          contains('init()'),
+        ),
+      ),
+    );
     await service.init();
     await service.init();
     verify(provider.init).called(1);
@@ -60,6 +69,8 @@ void main() {
     when(
       () => provider.getDouble('d', defaultValue: 1.5),
     ).thenAnswer((_) async => 2.5);
+    when(() => provider.hasFlag('b')).thenAnswer((_) async => true);
+    expect(await service.hasFlag('b'), isTrue);
     expect(await service.isEnabled('b', defaultValue: true), isTrue);
     expect(await service.getConfig('s', defaultValue: 'fallback'), 'value');
     expect(await service.getIntConfig('i', defaultValue: 3), 5);
@@ -127,6 +138,25 @@ void main() {
     expect(find.text('Enabled: true'), findsOneWidget);
   });
 
+  testWidgets('wrapper resolves registered services and logs read failures', (
+    tester,
+  ) async {
+    di.register<Logger>(logger);
+    di.register<FeatureFlag>(service);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: FeatureFlagWrapper(
+          flagKey: 'flag',
+          defaultValue: true,
+          builder: (_, value) => Text('Enabled: $value'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Enabled: true'), findsOneWidget);
+    verify(() => logger.e(any(), isA<StateError>(), any())).called(1);
+  });
+
   group('Firebase adapter', () {
     late _RemoteConfig remote;
     late FirebaseRemoteConfigProvider adapter;
@@ -149,24 +179,36 @@ void main() {
         () => remote.lastFetchStatus,
       ).thenReturn(RemoteConfigFetchStatus.success);
       when(() => remote.lastFetchTime).thenReturn(DateTime(2026));
-      when(
-        () => remote.onConfigUpdated,
-      ).thenAnswer((_) => const Stream.empty());
     });
 
     test('configures Firebase and exposes update metadata', () async {
       await adapter.init();
       verify(() => remote.setDefaults({})).called(1);
       expect(adapter.config.defaultParameters, isEmpty);
+      expect(
+        adapter.config.minimumFetchInterval,
+        FeatureFlagsConfig.defaultMinimumFetchInterval,
+      );
+      expect(
+        const FeatureFlagsConfig().fetchTimeout,
+        FeatureFlagsConfig.defaultFetchTimeout,
+      );
       expect(adapter.lastFetchTime, DateTime(2026));
       expect(adapter.lastFetchStatus, RemoteConfigFetchStatus.success);
-      expect(await adapter.onConfigUpdated.toList(), isEmpty);
       adapter.dispose();
     });
 
-    test('initialization failure propagates', () async {
-      when(remote.fetchAndActivate).thenThrow(StateError('offline'));
+    test('local configuration failure propagates', () async {
+      when(() => remote.setDefaults(any())).thenThrow(StateError('invalid'));
       await expectLater(adapter.init(), throwsStateError);
+    });
+
+    test('offline startup keeps defaults and completes module init', () async {
+      when(remote.fetchAndActivate).thenThrow(StateError('offline'));
+      di.register<Logger>(logger);
+      await flags.init(provider: adapter);
+      expect(di.get<FeatureFlag>().isInitialized, isTrue);
+      verify(() => logger.w(any(that: contains('fetch failed')))).called(1);
     });
 
     test('missing keys respect nonzero and true defaults', () async {

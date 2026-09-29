@@ -1,4 +1,4 @@
-abstract class AnalyticsConfig {
+abstract interface class AnalyticsConfig {
   bool get enableAnalytics;
   bool get enableDebugLogging;
   String? get userId;

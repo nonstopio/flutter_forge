@@ -4,19 +4,19 @@ import 'package:analytics/src/models/analytics_events.dart';
 import 'package:core/core.dart';
 import 'package:di/di.dart';
 
-class AnalyticsHelper {
-  static AnalyticsClient? get _analyticsClient => _getAnalyticsClient();
+/// Fire-and-forget analytics facade for UI code.
+///
+/// This is the one allowed service-locator facade in the app: widgets and
+/// feature helpers call these statics instead of threading an
+/// [AnalyticsClient] through every constructor. Each call resolves the
+/// registered client at call time and is a silent no-op when analytics is not
+/// configured; client failures are logged, never thrown. Code that needs a
+/// result or testable wiring should inject [AnalyticsClient] instead.
+abstract final class AnalyticsHelper {
+  static AnalyticsClient? get _analyticsClient =>
+      di.has<AnalyticsClient>() ? di.get<AnalyticsClient>() : null;
 
   static Logger? get _log => di.has<Logger>() ? di.get<Logger>() : null;
-
-  static AnalyticsClient? _getAnalyticsClient() {
-    try {
-      return di.get<AnalyticsClient>();
-    } catch (e) {
-      _log?.w('Analytics client not available: $e');
-      return null;
-    }
-  }
 
   /// Log a custom event with optional parameters
   static Future<void> logEvent(

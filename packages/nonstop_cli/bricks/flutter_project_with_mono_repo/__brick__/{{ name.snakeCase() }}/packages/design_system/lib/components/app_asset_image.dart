@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class AssetImage extends StatelessWidget {
+class AppAssetImage extends StatelessWidget {
   final String assetPath;
   final double? width;
   final double? height;
   final BoxFit boxFit;
   final String? package;
 
-  const AssetImage({
+  const AppAssetImage({
     super.key,
     required this.assetPath,
     this.width,

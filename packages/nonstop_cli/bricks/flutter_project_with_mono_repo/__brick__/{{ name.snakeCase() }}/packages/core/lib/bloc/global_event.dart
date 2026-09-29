@@ -12,13 +12,6 @@ abstract class GlobalEventType extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Example event: something invalidated the current user's profile.
-///
-/// Replace this with your own events; it is here to show the shape.
-class RefreshProfile extends GlobalEventType {
-  const RefreshProfile();
-}
-
 class FireGlobalEvent extends Equatable {
   final GlobalEventType eventType;
 

@@ -21,11 +21,3 @@ Map<String, dynamic> _$DeviceTokenRequestToJson(DeviceTokenRequest instance) =>
       'deviceName': instance.deviceName,
       'deviceType': instance.deviceType,
     };
-
-DeviceTokenUpdateRequest _$DeviceTokenUpdateRequestFromJson(
-  Map<String, dynamic> json,
-) => DeviceTokenUpdateRequest(fcmToken: json['fcmToken'] as String);
-
-Map<String, dynamic> _$DeviceTokenUpdateRequestToJson(
-  DeviceTokenUpdateRequest instance,
-) => <String, dynamic>{'fcmToken': instance.fcmToken};

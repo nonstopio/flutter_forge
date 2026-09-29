@@ -2,7 +2,8 @@ import 'package:di/di.dart';
 import 'package:core/core.dart' as core;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:{{name.snakeCase()}}/main.dart' as entrypoint;
+{{#dashboard}}import 'package:localization/localization.dart';
+{{/dashboard}}import 'package:{{name.snakeCase()}}/main.dart' as entrypoint;
 
 void main() {
   tearDown(di.reset);
@@ -24,7 +25,7 @@ void main() {
       expect(find.text('From notification'), findsOneWidget);
       openRoute('/home');
       await tester.pumpAndSettle();
-{{#dashboard}}      expect(find.text('Explore'), findsWidgets);
+{{#dashboard}}      expect(find.text(strings.nav.explore), findsWidgets);
 {{/dashboard}}
       await tester.pumpWidget(const SizedBox());
     },

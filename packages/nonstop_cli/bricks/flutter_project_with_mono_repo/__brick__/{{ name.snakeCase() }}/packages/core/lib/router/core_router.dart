@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
 
-abstract class CoreRouter {
+abstract interface class CoreRouter {
   List<RouteBase> get routes;
 }

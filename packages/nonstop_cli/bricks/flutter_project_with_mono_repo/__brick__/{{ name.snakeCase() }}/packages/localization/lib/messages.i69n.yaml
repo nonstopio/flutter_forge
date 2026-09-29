@@ -35,12 +35,6 @@ generic:
 
 # Common messages (used for consistency across modules)
 common:
-  cancel: "Cancel"
-  ok: "OK"
-  save: "Save"
-  delete: "Delete"
-  edit: "Edit"
-  try_again: "Try Again"
   week: "Week"
   month: "Month"
 
@@ -53,7 +47,6 @@ auth:
   already_have_account: "Already have an account? "
   sign_out_confirmation: "Are you sure you want to sign out?"
 
-# Profile
 # Profile
 profile:
   profile: "Profile"
@@ -71,6 +64,8 @@ profile:
 nav:
   home: "Home"
   dashboard: "Dashboard"
+  explore: "Explore"
+  explore_placeholder: "Your second tab. Replace this with a real feature."
   profile: "Profile"
   settings: "Settings"
   notifications: "Notifications"
@@ -146,3 +141,7 @@ validation:
   password_too_short: "Password must be at least 8 characters"
   passwords_dont_match: "Passwords do not match"
   invalid_key_config(String of, String key): "Invalid configuration for $key in $of. Please check your settings."
+
+# Developer tools
+developer:
+  no_viewer: "This logger has no interactive viewer."

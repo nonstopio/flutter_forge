@@ -9,6 +9,7 @@ export 'generated/theme.dart';
 export 'generated/util.dart';
 export 'loader/loader.dart';
 export 'screens/index.dart';
+export 'toast/toasts.dart';
 export 'wrapper/wrappers.dart';
 
 class DesignSystem {
@@ -38,7 +39,7 @@ class DesignSystem {
     return base.copyWith(
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade300),
+          borderSide: BorderSide(color: base.colorScheme.outlineVariant),
         ),
         hintStyle: base.textTheme.labelSmall?.copyWith(
           color: base.colorScheme.onSurface.withValues(alpha: 0.6),

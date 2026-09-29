@@ -9,5 +9,5 @@ inward, from features to packages.
 Add one with:
 
 ```sh
-nonstop create package my_package -o packages
+nonstop create my_package --template package -o packages
 ```

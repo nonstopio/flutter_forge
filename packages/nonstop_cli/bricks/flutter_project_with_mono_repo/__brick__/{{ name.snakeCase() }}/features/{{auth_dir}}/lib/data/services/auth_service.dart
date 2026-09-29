@@ -1,4 +1,4 @@
-abstract class AuthService {
+abstract interface class AuthService {
   String get uid;
 
   bool get isSignedIn;

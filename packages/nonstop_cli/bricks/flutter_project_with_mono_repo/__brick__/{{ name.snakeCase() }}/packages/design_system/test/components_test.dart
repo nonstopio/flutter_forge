@@ -100,7 +100,7 @@ void main() {
   for (final extension in ['png', 'svg']) {
     testWidgets('missing $extension assets render a fallback', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(home: ds.AssetImage(assetPath: 'missing.$extension')),
+        MaterialApp(home: ds.AppAssetImage(assetPath: 'missing.$extension')),
       );
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 100)),

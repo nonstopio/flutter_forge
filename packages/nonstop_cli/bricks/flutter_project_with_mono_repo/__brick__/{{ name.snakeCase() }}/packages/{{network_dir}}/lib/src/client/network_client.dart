@@ -1,6 +1,6 @@
 import 'package:network/src/models/network_response.dart';
 
-abstract class NetworkClient {
+abstract interface class NetworkClient {
   Future<NetworkResponse<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,

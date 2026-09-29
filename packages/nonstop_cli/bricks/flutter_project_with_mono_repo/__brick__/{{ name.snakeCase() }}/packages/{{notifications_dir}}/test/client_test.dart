@@ -197,6 +197,29 @@ void main() {
     },
   );
 
+  test(
+    'unregisterDevice removes only a registered device and surfaces failures',
+    () async {
+      when(() => tokens.unRegisterToken(any())).thenAnswer((_) async {});
+      await client.unregisterDevice();
+      verifyNever(() => tokens.unRegisterToken(any()));
+      await client.init();
+      await client.unregisterDevice();
+      verify(() => tokens.unRegisterToken('device')).called(1);
+      expect(client.deviceId, isNull);
+      await client.unregisterDevice();
+      verifyNever(() => tokens.unRegisterToken(any()));
+      await client.getFCMToken();
+      when(
+        () => tokens.unRegisterToken(any()),
+      ).thenThrow(StateError('backend'));
+      await expectLater(client.unregisterDevice(), throwsStateError);
+      expect(client.deviceId, 'device');
+      await client.dispose();
+      await client.unregisterDevice();
+    },
+  );
+
   test('failed startup cancels subscriptions and can be retried', () async {
     when(messaging.getInitialMessage).thenThrow(StateError('startup'));
     await expectLater(client.init(), throwsStateError);

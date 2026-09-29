@@ -1,6 +1,6 @@
 import 'package:network/src/auth/auth_token_provider.dart';
 
-abstract class NetworkConfig {
+abstract interface class NetworkConfig {
   String get baseUrl;
   Duration get connectTimeout;
   Duration get receiveTimeout;

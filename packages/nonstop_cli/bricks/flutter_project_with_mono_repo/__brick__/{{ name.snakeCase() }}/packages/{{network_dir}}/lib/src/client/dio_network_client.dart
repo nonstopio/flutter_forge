@@ -4,6 +4,7 @@ import 'package:core/core.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localization/localization.dart';
+import 'package:network/src/auth/auth_token_provider.dart';
 import 'package:network/src/client/network_client.dart';
 import 'package:network/src/config/network_config.dart';
 import 'package:network/src/exceptions/network_exceptions.dart';
@@ -12,15 +13,26 @@ import 'package:network/src/models/network_response.dart';
 import 'package:network/src/interceptors/logging_interceptor.dart';
 
 class DioNetworkClient implements NetworkClient {
-  DioNetworkClient(this._config, {required Logger logger, Dio? dio})
-    : _logger = logger,
-      _dio = dio ?? Dio() {
+  /// [authTokenProvider] overrides [NetworkConfig.authTokenProvider]; pass
+  /// `useAuthentication: false` to send requests without credentials.
+  DioNetworkClient(
+    this._config, {
+    required Logger logger,
+    Dio? dio,
+    AuthTokenProvider? authTokenProvider,
+    bool useAuthentication = true,
+  }) : _logger = logger,
+       _dio = dio ?? Dio(),
+       _authTokenProvider = useAuthentication
+           ? authTokenProvider ?? _config.authTokenProvider
+           : null {
     _setupDio();
   }
 
   final NetworkConfig _config;
   final Dio _dio;
   final Logger _logger;
+  final AuthTokenProvider? _authTokenProvider;
 
   void _setupDio() {
     _dio.options = BaseOptions(
@@ -33,11 +45,12 @@ class DioNetworkClient implements NetworkClient {
     );
 
     // Add authentication interceptor if token provider is available
-    if (_config.authTokenProvider != null) {
+    final tokens = _authTokenProvider;
+    if (tokens != null) {
       _dio.interceptors.add(
-        AuthInterceptor(_config.authTokenProvider!, dio: _dio, logger: _logger),
+        AuthInterceptor(tokens, dio: _dio, logger: _logger),
       );
-      _logger.d('🔐 Auth interceptor added to network client');
+      _logger.d('Auth interceptor added to network client');
     }
 
     if (_config.enableLogging) {
@@ -60,7 +73,7 @@ class DioNetworkClient implements NetworkClient {
       );
       return _handleResponse<T>(response, fromJsonT: fromJsonT);
     } catch (e) {
-      return _handleError<T>(e);
+      _handleError(e);
     }
   }
 
@@ -81,7 +94,7 @@ class DioNetworkClient implements NetworkClient {
       );
       return _handleResponse<T>(response, fromJsonT: fromJsonT);
     } catch (e) {
-      return _handleError<T>(e);
+      _handleError(e);
     }
   }
 
@@ -102,7 +115,7 @@ class DioNetworkClient implements NetworkClient {
       );
       return _handleResponse<T>(response, fromJsonT: fromJsonT);
     } catch (e) {
-      return _handleError<T>(e);
+      _handleError(e);
     }
   }
 
@@ -123,7 +136,7 @@ class DioNetworkClient implements NetworkClient {
       );
       return _handleResponse<T>(response, fromJsonT: fromJsonT);
     } catch (e) {
-      return _handleError<T>(e);
+      _handleError(e);
     }
   }
 
@@ -144,7 +157,7 @@ class DioNetworkClient implements NetworkClient {
       );
       return _handleResponse<T>(response, fromJsonT: fromJsonT);
     } catch (e) {
-      return _handleError<T>(e);
+      _handleError(e);
     }
   }
 
@@ -201,7 +214,7 @@ class DioNetworkClient implements NetworkClient {
     }
   }
 
-  NetworkResponse<T> _handleError<T>(dynamic error) {
+  Never _handleError(Object error) {
     NetworkException networkException;
     ErrorResponse? apiError;
 

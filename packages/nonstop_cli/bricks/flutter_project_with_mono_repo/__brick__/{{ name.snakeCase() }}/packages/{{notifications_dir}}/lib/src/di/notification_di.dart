@@ -1,6 +1,7 @@
 import 'package:di/di.dart';
 import 'package:core/core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:network/network.dart';
 import 'package:notifications/src/client/index.dart';
 import 'package:notifications/src/config/index.dart';
 import 'package:notifications/src/device_info/index.dart';
@@ -12,31 +13,33 @@ Future<void> registerNotificationWithDI(
   NotificationConfig config, {
   FirebaseMessaging? messaging,
 }) async {
+  // Composition edge: resolve collaborators once, then inject them.
   final selectedMessaging = messaging ?? FirebaseMessaging.instance;
-  // Register config
+  final logger = di.get<Logger>();
+  final networkClient = di.get<NetworkClient>();
+  final deviceInfo = DeviceInfoImpl(logger: logger);
+  final tokenManager = FirebaseTokenManager(
+    logger: logger,
+    networkClient: networkClient,
+    deviceInfo: deviceInfo,
+    firebaseMessaging: selectedMessaging,
+  );
+  final permissionManager = FirebasePermissionManager(
+    logger: logger,
+    firebaseMessaging: selectedMessaging,
+  );
+
   di.register<NotificationConfig>(config);
-
-  // Register device info service
-  di.register<DeviceInfo>(DeviceInfoImpl(logger: di.get<Logger>()));
-
-  // Register token manager
-  di.register<NotificationTokenManager>(
-    FirebaseTokenManager(firebaseMessaging: selectedMessaging),
-  );
-
-  // Register permission manager
-  di.register<NotificationPermissionManager>(
-    FirebasePermissionManager(firebaseMessaging: selectedMessaging),
-  );
-
-  // Register notification client with proper disposal
+  di.register<DeviceInfo>(deviceInfo);
+  di.register<NotificationTokenManager>(tokenManager);
+  di.register<NotificationPermissionManager>(permissionManager);
   di.register<NotificationClient>(
     FirebaseNotificationClient(
       config: config,
-      logger: di.get<Logger>(),
+      logger: logger,
       messaging: selectedMessaging,
-      tokenManager: di.get<NotificationTokenManager>(),
-      permissionManager: di.get<NotificationPermissionManager>(),
+      tokenManager: tokenManager,
+      permissionManager: permissionManager,
     ),
     dispose: (client) => client.dispose(),
   );

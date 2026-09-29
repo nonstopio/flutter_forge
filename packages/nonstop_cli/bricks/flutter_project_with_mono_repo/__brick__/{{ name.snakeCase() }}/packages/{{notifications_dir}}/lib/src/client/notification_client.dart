@@ -1,9 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart'
     hide NotificationSettings;
 
-/// Abstract notification client interface
-/// Simplified interface following network package patterns
-abstract class NotificationClient {
+/// Messaging, permission and device-registration contract used by the app.
+abstract interface class NotificationClient {
   Future<void> init();
 
   Future<bool> requestPermissions({bool provisional = false});
@@ -12,12 +11,14 @@ abstract class NotificationClient {
 
   Future<void> handleForegroundNotification(RemoteMessage message);
 
-  Future<void> handleNotificationOpened(
-    RemoteMessage message, {
-    String? source,
-  });
+  Future<void> handleNotificationOpened(RemoteMessage message);
 
   Future<void> clearBadge();
+
+  /// Removes this device's token registration from the backend, for example
+  /// on sign-out. Does nothing when the device was never registered. Backend
+  /// failures propagate so the caller decides whether sign-out continues.
+  Future<void> unregisterDevice();
 
   String? get fcmToken;
 

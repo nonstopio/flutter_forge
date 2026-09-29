@@ -1,10 +1,10 @@
 import 'package:crashlytics/src/models/user_metadata.dart';
 
-abstract class CrashlyticsClient {
+abstract interface class CrashlyticsClient {
   /// Initialize the crashlytics client
   Future<void> initialize();
 
-  /// Record a fatal error/exception
+  /// Record an error; non-fatal unless [fatal] is true.
   Future<void> recordError(
     dynamic exception,
     StackTrace? stackTrace, {
@@ -12,7 +12,7 @@ abstract class CrashlyticsClient {
     Iterable<Object> information = const [],
   });
 
-  /// Record a non-fatal error with custom context
+  /// Record a fatal Flutter error, first attaching [context] as custom keys.
   Future<void> recordFlutterFatalError(
     dynamic exception,
     StackTrace stackTrace, {
@@ -25,7 +25,7 @@ abstract class CrashlyticsClient {
   /// Set user identifier for crash reports
   Future<void> setUserIdentifier(String identifier);
 
-  /// Set user metadata
+  /// Set the opaque user id and non-personal custom attributes.
   Future<void> setUserMetadata(UserMetadata metadata);
 
   /// Set custom key-value pairs for debugging

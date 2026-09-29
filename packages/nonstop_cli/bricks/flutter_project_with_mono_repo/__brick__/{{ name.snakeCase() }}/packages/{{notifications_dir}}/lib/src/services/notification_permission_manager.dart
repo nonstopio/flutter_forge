@@ -1,10 +1,9 @@
 import 'package:core/logger/logger.dart';
-import 'package:di/di.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:network/network.dart';
 import 'package:notifications/src/exceptions/notification_exceptions.dart';
 
-abstract class NotificationPermissionManager {
+abstract interface class NotificationPermissionManager {
   Future<bool> requestPermissions({bool provisional = false});
 }
 
@@ -15,10 +14,10 @@ class FirebasePermissionManager implements NotificationPermissionManager {
   final FirebaseMessaging _firebaseMessaging;
 
   FirebasePermissionManager({
-    Logger? logger,
-    FirebaseMessaging? firebaseMessaging,
-  }) : _logger = logger ?? di.get<Logger>(),
-       _firebaseMessaging = firebaseMessaging ?? FirebaseMessaging.instance;
+    required Logger logger,
+    required FirebaseMessaging firebaseMessaging,
+  }) : _logger = logger,
+       _firebaseMessaging = firebaseMessaging;
 
   @override
   Future<bool> requestPermissions({bool provisional = false}) async {

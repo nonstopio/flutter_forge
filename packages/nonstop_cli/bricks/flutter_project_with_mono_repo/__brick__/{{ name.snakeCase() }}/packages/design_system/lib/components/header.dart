@@ -1,3 +1,4 @@
+import 'package:design_system/components/app_asset_image.dart';
 import 'package:design_system/components/network_url_image.dart';
 import 'package:design_system/utils/index.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +38,7 @@ class Header extends StatelessWidget {
         }
         return Hero(
           tag: assetPath!,
-          child: Image.asset(
-            assetPath!,
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            errorBuilder: (_, _, _) => const Icon(Icons.image),
-          ),
+          child: AppAssetImage(assetPath: assetPath!, boxFit: BoxFit.contain),
         );
       case HeaderType.image:
         return NetworkUrlImage(url: imageUrl.asEmptyIfNull);

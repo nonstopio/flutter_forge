@@ -21,8 +21,7 @@ dependencies:
     path: ../di
   localization:
     path: ../localization
-{{#firebase}}  firebase_core: ^4.15.0
-{{/firebase}}{{#auth}}  firebase_auth: ^6.7.0
+{{#auth}}  firebase_auth: ^6.7.0
 {{/auth}}{{#firestore}}  cloud_firestore: ^6.10.0
   cloud_functions: ^6.5.0
 {{/firestore}}

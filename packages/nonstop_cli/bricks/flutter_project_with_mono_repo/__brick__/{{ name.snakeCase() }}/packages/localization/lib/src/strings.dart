@@ -7,7 +7,7 @@ import 'package:localization/localization.dart';
 /// import 'package:localization/localization.dart';
 ///
 /// // Access strings easily
-/// Text(strings.auth.login);
+/// Text(strings.auth.sign_in);
 /// Text(strings.generic.ok);
 /// Text(strings.profile.name);
 /// ```

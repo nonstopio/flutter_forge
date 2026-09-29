@@ -9,7 +9,15 @@ class DeveloperRoutes {
   static const String developer = '/developer';
 }
 
-class DeveloperRouter extends core.CoreRouter {
+/// Feature flag keys owned by the developer tools.
+abstract final class DeveloperFlags {
+  /// Gates both the entry gesture and the route itself.
+  static const String screenEnabled = 'developer_screen_enabled';
+}
+
+class DeveloperRouter implements core.CoreRouter {
+  final core.Logger _logger = di.get<core.Logger>();
+
   @override
   List<RouteBase> get routes => [
     GoRoute(
@@ -20,7 +28,7 @@ class DeveloperRouter extends core.CoreRouter {
         if (!di.has<FeatureFlag>()) return core.CoreRoutes.root;
         try {
           return await di.get<FeatureFlag>().isEnabled(
-                'developer_screen_enabled',
+                DeveloperFlags.screenEnabled,
               )
               ? null
               : core.CoreRoutes.root;
@@ -29,7 +37,7 @@ class DeveloperRouter extends core.CoreRouter {
         }
       },
       builder: (BuildContext context, GoRouterState state) {
-        return const DeveloperScreen();
+        return DeveloperScreen(logger: _logger);
       },
     ),
   ];

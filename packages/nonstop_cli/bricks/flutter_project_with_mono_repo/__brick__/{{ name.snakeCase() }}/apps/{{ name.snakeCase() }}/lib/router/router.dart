@@ -5,12 +5,15 @@
 {{/dashboard}}import 'package:design_system/design_system.dart';
 {{#developer}}import 'package:developer/developer.dart' as developer;
 {{/developer}}{{#analytics}}import 'package:di/di.dart';
-{{/analytics}}
+{{/analytics}}{{^analytics}}{{#auth}}{{#dashboard}}{{#notifications}}import 'package:di/di.dart';
+{{/notifications}}{{/dashboard}}{{/auth}}{{/analytics}}
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+{{#auth}}import 'package:flutter/material.dart';
+{{/auth}}{{^auth}}{{^dashboard}}import 'package:flutter/material.dart';
+{{/dashboard}}{{/auth}}import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
-import 'package:{{name.snakeCase()}}/ui/splash_screen.dart';
+{{#auth}}{{#dashboard}}{{#notifications}}import 'package:notifications/notifications.dart';
+{{/notifications}}{{/dashboard}}{{/auth}}import 'package:{{name.snakeCase()}}/ui/splash_screen.dart';
 
 /// The app's single [GoRouter].
 ///
@@ -42,7 +45,12 @@ abstract final class AppRouter {
           path: core.CoreRoutes.home,
           redirect: (context, state) => DashboardRouter.home,
         ),
-        DashboardRouter.createShellRoute(),
+        DashboardRouter.createShellRoute({{#auth}}
+          // Demo tabs open before Firebase is configured; configured apps
+          // require sign-in. Never allow unconfigured access to real data.
+          redirect: auth.authRedirect(allowUnconfigured: true),
+          onSignOut: {{#notifications}}signOut{{/notifications}}{{^notifications}}auth.signOut{{/notifications}},
+        {{/auth}}),
 {{/dashboard}}{{^dashboard}}        GoRoute(
           path: core.CoreRoutes.home,
           builder: (context, state) => const _HomeScreen(),
@@ -70,7 +78,26 @@ abstract final class AppRouter {
 
     return router;
   }
-{{#auth}}
+{{#auth}}{{#dashboard}}{{#notifications}}
+  /// Signs out after removing this device's push token, so a signed-out
+  /// device stops receiving the previous user's notifications. A backend
+  /// failure is logged and never blocks sign-out.
+  @visibleForTesting
+  static Future<void> signOut(BuildContext context) async {
+    if (di.has<NotificationClient>()) {
+      try {
+        await di.get<NotificationClient>().unregisterDevice();
+      } catch (error, stackTrace) {
+        di.get<core.Logger>().e(
+          'Could not unregister the device token',
+          error,
+          stackTrace,
+        );
+      }
+    }
+    if (context.mounted) await auth.signOut(context);
+  }
+{{/notifications}}{{/dashboard}}{{/auth}}{{#auth}}
   /// Where a user lands once sign-in or sign-up succeeds.
   ///
   /// Load the profile / entitlements you need here before routing on.

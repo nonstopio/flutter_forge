@@ -71,7 +71,7 @@ class InternalServerException extends NetworkException {
 }
 
 class ConnectionTimeoutException extends NetworkException {
-  const ConnectionTimeoutException({super.message}) : super(statusCode: 599);
+  const ConnectionTimeoutException({super.message}) : super(statusCode: null);
 
   @override
   String get displayMessage => message ?? strings.errors.connection_timeout;

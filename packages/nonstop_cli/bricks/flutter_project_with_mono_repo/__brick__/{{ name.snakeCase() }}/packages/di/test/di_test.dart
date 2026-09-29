@@ -41,10 +41,6 @@ void main() {
     });
 
     group('Registration', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should register and retrieve instances', () async {
         final service = TestService('test');
 
@@ -78,9 +74,7 @@ void main() {
     });
 
     group('Error handling', () {
-      test('registering before init() is allowed', () {
-        // init() exists for symmetry with dispose(); GetIt needs no setup, so
-        // registration works straight away.
+      test('registration needs no prior setup', () {
         final service = TestService('test');
 
         di.register<TestService>(service);
@@ -88,20 +82,16 @@ void main() {
         expect(di.get<TestService>(), same(service));
       });
 
-      test('should throw when getting before initialization', () {
+      test('should throw when getting before registration', () {
         expect(() => di.get<TestService>(), throwsA(isA<StateError>()));
       });
 
-      test('should return false when not initialized', () {
+      test('should return false when nothing is registered', () {
         expect(di.has<TestService>(), false);
       });
     });
 
     group('Retrieval', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should get registered instances', () {
         final service = TestService('test');
         di.register<TestService>(service);
@@ -116,10 +106,6 @@ void main() {
     });
 
     group('Has/Contains', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should return true for registered types', () {
         final service = TestService('test');
         di.register<TestService>(service);
@@ -133,10 +119,6 @@ void main() {
     });
 
     group('Unregistration', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should unregister instances', () async {
         final service = TestService('test');
         di.register<TestService>(service);
@@ -173,17 +155,13 @@ void main() {
         },
       );
 
-      test('should handle unregistering when not initialized', () async {
+      test('should handle unregistering on an empty container', () async {
         // Should not throw
         await di.unregister<TestService>(null);
       });
     });
 
     group('Disposal', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should dispose all registered instances', () async {
         final service = TestService('service');
         final repository = TestRepository(service);
@@ -208,9 +186,7 @@ void main() {
     });
 
     group('Reset', () {
-      test('should reset and reinitialize', () async {
-        await di.init();
-
+      test('should reset and dispose registrations', () async {
         final service = TestService('test');
         di.register<TestService>(
           service,
@@ -227,10 +203,6 @@ void main() {
     });
 
     group('Complex scenarios', () {
-      setUp(() async {
-        await di.init();
-      });
-
       test('should handle multiple dependencies', () {
         final service = TestService('service');
         final repository = TestRepository(service);

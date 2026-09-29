@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:design_system/toast/toasts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -100,13 +101,7 @@ class FileInfoDialog extends StatelessWidget {
 
   void _copyToClipboard(BuildContext context, String value, String label) {
     Clipboard.setData(ClipboardData(text: value));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$label copied to clipboard'),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    Toast.success(context, message: '$label copied to clipboard');
   }
 
   @override

@@ -1,5 +1,5 @@
-/// Abstract interface for feature flag providers
-abstract class FeatureFlagProvider {
+/// Backend that stores flag values (Firebase Remote Config by default).
+abstract interface class FeatureFlagProvider {
   /// Initialize the feature flag provider
   Future<void> init();
 

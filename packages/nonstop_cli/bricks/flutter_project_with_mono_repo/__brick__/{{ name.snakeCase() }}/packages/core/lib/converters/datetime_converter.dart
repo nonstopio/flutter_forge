@@ -21,13 +21,13 @@ abstract final class DateTimeConverter {
     if (date == null) return '';
     final dateFormate = DateFormat('MMMM d, y, h:mm a');
 
-    return dateFormate.format(date);
+    return dateFormate.format(date.toLocal());
   }
 
   static String toViewFormatTime(DateTime? date) {
     if (date == null) return '';
     final dateFormate = DateFormat('h:mm:ss a');
 
-    return dateFormate.format(date);
+    return dateFormate.format(date.toLocal());
   }
 }

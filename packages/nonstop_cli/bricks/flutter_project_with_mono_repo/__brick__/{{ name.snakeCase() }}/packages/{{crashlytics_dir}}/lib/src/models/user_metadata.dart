@@ -1,42 +1,29 @@
+/// Crash-report user context. [userId] must be an opaque identifier (for
+/// example the auth uid), never an email or name; [customAttributes] must not
+/// contain personal data either.
 class UserMetadata {
-  const UserMetadata({
-    this.userId,
-    this.email,
-    this.name,
-    this.customAttributes = const {},
-  });
+  const UserMetadata({this.userId, this.customAttributes = const {}});
 
   final String? userId;
-  final String? email;
-  final String? name;
   final Map<String, dynamic> customAttributes;
 
   UserMetadata copyWith({
     String? userId,
-    String? email,
-    String? name,
     Map<String, dynamic>? customAttributes,
   }) {
     return UserMetadata(
       userId: userId ?? this.userId,
-      email: email ?? this.email,
-      name: name ?? this.name,
       customAttributes: customAttributes ?? this.customAttributes,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'email': email,
-      'name': name,
-      'customAttributes': customAttributes,
-    };
+    return {'userId': userId, 'customAttributes': customAttributes};
   }
 
   @override
   String toString() {
-    return 'UserMetadata{userId: $userId, email: $email, name: $name, customAttributes: $customAttributes}';
+    return 'UserMetadata{userId: $userId, customAttributes: $customAttributes}';
   }
 
   @override
@@ -45,15 +32,11 @@ class UserMetadata {
       other is UserMetadata &&
           runtimeType == other.runtimeType &&
           userId == other.userId &&
-          email == other.email &&
-          name == other.name &&
           _mapEquals(customAttributes, other.customAttributes);
 
   @override
   int get hashCode =>
       userId.hashCode ^
-      email.hashCode ^
-      name.hashCode ^
       Object.hashAllUnordered(
         customAttributes.entries.map((e) => Object.hash(e.key, e.value)),
       );

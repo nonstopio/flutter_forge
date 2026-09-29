@@ -1,7 +1,7 @@
 class CrashlyticsConfig {
   const CrashlyticsConfig({
     this.enableInDebugMode = false,
-    this.enableAutomaticDataCollection = true,
+    this.installGlobalErrorHandlers = true,
     this.enableCustomLogs = true,
     this.logBufferSize = 100,
     this.enableUserMetadata = true,
@@ -11,8 +11,9 @@ class CrashlyticsConfig {
   /// Enable crashlytics in debug mode (typically disabled for development)
   final bool enableInDebugMode;
 
-  /// Enable automatic data collection
-  final bool enableAutomaticDataCollection;
+  /// Install `FlutterError.onError` and `PlatformDispatcher.onError` handlers
+  /// that report uncaught errors as fatal (previous handlers still run).
+  final bool installGlobalErrorHandlers;
 
   /// Enable custom logging
   final bool enableCustomLogs;
@@ -28,7 +29,7 @@ class CrashlyticsConfig {
 
   CrashlyticsConfig copyWith({
     bool? enableInDebugMode,
-    bool? enableAutomaticDataCollection,
+    bool? installGlobalErrorHandlers,
     bool? enableCustomLogs,
     int? logBufferSize,
     bool? enableUserMetadata,
@@ -36,8 +37,8 @@ class CrashlyticsConfig {
   }) {
     return CrashlyticsConfig(
       enableInDebugMode: enableInDebugMode ?? this.enableInDebugMode,
-      enableAutomaticDataCollection:
-          enableAutomaticDataCollection ?? this.enableAutomaticDataCollection,
+      installGlobalErrorHandlers:
+          installGlobalErrorHandlers ?? this.installGlobalErrorHandlers,
       enableCustomLogs: enableCustomLogs ?? this.enableCustomLogs,
       logBufferSize: logBufferSize ?? this.logBufferSize,
       enableUserMetadata: enableUserMetadata ?? this.enableUserMetadata,
@@ -48,7 +49,7 @@ class CrashlyticsConfig {
   Map<String, dynamic> toMap() {
     return {
       'enableInDebugMode': enableInDebugMode,
-      'enableAutomaticDataCollection': enableAutomaticDataCollection,
+      'installGlobalErrorHandlers': installGlobalErrorHandlers,
       'enableCustomLogs': enableCustomLogs,
       'logBufferSize': logBufferSize,
       'enableUserMetadata': enableUserMetadata,
@@ -58,7 +59,7 @@ class CrashlyticsConfig {
 
   @override
   String toString() {
-    return 'CrashlyticsConfig{enableInDebugMode: $enableInDebugMode, enableAutomaticDataCollection: $enableAutomaticDataCollection, enableCustomLogs: $enableCustomLogs, logBufferSize: $logBufferSize, enableUserMetadata: $enableUserMetadata, customKeys: $customKeys}';
+    return 'CrashlyticsConfig{enableInDebugMode: $enableInDebugMode, installGlobalErrorHandlers: $installGlobalErrorHandlers, enableCustomLogs: $enableCustomLogs, logBufferSize: $logBufferSize, enableUserMetadata: $enableUserMetadata, customKeys: $customKeys}';
   }
 
   @override
@@ -67,8 +68,8 @@ class CrashlyticsConfig {
       other is CrashlyticsConfig &&
           runtimeType == other.runtimeType &&
           enableInDebugMode == other.enableInDebugMode &&
-          enableAutomaticDataCollection ==
-              other.enableAutomaticDataCollection &&
+          installGlobalErrorHandlers ==
+              other.installGlobalErrorHandlers &&
           enableCustomLogs == other.enableCustomLogs &&
           logBufferSize == other.logBufferSize &&
           enableUserMetadata == other.enableUserMetadata &&
@@ -77,7 +78,7 @@ class CrashlyticsConfig {
   @override
   int get hashCode =>
       enableInDebugMode.hashCode ^
-      enableAutomaticDataCollection.hashCode ^
+      installGlobalErrorHandlers.hashCode ^
       enableCustomLogs.hashCode ^
       logBufferSize.hashCode ^
       enableUserMetadata.hashCode ^
@@ -97,7 +98,7 @@ class CrashlyticsConfig {
 class DefaultCrashlyticsConfig extends CrashlyticsConfig {
   const DefaultCrashlyticsConfig({
     super.enableInDebugMode = false,
-    super.enableAutomaticDataCollection = true,
+    super.installGlobalErrorHandlers = true,
     super.enableCustomLogs = true,
     super.logBufferSize = 100,
     super.enableUserMetadata = true,

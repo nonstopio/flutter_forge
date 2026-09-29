@@ -43,6 +43,14 @@ void main() {
       'Custom',
     );
     expect(const UnauthorizedException().statusCode, 401);
+    // Timeouts never produced an HTTP response, so none carries a status.
+    for (final timeout in const <NetworkException>[
+      ConnectionTimeoutException(),
+      ReceiveTimeoutException(),
+      SendTimeoutException(),
+    ]) {
+      expect(timeout.statusCode, isNull);
+    }
     final api = _Api();
     expect(api.urlConfig.pathPrefix, '/v1');
     expect(api.headers, isEmpty);

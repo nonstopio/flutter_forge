@@ -11,23 +11,21 @@ dependencies:
   flutter:
     sdk: flutter
   go_router: ^18.0.1
-  core:
-    path: ../../packages/core
   design_system:
     path: ../../packages/design_system
-  di:
-    path: ../../packages/di
   localization:
     path: ../../packages/localization
-{{#auth}}  auth:
-    path: ../auth
-{{/auth}}{{#developer}}  developer:
+{{#developer}}  developer:
     path: ../../packages/developer
 {{/developer}}
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  core:
+    path: ../../packages/core
+  di:
+    path: ../../packages/di
 
 flutter:
 

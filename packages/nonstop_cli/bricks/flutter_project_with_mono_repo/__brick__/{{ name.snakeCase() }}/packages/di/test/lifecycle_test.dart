@@ -51,6 +51,25 @@ void main() {
     expect(container.has<String>(), isFalse);
   });
 
+  test('dispose failures are routed to the configured handler', () async {
+    final errors = <Object>[];
+    container = GetItDependencyInjection(
+      getIt: GetIt.asNewInstance(),
+      onDisposeError: (error, _) => errors.add(error),
+    );
+    container.register<String>(
+      'value',
+      dispose: (_) => throw StateError('unregister'),
+    );
+    await container.unregister<String>(null);
+    container.register<int>(1, dispose: (_) => throw StateError('dispose'));
+    await container.dispose();
+    expect(errors.map((e) => (e as StateError).message), [
+      'unregister',
+      'dispose',
+    ]);
+  });
+
   test('wrong-instance unregistration has no disposal side effects', () async {
     final first = _Service();
     var disposed = false;

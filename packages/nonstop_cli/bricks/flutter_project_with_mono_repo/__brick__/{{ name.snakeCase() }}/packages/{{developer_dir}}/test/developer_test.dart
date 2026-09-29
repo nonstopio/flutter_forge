@@ -8,7 +8,7 @@ void main() {
       expect(DeveloperRoutes.developer, '/developer');
     });
 
-    testWidgets('DebugGestureDetector exports are available', (tester) async {
+    testWidgets('OpenDevToolsWrapper exports are available', (tester) async {
       // Test that the widget can be instantiated
       const widget = OpenDevToolsWrapper(child: Text('Test'));
 
@@ -19,7 +19,7 @@ void main() {
       expect(widget.enableVisualFeedback, false); // Default value
     });
 
-    testWidgets('DebugGestureDetector custom values work', (tester) async {
+    testWidgets('OpenDevToolsWrapper custom values work', (tester) async {
       // Test custom configuration
       const widget = OpenDevToolsWrapper(
         tapCount: 7,

@@ -1,247 +1,92 @@
-# Analytics Package
+# analytics
 
-A structured analytics package for {{name.titleCase()}} with Firebase Analytics integration and pluggable provider architecture.
+Event tracking for {{name.titleCase()}} behind the `AnalyticsClient` interface,
+with a Firebase Analytics implementation, a route observer for screen views and
+a static `AnalyticsHelper` facade for UI code.
 
-## Features
+## Initialise
 
-- ✅ **Interface-based design** - Easy to switch analytics providers
-- ✅ **Automatic screen tracking** - Route observer tracks navigation automatically
-- ✅ **Structured event names** - Type-safe, organized event constants
-- ✅ **Dependency injection** - Integrated with DI container
-- ✅ **Error handling** - Graceful failures don't crash the app
-- ✅ **Debug logging** - Configurable logging for development
-
-## Quick Start
-
-### 1. Initialize Analytics
+Firebase must be initialised and a `Logger` registered.
 
 ```dart
-import 'package:analytics/analytics.dart';
+import 'package:analytics/analytics.dart' as analytics;
 
-final analyticsConfig = DefaultAnalyticsConfig(
-  enableAnalytics: true,
-  enableDebugLogging: true, // Set to false in production
+await analytics.init(
+  config: const analytics.DefaultAnalyticsConfig(
+    enableAnalytics: !kDebugMode,
+    enableDebugLogging: kDebugMode,
+  ),
 );
-await init(config: analyticsConfig);
 ```
 
-### 2. Automatic Screen Tracking
+`init` applies the config to Firebase, then registers `AnalyticsClient` and
+`AnalyticsConfig`. SDK failures during `init` propagate.
 
-Add the `AnalyticsRouteObserver` to your router:
+## Configure
+
+| `DefaultAnalyticsConfig` field | Default | Effect |
+| --- | --- | --- |
+| `enableAnalytics` | `true` | collection on/off; when off, events are skipped |
+| `enableDebugLogging` | `false` | logs event names (never parameters or user ids) at debug |
+| `userId` | `null` | initial analytics user id |
+| `defaultUserProperties` | `null` | user properties set at startup |
+
+`setAnalyticsCollectionEnabled` changes collection at runtime.
+
+## Screen tracking
+
+`AnalyticsRouteObserver` logs a `screen_view` for every named `PageRoute` on
+push, pop (the route returned to) and replace:
 
 ```dart
 GoRouter(
   observers: [
-    AnalyticsRouteObserver(), // Uses FirebaseAnalyticsObserver internally
+    AnalyticsRouteObserver(
+      client: di.get<AnalyticsClient>(),
+      logger: di.get<Logger>(),
+    ),
   ],
-  // ... routes
+  routes: [...],
 );
 ```
 
-The `AnalyticsRouteObserver` internally uses Firebase's native `FirebaseAnalyticsObserver` for proper screen tracking while adding additional logging and error handling.
+## Logging events
 
-### 3. Manual Event Tracking
-
-#### Using Structured Event Names (Recommended)
+From UI code, use `AnalyticsHelper`. It is the one allowed locator facade: it
+resolves the registered client per call, does nothing when analytics is not
+registered, and logs instead of throwing.
 
 ```dart
-// User events
-await AnalyticsHelper.logEvent(AnalyticsEvents.user.authenticatedRedirect);
-
-// Authentication events
-await AnalyticsHelper.logEvent(
-  AnalyticsEvents.auth.signIn,
-  parameters: {'method': 'google'},
-);
-
-// Feature usage
-await AnalyticsHelper.logEvent(
-  AnalyticsEvents.feature.used,
-  parameters: {'feature_name': 'export'},
-);
-
-// A group of your own, added to AnalyticsEvents
 await AnalyticsHelper.logEvent(
   AnalyticsEvents.feature.tutorialCompleted,
-  parameters: {
-    'tutorial_id': 'getting_started',
-    'duration_seconds': 120,
-  },
+  parameters: {'tutorial_id': 'getting_started', 'duration_seconds': 120},
 );
-```
-
-#### Using Helper Methods
-
-```dart
-// Feature tracking
+await AnalyticsHelper.logSignIn(method: 'google');
 await AnalyticsHelper.logFeatureUsed('export');
-
-// Error tracking
+await AnalyticsHelper.logButtonPressed('get_started', screenName: 'home');
 await AnalyticsHelper.logAppError('network_timeout');
-
-// Button interactions
-await AnalyticsHelper.logButtonPressed('get_started');
-
-// Authentication events
-await AnalyticsHelper.logSignIn(method: 'google');
-await AnalyticsHelper.logSignUp(method: 'email');
-
-// User management
-await AnalyticsHelper.setUserId('user123');
-await AnalyticsHelper.setUserProperty(name: 'plan', value: 'premium');
-
-// App lifecycle
-await AnalyticsHelper.logAppOpen();
 ```
 
-#### Direct Client Usage
+Elsewhere, inject `AnalyticsClient`, which also offers `logScreenView`,
+`logAppOpen`, `logLogin`, `logSignUp`, `logPurchase`, `setUserId`,
+`setUserProperty` and `resetAnalyticsData`.
 
-```dart
-final analyticsClient = di.get<AnalyticsClient>();
+Event names live in `AnalyticsEvents` (`user`, `auth`, `navigation`, `feature`,
+`error`, `app`, `profile`); add your own groups there rather than using string
+literals.
 
-await analyticsClient.logEvent(
-  name: 'custom_event',
-  parameters: {'key': 'value'},
-);
+Parameter values are converted to what Firebase accepts: `String` and `num`
+pass through, `bool` becomes `'true'`/`'false'`, other objects use
+`toString()`, and `null` entries are dropped.
 
-await analyticsClient.setUserId('user123');
-await analyticsClient.setUserProperty(name: 'plan', value: 'premium');
-```
+## Errors
 
-## Structured Event Names
+After `init`, client methods catch SDK failures and log them; analytics never
+crashes the app.
 
-The package provides organized, type-safe event names through `AnalyticsEvents`:
+## Privacy rules
 
-### Available Event Categories
-
-```dart
-// User-related events
-AnalyticsEvents.user.authenticatedRedirect
-AnalyticsEvents.user.profileUpdated
-AnalyticsEvents.user.onboardingCompleted
-
-// Authentication events
-AnalyticsEvents.auth.signIn
-AnalyticsEvents.auth.signUp
-AnalyticsEvents.auth.signOut
-
-// Navigation events
-AnalyticsEvents.navigation.screenView
-AnalyticsEvents.navigation.tabSwitched
-
-// Feature usage
-AnalyticsEvents.feature.used
-AnalyticsEvents.feature.tutorialCompleted
-
-// App lifecycle
-AnalyticsEvents.app.open
-AnalyticsEvents.app.background
-AnalyticsEvents.app.foreground
-
-// Error events
-AnalyticsEvents.error.appError
-AnalyticsEvents.error.networkError
-```
-
-## Configuration
-
-### AnalyticsConfig Options
-
-```dart
-final config = DefaultAnalyticsConfig(
-  enableAnalytics: true,        // Enable/disable analytics collection
-  enableDebugLogging: false,    // Debug logging (development only)
-  userId: 'user123',           // Optional: Set initial user ID
-  defaultUserProperties: {      // Optional: Default user properties
-    'user_type': 'premium',
-    'app_version': '1.0.0',
-  },
-);
-```
-
-### Environment-based Configuration
-
-```dart
-import 'package:flutter/foundation.dart';
-
-final config = DefaultAnalyticsConfig(
-  enableAnalytics: !kDebugMode,          // Disable in debug builds
-  enableDebugLogging: kDebugMode,        // Debug logging in development
-);
-```
-
-## Architecture
-
-### Components
-
-- **AnalyticsClient** - Abstract interface for analytics operations
-- **FirebaseAnalyticsClient** - Firebase Analytics implementation
-- **AnalyticsRouteObserver** - Automatic screen tracking
-- **AnalyticsHelper** - Convenience methods for common events
-- **AnalyticsEvents** - Structured event name constants
-
-### Pluggable Design
-
-Switch analytics providers by implementing `AnalyticsClient`:
-
-```dart
-class MixpanelAnalyticsClient implements AnalyticsClient {
-  @override
-  Future<void> logEvent({required String name, Map<String, dynamic>? parameters}) {
-    // Mixpanel implementation
-  }
-  // ... other methods
-}
-
-// Register with DI
-di.register<AnalyticsClient>(MixpanelAnalyticsClient(config));
-```
-
-## Best Practices
-
-1. **Use Structured Events**: Always prefer `AnalyticsEvents.category.eventName` over string literals
-2. **Include Context**: Add relevant parameters like `screen_name`, `user_id`, etc.
-3. **Consistent Naming**: Use snake_case for event names and parameters
-4. **Error Handling**: Analytics failures should never crash the app
-5. **Privacy**: Respect user privacy settings and data regulations
-
-## Examples
-
-### Track User Journey
-
-```dart
-// App launch
-await AnalyticsHelper.logAppOpen();
-
-// User signs in
-await AnalyticsHelper.logSignIn(method: 'google');
-
-// User completes onboarding
-await AnalyticsHelper.logEvent(
-  AnalyticsEvents.user.onboardingCompleted,
-  parameters: {'steps_completed': 5},
-);
-
-// User uses a feature
-await AnalyticsHelper.logFeatureUsed('export');
-```
-
-### Error Tracking
-
-```dart
-try {
-  // Some operation
-} catch (error) {
-  await AnalyticsHelper.logAppError(
-    'api_call_failed',
-    errorMessage: error.toString(),
-    parameters: {
-      'endpoint': '/api/items',
-      'user_id': userId,
-    },
-  );
-  rethrow;
-}
-```
-
-This structured approach ensures consistent, discoverable, and maintainable analytics throughout the {{name.titleCase()}} app.
+- User ids are never written to the log.
+- Do not put personal data (emails, names, raw ids, free-text errors from the
+  backend) into event parameters or user properties.
+- Call `resetAnalyticsData()` and `setUserId(null)` on sign-out.

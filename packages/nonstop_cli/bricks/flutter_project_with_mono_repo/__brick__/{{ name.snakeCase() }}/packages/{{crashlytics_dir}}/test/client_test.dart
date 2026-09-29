@@ -40,7 +40,7 @@ void main() {
     when(sdk.deleteUnsentReports).thenAnswer((_) async {});
     client = FirebaseCrashlyticsClient(
       config: const CrashlyticsConfig(
-        enableAutomaticDataCollection: false,
+        installGlobalErrorHandlers: false,
         logBufferSize: 2,
         customKeys: {'build': 'test'},
       ),
@@ -63,12 +63,7 @@ void main() {
     await client.log('log');
     await client.setUserIdentifier('user');
     await client.setUserMetadata(
-      const UserMetadata(
-        userId: 'user',
-        email: 'test@example.test',
-        name: 'Test',
-        customAttributes: {'role': 'tester'},
-      ),
+      const UserMetadata(userId: 'user', customAttributes: {'role': 'tester'}),
     );
     await client.setCustomKey('key', 'value');
     await client.setCustomKeys({'key': 'value'});
@@ -105,6 +100,35 @@ void main() {
     await exerciseClient();
     expect(client.isCrashlyticsCollectionEnabled, isFalse);
     verifyNever(() => sdk.log(any()));
+  });
+
+  test(
+    'metadata sends only the opaque id and logs never carry values',
+    () async {
+      await client.initialize();
+      await client.setUserMetadata(
+        const UserMetadata(userId: 'uid-1', customAttributes: {'plan': 'pro'}),
+      );
+      verify(() => sdk.setUserIdentifier('uid-1')).called(1);
+      verify(() => sdk.setCustomKey('plan', 'pro')).called(1);
+      await client.setCustomKey('token', 'secret-value');
+      await client.log('secret-message');
+      final messages = verify(() => logger.d(captureAny())).captured;
+      expect(messages.where((m) => '$m'.contains('secret')), isEmpty);
+    },
+  );
+
+  test('initialization failures log the error and its stack trace', () async {
+    final failure = StateError('startup');
+    when(() => sdk.setCrashlyticsCollectionEnabled(any())).thenThrow(failure);
+    await expectLater(client.initialize(), throwsStateError);
+    verify(
+      () => logger.e(
+        'Failed to initialize Firebase Crashlytics',
+        failure,
+        any(that: isA<StackTrace>()),
+      ),
+    ).called(1);
   });
 
   test('initialization applies custom keys and can be called twice', () async {
@@ -205,7 +229,7 @@ void main() {
       di.register<Logger>(logger);
       when(sdk.checkForUnsentReports).thenAnswer((_) async => hasReports);
       await crash.init(
-        config: const CrashlyticsConfig(enableAutomaticDataCollection: false),
+        config: const CrashlyticsConfig(installGlobalErrorHandlers: false),
         crashlytics: sdk,
       );
       expect(di.has<CrashlyticsClient>(), isTrue);

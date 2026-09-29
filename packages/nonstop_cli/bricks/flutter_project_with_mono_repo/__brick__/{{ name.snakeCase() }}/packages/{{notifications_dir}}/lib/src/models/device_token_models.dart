@@ -21,15 +21,3 @@ class DeviceTokenRequest {
 
   Map<String, dynamic> toJson() => _$DeviceTokenRequestToJson(this);
 }
-
-@JsonSerializable()
-class DeviceTokenUpdateRequest {
-  final String fcmToken;
-
-  const DeviceTokenUpdateRequest({required this.fcmToken});
-
-  factory DeviceTokenUpdateRequest.fromJson(Map<String, dynamic> json) =>
-      _$DeviceTokenUpdateRequestFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DeviceTokenUpdateRequestToJson(this);
-}

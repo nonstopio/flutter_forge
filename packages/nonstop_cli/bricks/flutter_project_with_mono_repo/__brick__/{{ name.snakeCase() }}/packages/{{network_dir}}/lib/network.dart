@@ -2,6 +2,7 @@ library;
 
 import 'package:core/core.dart';
 import 'package:di/di.dart';
+import 'package:dio/dio.dart';
 import 'package:network/src/auth/index.dart';
 import 'package:network/src/client/index.dart';
 import 'package:network/src/config/index.dart';
@@ -24,56 +25,39 @@ Future<void> init({
   logger.i('Network module initialized with base URL: ${config.baseUrl}');
 }
 
+/// Registers [NetworkClient] and the caller's own [config] instance.
+///
+/// When [useAuthentication] is true, credentials come from
+/// [NetworkConfig.authTokenProvider] or, failing that, from an
+/// [AuthTokenProvider] registered in DI (for example by the auth feature).
 Future<void> registerNetworkWithDI(
   NetworkConfig config, {
   bool useAuthentication = true,
+  Dio? dio,
 }) async {
   final logger = di.get<Logger>();
 
-  // Try to get AuthTokenProvider from DI if authentication is enabled
-  AuthTokenProvider? authTokenProvider;
-  if (useAuthentication && config.authTokenProvider == null) {
-    try {
-      authTokenProvider = di.get<AuthTokenProvider>();
-      logger.d('🔐 Found AuthTokenProvider in DI, using for authentication');
-    } catch (e) {
-      logger.d(
-        '🔓 No AuthTokenProvider found in DI, creating unauthenticated client',
-      );
-    }
-  } else if (useAuthentication && config.authTokenProvider != null) {
-    authTokenProvider = config.authTokenProvider;
-    logger.d('🔐 Using provided AuthTokenProvider');
-  }
+  final authTokenProvider = !useAuthentication
+      ? null
+      : config.authTokenProvider ??
+            (di.has<AuthTokenProvider>() ? di.get<AuthTokenProvider>() : null);
 
-  // Create network config with auth provider if available
-  late final NetworkConfig finalConfig;
-  if (!useAuthentication ||
-      (authTokenProvider != null && config.authTokenProvider == null)) {
-    // Create a new config with the auth provider
-    finalConfig = DefaultNetworkConfig(
-      baseUrl: config.baseUrl,
-      connectTimeout: config.connectTimeout,
-      receiveTimeout: config.receiveTimeout,
-      sendTimeout: config.sendTimeout,
-      defaultHeaders: config.defaultHeaders,
-      enableLogging: config.enableLogging,
-      authTokenProvider: authTokenProvider,
-    );
-  } else {
-    finalConfig = config;
-  }
-
-  final networkClient = DioNetworkClient(finalConfig, logger: logger);
+  final networkClient = DioNetworkClient(
+    config,
+    logger: logger,
+    dio: dio,
+    authTokenProvider: authTokenProvider,
+    useAuthentication: useAuthentication,
+  );
   di.register<NetworkClient>(
     networkClient,
     dispose: (client) => client.dispose(),
   );
-  di.register<NetworkConfig>(finalConfig);
+  di.register<NetworkConfig>(config);
 
-  if (finalConfig.authTokenProvider != null) {
-    logger.i('🔐 Network client registered with authentication support');
-  } else {
-    logger.i('🔓 Network client registered without authentication');
-  }
+  logger.i(
+    authTokenProvider != null
+        ? 'Network client registered with authentication support'
+        : 'Network client registered without authentication',
+  );
 }

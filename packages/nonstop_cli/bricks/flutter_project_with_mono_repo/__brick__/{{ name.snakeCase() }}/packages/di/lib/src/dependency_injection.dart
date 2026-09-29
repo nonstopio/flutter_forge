@@ -2,9 +2,7 @@ import 'dart:async';
 
 typedef DisposeFunc<T> = FutureOr Function(T param);
 
-abstract class DependencyInjection {
-  Future<void> init();
-
+abstract interface class DependencyInjection {
   Future<void> dispose();
 
   void register<T extends Object>(

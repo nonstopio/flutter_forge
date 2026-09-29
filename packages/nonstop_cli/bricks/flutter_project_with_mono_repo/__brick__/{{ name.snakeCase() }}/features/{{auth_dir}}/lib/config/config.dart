@@ -1,3 +1,3 @@
-abstract class AuthConfig {
+abstract interface class AuthConfig {
   String get clientId;
 }

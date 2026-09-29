@@ -1,6 +1,5 @@
 import 'package:auth/constants/index.dart';
 import 'package:core/logger/logger.dart';
-import 'package:di/di.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +7,12 @@ import 'package:localization/localization.dart';
 
 enum FooterType { signIn, register }
 
-Widget footerBuilder(BuildContext context, AuthAction action, FooterType type) {
-  final logger = di.get<Logger>();
+Widget footerBuilder(
+  BuildContext context,
+  AuthAction action,
+  FooterType type,
+  Logger logger,
+) {
   switch (type) {
     case FooterType.signIn:
       return _AuthFooter(

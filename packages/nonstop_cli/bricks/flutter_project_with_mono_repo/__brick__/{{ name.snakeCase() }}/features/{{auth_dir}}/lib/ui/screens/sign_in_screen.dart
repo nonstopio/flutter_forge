@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth/analytics/analytics.dart';
 import 'package:auth/constants/index.dart';
 import 'package:auth/ui/components/footer_builder.dart';
@@ -5,21 +7,23 @@ import 'package:auth/ui/components/header_builder.dart';
 import 'package:core/core.dart' as core;
 import 'package:core/logger/logger.dart';
 import 'package:design_system/toast/toasts.dart';
-import 'package:di/di.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as ui_auth;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key, required this.onSignedIn});
+  const SignInScreen({
+    super.key,
+    required this.onSignedIn,
+    required this.logger,
+  });
 
-  final Function(BuildContext context) onSignedIn;
+  final FutureOr<void> Function(BuildContext context) onSignedIn;
+  final Logger logger;
 
   @override
   Widget build(BuildContext context) {
-    final logger = di.get<Logger>();
-
     return ui_auth.SignInScreen(
       showAuthActionSwitch: false,
       oauthButtonVariant: ui_auth.OAuthButtonVariant.icon_and_text,
@@ -37,32 +41,22 @@ class SignInScreen extends StatelessWidget {
           logger.d('User signed in successfully');
 
           final method = AuthAnalytics.getAuthMethod(state.user?.providerData);
+          unawaited(AuthAnalytics.logSignInSuccess(method: method));
 
-          // Log successful sign in
-          AuthAnalytics.logSignInSuccess(
-            method: method,
-            userEmail: state.user?.email,
-          );
-
-          onSignedIn(context);
+          await onSignedIn(context);
         }),
         ui_auth.AuthStateChangeAction<ui_auth.UserCreated>((
           context,
           state,
         ) async {
-          logger.d('User signed in successfully');
+          logger.d('User created from the sign-in screen');
 
           final method = AuthAnalytics.getAuthMethod(
             state.credential.user?.providerData,
           );
+          unawaited(AuthAnalytics.logSignUpSuccess(method: method));
 
-          // Log successful user creation (from sign in screen)
-          AuthAnalytics.logUserCreationSuccess(
-            method: method,
-            userEmail: state.credential.user?.email,
-          );
-
-          onSignedIn(context);
+          await onSignedIn(context);
         }),
         ui_auth.AuthStateChangeAction<ui_auth.AuthFailed>((
           context,
@@ -70,11 +64,12 @@ class SignInScreen extends StatelessWidget {
         ) async {
           logger.e('Sign-in failed: ${state.exception}');
 
-          // Log auth error
-          AuthAnalytics.logAuthError(
-            errorType: state.exception.runtimeType.toString(),
-            flowType: 'sign_in',
-            errorMessage: state.exception.toString(),
+          unawaited(
+            AuthAnalytics.logAuthError(
+              errorType: state.exception.runtimeType.toString(),
+              flowType: 'sign_in',
+              errorMessage: state.exception.toString(),
+            ),
           );
 
           Toast.error(context, message: strings.errors.default_error_message);
@@ -82,7 +77,7 @@ class SignInScreen extends StatelessWidget {
         //TODO: Handle other AuthState
       ],
       footerBuilder: (context, action) {
-        return footerBuilder(context, action, FooterType.signIn);
+        return footerBuilder(context, action, FooterType.signIn, logger);
       },
       headerBuilder: (context, constraints, shrinkOffset) {
         return headerBuilder(context);

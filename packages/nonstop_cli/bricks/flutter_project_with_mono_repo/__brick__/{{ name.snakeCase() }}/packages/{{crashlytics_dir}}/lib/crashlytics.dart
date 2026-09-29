@@ -20,7 +20,7 @@ Future<void> init({
     crashlytics: crashlytics,
   );
   final logger = di.get<Logger>();
-  logger.i('🔥 Crashlytics module initialized');
+  logger.i('Crashlytics module initialized');
 }
 
 /// Register crashlytics components with DI container
@@ -41,10 +41,10 @@ Future<void> registerCrashlyticsWithDI(
 
     // Check if there are any unsent reports
     if (await client.checkForUnsentReports()) {
-      logger.w('⚠️ There are unsent crash reports.');
+      logger.w('There are unsent crash reports.');
       await client.sendUnsentReports();
     } else {
-      logger.i('✅ No unsent crash reports found.');
+      logger.i('No unsent crash reports found.');
     }
 
     di.register<CrashlyticsConfig>(config);
@@ -52,10 +52,10 @@ Future<void> registerCrashlyticsWithDI(
       client,
       dispose: (client) => client.dispose(),
     );
-    logger.i('🔥 Crashlytics registered with DI container');
+    logger.i('Crashlytics registered with DI container');
   } catch (e, stackTrace) {
     client.dispose();
-    logger.e('❌ Failed to register crashlytics with DI', e, stackTrace);
+    logger.e('Failed to register crashlytics with DI', e, stackTrace);
     rethrow;
   }
 }

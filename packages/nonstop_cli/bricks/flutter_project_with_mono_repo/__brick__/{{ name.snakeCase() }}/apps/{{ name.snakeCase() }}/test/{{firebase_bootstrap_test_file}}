@@ -29,7 +29,8 @@ import 'package:flutter/material.dart';
 {{/auth}}
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-{{#notifications}}import 'package:notifications/notifications.dart';
+{{#auth}}{{#dashboard}}import 'package:localization/localization.dart';
+{{/dashboard}}{{/auth}}{{#notifications}}import 'package:notifications/notifications.dart';
 {{/notifications}}
 {{#firebase_sdk_mocks}}import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 {{/firebase_sdk_mocks}}
@@ -196,9 +197,12 @@ void main() {
 {{/auth}}
 {{#notifications}}      expect(di.has<NotificationClient>(), isTrue);
 {{/notifications}}
-{{#notifications}}      expect(FirebaseTokenManager(), isA<NotificationTokenManager>());
+{{#notifications}}      expect(di.get<NotificationTokenManager>(), isA<FirebaseTokenManager>());
 {{/notifications}}
-{{#notifications}}      expect(FirebasePermissionManager(), isA<NotificationPermissionManager>());
+{{#notifications}}      expect(
+        di.get<NotificationPermissionManager>(),
+        isA<FirebasePermissionManager>(),
+      );
 {{/notifications}}
 {{#analytics}}      verify(
         () => analytics.logEvent(
@@ -230,7 +234,7 @@ void main() {
       when(() => identity.currentUser).thenReturn(_User());
       await screen.onSignedIn(context);
       await tester.pumpAndSettle();
-{{#dashboard}}      expect(find.text('Explore'), findsWidgets);
+{{#dashboard}}      expect(find.text(strings.nav.explore), findsWidgets);
 {{/dashboard}}
 {{/auth}}{{#notifications}}      await di.get<NotificationConfig>().onForeground!('Notice', 'Details');
       await tester.pump();

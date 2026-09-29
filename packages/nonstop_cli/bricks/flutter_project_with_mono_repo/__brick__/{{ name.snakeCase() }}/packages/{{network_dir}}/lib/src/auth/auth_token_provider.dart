@@ -1,4 +1,5 @@
-abstract class AuthTokenProvider {
+/// Supplies session credentials to the network layer.
+abstract interface class AuthTokenProvider {
   /// Gets a valid authentication token
   /// Returns null if user is not authenticated
   Future<String?> getValidToken();

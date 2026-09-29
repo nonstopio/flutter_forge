@@ -85,6 +85,23 @@ class _DelayedTokens extends _Tokens {
   }
 }
 
+class _CustomConfig implements NetworkConfig {
+  @override
+  String get baseUrl => 'https://example.test';
+  @override
+  Duration get connectTimeout => const Duration(seconds: 5);
+  @override
+  Duration get receiveTimeout => const Duration(seconds: 5);
+  @override
+  Duration get sendTimeout => const Duration(seconds: 5);
+  @override
+  Map<String, String> get defaultHeaders => const {'X-App': 'custom'};
+  @override
+  bool get enableLogging => false;
+  @override
+  AuthTokenProvider? get authTokenProvider => null;
+}
+
 void main() {
   late _Adapter adapter;
   late _Logger logger;
@@ -288,32 +305,51 @@ void main() {
     'module respects explicit disable, injected credentials and unconfigured auth',
     () async {
       addTearDown(di.reset);
+      Future<bool> sendsCredentials(
+        NetworkConfig config, {
+        bool enabled = true,
+      }) async {
+        final dio = Dio()..httpClientAdapter = adapter;
+        await network.registerNetworkWithDI(
+          config,
+          useAuthentication: enabled,
+          dio: dio,
+        );
+        expect(di.get<NetworkConfig>(), same(config));
+        await di.get<NetworkClient>().get<Object?>('/me', fromJsonT: (j) => j);
+        return adapter.requests.last.headers.containsKey('Authorization');
+      }
+
       for (final supplied in [false, true]) {
         for (final enabled in [false, true]) {
           await di.reset();
           di.register<Logger>(logger);
-          final tokens = _Tokens();
-          await network.init(
-            config: DefaultNetworkConfig(
-              baseUrl: 'https://example.test',
-              authTokenProvider: supplied ? tokens : null,
-            ),
-            useAuthentication: enabled,
+          final config = DefaultNetworkConfig(
+            baseUrl: 'https://example.test',
+            authTokenProvider: supplied ? _Tokens() : null,
           );
           expect(
-            di.get<NetworkConfig>().authTokenProvider,
-            supplied && enabled ? same(tokens) : isNull,
+            await sendsCredentials(config, enabled: enabled),
+            supplied && enabled,
           );
         }
       }
       await di.reset();
       di.register<Logger>(logger);
-      final tokens = _Tokens();
-      di.register<AuthTokenProvider>(tokens);
+      di.register<AuthTokenProvider>(_Tokens());
+      final custom = _CustomConfig();
+      expect(await sendsCredentials(custom), isTrue);
+      expect(custom.authTokenProvider, isNull);
+      await di.reset();
+      di.register<Logger>(logger);
       await network.init(
-        config: DefaultNetworkConfig(baseUrl: 'https://example.test'),
+        config: const DefaultNetworkConfig(baseUrl: 'https://example.test'),
       );
-      expect(di.get<NetworkConfig>().authTokenProvider, same(tokens));
+      expect(di.has<NetworkClient>(), isTrue);
+      expect(
+        logger.messages,
+        contains('Network client registered without authentication'),
+      );
     },
   );
 

@@ -16,3 +16,6 @@ pubspec_overrides.yaml
 !apps/*/pubspec.lock
 mason-lock.json
 .mason
+
+# Per-machine Claude Code settings
+.claude/settings.local.json

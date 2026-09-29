@@ -9,7 +9,7 @@ void registerLoggerWithDI() {
   di.register<Logger>(logger);
 }
 
-abstract class Logger {
+abstract interface class Logger {
   Object get logger;
 
   void d(String message);

@@ -3,5 +3,5 @@
 Platform channels and native integrations.
 
 ```sh
-nonstop create plugin my_plugin -o plugins
+nonstop create my_plugin --template plugin -o plugins
 ```

@@ -23,9 +23,9 @@ Future<void> init({
   final logger = di.get<Logger>();
   try {
     await registerNotificationWithDI(config, messaging: messaging);
-    logger.i('🔔 Notifications module initialized');
+    logger.i('Notifications module initialized');
   } catch (e, s) {
-    logger.e('🔔 Failed to initialize notifications module', e, s);
+    logger.e('Failed to initialize notifications module', e, s);
     rethrow;
   }
 }

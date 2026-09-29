@@ -197,8 +197,6 @@ void main() {
       DeviceTokenRequest.fromJson(request.toJson()).toJson(),
       request.toJson(),
     );
-    const update = DeviceTokenUpdateRequest(fcmToken: 'next');
-    expect(DeviceTokenUpdateRequest.fromJson(update.toJson()).fcmToken, 'next');
     expect(const DefaultNotificationConfig(), isA<NotificationConfig>());
   });
 }

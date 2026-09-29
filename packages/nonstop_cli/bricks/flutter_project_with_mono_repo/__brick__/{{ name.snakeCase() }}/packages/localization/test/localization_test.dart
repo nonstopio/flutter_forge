@@ -4,7 +4,6 @@ import 'package:localization/localization.dart';
 
 void main() {
   test('locale matching selects supported language or defaults to English', () {
-    expect(LocalizationProvider.getMessages('en'), isA<Messages>());
     expect(
       LocalizationProvider.getBestMatchingLocale([
         const Locale('es'),
@@ -19,8 +18,7 @@ void main() {
     expect(LocalizationProvider.getBestMatchingLocale([]), 'en');
   });
   group('LocalizationProvider Tests', () {
-    test('should initialize with default locale', () {
-      LocalizationProvider.initialize();
+    test('should default to English', () {
       expect(LocalizationProvider.currentLocale, 'en');
     });
 

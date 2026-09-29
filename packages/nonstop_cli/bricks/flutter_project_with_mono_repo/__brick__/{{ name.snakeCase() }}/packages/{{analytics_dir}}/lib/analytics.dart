@@ -40,8 +40,8 @@ Future<void> registerAnalyticsWithDI(
   di.register<AnalyticsConfig>(config);
 
   if (config.enableAnalytics) {
-    logger.i('🔍 Analytics client registered with collection enabled');
+    logger.i('Analytics client registered with collection enabled');
   } else {
-    logger.i('🔍 Analytics client registered with collection disabled');
+    logger.i('Analytics client registered with collection disabled');
   }
 }
