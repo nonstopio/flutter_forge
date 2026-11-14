@@ -278,6 +278,12 @@ def run_package(entry: dict, root: Path, report_only: bool = False) -> dict:
                 args += [str(fixture.relative_to(package)), *[str(test.relative_to(package)) for test in tests[1:]]]
                 if not command(args, package, log, env):
                     summary['reason'] = f'Tests failed; see {coverage.relative_to(root)}/test.log'
+                    # The driver uses unstable flutter_tools internals; name that cause
+                    # instead of blaming the package's tests after a Flutter upgrade.
+                    log.flush()
+                    if flutter and 'flutter_coverage_runner.dart:' in (coverage / 'test.log').read_text(errors='replace'):
+                        summary['reason'] = ('Coverage driver no longer compiles against this Flutter SDK '
+                                             f'(flutter_tools internals changed); see {coverage.relative_to(root)}/test.log')
                     return summary
                 if not flutter and not command(['dart', 'run', 'coverage:format_coverage', '--lcov', '--in=coverage/raw', '--out=coverage/lcov.info', '--report-on=.'], package, log, env):
                     summary['reason'] = 'Coverage conversion failed'
