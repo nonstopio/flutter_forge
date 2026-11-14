@@ -147,8 +147,10 @@ Confirm its generated version commit, package tag runs, and pub.dev versions.
 The version commit itself is excluded from recursive preparation.
 
 Release checks use Flutter **3.50.0** and the pinned **Melos 8.8.0** dependency
-from the current Dart workspace. All release commands use `melos`;
-global Melos activation is not required.
+from the current Dart workspace. Release commands call `melos` directly, so
+activate it once with `dart pub global activate melos 8.8.0`; the global
+launcher defers to the workspace-pinned version. (`dart run melos` fails on
+Dart 3.14.)
 
 ## CLI usage
 

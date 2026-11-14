@@ -186,14 +186,14 @@ tooling and native platform code are outside this metric. Coverage does not
 prove every branch, platform integration or security property. Live Firebase,
 push delivery and backend authorization still need project-specific integration
 tests. The generated GitHub workflow checks formatting, analysis, coverage and
-a web build on Flutter 3.44.0.
+a web build on Flutter 3.50.0.
 
 Templates are bundled with the CLI release, not fetched from the registry at
 generation time. To change the default template, generate an app, implement and
 verify the change there, then port it into the brick and rebuild the bundle:
 
 ```bash
-# From packages/nonstop_cli; requires Flutter 3.44.0 and Mason CLI.
+# From packages/nonstop_cli; requires Flutter 3.50.0 and Mason CLI.
 dart pub get
 mason bundle bricks/flutter_project_with_mono_repo -t dart -o lib/commands/create
 dart format lib/commands/create/flutter_project_with_mono_repo_bundle.dart

@@ -27,7 +27,7 @@ that points the other way is a design error, not a shortcut. Fix the boundary.
 
 ## First-time setup
 
-Requires Flutter **3.47.5 or newer** (`flutter --version`). With FVM: `fvm use 3.47.5`.
+Requires Flutter **3.47.5 or newer** (`flutter --version`). With FVM: `fvm use 3.50.0` (the version CI uses).
 
 ```sh
 dart pub global activate melos   # once per machine; defers to the workspace-pinned version

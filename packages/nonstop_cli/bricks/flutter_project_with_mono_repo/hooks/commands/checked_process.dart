@@ -14,7 +14,7 @@ typedef ProcessRunner = Future<ProcessResult> Function(
 /// `cli_core`'s `trackOperation` reports success as soon as the future
 /// completes, so a non-zero exit code shows a green tick and generation
 /// carries on to produce a half-built project. Every step here is load-bearing
-/// - if `flutter create` or `melos bootstrap` fails there is nothing worth
+/// - if `flutter create` or `dart pub get` fails there is nothing worth
 /// continuing for - so the exit code is checked and the child's stderr is
 /// surfaced.
 Future<void> runChecked(
