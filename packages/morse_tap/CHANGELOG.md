@@ -1,3 +1,7 @@
+## 0.1.1
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+
 ## 0.1.0
 
 > Note: This release has breaking changes.

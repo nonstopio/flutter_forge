@@ -1,3 +1,7 @@
+## 2.4.2
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+
 ## 2.4.1
 
  - **FIX**(timer_button): release Dart 3.6 compatibility.

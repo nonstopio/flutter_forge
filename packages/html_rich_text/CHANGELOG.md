@@ -1,3 +1,7 @@
+## 1.2.2
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+
 ## 1.2.1
 
  - **FIX**(html_rich_text): release Dart 3.6 compatibility.

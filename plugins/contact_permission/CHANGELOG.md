@@ -1,3 +1,8 @@
+## 2.0.1
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+ - **FIX**(contact_permission): build with the Flutter 3.50 default Android toolchain.
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

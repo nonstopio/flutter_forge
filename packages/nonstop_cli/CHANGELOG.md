@@ -1,3 +1,7 @@
+## 0.0.12+6
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+
 ## 0.0.11+5
 
  - **FEAT**(nonstop_cli): generate a Claude Code setup and harden the app template.

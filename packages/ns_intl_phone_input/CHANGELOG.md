@@ -1,3 +1,7 @@
+## 1.1.2
+
+ - **FIX**: close Flutter 3.50 upgrade gaps.
+
 ## 1.1.1
 
  - **FIX**(ns_intl_phone_input): release phone input updates.

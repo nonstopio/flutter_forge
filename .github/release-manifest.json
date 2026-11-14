@@ -1,12 +1,66 @@
 {
   "schema": 1,
-  "base": "2d0470405fb2ff6de720665c49e31316e33fcc53",
+  "base": "87277642056c823186f952b2970bd5e427dfd2ac",
   "packages": [
     {
+      "name": "connectivity_wrapper",
+      "version": "2.0.1",
+      "path": "packages/connectivity_wrapper",
+      "tag": "connectivity_wrapper-v2.0.1"
+    },
+    {
+      "name": "contact_permission",
+      "version": "2.0.1",
+      "path": "plugins/contact_permission",
+      "tag": "contact_permission-v2.0.1"
+    },
+    {
+      "name": "dzod",
+      "version": "0.3.1",
+      "path": "packages/dzod",
+      "tag": "dzod-v0.3.1"
+    },
+    {
+      "name": "html_rich_text",
+      "version": "1.2.2",
+      "path": "packages/html_rich_text",
+      "tag": "html_rich_text-v1.2.2"
+    },
+    {
+      "name": "morse_tap",
+      "version": "0.1.1",
+      "path": "packages/morse_tap",
+      "tag": "morse_tap-v0.1.1"
+    },
+    {
       "name": "nonstop_cli",
-      "version": "0.0.11+5",
+      "version": "0.0.12+6",
       "path": "packages/nonstop_cli",
-      "tag": "nonstop_cli-v0.0.11+5"
+      "tag": "nonstop_cli-v0.0.12+6"
+    },
+    {
+      "name": "ns_firebase_utils",
+      "version": "2.0.1",
+      "path": "packages/ns_firebase_utils",
+      "tag": "ns_firebase_utils-v2.0.1"
+    },
+    {
+      "name": "ns_intl_phone_input",
+      "version": "1.1.2",
+      "path": "packages/ns_intl_phone_input",
+      "tag": "ns_intl_phone_input-v1.1.2"
+    },
+    {
+      "name": "ns_utils",
+      "version": "2.0.1",
+      "path": "packages/ns_utils",
+      "tag": "ns_utils-v2.0.1"
+    },
+    {
+      "name": "timer_button",
+      "version": "2.4.2",
+      "path": "packages/timer_button",
+      "tag": "timer_button-v2.4.2"
     }
   ]
 }
