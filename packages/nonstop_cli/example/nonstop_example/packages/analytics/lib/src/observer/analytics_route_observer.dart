@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:analytics/src/client/analytics_client.dart';
 import 'package:core/core.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Tracks named pages through the analytics abstraction, including async errors.
 class AnalyticsRouteObserver extends NavigatorObserver {

@@ -8,8 +8,8 @@
 {{/analytics}}{{^analytics}}{{#auth}}{{#dashboard}}{{#notifications}}import 'package:di/di.dart';
 {{/notifications}}{{/dashboard}}{{/auth}}{{/analytics}}
 import 'package:flutter/foundation.dart';
-{{#auth}}import 'package:flutter/material.dart';
-{{/auth}}{{^auth}}{{^dashboard}}import 'package:flutter/material.dart';
+{{#auth}}import 'package:material_ui/material_ui.dart';
+{{/auth}}{{^auth}}{{^dashboard}}import 'package:material_ui/material_ui.dart';
 {{/dashboard}}{{/auth}}import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 {{#auth}}{{#dashboard}}{{#notifications}}import 'package:notifications/notifications.dart';

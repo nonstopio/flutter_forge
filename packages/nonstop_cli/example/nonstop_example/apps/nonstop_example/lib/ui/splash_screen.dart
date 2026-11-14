@@ -1,7 +1,7 @@
 import 'package:auth/auth.dart' as auth;
 import 'package:dashboard/dashboard.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 

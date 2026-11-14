@@ -10,7 +10,7 @@ screenshots:
 
 environment:
   sdk: ^3.8.1
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 platforms:
   android:
@@ -21,6 +21,7 @@ platforms:
   windows:
 
 dependencies:
+  material_ui: ^1.11.0
   flutter:
     sdk: flutter
 

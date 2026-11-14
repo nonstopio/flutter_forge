@@ -6,9 +6,10 @@ version: 2.0.0
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
+  material_ui: ^1.11.0
   flutter:
     sdk: flutter
   dzod:

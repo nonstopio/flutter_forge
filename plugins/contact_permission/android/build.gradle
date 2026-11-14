@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.4.1'
+        classpath 'com.android.tools.build:gradle:9.3.1'
     }
 }
 
@@ -42,7 +42,7 @@ kotlin {
 }
 
 dependencies {
-    // 1.19 requires compileSdk 37; Flutter 3.47 targets compileSdk 36.
+    // 1.19 requires compileSdk 37; Flutter 3.50 still targets compileSdk 36.
     implementation 'androidx.core:core:1.18.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0'
 }

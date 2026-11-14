@@ -19,5 +19,5 @@ contains, including its Claude Code setup (`CLAUDE.md` files, `.claude/`
 hooks and skills). It is regenerated from the bricks, never edited by hand:
 
 ```sh
-dart run melos run generate:nonstop_example   # from the flutter_forge root
+melos run generate:nonstop_example   # from the flutter_forge root
 ```

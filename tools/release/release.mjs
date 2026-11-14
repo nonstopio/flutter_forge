@@ -11,8 +11,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function run(command, args, cwd = root, capture = false) {
-  // Resolve the pinned workspace version, independent of global activation.
-  if (command === 'melos') { command = 'dart'; args = ['run', 'melos', ...args]; }
   if (!capture) console.log(`> ${command} ${args.join(' ')}`);
   const result = spawnSync(command, args, {
     cwd, encoding: 'utf8', stdio: capture ? 'pipe' : 'inherit',

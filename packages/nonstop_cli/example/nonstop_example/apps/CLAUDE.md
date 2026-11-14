@@ -41,5 +41,5 @@ owns nothing else. Read the root `CLAUDE.md` first.
 notification lifecycle. Adding a bootstrap step means adding a test that proves
 it runs, and that the app still boots when it is unavailable.
 
-Run from the root: `dart run melos run coverage`. For a quick loop:
+Run from the root: `melos run coverage`. For a quick loop:
 `cd apps/nonstop_example && flutter test`.

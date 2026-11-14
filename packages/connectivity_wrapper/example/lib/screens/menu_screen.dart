@@ -2,7 +2,7 @@ import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:connectivity_wrapper_example/screens/scaffold_example_screen.dart';
 import 'package:connectivity_wrapper_example/utils/strings.dart';
 import 'package:connectivity_wrapper_example/utils/utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'custom_offline_widget_screen.dart';
 import 'network_aware_widget_screen.dart';

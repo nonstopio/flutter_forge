@@ -51,7 +51,7 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 - `test/lifecycle_test.dart`: reverse-order awaited disposal that continues past a throwing callback, idempotent second reset, unregister cleanup failure, failures routed to `onDisposeError`, wrong-instance unregistration without side effects.
 - Pattern: a fresh `GetItDependencyInjection(getIt: GetIt.asNewInstance())` per test, disposed in `tearDown`. Never test against the global `di` here.
 
-Run: `dart run melos exec --scope=di -- flutter test`. `dart run melos run coverage` must stay 100%.
+Run: `melos exec --scope=di -- flutter test`. `melos run coverage` must stay 100%.
 
 ## Gotchas
 

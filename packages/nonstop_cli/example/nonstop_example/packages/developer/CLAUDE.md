@@ -49,7 +49,7 @@ Exported from `package:developer/developer.dart`. There is no `init()`; nothing 
 - `test/navigation_test.dart`: non-Talker logger shows `strings.developer.no_viewer`; disabled flag keeps the gesture inert; direct navigation redirected to `/` with no `FeatureFlag` registered; enabled gesture honours `tapWindow` and opens `TalkerScreen`, run with `enableVisualFeedback` false and true.
 - Pattern: `setUp(core.init)`, `tearDown(di.reset)`; a fake `FeatureFlagProvider` (`_Flags`) wrapped in a real `FeatureFlag(provider:, logger:)` registered with `di`; `GoRouter` with `addTearDown(router.dispose)`.
 
-Run: `dart run melos exec --scope=developer -- flutter test`. `dart run melos run coverage` must stay 100%.
+Run: `melos exec --scope=developer -- flutter test`. `melos run coverage` must stay 100%.
 
 ## Gotchas
 

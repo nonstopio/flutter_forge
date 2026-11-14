@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
+
 import '../models/haptic_config.dart';
 import '../models/haptic_feedback_type.dart';
 import 'platform_utils_io.dart'

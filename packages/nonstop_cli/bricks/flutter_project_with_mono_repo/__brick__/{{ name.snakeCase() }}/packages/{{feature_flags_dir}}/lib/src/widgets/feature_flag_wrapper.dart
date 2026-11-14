@@ -1,7 +1,7 @@
 import 'package:core/logger/logger.dart';
 import 'package:di/di.dart';
 import 'package:feature_flags/src/client/feature_flag.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A wrapper widget that conditionally renders content based on feature flags
 class FeatureFlagWrapper extends StatefulWidget {

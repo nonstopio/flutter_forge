@@ -77,8 +77,8 @@ Everything, including `Toast`, is exported from
 | `components_test.dart` | Theme building, loaders, error view/screen, asset fallbacks, network image, wrapper brightness + loader, string helpers |
 | `integration_test.dart` | Image adapters, {{#network}}`AuthHeadersBuilder` (missing provider, failures, rebuilds), {{/network}}dialogs, toast variants |
 
-Run `dart run melos exec --scope=design_system -- flutter test`. Keep
-`dart run melos run coverage` at 100%.
+Run `melos exec --scope=design_system -- flutter test`. Keep
+`melos run coverage` at 100%.
 
 ## Gotchas
 

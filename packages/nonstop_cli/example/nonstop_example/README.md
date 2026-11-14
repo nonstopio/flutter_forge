@@ -42,8 +42,9 @@ Use Flutter 3.47.5 or newer. The root `pubspec.yaml` declares the native Dart
 workspace and Melos scripts; member packages share a single dependency lockfile.
 
 ```sh
+dart pub global activate melos   # once per machine
 dart pub get
-dart run melos bootstrap
+melos bootstrap
 ```
 
 ### Firebase
@@ -74,11 +75,11 @@ To run against the Firebase emulator suite, add
 ## Day-to-day
 
 ```sh
-dart run melos run lint       # format-check and analyze
-dart run melos run test       # run every package's tests
-dart run melos run coverage   # tests + strict 100% line-coverage gate
-dart run melos run generate   # rebuild serializers
-dart run melos run generate:i69n  # rebuild localization
+melos run lint       # format-check and analyze
+melos run test       # run every package's tests
+melos run coverage   # tests + strict 100% line-coverage gate
+melos run generate   # rebuild serializers
+melos run generate:i69n  # rebuild localization
 ```
 
 ## Adding to the monorepo

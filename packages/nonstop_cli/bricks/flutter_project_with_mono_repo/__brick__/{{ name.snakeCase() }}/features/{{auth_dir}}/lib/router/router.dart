@@ -5,7 +5,7 @@ import 'package:auth/data/services/auth_service.dart';
 import 'package:auth/ui/screens/index.dart';
 import 'package:core/core.dart' as core;
 import 'package:di/di.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class AuthRouter implements core.CoreRouter {

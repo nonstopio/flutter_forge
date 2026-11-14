@@ -1,6 +1,6 @@
 import 'package:design_system/generated/theme.dart';
 import 'package:design_system/generated/util.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 export 'components/index.dart';
 export 'constants/navigation_icons.dart';

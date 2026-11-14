@@ -1,6 +1,6 @@
 import 'package:di/di.dart';
 import 'package:core/core.dart' as core;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:localization/localization.dart';
 import 'package:nonstop_example/main.dart' as entrypoint;

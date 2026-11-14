@@ -51,7 +51,7 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 
 Doubles: mocktail `FirebaseCrashlytics` (`_Sdk`), `Logger`, `UserMetadata`. Handler tests save and restore the real `FlutterError.onError` / `PlatformDispatcher.instance.onError` in `finally`.
 
-`dart run melos exec --scope=crashlytics -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=crashlytics -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

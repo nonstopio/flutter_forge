@@ -1,6 +1,6 @@
 import 'package:core/core.dart';
 import 'package:di/di.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CoreRouteObserver extends NavigatorObserver {
   CoreRouteObserver({Logger? logger}) : _logger = logger ?? di.get<Logger>();

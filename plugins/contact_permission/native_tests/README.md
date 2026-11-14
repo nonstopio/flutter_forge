@@ -35,7 +35,7 @@ No test requests real contact access. Device integration tests remain a separate
 validation boundary.
 
 The production plugin now uses Android API 24 and iOS 15 deployment minima,
-matching the [Flutter 3.47 support matrix](https://docs.flutter.dev/reference/supported-platforms).
+matching the [Flutter 3.50 support matrix](https://docs.flutter.dev/reference/supported-platforms).
 Its Android build follows the [Flutter plugin Kotlin migration](https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors).
 AndroidX Core stays at 1.18.0 because 1.19.0 requires compile SDK 37, above this
-plugin's compile SDK 36. AGP 9.4.1 and kotlinx.coroutines 1.11.0 are pinned.
+plugin's compile SDK 36. AGP 9.3.1 and kotlinx.coroutines 1.11.0 are pinned.

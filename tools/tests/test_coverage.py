@@ -82,6 +82,16 @@ extension Empty on Function {}
         self.assertIn('test/full_coverage_test.dart', run.call_args.args[0])
         self.assertNotIn('test/example_test.dart', run.call_args.args[0])
 
+    def test_driver_compile_error_is_reported_as_driver_breakage(self):
+        (self.package / 'pubspec.yaml').write_text('name: example\ndependencies:\n  flutter:\n    sdk: flutter\n')
+        def fail(args, package, log, env):
+            log.write(b'coverage/flutter_coverage_runner.dart:12:3: Error: No named parameter.\n')
+            return False
+        with patch.object(gate, 'flutter_command', return_value=['flutter']), \
+             patch.object(gate, 'command', side_effect=fail):
+            result = gate.run_package(self.entry, self.root)
+        self.assertIn('Coverage driver no longer compiles', result['reason'])
+
     def test_hooks_include_commands_but_not_tests_or_nested_templates(self):
         hooks = self.root / 'hooks'
         (hooks / 'commands').mkdir(parents=True)
@@ -132,8 +142,8 @@ extension Empty on Function {}
         self.assertEqual(args[0], str(sdk / 'bin/cache/dart-sdk/bin/dart'))
         self.assertEqual(args[1], f'--packages={config}')
         driver = Path(args[2]).read_text()
-        self.assertIn('watcher.libraryNames = null;', driver)
-        self.assertIn('Function.apply(const FlutterTestRunner().runTests', driver)
+        self.assertIn('Set<String>? get libraryNames => null;', driver)
+        self.assertIn('Function.apply(', driver)
         self.assertEqual(config.read_text(), '{}')
 
     def test_command_timeout_returns_failure_and_writes_diagnostic(self):

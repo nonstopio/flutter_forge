@@ -24,15 +24,5 @@ final class MelosCommand extends CliCommand {
       arguments: ['pub', 'get'],
       workingDirectory: appName,
     );
-
-    await runChecked(
-      context,
-      runProcess: runProcess,
-      startMessage: 'Running melos bootstrap',
-      endMessage: 'Dependencies installed',
-      executable: 'dart',
-      arguments: ['run', 'melos', 'bootstrap'],
-      workingDirectory: appName,
-    );
   }
 }

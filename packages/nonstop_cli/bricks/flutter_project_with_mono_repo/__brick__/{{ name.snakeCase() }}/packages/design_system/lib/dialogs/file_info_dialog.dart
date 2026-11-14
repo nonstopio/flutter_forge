@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:design_system/toast/toasts.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 class FileInfoDialog extends StatelessWidget {

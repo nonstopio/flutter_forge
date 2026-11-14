@@ -1,5 +1,5 @@
 import 'package:dzod/dzod.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../widgets/schema_display.dart';
 import '../../widgets/validation_card.dart';

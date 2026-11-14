@@ -1,7 +1,7 @@
 import 'package:design_system/design_system.dart' as ds;
 import 'package:design_system/utils/extensions/string.dart';
 import 'package:design_system/generated/theme.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:localization/localization.dart';
 

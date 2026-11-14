@@ -27,11 +27,12 @@ that points the other way is a design error, not a shortcut. Fix the boundary.
 
 ## First-time setup
 
-Requires Flutter **3.47.5 or newer** (`flutter --version`). With FVM: `fvm use 3.47.5`.
+Requires Flutter **3.47.5 or newer** (`flutter --version`). With FVM: `fvm use 3.50.0` (the version CI uses).
 
 ```sh
-dart pub get                  # resolves the whole workspace, one pubspec.lock
-dart run melos bootstrap      # links members, IDE config
+dart pub global activate melos   # once per machine; defers to the workspace-pinned version
+dart pub get                     # resolves the whole workspace, one pubspec.lock
+melos bootstrap                  # links members, IDE config
 ```
 
 {{#firebase}}Optional, for Firebase-backed modules (the app boots without it):
@@ -56,18 +57,18 @@ Every environment value is a `--dart-define` declared in
 
 ## Day-to-day commands
 
-Always run from the repository root. Use `dart run melos ...` so the pinned
+Always run from the repository root. Use `melos ...` so the pinned
 Melos version is used (a global `melos` also works if versions match).
 
 | Command | What it does |
 |---|---|
-| `dart run melos run lint` | Format check + `dart analyze --fatal-infos` over all workspace code |
-| `dart run melos run test` | Every package's tests |
-| `dart run melos run coverage` | All tests + strict 100% line-coverage gate (CI runs this) |
-| `dart run melos run fix` | `dart fix --apply` in every package |
-| `dart run melos run generate` | `build_runner` in packages that use it (`*.g.dart`) |
-| `dart run melos run generate:i69n` | Regenerate `packages/localization` strings |
-| `dart run melos run clean:flutter` | `flutter clean` everywhere |
+| `melos run lint` | Format check + `dart analyze --fatal-infos` over all workspace code |
+| `melos run test` | Every package's tests |
+| `melos run coverage` | All tests + strict 100% line-coverage gate (CI runs this) |
+| `melos run fix` | `dart fix --apply` in every package |
+| `melos run generate` | `build_runner` in packages that use it (`*.g.dart`) |
+| `melos run generate:i69n` | Regenerate `packages/localization` strings |
+| `melos run clean:flutter` | `flutter clean` everywhere |
 
 Workspace operations (adding packages, dependencies, scripts) are in the
 `melos-workspace` skill. A new feature end to end is in the `new-feature` skill.
@@ -119,8 +120,8 @@ testing) are in the `flutter-best-practices` skill; visual rules are in the
 
 A change is complete only when all of these hold. Report any you did not run.
 
-1. `dart run melos run lint` passes.
-2. `dart run melos run coverage` passes (100% line coverage, no missing tests).
+1. `melos run lint` passes.
+2. `melos run coverage` passes (100% line coverage, no missing tests).
 3. New behavior has tests for success, invalid input, failure and cleanup.
 4. Docs that describe the change are updated in the same change: the member's
    `CLAUDE.md` and `README.md`, or this file when a rule or command changed. A
@@ -201,7 +202,7 @@ are not alternatives. Silence reads as "I did not think about it".
 
 Never name a cause you have not verified. In this repo the checks are cheap:
 `git status` / `git diff`, `grep` for callers, `flutter test` on one package,
-`dart run melos run lint`, `dart run melos run coverage`, and the app's logs
+`melos run lint`, `melos run coverage`, and the app's logs
 from `flutter run`. If a claim can be checked, check it before saying it, not
 after the USER pushes back.
 

@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 env:
-  FLUTTER_VERSION: "3.47.5"
+  FLUTTER_VERSION: "3.50.0"
 
 jobs:
   # Test only packages changed since the base (plus their dependents). Shared
@@ -24,6 +24,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+      - run: dart pub global activate melos 8.8.0
       - run: flutter pub get --enforce-lockfile
       - id: select
         env:
@@ -34,7 +35,7 @@ jobs:
             packages=$(dart pub workspace list --json | jq -c --arg root "$PWD" \
               '[.packages[].path | if . == $root then "." else ltrimstr($root + "/") end]')
           else
-            packages=$(dart run melos list --diff="$BASE" --include-dependents --parsable --relative | jq -Rsc 'split("\n") | map(select(. != ""))')
+            packages=$(melos list --diff="$BASE" --include-dependents --parsable --relative | jq -Rsc 'split("\n") | map(select(. != ""))')
           fi
           echo "packages=$packages" >> "$GITHUB_OUTPUT"
           echo "Testing: $packages"
@@ -47,6 +48,7 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           cache: true
+      - run: dart pub global activate melos 8.8.0
       - uses: actions/setup-python@v7
         with:
           python-version: "3.x"
@@ -55,7 +57,7 @@ jobs:
       - name: Verify coverage gate behavior
         run: python3 -m unittest discover -s tools/tests
       - name: Check formatting and analyze workspace
-        run: dart run melos run lint
+        run: melos run lint
 
   # One job per selected package; packages are independent, so they run in parallel.
   test:

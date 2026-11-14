@@ -24,16 +24,20 @@ ROOT = Path(__file__).resolve().parents[1]
 RUNTIME_CRASH = b'Shell subprocess crashed with segmentation fault'
 
 # Run the installed Flutter tool through its test-runner injection point. The
-# stock CLI cannot request truly unfiltered coverage: an empty package selection
-# disables VM filters but also discards every line when formatting LCOV. Setting
-# the collector's nullable libraryNames to null handles both stages correctly.
-# This does not modify the SDK or coverage dependency. Function.apply forwards
-# Flutter's entire runTests signature, including optional arguments, unchanged.
+# stock CLI cannot request truly unfiltered coverage: a package selection only
+# reports `package:` libraries, which drops tool/, bin/ and hook sources imported
+# by path. The command's own collector is immutable (its libraryNames is final),
+# so this driver drops --coverage, enables the VM service, and attaches its own
+# collector whose libraryNames getter is null (accept every library), then writes
+# coverage/lcov.info itself. This does not modify the SDK or coverage dependency.
+# Function.apply forwards Flutter's entire runTests signature unchanged.
 FLUTTER_COVERAGE_RUNNER = """\
 import 'dart:io';
 import 'package:flutter_tools/runner.dart' as runner;
 import 'package:flutter_tools/src/cache.dart';
 import 'package:flutter_tools/src/commands/test.dart';
+import 'package:flutter_tools/src/context/tool_context.dart';
+import 'package:flutter_tools/src/device.dart';
 import 'package:flutter_tools/src/globals.dart' as globals;
 import 'package:flutter_tools/src/test/coverage_collector.dart';
 import 'package:flutter_tools/src/test/runner.dart';
@@ -44,25 +48,53 @@ import 'package:flutter_tools/src/isolated/build_targets.dart';
 import 'package:flutter_tools/src/base/template.dart';
 import 'package:flutter_tools/src/isolated/mustache_template.dart';
 
+class AllLibrariesCollector extends CoverageCollector {
+  AllLibrariesCollector({
+    required super.packagesPath,
+    required super.toolContext,
+    super.resolver,
+  }) : super(verbose: false);
+
+  @override
+  Set<String>? get libraryNames => null;
+}
+
 class AllSourceTestRunner implements FlutterTestRunner {
+  AllSourceTestRunner(this.toolContext);
+
+  final ToolContext toolContext;
+
   @override
   dynamic noSuchMethod(Invocation call) {
     if (call.memberName != #runTests) return super.noSuchMethod(call);
-    final watcher = call.namedArguments[#watcher];
-    if (watcher is! CoverageCollector) {
-      throw StateError('Expected coverage collector, got $watcher');
-    }
-    watcher.libraryNames = null;
-    return Function.apply(const FlutterTestRunner().runTests,
-        call.positionalArguments, call.namedArguments);
+    return _run(call);
+  }
+
+  Future<int> _run(Invocation call) async {
+    final options = call.namedArguments[#debuggingOptions] as DebuggingOptions;
+    final packages = options.buildInfo.packageConfigPath;
+    final collector = AllLibrariesCollector(
+      packagesPath: packages,
+      toolContext: toolContext,
+      resolver: await CoverageCollector.getResolver(packages),
+    );
+    final named = Map<Symbol, dynamic>.of(call.namedArguments);
+    named[#watcher] = collector;
+    final result = await Function.apply(
+        FlutterTestRunner(toolContext: toolContext).runTests,
+        call.positionalArguments, named) as int;
+    if (!await collector.collectCoverageData('coverage/lcov.info')) return 1;
+    return result;
   }
 }
 
 Future<void> main(List<String> args) async {
   Cache.flutterRoot = Platform.environment['FLUTTER_ROOT']!;
-  await runner.run(args, () => [TestCommand(
-      testRunner: AllSourceTestRunner(),
-      nativeAssetsBuilder: globals.nativeAssetsBuilder)],
+  args = [...args.where((arg) => arg != '--coverage'), '--enable-vmservice'];
+  await runner.run(args, (deps) => [TestCommand(
+      toolContext: deps.toolContext,
+      testRunner: AllSourceTestRunner(deps.toolContext),
+      nativeAssetsBuilder: deps.toolContext.nativeAssetsBuilder)],
       shutdownHooks: globals.shutdownHooks,
       overrides: {
         FlutterHookRunner: () => FlutterHookRunnerNative(),
@@ -246,6 +278,12 @@ def run_package(entry: dict, root: Path, report_only: bool = False) -> dict:
                 args += [str(fixture.relative_to(package)), *[str(test.relative_to(package)) for test in tests[1:]]]
                 if not command(args, package, log, env):
                     summary['reason'] = f'Tests failed; see {coverage.relative_to(root)}/test.log'
+                    # The driver uses unstable flutter_tools internals; name that cause
+                    # instead of blaming the package's tests after a Flutter upgrade.
+                    log.flush()
+                    if flutter and 'flutter_coverage_runner.dart:' in (coverage / 'test.log').read_text(errors='replace'):
+                        summary['reason'] = ('Coverage driver no longer compiles against this Flutter SDK '
+                                             f'(flutter_tools internals changed); see {coverage.relative_to(root)}/test.log')
                     return summary
                 if not flutter and not command(['dart', 'run', 'coverage:format_coverage', '--lcov', '--in=coverage/raw', '--out=coverage/lcov.info', '--report-on=.'], package, log, env):
                     summary['reason'] = 'Coverage conversion failed'

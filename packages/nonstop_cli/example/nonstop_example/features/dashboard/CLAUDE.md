@@ -72,7 +72,7 @@ sign-out cancel does nothing, confirm calls `onSignOut` once;
 `ProfileTabScreen()` hides settings and sign-out; `PlaceholderTab` action fires. Pattern: real `GoRouter` with a recording `redirect` and counter
 callbacks, `setUp(core.init)` / `tearDown(di.reset)`.
 
-`dart run melos exec --scope=dashboard -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=dashboard -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

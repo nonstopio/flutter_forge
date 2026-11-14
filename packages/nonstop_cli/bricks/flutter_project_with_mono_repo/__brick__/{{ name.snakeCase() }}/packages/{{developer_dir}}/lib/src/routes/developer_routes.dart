@@ -2,7 +2,7 @@ import 'package:core/core.dart' as core;
 import 'package:developer/src/screens/index.dart';
 import 'package:di/di.dart';
 import 'package:feature_flags/feature_flags.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class DeveloperRoutes {

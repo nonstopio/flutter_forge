@@ -79,7 +79,7 @@ lib/
 Pattern: `mocktail` mocks of `FirebaseAuth`, `User`, `IdTokenResult`, `AuthService`;
 `setUp(core.init)` / `tearDown(di.reset)` in widget tests.
 
-`dart run melos exec --scope=auth -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=auth -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

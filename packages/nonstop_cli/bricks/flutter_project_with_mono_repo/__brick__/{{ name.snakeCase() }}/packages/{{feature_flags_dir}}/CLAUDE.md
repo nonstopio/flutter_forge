@@ -53,7 +53,7 @@ Each folder has an `index.dart` barrel.
 
 Doubles: mocktail `FeatureFlagProvider` (`_Provider`), `FirebaseRemoteConfig` (`_RemoteConfig`), `Logger` (`_Logger`).
 
-`dart run melos exec --scope=feature_flags -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=feature_flags -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

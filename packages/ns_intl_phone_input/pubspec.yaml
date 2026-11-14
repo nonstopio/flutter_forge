@@ -7,9 +7,10 @@ issue_tracker: https://github.com/nonstopio/flutter_forge/tree/main/packages/ns_
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.0"
 
 dependencies:
+  material_ui: ^1.11.0
   flutter:
     sdk: flutter
   mask_text_input_formatter: ^2.9.0

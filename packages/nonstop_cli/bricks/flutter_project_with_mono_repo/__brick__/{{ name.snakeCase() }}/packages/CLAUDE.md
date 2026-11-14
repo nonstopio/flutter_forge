@@ -50,7 +50,7 @@ same-row dependency needs a reason stated in the change.
 - **`di`**: the only place `get_it` is imported. Everything else uses the
   `DependencyInjection` interface via `di`.
 - **`localization`**: edit `lib/messages.i69n.yaml`, then run
-  `dart run melos run generate:i69n`. Never edit `messages.i69n.dart`. Keys are
+  `melos run generate:i69n`. Never edit `messages.i69n.dart`. Keys are
   grouped by area (`generic`, `errors`{{#auth}}, `auth`{{/auth}}, ...); add to the right group.
 - **`design_system`**: `lib/generated/theme.dart` comes from Material Theme
   Builder; replace the file wholesale when the palette changes. Shared
@@ -60,7 +60,7 @@ same-row dependency needs a reason stated in the change.
 {{#network}}- **`network`**: bearer headers are attached only for the configured API origin;
   logs omit headers, query values and bodies. Keep both properties when
   changing interceptors. `network_response.g.dart` is generated: run
-  `dart run melos run generate`.
+  `melos run generate`.
 {{/network}}{{#notifications}}- **`notifications`**: owns SDK subscriptions only. Navigation and toasts are
   callbacks supplied by the app.
 {{/notifications}}

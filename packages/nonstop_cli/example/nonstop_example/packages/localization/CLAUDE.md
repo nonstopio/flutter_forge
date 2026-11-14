@@ -38,7 +38,7 @@ Exported from `package:localization/localization.dart`.
 
 ## Common changes
 
-- **Add a string:** add the key to the right group in `lib/messages.i69n.yaml`, run `dart run melos run generate:i69n` (build_runner + `dart format lib/messages.i69n.dart`), then use `strings.<group>.<key>`. Commit the YAML and the regenerated `.i69n.dart` together.
+- **Add a string:** add the key to the right group in `lib/messages.i69n.yaml`, run `melos run generate:i69n` (build_runner + `dart format lib/messages.i69n.dart`), then use `strings.<group>.<key>`. Commit the YAML and the regenerated `.i69n.dart` together.
 - **Add a parameterised string:** `key(String x): "text $x"` in the YAML, regenerate, call `strings.<group>.key(x)`.
 - **Add a locale:** add `lib/messages_<code>.i69n.yaml`, list the code under `locales` and the file under `generate_for` in `build.yaml`, regenerate, then list the code in `supportedLocales` and pick its generated class in `messages` (the steps in the `LocalizationProvider` doc comment); extend `test/localization_test.dart` for the new match and fallback.
 
@@ -46,7 +46,7 @@ Exported from `package:localization/localization.dart`.
 
 `test/localization_test.dart` covers `getBestMatchingLocale` (supported, unsupported, empty list), `currentLocale`, `messages`, `supportedLocales` and `isLocaleSupported`. Generated `*.i69n.dart` is excluded from the coverage gate (`tool/coverage.dart`), so new keys need no tests; new logic in `lib/src/` does.
 
-Run: `dart run melos exec --scope=localization -- flutter test`. `dart run melos run coverage` must stay 100%.
+Run: `melos exec --scope=localization -- flutter test`. `melos run coverage` must stay 100%.
 
 ## Gotchas
 

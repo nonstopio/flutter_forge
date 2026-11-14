@@ -41,5 +41,5 @@ owns nothing else. Read the root `CLAUDE.md` first.
 notification lifecycle{{/notifications}}{{^notifications}} and Firebase-absent boot{{/notifications}}{{/firebase}}{{^firebase}} and entrypoint{{/firebase}}. Adding a bootstrap step means adding a test that proves
 it runs, and that the app still boots when it is unavailable.
 
-Run from the root: `dart run melos run coverage`. For a quick loop:
+Run from the root: `melos run coverage`. For a quick loop:
 `cd apps/{{name.snakeCase()}} && flutter test`.

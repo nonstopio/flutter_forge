@@ -1,41 +1,34 @@
-import 'package:flutter/material.dart';
-
-// Basic examples
-import 'examples/basic/boolean_null_example.dart';
-import 'examples/basic/number_validations_example.dart';
-import 'examples/basic/string_validation_example.dart';
-import 'examples/basic/user_schema_example.dart';
-
-// Complex examples
-import 'examples/complex/array_advanced_example.dart';
-import 'examples/complex/enum_example.dart';
-import 'examples/complex/object_manipulation_example.dart';
-import 'examples/complex/record_example.dart';
-import 'examples/complex/tuple_example.dart';
+import 'package:material_ui/material_ui.dart';
 
 // Advanced examples
 import 'examples/advanced/coercion_example.dart';
 import 'examples/advanced/discriminated_union_example.dart';
 import 'examples/advanced/pipeline_example.dart';
 import 'examples/advanced/recursive_schema_example.dart';
-
 // Async examples
 import 'examples/async/api_validation_example.dart';
 import 'examples/async/database_validation_example.dart';
-
+// Basic examples
+import 'examples/basic/boolean_null_example.dart';
+import 'examples/basic/number_validations_example.dart';
+import 'examples/basic/string_validation_example.dart';
+import 'examples/basic/user_schema_example.dart';
+// Complex examples
+import 'examples/complex/array_advanced_example.dart';
+import 'examples/complex/enum_example.dart';
+import 'examples/complex/object_manipulation_example.dart';
+import 'examples/complex/record_example.dart';
+import 'examples/complex/tuple_example.dart';
 // Error handling examples
 import 'examples/error_handling/error_code_system_example.dart';
 import 'examples/error_handling/error_formatting_example.dart';
-
+// Real world examples
+import 'examples/real_world/authentication_schema_example.dart';
 // Schema composition examples
 import 'examples/schema_composition/introspection_example.dart';
 import 'examples/schema_composition/json_schema_generation_example.dart';
-
 // Security examples
 import 'examples/security/security_best_practices_example.dart';
-
-// Real world examples
-import 'examples/real_world/authentication_schema_example.dart';
 
 class ExampleItem {
   final String title;

@@ -24,7 +24,7 @@ import 'package:firebase_remote_config_platform_interface/firebase_remote_config
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:flutter_test/flutter_test.dart';

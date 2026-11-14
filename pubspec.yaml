@@ -49,7 +49,7 @@ melos:
       updateGitTagRefs: false
       linkToCommits: false
       hooks:
-        preCommit: dart run melos run update_nonstop_cli_version && dart run melos run update_nonstop_cli_bundles
+        preCommit: melos run update_nonstop_cli_version && melos run update_nonstop_cli_bundles
 
   scripts:
     lint:

@@ -36,8 +36,8 @@ touch and the test to add._
 
 ## Tests
 
-Run `dart run melos exec --scope={{ name.snakeCase() }} -- flutter test`. Keep
-`dart run melos run coverage` at 100%: the gate fails a member without tests.
+Run `melos exec --scope={{ name.snakeCase() }} -- flutter test`. Keep
+`melos run coverage` at 100%: the gate fails a member without tests.
 
 ## Gotchas
 

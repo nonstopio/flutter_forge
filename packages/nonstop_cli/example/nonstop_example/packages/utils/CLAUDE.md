@@ -43,7 +43,7 @@ Exported from `package:utils/utils.dart`.
 
 `test/formatters_test.dart` covers decimal formatting, `asScore`, `compact` (including a `de` locale via `Intl.withLocale`), all `asTime` boundaries (0, 59, 60, 61, 3599, 3600, 3660) plus custom labels, and every `formatRelative` branch with an injected `now`, one real-clock call and custom labels. Pattern: `Map<input, expected>` tables iterated in a loop.
 
-Run: `dart run melos exec --scope=utils -- flutter test`. `dart run melos run coverage` must stay 100%.
+Run: `melos exec --scope=utils -- flutter test`. `melos run coverage` must stay 100%.
 
 ## Gotchas
 

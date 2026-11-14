@@ -2,7 +2,7 @@ library;
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A mixin that provides safe state updates for StatefulWidget classes.
 mixin SafeStateMixin<T extends StatefulWidget> on State<T> {

@@ -1,7 +1,7 @@
 import 'package:design_system/components/app_asset_image.dart';
 import 'package:design_system/components/network_url_image.dart';
 import 'package:design_system/utils/index.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 enum HeaderType {
   image,

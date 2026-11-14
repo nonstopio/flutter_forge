@@ -24,7 +24,7 @@ import 'package:firebase_core_platform_interface/test.dart';
 {{#notifications}}import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 {{/notifications}}
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 {{#auth}}import 'package:go_router/go_router.dart';
 {{/auth}}
 import 'package:flutter_test/flutter_test.dart';

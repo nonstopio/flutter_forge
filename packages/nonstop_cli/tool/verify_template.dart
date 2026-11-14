@@ -72,8 +72,8 @@ Future<void> main(
         output.path
       ],
       cli);
-  await run('dart', ['run', 'melos', 'run', 'lint'], workspace);
-  await run('dart', ['run', 'melos', 'run', 'coverage'], workspace);
+  await run('melos', ['run', 'lint'], workspace);
+  await run('melos', ['run', 'coverage'], workspace);
   await run('flutter', ['build', 'web'], p.join(workspace, 'apps', name));
   report('Verified $profile: analysis, tests, 100% coverage, web build.');
 }
