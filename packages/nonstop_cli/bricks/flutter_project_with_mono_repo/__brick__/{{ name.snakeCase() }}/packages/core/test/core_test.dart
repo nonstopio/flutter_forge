@@ -4,7 +4,7 @@ import 'package:core/developer/emulators.dart' as emulators;
 import 'package:core/core.dart';
 import 'package:core/logger/talker_logger_impl.dart';
 import 'package:di/di.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:talker_flutter/talker_flutter.dart';

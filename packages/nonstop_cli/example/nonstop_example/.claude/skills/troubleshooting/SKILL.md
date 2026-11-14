@@ -18,7 +18,7 @@ coverage bar, or adding `// ignore:` without an explanation.
 2. `git status`: is the failure caused by an uncommitted change?
 3. `dart pub get` at the root: does the workspace resolve?
 4. The failing command, alone, for one package
-   (`dart run melos exec --scope=<pkg> -- flutter test`).
+   (`melos exec --scope=<pkg> -- flutter test`).
 
 ## Resolution and bootstrap
 
@@ -27,30 +27,30 @@ coverage bar, or adding `// ignore:` without an explanation.
 | `requires Flutter SDK version >=3.47.5` | Old SDK on `PATH` | Upgrade Flutter or switch FVM version |
 | `... is not a workspace member` / package resolved separately | Missing `resolution: workspace` or not listed under root `workspace:` | Add both (see `melos-workspace` skill) |
 | `version solving failed` after adding a dep | Two members need incompatible versions | Align constraints; one version per package in a workspace |
-| Stale imports / `Target of URI doesn't exist` | Links out of date | `dart pub get && dart run melos bootstrap`; restart the analysis server |
-| Melos command not found / wrong version | Global melos differs | Use `dart run melos ...` |
+| Stale imports / `Target of URI doesn't exist` | Links out of date | `dart pub get && melos bootstrap`; restart the analysis server |
+| Melos command not found / wrong version | Melos not activated globally | `dart pub global activate melos` (the global launcher defers to the workspace-pinned version) |
 
 ## Lint and analyzer
 
-- `dart run melos run lint` runs `tool/check.dart`: format check, then
+- `melos run lint` runs `tool/check.dart`: format check, then
   `dart analyze --fatal-infos`. **Infos fail the build.**
 - Formatting: `dart format <files>` (the Claude hook formats edited files
   automatically).
 - `require_trailing_commas` is on; the formatter adds them.
-- Try `dart run melos run fix:dry` then `fix` for mechanical fixes.
+- Try `melos run fix:dry` then `fix` for mechanical fixes.
 
 ## Codegen
 
 | Symptom | Fix |
 |---|---|
-| `*.g.dart` missing or outdated | `dart run melos run generate` |
+| `*.g.dart` missing or outdated | `melos run generate` |
 | `Conflicting outputs` | Already handled by `--delete-conflicting-outputs`; if it persists, delete the package's `.dart_tool/build` and rerun |
-| New string not found on `strings.` | Key added to `messages.i69n.yaml`? Then `dart run melos run generate:i69n` |
+| New string not found on `strings.` | Key added to `messages.i69n.yaml`? Then `melos run generate:i69n` |
 | i69n YAML parse error | Quote values containing `:` or `#`; keep 2-space indentation |
 
 Never hand-edit generated files; the hook blocks it.
 
-## Coverage gate (`dart run melos run coverage`)
+## Coverage gate (`melos run coverage`)
 
 | Output | Meaning | Fix |
 |---|---|---|
@@ -81,8 +81,8 @@ validation run.
   `android/app/build.gradle(.kts)`; Gradle/AGP errors after upgrades usually
   need `flutter clean` and matching Kotlin/AGP versions.
 - **Web**: `flutter build web` from the app directory; CI runs this too.
-- Last resort for weird state: `dart run melos run clean:flutter`, then
-  `dart pub get && dart run melos bootstrap`.
+- Last resort for weird state: `melos run clean:flutter`, then
+  `dart pub get && melos bootstrap`.
 
 ## Report back
 

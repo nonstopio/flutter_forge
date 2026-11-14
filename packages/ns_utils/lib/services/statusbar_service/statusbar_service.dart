@@ -1,6 +1,6 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 const Duration _delayDuration = Duration(milliseconds: 500);
 

@@ -51,7 +51,7 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 
 - **Add an interceptor:** add it under `lib/src/interceptors/`, export it from `interceptors/index.dart`, add it in `DioNetworkClient._setupDio`. Order matters: auth is added before logging. Test through `DioNetworkClient` with the `_Adapter` fake in `test/dio_network_client_test.dart`.
 - **Map a new status code:** add a subclass in `network_exceptions.dart` with a `strings.errors.*` message (new key in `packages/localization`), add the case in `_mapDioException`, add the row to the status table test in `dio_network_client_test.dart` and to the list in `test/models_test.dart`.
-- **Change an envelope model:** edit `network_response.dart`, run `dart run melos run generate`, extend `test/models_test.dart`.
+- **Change an envelope model:** edit `network_response.dart`, run `melos run generate`, extend `test/models_test.dart`.
 
 ## Tests
 
@@ -64,10 +64,10 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 
 Doubles: `_Adapter` (`HttpClientAdapter`), `_Tokens`/`_DelayedTokens` (`AuthTokenProvider`), `_Logger` recording messages.
 
-`dart run melos exec --scope=network -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=network -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 
-- `network_response.g.dart` is generated: `dart run melos run generate`.
+- `network_response.g.dart` is generated: `melos run generate`.
 - `ErrorResponse.toJson()` keeps `error` as an object, not a map; tests reassign it before `fromJson`.
 - `sendTimeout` is dropped on web (`kIsWeb`) because Dio rejects it without a body.

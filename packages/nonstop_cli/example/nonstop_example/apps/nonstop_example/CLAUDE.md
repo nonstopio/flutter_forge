@@ -79,7 +79,7 @@ lib/
 
 Pattern: hand-written `_Logger`/`_Client` fakes, `mocktail` + `MockPlatformInterfaceMixin`, `tearDown(di.reset)`.
 
-`dart run melos exec --scope=nonstop_example -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=nonstop_example -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

@@ -10,20 +10,20 @@ members under `workspace:` and holds Melos config under `melos:`. There is no
 `melos.yaml`. Every member declares `resolution: workspace`, so the whole repo
 resolves to **one** root `pubspec.lock`.
 
-Run everything from the repository root with `dart run melos ...`.
+Run everything from the repository root with `melos ...`.
 
 ## Everyday commands
 
 | Goal | Command |
 |---|---|
-| Resolve + link everything | `dart pub get && dart run melos bootstrap` |
-| List members | `dart run melos list` (`--long` for paths) |
-| Lint / test / coverage | `dart run melos run lint` / `test` / `coverage` |
-| Codegen | `dart run melos run generate` (json_serializable), `generate:i69n` |
-| One command in every package | `dart run melos exec -- <command>` |
-| Only some packages | `dart run melos exec --scope={{#network}}network{{/network}}{{^network}}core{{/network}} -- flutter test` |
-| Packages that depend on X | `dart run melos list --depends-on=core` |
-| Changed since main (+ dependents) | `dart run melos list --diff=origin/main --include-dependents` |
+| Resolve + link everything | `dart pub get && melos bootstrap` |
+| List members | `melos list` (`--long` for paths) |
+| Lint / test / coverage | `melos run lint` / `test` / `coverage` |
+| Codegen | `melos run generate` (json_serializable), `generate:i69n` |
+| One command in every package | `melos exec -- <command>` |
+| Only some packages | `melos exec --scope={{#network}}network{{/network}}{{^network}}core{{/network}} -- flutter test` |
+| Packages that depend on X | `melos list --depends-on=core` |
+| Changed since main (+ dependents) | `melos list --diff=origin/main --include-dependents` |
 
 Useful filters: `--scope=<glob>`, `--ignore=<glob>`, `--depends-on=<pkg>`,
 `--dir-exists=test`, `--flutter` / `--no-flutter`.
@@ -59,7 +59,7 @@ root `workspace:` list and sets `resolution: workspace` in its pubspec. Then:
 5. Fill in the starter `<member>/CLAUDE.md` that `nonstop create` adds, using
    the sections of an existing member (for example `{{#analytics}}packages/analytics{{/analytics}}{{^analytics}}packages/core{{/analytics}}/CLAUDE.md`): purpose, public API, layout, rules,
    common changes, tests, gotchas.
-6. `dart pub get && dart run melos bootstrap`, then `lint` and `coverage`.
+6. `dart pub get && melos bootstrap`, then `lint` and `coverage`.
 7. Respect the layer rules in `packages/CLAUDE.md` / `features/CLAUDE.md`, and
    add the member to the root `README.md` module table.
 

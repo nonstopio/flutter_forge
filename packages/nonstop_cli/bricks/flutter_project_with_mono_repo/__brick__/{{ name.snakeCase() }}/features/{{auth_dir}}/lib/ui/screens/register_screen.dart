@@ -6,7 +6,7 @@ import 'package:auth/ui/components/header_builder.dart';
 import 'package:core/logger/logger.dart';
 import 'package:design_system/toast/toasts.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as ui_auth;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:localization/localization.dart';
 
 class RegisterScreen extends StatelessWidget {

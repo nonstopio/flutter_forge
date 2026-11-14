@@ -26,7 +26,7 @@ Only one component should own each subscription or disposable service.
 3. Write tests for success, invalid input, platform failure and lifecycle cleanup.
 4. Expose feature routes and compose them in the app router.
 5. Register implementations in bootstrap; keep registration separate from widget rendering.
-6. Run `dart run melos run lint` and `dart run melos run coverage` before committing.
+6. Run `melos run lint` and `melos run coverage` before committing.
 
 ```dart
 abstract interface class GreetingRepository {

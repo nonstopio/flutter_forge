@@ -8,11 +8,12 @@ environment:
   flutter: ">=3.47.5"
 
 dependencies:
+  material_ui: ^1.4.0
   flutter:
     sdk: flutter
   cached_network_image: ^4.0.0
   flutter_svg: ^2.2.0
-  google_fonts: ^8.2.1
+  google_fonts: ^9.0.0
   iconsax_flutter: ^1.0.1
   loader_overlay: ^5.0.0
   toastification: ^3.0.3

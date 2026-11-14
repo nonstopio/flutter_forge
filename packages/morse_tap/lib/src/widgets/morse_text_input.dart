@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../morse_algorithm.dart';
 
 /// A widget that converts tap input to Morse code and updates a text controller

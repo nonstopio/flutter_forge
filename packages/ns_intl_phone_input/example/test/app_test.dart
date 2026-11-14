@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ns_intl_phone_input/ns_intl_phone_input.dart';
 import 'package:ns_intl_phone_input_example/home/home_screen.dart';
 import 'package:ns_intl_phone_input_example/main.dart' as app;

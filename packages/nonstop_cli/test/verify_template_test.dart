@@ -78,8 +78,8 @@ void main() {
           ],
           cli,
         ),
-        ('dart', ['run', 'melos', 'run', 'lint'], workspace),
-        ('dart', ['run', 'melos', 'run', 'coverage'], workspace),
+        ('melos', ['run', 'lint'], workspace),
+        ('melos', ['run', 'coverage'], workspace),
         (
           'flutter',
           ['build', 'web'],
@@ -180,8 +180,14 @@ void main() {
         ),
         throwsA(isA<ProcessException>()
             .having((error) => error.errorCode, 'errorCode', 37)
-            .having((error) => error.executable, 'executable',
-                failedStep == 3 ? 'flutter' : 'dart')
+            .having(
+                (error) => error.executable,
+                'executable',
+                failedStep == 3
+                    ? 'flutter'
+                    : failedStep == 0
+                        ? 'dart'
+                        : 'melos')
             .having((error) => error.arguments, 'arguments',
                 predicate<List<String>>((args) => args == calls.last.$2))
             .having(

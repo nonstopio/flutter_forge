@@ -2,15 +2,15 @@
 
 The [verified coverage report](coverage-report.md) records the package totals, generated-template builds, native coverage, and dependency compatibility limits.
 
-Use Flutter 3.47.5 (Dart 3.13.4), Python 3.10 or newer, and Node.js 24 or newer. The repository uses a native Dart pub workspace and Melos 8; configuration lives in the root `pubspec.yaml`.
+Use Flutter 3.50.0, Python 3.10 or newer, and Node.js 24 or newer. The repository uses a native Dart pub workspace and Melos 8; configuration lives in the root `pubspec.yaml`.
 
 ```sh
 flutter pub get --enforce-lockfile
-dart run melos run lint
+melos run lint
 python3 -m unittest discover -s tools/tests
 python3 tools/coverage.py
 # Equivalent full coverage command:
-dart run melos run test
+melos run test
 ```
 
 The coverage command discovers workspace packages rather than selecting only folders that already have tests. It includes libraries, executable entrypoints, example applications, Mason hook packages, README synchronization, repository version/bundle tools, and the generated-template verification script. Every package must have real unit or widget tests and a nonempty report. The gate requires every executable Dart line to be hit; it compares integer counts rather than a rounded percentage. Compile-time constants and export-only libraries do not contain executable lines.

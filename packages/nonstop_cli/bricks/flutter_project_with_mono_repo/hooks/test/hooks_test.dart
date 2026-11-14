@@ -210,12 +210,6 @@ void main() {
       ],
       [
         'dart',
-        ['run', 'melos', 'bootstrap'],
-        'sample_app',
-        true
-      ],
-      [
-        'dart',
         ['format', '.'],
         'sample_app',
         true
@@ -226,7 +220,9 @@ void main() {
         .called(1);
     verify(() => logger.info(
         '  cd sample_app/apps/sample_app && flutterfire configure')).called(1);
-    verify(() => logger.info('  dart run melos run coverage')).called(1);
+    verify(() => logger.info('  dart pub global activate melos')).called(1);
+    verify(() => logger.info('  melos bootstrap')).called(1);
+    verify(() => logger.info('  melos run coverage')).called(1);
     verify(() => logger.info('  cd sample_app/apps/sample_app && flutter run'))
         .called(1);
   });
@@ -250,7 +246,7 @@ void main() {
     verifyNever(() => logger.warn(any()));
     verify(() => logger.info('Verify the workspace (from sample_app):'))
         .called(1);
-    verify(() => logger.info('  dart run melos run lint')).called(1);
+    verify(() => logger.info('  melos run lint')).called(1);
   });
 
   group('module variables', () {

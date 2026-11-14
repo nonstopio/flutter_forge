@@ -49,7 +49,7 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 ## Common changes
 
 - **Handle a new payload key or route rule:** edit `handleNotificationOpened` in `firebase_notification_client.dart`; add cases to the rejected-data loop in `test/client_test.dart` ("foreground, opened, initial and token-refresh events reach their owners").
-- **Change the device-token endpoint or payload:** edit `notification_token_manager.dart` and `device_token_models.dart` (`DeviceTokenRequest`), run `dart run melos run generate`, update "registers metadata, refreshes and unregisters" in `test/services_test.dart`.
+- **Change the device-token endpoint or payload:** edit `notification_token_manager.dart` and `device_token_models.dart` (`DeviceTokenRequest`), run `melos run generate`, update "registers metadata, refreshes and unregisters" in `test/services_test.dart`.
 - **React to a notification in the app:** pass a new callback through `NotificationConfig` from `apps/nonstop_example/lib/bootstrap.dart`; do not import app code here.
 
 ## Tests
@@ -62,11 +62,11 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 
 Doubles: mocktail `FirebaseMessaging`, `NotificationTokenManager`, `NotificationPermissionManager`, `NetworkClient`, `DeviceInfo`; broadcast `StreamController`s for FCM streams; `_Store` for `InstallationIdStore`; `SharedPreferences.setMockInitialValues`.
 
-`dart run melos exec --scope=notifications -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=notifications -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 
 - `init` needs `Logger` and `NetworkClient` in `di` first (`registerNotificationWithDI` resolves them); call `network.init` before it, as bootstrap does.
 - Backend endpoints required: `POST /device-tokens/me` and `DELETE /device-tokens/me/{deviceId}` on the configured `baseUrl`.
-- `device_token_models.g.dart` is generated: `dart run melos run generate`.
+- `device_token_models.g.dart` is generated: `melos run generate`.
 - The client's `init()` is run by `NotificationLifecycle` in the app after the first frame, not by the package `init`.

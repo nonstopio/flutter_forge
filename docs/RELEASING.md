@@ -80,7 +80,7 @@ To generate the current inventory locally:
 
 ```sh
 flutter pub get --enforce-lockfile
-dart run melos --version
+melos --version
 node tools/release/release.mjs auth
 ```
 
@@ -146,13 +146,13 @@ commits since the last package tags may be included in this first release.
 Confirm its generated version commit, package tag runs, and pub.dev versions.
 The version commit itself is excluded from recursive preparation.
 
-Release checks use Flutter **3.47.5** and the pinned **Melos 8.8.0** dependency
-from the current Dart workspace. All release commands use `dart run melos`;
+Release checks use Flutter **3.50.0** and the pinned **Melos 8.8.0** dependency
+from the current Dart workspace. All release commands use `melos`;
 global Melos activation is not required.
 
 ## CLI usage
 
-Run from a checkout with Node 22+, Flutter 3.47.5 and resolved workspace dependencies:
+Run from a checkout with Node 22+, Flutter 3.50.0 and resolved workspace dependencies:
 
 ```sh
 node tools/release/release.mjs --help

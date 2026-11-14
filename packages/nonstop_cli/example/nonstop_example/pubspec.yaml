@@ -76,7 +76,7 @@ melos:
 
     test:
       description: "Run all tests (Dart and Flutter)"
-      run: dart run melos run test:select --no-select
+      run: melos run test:select --no-select
 
     coverage:
       description: "Run every test and require 100% handwritten line coverage"

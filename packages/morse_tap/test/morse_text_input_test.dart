@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:morse_tap/morse_tap.dart';
 
 Finder _tapArea() => find.byType(GestureDetector).last;

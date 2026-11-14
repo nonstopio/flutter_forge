@@ -6,8 +6,8 @@ import 'package:connectivity_wrapper_example/screens/scaffold_example_screen.dar
 import 'package:connectivity_wrapper_example/utils/strings.dart';
 import 'package:connectivity_wrapper_example/utils/ui_helper.dart' as ui;
 import 'package:connectivity_wrapper_example/utils/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   var connected = true;

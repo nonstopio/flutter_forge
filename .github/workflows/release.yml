@@ -44,12 +44,13 @@ jobs:
           node-version: '22'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.5'
+          flutter-version: '3.50.0'
           cache: true
+      - run: dart pub global activate melos 8.8.0
       - name: Install release tools
         run: |
           flutter pub get --enforce-lockfile
-          dart run melos --version
+          melos --version
       - name: Configure release author
         run: |
           git config user.name 'github-actions[bot]'

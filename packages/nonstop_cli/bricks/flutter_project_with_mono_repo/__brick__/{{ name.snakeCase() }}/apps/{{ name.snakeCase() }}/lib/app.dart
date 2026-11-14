@@ -1,6 +1,10 @@
 import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart';
+// Third-party widgets (talker_flutter, firebase_ui_auth) still build on the
+// legacy Material library, which needs its own localizations next to material_ui's.
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart' as legacy show DefaultMaterialLocalizations;
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 
@@ -17,6 +21,7 @@ class App extends StatelessWidget {
         builder: (context, theme) => MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: strings.app.name,
+          localizationsDelegates: [legacy.DefaultMaterialLocalizations.delegate],
           theme: theme,
           routerConfig: router,
         ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [EmptyContainer] is a StatelessWidget that returns a SizedBox.shrink().
 ///

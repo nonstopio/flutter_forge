@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class DefaultLoader extends StatelessWidget {
   const DefaultLoader({super.key, this.size = 20});

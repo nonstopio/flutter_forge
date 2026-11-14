@@ -47,7 +47,7 @@ class OrdersServiceImp implements OrdersService {
 
 Models are immutable (`final` fields, `const` constructors, `Equatable` or
 value equality), with `fromJson`/`toJson` via `json_serializable` if they cross
-the wire. Run `dart run melos run generate`.
+the wire. Run `melos run generate`.
 
 ## 3. State
 
@@ -70,7 +70,7 @@ Widgets switch exhaustively on it. No service calls from widgets.
 - Build with `design_system` components and `Theme.of(context)`.
 - Every string from `strings.<group>.<key>`: add keys to
   `packages/localization/lib/messages.i69n.yaml`, then
-  `dart run melos run generate:i69n`.
+  `melos run generate:i69n`.
 - Handle loading, empty, error and data states explicitly.
 - Load the `flutter-best-practices` and `design-system` skills for widget and
   visual rules.
@@ -126,7 +126,7 @@ Add the dependency to `apps/{{name.snakeCase()}}/pubspec.yaml`.
 
 ## 8. Finish
 
-`dart run melos run lint`, `dart run melos run coverage`, run the app and try
+`melos run lint`, `melos run coverage`, run the app and try
 the flow. Add a `README.md` (purpose, routes, config) and a `CLAUDE.md`
 (match {{#auth}}`features/auth/CLAUDE.md`{{/auth}}{{^auth}}{{#dashboard}}`features/dashboard/CLAUDE.md`{{/dashboard}}{{^dashboard}}the sections of `packages/core/CLAUDE.md`{{/dashboard}}{{/auth}}), and list the feature in the root
 `README.md` module table.

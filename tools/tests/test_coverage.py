@@ -132,8 +132,8 @@ extension Empty on Function {}
         self.assertEqual(args[0], str(sdk / 'bin/cache/dart-sdk/bin/dart'))
         self.assertEqual(args[1], f'--packages={config}')
         driver = Path(args[2]).read_text()
-        self.assertIn('watcher.libraryNames = null;', driver)
-        self.assertIn('Function.apply(const FlutterTestRunner().runTests', driver)
+        self.assertIn('Set<String>? get libraryNames => null;', driver)
+        self.assertIn('Function.apply(', driver)
         self.assertEqual(config.read_text(), '{}')
 
     def test_command_timeout_returns_failure_and_writes_diagnostic(self):

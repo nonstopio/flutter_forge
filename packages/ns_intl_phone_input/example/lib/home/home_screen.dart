@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:ns_intl_phone_input/ns_intl_phone_input.dart';
 
 const samplePhoneNumber = '9876543210';

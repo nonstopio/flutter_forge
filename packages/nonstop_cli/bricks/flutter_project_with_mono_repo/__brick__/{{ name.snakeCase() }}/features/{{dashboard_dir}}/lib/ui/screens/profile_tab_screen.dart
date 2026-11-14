@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
 {{#developer}}import 'package:developer/developer.dart';
-{{/developer}}import 'package:flutter/material.dart';
+{{/developer}}import 'package:material_ui/material_ui.dart';
 import 'package:localization/localization.dart';
 
 /// Account tab: identity, settings entry points, sign out.

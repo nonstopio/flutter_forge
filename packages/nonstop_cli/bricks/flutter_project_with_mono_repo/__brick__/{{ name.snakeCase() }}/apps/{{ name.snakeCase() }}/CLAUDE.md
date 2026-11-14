@@ -83,7 +83,7 @@ lib/
 
 Pattern: {{#notifications}}hand-written `_Logger`/`_Client` fakes, {{/notifications}}{{#firebase_sdk_mocks}}`mocktail` + `MockPlatformInterfaceMixin`, {{/firebase_sdk_mocks}}`tearDown(di.reset)`.
 
-`dart run melos exec --scope={{name.snakeCase()}} -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope={{name.snakeCase()}} -- flutter test`; `melos run coverage` must stay 100%.
 {{#firebase}}
 ## Gotchas
 

@@ -1,6 +1,6 @@
 import 'package:core/bloc/global_event_channel_bloc.dart';
 import 'package:core/bloc/global_event_channel_state.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GlobalEventChannelProvider extends StatelessWidget {

@@ -1,8 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:dzod_example/main.dart' as app;
-import 'package:dzod_example/widgets/schema_display.dart';
-import 'package:dzod_example/widgets/validation_card.dart';
 import 'package:dzod_example/examples/advanced/coercion_example.dart';
 import 'package:dzod_example/examples/advanced/discriminated_union_example.dart';
 import 'package:dzod_example/examples/advanced/pipeline_example.dart';
@@ -24,6 +19,11 @@ import 'package:dzod_example/examples/real_world/authentication_schema_example.d
 import 'package:dzod_example/examples/schema_composition/introspection_example.dart';
 import 'package:dzod_example/examples/schema_composition/json_schema_generation_example.dart';
 import 'package:dzod_example/examples/security/security_best_practices_example.dart';
+import 'package:dzod_example/main.dart' as app;
+import 'package:dzod_example/widgets/schema_display.dart';
+import 'package:dzod_example/widgets/validation_card.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 
 Future<void> settle(WidgetTester tester) async {
   for (var i = 0; i < 5; i++) {

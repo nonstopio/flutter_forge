@@ -8,7 +8,7 @@ import 'package:core/core.dart' as core;
 import 'package:core/logger/logger.dart';
 import 'package:design_system/toast/toasts.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as ui_auth;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';
 

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:example_html_rich_text/main.dart' as app;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:html_rich_text/html_rich_text.dart';
-import 'package:example_html_rich_text/main.dart' as app;
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   testWidgets('demo renders every card and responds to all link examples',

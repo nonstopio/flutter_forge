@@ -156,13 +156,13 @@ The generated workspace is bootstrapped and formatted, with offline unit and
 widget tests and a strict 100% executable-line coverage gate. Run its checks:
 
 ```bash
-dart run melos run lint
-dart run melos run coverage
+melos run lint
+melos run coverage
 cd apps/youtube
 flutter run
 ```
 
-Melos is a workspace dependency; no global Melos installation is needed.
+Melos must be activated globally (`dart pub global activate melos`); it defers to the workspace-pinned version.
 If you picked any Firebase
 module, run `flutterfire configure` in the app directory when you want those
 features live. Until then the app still runs; Firebase-backed modules are
@@ -178,7 +178,7 @@ startup is awaited, and disposable services own their subscriptions and error
 handlers. The generated `docs/architecture.md` explains the SOLID boundaries
 and how to extend them without coupling UI to infrastructure.
 
-Every runtime package includes tests. `dart run melos run coverage` runs them,
+Every runtime package includes tests. `melos run coverage` runs them,
 imports otherwise untested libraries, merges cross-package coverage and fails
 below **100% executable-line coverage of handwritten runtime Dart**. Only
 generated `.g.dart`, `.freezed.dart` and `.i69n.dart` files are excluded; test,

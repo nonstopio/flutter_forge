@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:localization/localization.dart';
 
 /// Banner shown above the sign-in and register forms.

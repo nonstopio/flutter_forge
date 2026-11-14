@@ -1,7 +1,7 @@
 import 'package:core/core.dart' as core;
 import 'package:dashboard/dashboard.dart';
 import 'package:di/di.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:localization/localization.dart';

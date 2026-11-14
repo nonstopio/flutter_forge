@@ -61,7 +61,7 @@ Dart/Flutter dependencies, generated-template dependencies, Node development too
 
 ```sh
 flutter pub get --enforce-lockfile
-dart run melos run lint
+melos run lint
 python3 -m unittest discover -s tools/tests
 python3 tools/coverage.py
 python3 plugins/contact_permission/native_tests/run.py

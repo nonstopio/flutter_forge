@@ -1,5 +1,5 @@
 import 'package:connectivity_wrapper/src/widgets/connectivity_screen_wrapper.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// More info on why default port is 53
 /// here:

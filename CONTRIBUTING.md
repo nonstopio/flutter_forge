@@ -9,13 +9,14 @@ each PR focused, include a reproducible example when relevant, and follow our
 Install Flutter and Node 22+ (for release tooling), then from the repository root:
 
 ```sh
+dart pub global activate melos
 flutter pub get --enforce-lockfile
-dart run melos --version
-dart run melos bootstrap --scope=PACKAGE_NAME --include-dependencies
+melos --version
+melos bootstrap --scope=PACKAGE_NAME --include-dependencies
 ```
 
 Replace `PACKAGE_NAME` with the package you are changing. All CI and release
-workflows use Flutter 3.47.5 and the pinned Melos 8.8.0 workspace dependency.
+workflows use Flutter 3.50.0 and the pinned Melos 8.8.0 workspace dependency. Melos must be activated globally (`dart pub global activate melos`); the global launcher defers to the workspace-pinned version, since `dart run melos` no longer works on Dart 3.14.
 
 Run `dart analyze --fatal-infos` inside the affected package. Use `flutter test`
 for Flutter packages, or `dart test` for Dart-only packages. Format changed Dart

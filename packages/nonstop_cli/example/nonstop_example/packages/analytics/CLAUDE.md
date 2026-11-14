@@ -60,7 +60,7 @@ Read the root `CLAUDE.md` and `packages/CLAUDE.md` first.
 
 Doubles: mocktail `FirebaseAnalytics` (`_Sdk`), `AnalyticsClient` (`_Client`), `Logger`.
 
-`dart run melos exec --scope=analytics -- flutter test`; `dart run melos run coverage` must stay 100%.
+`melos exec --scope=analytics -- flutter test`; `melos run coverage` must stay 100%.
 
 ## Gotchas
 

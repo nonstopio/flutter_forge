@@ -66,7 +66,7 @@ Exported from `package:core/core.dart` unless noted.
 
 `test/core_test.dart` covers: {{#emulators}}emulator init failing before Firebase init{{/emulators}}{{^emulators}}the no-op emulator init{{/emulators}}, event equality and `Logger` registration after `init`, DI dispose failures reported through the logger, `context.fire`, bounded history with total counts, provider/builder/listener/consumer, date and `asBool` helpers, timestamp converter shapes and invalid input, every `TalkerLoggerImpl` level, and all observer callbacks with named and unnamed routes. Pattern: `setUp(init)`, `tearDown(di.reset)`; Talker with `useConsoleLogs: false` for log assertions.
 
-Run: `dart run melos exec --scope=core -- flutter test`. `dart run melos run coverage` must stay 100%.
+Run: `melos exec --scope=core -- flutter test`. `melos run coverage` must stay 100%.
 
 ## Gotchas
 
